@@ -6,7 +6,7 @@ import java.io.PrintWriter;
 import java.net.Socket;
 
 public class ClientHandler extends Thread {
-    private Socket socket;
+    private final Socket socket;
     BufferedReader in;
     PrintWriter out;
     public ClientHandler(Socket client){
