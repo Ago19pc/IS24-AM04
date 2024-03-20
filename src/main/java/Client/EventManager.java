@@ -3,11 +3,16 @@ package main.java.Client;
 import main.java.Enums.EventType;
 import main.java.Messages.GeneralMessage;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
 public class EventManager {
-    private final Map<EventType, List<Listener>> listeners = new HashMap<>();
+    private final Map<EventType, List<Listener>> listeners;
+    public EventManager(){
+        listeners = new HashMap<>();
+        listeners.put(EventType.SET_COLOR, new LinkedList<Listener>());
+    }
     public void subscribe(EventType eventType, Listener listener) {
         listeners.get(eventType).add(listener);
     }
