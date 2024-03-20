@@ -3,9 +3,12 @@ package main.java.Player;
 import main.java.Card.AchievementCard;
 import main.java.Card.Card;
 import main.java.Card.StartingCard;
+import main.java.Client.EventManager;
 import main.java.Enums.Color;
+import main.java.Enums.EventType;
 import main.java.Enums.Face;
 import main.java.Manuscript.Manuscript;
+import main.java.Messages.ColorMessage;
 
 import java.util.List;
 
@@ -16,6 +19,14 @@ public class PlayerInstance implements Player {
     private String name;
     private int points;
     private Manuscript manuscript;
+
+    private EventManager eventManager;
+
+    public PlayerInstance(String name, EventManager eventManager) {
+        this.name = name;
+        this.eventManager = eventManager;
+
+    }
 
     /**
      * Add a card to the player's hand
@@ -110,7 +121,7 @@ public class PlayerInstance implements Player {
     @Override
     public void setColor(Color color) {
         this.color = color;
-        System.out.println(this.toString() + " setColor");
+        eventManager.notify(EventType.SET_COLOR,new ColorMessage(this, color));
     }
 
     /**
