@@ -28,8 +28,8 @@ public class Manuscript {
 
     /**
      * Add a card to the manuscript
-     * @param positions
-     * @param cardFace
+     * @param positions where to add the card
+     * @param cardFace which face to add
      */
     public void addCard(List<CornerCardFace> positions, ResourceFrontFace cardFace){
         System.out.println(this.toString() + " addCard");

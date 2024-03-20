@@ -1,6 +1,7 @@
 package main.java.Deck;
 
 public class AchievementDeck extends Deck {
+
     public AchievementDeck(){
         System.out.println(this.toString() + "AchievementDeck");
         this.createCards();
@@ -12,4 +13,6 @@ public class AchievementDeck extends Deck {
     private void createCards() {
         System.out.println(this.toString() + " createCards");
     }
+
+
 }
