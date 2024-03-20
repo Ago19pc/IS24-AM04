@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Map;
 
 public class Manuscript {
-    private GraphNode root;
+    private final GraphNode root;
     private Map<Symbol, Integer> activeSymbols;
 
     public Manuscript(StartingCard card, Face face){

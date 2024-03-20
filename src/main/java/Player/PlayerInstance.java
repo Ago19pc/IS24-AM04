@@ -35,6 +35,7 @@ public class PlayerInstance implements Player {
      */
     @Override
     public void addCardToHand(Card card) {
+        handCards.add(card);
         System.out.println(this.toString() + " addCardToHand");
     }
 
@@ -45,6 +46,7 @@ public class PlayerInstance implements Player {
      */
     @Override
     public void removeCardFromHand(Card card) {
+        handCards.remove(card);
         System.out.println(this.toString() + " removeCardFromHand");
     }
 
