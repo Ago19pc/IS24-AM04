@@ -13,7 +13,10 @@ package main.java;
  *  2.4: CONFERMA PER IL COLORE -> INVIA DATI
  *  2.5.0 : PLAYER RICEVE CARTA SEGRETA -> INVIA DATI
  *          achievementDeck::popCard()
- *          send card to client
+ *          achievementDeck::popCard()
+ *          send cards to client
+ *          receive chosen card from client
+ *          player::setSecretObjectiveCard(card)
  *  2.5: PLAYER SCEGLIE CARTE INIZIALI -> INVIA & RICEVI DATI
  *          getStartingCards() ritorna la lista mescolata di carte iniziali
  *          send cards to client
@@ -37,7 +40,7 @@ package main.java;
  *         forall deck: deck::getBoardCards()
  *         forall player: player::getHand()
  *
- *  3.0: VEDI SE IL PLAYER E' ONLINE ALTRIMENTI SALTA TURNO
+ *  3.0: VEDI SE IL PLAYER E ONLINE ALTRIMENTI SALTA TURNO
  *          check online status
  *          if not online skip turn (continue)
  *
