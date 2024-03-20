@@ -1,6 +1,8 @@
 package main.java.GameModel;
 
+import main.java.Card.RegularBackFace;
 import main.java.Card.StartingCard;
+import main.java.Card.StartingFrontFace;
 import main.java.Chat.Chat;
 import main.java.Deck.AchievementDeck;
 import main.java.Deck.GoldDeck;
@@ -18,6 +20,23 @@ public class GameModelInstance implements GameModel {
     private boolean isEndGamePhase;
     private Chat chat;
     private List<Player> playerList;
+
+    public GameModelInstance() {
+        System.out.println(this.toString() + "GameModelInstance");
+        resourceDeck = new ResourceDeck();
+        goldDeck = new GoldDeck();
+        achievementDeck = new AchievementDeck();
+        chat = new Chat();
+        isEndGamePhase = false;
+        turn = 0;
+        for (int i = 0; i < 5; i++){
+            StartingFrontFace frontFace = new StartingFrontFace("imageURI", null, null);
+            RegularBackFace backFace = new RegularBackFace("imageURI", null);
+            startingCards.add(new StartingCard());
+        }
+        Collection.shuffle(startingCards);
+    }
+
     /**
      * Adds 1 to turn
      */

@@ -1,4 +1,8 @@
 package main.java;
+
+import main.java.GameModel.GameModel;
+import main.java.GameModel.GameModelInstance;
+
 /**
  *  FASE 0: INIZIALIZZAZIONE
  *  -
@@ -80,13 +84,12 @@ package main.java;
  *         sort player by points
  *         send leaderboard
  *  <p>
- *
  *  FASE 5: NUOVA PARTITA / TERMINA
  *          clear all variables for reset
 */
 public class TestController {
     public static void main(String[] args) {
-
+        GameModel game = new GameModelInstance();
     }
 }
 
