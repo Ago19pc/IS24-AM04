@@ -23,6 +23,7 @@ public interface Player {
     public void removeCardFromHand(Card card);
 
     /**
+     * Returns the player's hand
      * @return List<Card> the player's hand
      */
     public List<Card> getHand();

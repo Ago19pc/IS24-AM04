@@ -16,7 +16,7 @@ public class PlayerInstance implements Player {
     private AchievementCard secretObjective;
     private List<Card> handCards;
     private Color color;
-    private String name;
+    private final String name;
     private int points;
     private Manuscript manuscript;
 

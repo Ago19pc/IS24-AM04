@@ -16,5 +16,6 @@ public class Main {
         eventManager.subscribe(EventType.SET_COLOR, listener2);
         Player player = new PlayerInstance("Ago19", eventManager);
         player.setColor(Color.RED);
+
     }
 }
