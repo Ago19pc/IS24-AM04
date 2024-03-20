@@ -26,6 +26,7 @@ public class ConnectionHandler extends Thread {
             try {
                 Socket client = this.socket.accept();
                 System.out.println("Client connected: " + client.getInetAddress());
+                // QUI ANDREBBE GESTITO IL CASO DI RICONNESIONE
                 Thread t = new ClientHandler(client);
                 t.start();
                 threads.add(t);
