@@ -32,8 +32,11 @@ public abstract  class Deck implements Deckable {
     /**
      * @param where_to the position to add the card to
      */
-    private void moveCardToBoard(DeckPosition where_to) {
-        System.out.println(this.toString() + "moveCardToBoard");
+    private void moveCardToBoard(DeckPosition where_to) throws IncorrectDeckPositionException {
+        if (where_to == DECK)
+            throw new IncorrectDeckPositionException("Cannot add card to the deck, only to FIST_CARD or SECOND_CARD.");
+        else
+            System.out.println(this.toString() + "moveCardToBoard");
     }
 
     /**

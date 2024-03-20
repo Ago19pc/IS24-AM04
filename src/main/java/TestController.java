@@ -2,6 +2,7 @@ package main.java;
 /**
  *  FASE 0: INIZIALIZZAZIONE
  *  -
+ *  <p>
  *  FASE 1: CONNESSIONE
  * <p>
  *  FASE 2: PREPARAZIONE PARTITA
@@ -36,6 +37,10 @@ package main.java;
  *         forall deck: deck::getBoardCards()
  *         forall player: player::getHand()
  *
+ *  3.0: VEDI SE IL PLAYER E' ONLINE ALTRIMENTI SALTA TURNO
+ *          check online status
+ *          if not online skip turn (continue)
+ *
  *         for each client:
  *          notify begin turn
  *
@@ -55,17 +60,26 @@ package main.java;
  *
  *          notify end turn
  *
- *
- *
  *  3.5: RIGENERA LA CARTA PESCATA & AGGIORNA STATO -> INVIA DATI
+ *        deck::moveCardToBoard(deckPosition)
+ *        notify client of new board deck::getBoardCard()
+ *
  *  3.6: FINE TURNO
+ *         notify end turn to client
  *  <p>
  *  FASE 4: FINE PARTITA
+ *         setEndGamePhase(true)
+ *         notify clients of end game
+ *
  *  4.1: CALCOLA PUNTEGGIO OBBIETTIVI & CLASSIFICA
- *  4.2: AGGIORNA STATO -> INVIA DATI
+ *         calculate all objective cards
+ *         update points
+ *         sort player by points
+ *         send leaderboard
  *  <p>
  *
  *  FASE 5: NUOVA PARTITA / TERMINA
+ *          clear all variables for reset
 */
 public class TestController {
     public static void main(String[] args) {
