@@ -3,7 +3,7 @@ package main.java.Messages;
 import main.java.Enums.Color;
 import main.java.Player.Player;
 
-public class ColorMessage extends GeneralMessage {
+public class ColorMessage implements GeneralMessage {
 
     private final Player player;
     private final Color color;

@@ -1,6 +1,6 @@
 package main.java.Messages;
 
-public abstract class GeneralMessage {
+public interface GeneralMessage {
     public abstract void printData() ;
 
 }
