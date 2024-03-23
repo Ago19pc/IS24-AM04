@@ -2,7 +2,7 @@ package main.java.Card;
 
 public class EmptyCardFace implements CardFace {
     private final String imageURI;
-    private final Card card;
+    private Card card;
 
     /**
      * Constructor for the EmptyCardFace
@@ -27,5 +27,9 @@ public class EmptyCardFace implements CardFace {
     @Override
     public Card getCard() {
         return card;
+    }
+
+    public void setCard(Card card) {
+        this.card = card;
     }
 }

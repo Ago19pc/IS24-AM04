@@ -7,9 +7,13 @@ import main.java.Chat.Chat;
 import main.java.Deck.AchievementDeck;
 import main.java.Deck.GoldDeck;
 import main.java.Deck.ResourceDeck;
+import main.java.Enums.Symbol;
 import main.java.Player.Player;
 
-import java.util.List;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.util.*;
 
 public class GameModelInstance implements GameModel {
     private ResourceDeck resourceDeck;
@@ -29,12 +33,37 @@ public class GameModelInstance implements GameModel {
         chat = new Chat();
         isEndGamePhase = false;
         turn = 0;
-        for (int i = 0; i < 5; i++){
-            StartingFrontFace frontFace = new StartingFrontFace("imageURI", null, null);
-            RegularBackFace backFace = new RegularBackFace("imageURI", null);
-            startingCards.add(new StartingCard());
+        generateStartingCards();
+        //Collection.shuffle(startingCards);
+    }
+
+    void generateStartingCards() {
+        try {
+            File fileFRONT = new File("C:\\Users\\ago19\\IdeaProjects\\IS24-AM04\\images\\StartingCardsFRONT.txt");
+            File fileBACK = new File("C:\\Users\\ago19\\IdeaProjects\\IS24-AM04\\images\\StartingCardsBACK.txt");
+
+            BufferedReader readerFRONT = new BufferedReader(new FileReader(fileFRONT));
+            String line;
+            while ((line = readerFRONT.readLine()) != null) {
+                String[] parts = line.split(" ");
+                System.out.println(line);
+
+                Map<Integer, Symbol> cornerSymbols = new HashMap<Integer, Symbol>();
+                List<Symbol> centerSymbols = new ArrayList<Symbol>();
+                for (int i = 0; i < parts.length; i++) {
+                    if (i < 4) cornerSymbols.put(i, Symbol.valueOf(parts[i + 1]));
+                    else centerSymbols.add(Symbol.valueOf(parts[i]));
+                }
+
+                StartingFrontFace frontFace = new StartingFrontFace(parts[0], null, cornerSymbols, centerSymbols);
+
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        Collection.shuffle(startingCards);
+
+        //Collection.shuffle(startingCards);
     }
 
     /**

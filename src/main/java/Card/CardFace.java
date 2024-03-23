@@ -9,4 +9,6 @@ public interface CardFace {
      * @return Card the card that the face is on
      */
     public Card getCard();
+
+    public void setCard(Card card);
 }
