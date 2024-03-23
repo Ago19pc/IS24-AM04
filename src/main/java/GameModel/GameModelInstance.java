@@ -23,6 +23,7 @@ public class GameModelInstance implements GameModel {
     private int turn;
     private boolean isEndGamePhase;
     private Chat chat;
+
     private List<Player> playerList;
 
     public GameModelInstance() {
@@ -34,10 +35,10 @@ public class GameModelInstance implements GameModel {
         isEndGamePhase = false;
         turn = 0;
         generateStartingCards();
-        //Collection.shuffle(startingCards);
+
     }
 
-    void generateStartingCards() {
+    private void generateStartingCards() {
         try {
             File fileFRONT = new File("C:\\Users\\ago19\\IdeaProjects\\IS24-AM04\\images\\StartingCardsFRONT.txt");
             File fileBACK = new File("C:\\Users\\ago19\\IdeaProjects\\IS24-AM04\\images\\StartingCardsBACK.txt");
@@ -64,6 +65,10 @@ public class GameModelInstance implements GameModel {
         }
 
         //Collection.shuffle(startingCards);
+    }
+
+    public List<Player> getPlayerList() {
+        return playerList;
     }
 
     /**
@@ -128,8 +133,8 @@ public class GameModelInstance implements GameModel {
      * @param endGamePhase boolean true or false
      */
     @Override
-    public void setEndGamePhase(boolean endGamePhase) {
-        this.isEndGamePhase = endGamePhase;
+    public void setEndGamePhase() {
+        this.isEndGamePhase = true;
     }
 
     /**

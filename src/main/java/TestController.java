@@ -8,81 +8,101 @@ import main.java.GameModel.GameModelInstance;
  *  -
  *  <p>
  *  FASE 1: CONNESSIONE
+ *      DOPO LA CONNESSIONE
+ *
  * <p>
  *  FASE 2: PREPARAZIONE PARTITA
+ *  2.0:
+ *      subscribeClients()
+ *        sottoscrivere i client agli eventi
  *  2.1: SHUFFLE PLAYERS, DISTRIBUISCI SEGNALINO -> INVIA DATI (ORDINE DI GIOCO DEI PLAYER)
+ *       setupMatch()
+ *          gameModel = new GamemodelInstance()
+ *              shufflePlayers() (nel costruttore)
+ *          eventHandler::notify(Event.playersOrder, )
+ *
  *  2.2: PLAYER SCEGLIE NOME, COLORE - PARALLELO -> RICEVI DATI (CONTROLLO NOME DIVERSO)
- *  2.3: AGGIORNA STATO -> INVIA DATI
-            player::setColor(color)
- *  2.4: CONFERMA PER IL COLORE -> INVIA DATI
+ *        gameModel.getPlayers[].setName() (dentro setplayerData)
+ *  2.3: CONFERMA PER IL COLORE -> INVIA DATI
+ *        setPlayerData()
+ *        notify(Event.playersData) (in setPlayerData)
  *  2.5.0 : PLAYER RICEVE CARTA SEGRETA -> INVIA DATI
- *          achievementDeck::popCard()
- *          achievementDeck::popCard()
- *          send cards to client
- *          receive chosen card from client
- *          player::setSecretObjectiveCard(card)
+ *          giveSecretObjectiveCard()
+ *              achievementDeck::popCard()
+ *              achievementDeck::popCard()
+ *              notify(Event.secretCardSelection,)
+ *              receive chosen card from client
+ *              player::setSecretObjectiveCard(card)
+ *              notify(Event.othersSecretCardSelection,
  *  2.5: PLAYER SCEGLIE CARTE INIZIALI -> INVIA & RICEVI DATI
- *          getStartingCards() ritorna la lista mescolata di carte iniziali
- *          send cards to client
- *          receive cards face from client
- *          forEach(player -> player.initManuscript(startingCard, face));
- *          achievementDeck::popCard()
- *          send card to client
+ *          giveStartingCards()
+ *              getStartingCards() ritorna la lista mescolata di carte iniziali
+ *              notify(Event.StartingCards, )
+ *              receive cards face from client
+ *              forEach(player -> player.initManuscript(startingCard, face));
+ *              notify(Event.othersStartingCards, )
+ *
  *
  *  2.6: DISTRIBUISCI CARTE -> INVIA DATI
- *        resourceDeck::popCard()
- *        player.addCardToHand(card)
- *        resourceDeck::popCard()
- *           player.addCardToHand(card)
- *         goldDeck::popCard()
- *           player::addCardToHand(card)
- *         send player::getHand()
+ *          giveInitialHand()
+ *              resourceDeck::popCard()
+ *              player.addCardToHand(card)
+ *              notify(Event.drawCard,)
+ *              resourceDeck::popCard()
+ *              player.addCardToHand(card)
+ *              notify(Event.drawCard,)
+ *              goldDeck::popCard()
+ *              player::addCardToHand(card)
+ *              notify(Event.drawCard,)
  *  <p>
  *  FASE 3: GIOCO
- *         turn ++
- *         notify decks & manuscript to all players
- *         forall deck: deck::getBoardCards()
- *         forall player: player::getHand()
+ *         gameModel.nextTurn()
  *
  *  3.0: VEDI SE IL PLAYER E ONLINE ALTRIMENTI SALTA TURNO
- *          check online status
- *          if not online skip turn (continue)
- *
- *         for each client:
- *          notify begin turn
+ *          try {
+ *            new Thread(() -> {while (!fineTurno) {if (timeout) {throw new TimeoutException();}}}).start()
  *
  *  3.1: PLAYER SCEGLIE LA CARTA DA GIOCARE E LA POSIZIONE -> RICEVI DATI
- *          recive client move (resourceFrontFace, position)
- *          player::removeCardFromHand(card)
- *          player::getManuscript().setCard(resourceFrontFace, position)
+ *          playerTurn()
+ *              notify(Event.nextTurn, numero di turno e chi deve giocare)
+ *              receive client move (resourceFrontFace, position)
+ *              player::removeCardFromHand(card)
+ *              player::getManuscript().setCard(resourceFrontFace, position)
+ *
 
  *  3.2: CONTROLLO EFFETTI CARTA
- *          evaluete effects of move
+ *          evaluate effects of move
  *          player::addPoints(points)
- *          notify player of new point
+ *
+ *          notify(Event.cardPlacement, carta, posizione e punti e se proprio devo, giocatroie)
  *
  *  3.4: PLAYER SCEGLIE LA CARTA DA PESCARE -> RICEVI DATI
- *          notify player to draw card (deck, deckPosition)
  *          player::addCardToHand(deck.popCard())
- *
- *          notify end turn
- *
  *  3.5: RIGENERA LA CARTA PESCATA & AGGIORNA STATO -> INVIA DATI
  *        deck::moveCardToBoard(deckPosition)
- *        notify client of new board deck::getBoardCard()
+ *        notify(Event.drawCard, carta pescata e il giocatroie anche, e il mazzo, quello che serve, che cazzo ti aspettavi, ma anche il timestamp, ma perché continui, ma una chiave asimmetrica resistente ad attacchi quantici no? e certo che ce la metti scusa, che ti fai mancare le basi, ma sparati brutto frocio dimmerda comunista, assassino bastardo e la madonna mo questi vogliono occuparsi della sicurezza ma che cazzo stanno dicendo? Solo Dio sa cosa vogliono fare. Ora fil dice che in 36 ore ce la fa a implementare. Abbiamo ancora 3 mesi e 6 giorni, manca la view il server)
+ *
+ *
  *
  *  3.6: FINE TURNO
- *         notify end turn to client
+ *          saveData()
+ *         } catch (Exception TimeoutException) {
+ *                notify(Event.timeout, )
+ *                skipTurn()
+ *         }
  *  <p>
  *  FASE 4: FINE PARTITA
- *         setEndGamePhase(true)
- *         notify clients of end game
+ *         setEndGamePhase()
+ *         notify(Event.endGamePhase,)
+ *
  *
  *  4.1: CALCOLA PUNTEGGIO OBBIETTIVI & CLASSIFICA
+ *          notify(Event.gameOver, )
  *         calculate all objective cards
  *         update points
  *         sort player by points
- *         send leaderboard
+ *         notify(Event.leaderboard, )
+ *
  *  <p>
  *  FASE 5: NUOVA PARTITA / TERMINA
  *          clear all variables for reset

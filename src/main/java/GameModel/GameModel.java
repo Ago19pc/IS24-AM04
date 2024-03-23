@@ -48,7 +48,7 @@ public interface GameModel {
      * Set the game to the end game phase
      * @param endGamePhase boolean true or false
      */
-    public void setEndGamePhase(boolean endGamePhase);
+    public void setEndGamePhase();
 
     /**
      * @return Chat the chat
