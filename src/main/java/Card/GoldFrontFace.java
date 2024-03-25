@@ -13,14 +13,13 @@ public class GoldFrontFace extends ResourceFrontFace {
      * Constructor for the GoldFrontFace
      *
      * @param imageURI the URI of the image
-     * @param card the card that owns the face
      * @param cornerSymbols the corner symbols
      * @param score the score
      * @param placementRequirements the placement requirements
      * @param scoreRequirements the score requirements
      */
-    public GoldFrontFace(String imageURI, Card card, Map<Integer, Symbol> cornerSymbols, int score, Map<Symbol, Integer> placementRequirements, List<Symbol> scoreRequirements) {
-        super(imageURI, card, cornerSymbols, score);
+    public GoldFrontFace(String imageURI, Map<Integer, Symbol> cornerSymbols, int score, Map<Symbol, Integer> placementRequirements, List<Symbol> scoreRequirements) {
+        super(imageURI, cornerSymbols, score);
         this.placementRequirements = placementRequirements;
         this.scoreRequirements = scoreRequirements;
     }

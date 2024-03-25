@@ -13,12 +13,11 @@ public class StartingFrontFace extends  CornerCardFace {
      * Constructor for the StartingFrontFace
      *
      * @param imageURI the URI of the image
-     * @param card the card that owns the face
      * @param cornerSymbols the corner symbols
      * @param centerSymbols the center symbols
      */
-    public StartingFrontFace(String imageURI, Card card, Map<Integer, Symbol> cornerSymbols, List<Symbol> centerSymbols) {
-        super(imageURI, card, cornerSymbols);
+    public StartingFrontFace(String imageURI, Map<Integer, Symbol> cornerSymbols, List<Symbol> centerSymbols) {
+        super(imageURI, cornerSymbols);
         this.centerSymbols = new ArrayList<Symbol>(centerSymbols);
     }
 

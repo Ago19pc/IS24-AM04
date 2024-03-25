@@ -12,12 +12,11 @@ public class ResourceFrontFace extends CornerCardFace {
      * Constructor for the ResourceFrontFace
      *
      * @param imageURI the URI of the image
-     * @param card the card that owns the face
      * @param cornerSymbols the corner symbols
      * @param score the score
      */
-    public ResourceFrontFace(String imageURI, Card card, Map<Integer, Symbol> cornerSymbols, int score) {
-        super(imageURI, card, cornerSymbols);
+    public ResourceFrontFace(String imageURI, Map<Integer, Symbol> cornerSymbols, int score) {
+        super(imageURI, cornerSymbols);
         this.score = score;
     }
 

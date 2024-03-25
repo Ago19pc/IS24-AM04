@@ -1,7 +1,12 @@
 package main.java;
 
+import main.java.Client.Client;
+import main.java.Enums.Color;
 import main.java.GameModel.GameModel;
 import main.java.GameModel.GameModelInstance;
+
+import java.beans.EventHandler;
+import java.util.List;
 
 /**
  *  FASE 0: INIZIALIZZAZIONE
@@ -108,9 +113,30 @@ import main.java.GameModel.GameModelInstance;
  *          clear all variables for reset
 */
 public class TestController {
+    private static List<Client> clients;
+    private static GameModel gameModel;
+    private static EventHandler eventHandler;
+    /**
+     * Main method, here goes the program
+     * @param args the arguments, that I don't know, they're useless, just like me :'(
+     */
     public static void main(String[] args) {
-        GameModel game = new GameModelInstance();
+
+        gameModel = new GameModelInstance();
+
     }
+
+    private void setPlayerData(String name, Color color) {};
+    private void giveSecretObjectiveCard() {};
+    private void subscribeClients() {};
+    private void setupMatch() {};
+    private void giveStartingCards() {};
+    private void giveInitialHand() {};
+    private void playerTurn() {};
+    private void saveData() {};
+    private void setEndGamePhase() {};
+    private void reset() {};
+    private void chat() {};
 }
 
 

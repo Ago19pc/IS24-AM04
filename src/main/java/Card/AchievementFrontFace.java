@@ -13,12 +13,11 @@ public class AchievementFrontFace extends EmptyCardFace {
      * Constructor for the AchievementFrontFace
      *
      * @param imageURI the URI of the image
-     * @param card the card that owns the face
      * @param scoreRequirements the score requirements
      * @param score the score
      */
-    public AchievementFrontFace(String imageURI, Card card, ArrayList<Symbol> scoreRequirements, int score) {
-        super(imageURI, card);
+    public AchievementFrontFace(String imageURI, ArrayList<Symbol> scoreRequirements, int score) {
+        super(imageURI);
         this.scoreRequirements = new ArrayList<Symbol>(scoreRequirements);
         this.score = score;
     }

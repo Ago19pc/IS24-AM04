@@ -56,7 +56,7 @@ public class GameModelInstance implements GameModel {
                     else centerSymbols.add(Symbol.valueOf(parts[i]));
                 }
 
-                StartingFrontFace frontFace = new StartingFrontFace(parts[0], null, cornerSymbols, centerSymbols);
+                StartingFrontFace frontFace = new StartingFrontFace(parts[0], cornerSymbols, centerSymbols);
 
             }
 
@@ -129,8 +129,6 @@ public class GameModelInstance implements GameModel {
 
     /**
      * Set the game to the end game phase
-     *
-     * @param endGamePhase boolean true or false
      */
     @Override
     public void setEndGamePhase() {
