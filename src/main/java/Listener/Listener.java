@@ -1,4 +1,4 @@
-package main.java.Client;
+package main.java.Listener;
 
 import main.java.Messages.GeneralMessage;
 

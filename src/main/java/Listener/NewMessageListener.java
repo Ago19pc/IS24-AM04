@@ -1,9 +1,9 @@
-package main.java.Client;
+package main.java.Listener;
 
 import main.java.Messages.GeneralMessage;
 
-public class ColorListener implements Listener {
-    public  ColorListener(){}
+public class NewMessageListener implements Listener {
+    public NewMessageListener(){}
 
     @Override
     public void update(GeneralMessage data) {

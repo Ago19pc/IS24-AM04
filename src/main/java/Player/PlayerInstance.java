@@ -3,7 +3,7 @@ package main.java.Player;
 import main.java.Card.AchievementCard;
 import main.java.Card.Card;
 import main.java.Card.StartingCard;
-import main.java.Client.EventManager;
+import main.java.EventManager.EventManager;
 import main.java.Enums.Color;
 import main.java.Enums.EventType;
 import main.java.Enums.Face;

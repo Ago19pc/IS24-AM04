@@ -1,5 +1,6 @@
-package main.java.Client;
+package main.java.EventManager;
 
+import main.java.Listener.Listener;
 import main.java.Enums.EventType;
 import main.java.Messages.GeneralMessage;
 import java.util.HashMap;

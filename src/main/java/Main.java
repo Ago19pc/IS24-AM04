@@ -1,7 +1,7 @@
 package main.java;
 
-import main.java.Client.ColorListener;
-import main.java.Client.EventManager;
+import main.java.Listener.ColorListener;
+import main.java.EventManager.EventManager;
 import main.java.GameModel.GameModel;
 import main.java.GameModel.GameModelInstance;
 import main.java.Player.Player;
