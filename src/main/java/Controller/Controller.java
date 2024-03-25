@@ -1,4 +1,4 @@
-package main.java;
+package main.java.Controller;
 
 import main.java.Client.Client;
 import main.java.Enums.Color;
@@ -112,7 +112,7 @@ import java.util.List;
  *  FASE 5: NUOVA PARTITA / TERMINA
  *          clear all variables for reset
 */
-public class TestController {
+public class Controller {
     private static List<Client> clients;
     private static GameModel gameModel;
     private static EventHandler eventHandler;
