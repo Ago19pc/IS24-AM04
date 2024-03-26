@@ -16,7 +16,7 @@ public class AchievementFrontFace extends EmptyCardFace {
      * @param scoreRequirements the score requirements
      * @param score the score
      */
-    public AchievementFrontFace(String imageURI, ArrayList<Symbol> scoreRequirements, int score) {
+    public AchievementFrontFace(String imageURI, List<Symbol> scoreRequirements, int score) {
         super(imageURI);
         this.scoreRequirements = new ArrayList<Symbol>(scoreRequirements);
         this.score = score;

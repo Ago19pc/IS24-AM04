@@ -74,7 +74,7 @@ public class ResourceDeck extends Deck {
     } catch (Exception e) {
         e.printStackTrace();
     }
-        ///*This is to print to check if the cards are generated correctly 
+        /*This is to print to check if the cards are generated correctly 
          for(Card card : this.cards) {
              System.out.println("Front Corner Symbols:");
              card.getFace(FRONT).getCornerSymbols().forEach((key, value) -> System.out.println(key + " " + value));
@@ -87,7 +87,7 @@ public class ResourceDeck extends Deck {
              card.getFace(BACK).getCenterSymbols().forEach(symbol -> System.out.println(symbol));
              System.out.println();
             }
-        //*/
+        */
             
         Collections.shuffle(this.cards);
 

@@ -35,4 +35,8 @@ public class EmptyCardFace implements CardFace {
     public List<Symbol> getCenterSymbols() {
         return null;
     }
+
+    public List<Symbol> getScoreRequirements() {
+        return null;
+    }
 }
