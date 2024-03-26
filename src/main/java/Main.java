@@ -1,18 +1,18 @@
 package main.java;
 
-import main.java.Connections.ConnectionHandler;
-import main.java.Listener.ColorListener;
-import main.java.EventManager.EventManager;
-import main.java.GameModel.GameModel;
-import main.java.GameModel.GameModelInstance;
-import main.java.Player.Player;
-import main.java.Player.PlayerInstance;
-import main.java.Enums.Color;
-import main.java.Enums.EventType;
+import main.java.Server.Connections.ConnectionHandler;
+import main.java.Server.Listener.ColorListener;
+import main.java.Server.EventManager.EventManager;
+import main.java.Server.GameModel.GameModel;
+import main.java.Server.GameModel.GameModelInstance;
+import main.java.Server.Player.Player;
+import main.java.Server.Player.PlayerInstance;
+import main.java.Server.Enums.Color;
+import main.java.Server.Enums.EventType;
 
 public class Main {
     public static void main(String[] args) {
-        /*EventManager eventManager = new EventManager( );
+        EventManager eventManager = new EventManager( );
         ColorListener listener1 = new ColorListener();
         ColorListener listener2 = new ColorListener();
         eventManager.subscribe(EventType.SET_COLOR, listener1);
@@ -21,12 +21,13 @@ public class Main {
         player.setColor(Color.RED);
 
         GameModel gameModel = new GameModelInstance();
-        */
-        try {
+        
+        /*try {
             ConnectionHandler connectionHandler = new ConnectionHandler(1234);
         } catch (Exception e) {
             e.printStackTrace();
         }
+        */
 
     }
 }
