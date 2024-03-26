@@ -1,6 +1,40 @@
-// In questo caso gli angoli sono sempre tutti none
-// e il simbolo al centro ha valore per il calcolo degli obiettivi
-Da 0 a 9: FUNGUS
-da 10 a 19: PLANT
-da 20 a 29: ANIMAL
-da 30 a 39: BUG
+FUNGUS
+FUNGUS
+FUNGUS
+FUNGUS
+FUNGUS
+FUNGUS
+FUNGUS
+FUNGUS
+FUNGUS
+FUNGUS
+PLANT
+PLANT
+PLANT
+PLANT
+PLANT
+PLANT
+PLANT
+PLANT
+PLANT
+PLANT
+ANIMAL
+ANIMAL
+ANIMAL
+ANIMAL
+ANIMAL
+ANIMAL
+ANIMAL
+ANIMAL
+ANIMAL
+ANIMAL
+BUG
+BUG
+BUG
+BUG
+BUG
+BUG
+BUG
+BUG
+BUG
+BUG
