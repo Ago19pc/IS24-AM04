@@ -5,7 +5,9 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ConnectionHandler extends Thread {
+import static java.lang.System.exit;
+
+public class ConnectionHandler {
     private ServerSocket socket;
     private List<Thread> threads;
 
@@ -17,16 +19,16 @@ public class ConnectionHandler extends Thread {
      */
     public ConnectionHandler(int port) throws IOException {
         threads = new ArrayList<>();
-        try {
-            this.socket = new ServerSocket(port);
-        } catch (IOException e) {
-            e.printStackTrace();
+        while (!startServer(port)) {
+            System.out.println("Port already in use, trying next port...");
+            port++;
         }
+        System.out.println("Server started on port: " + port);
         while (true) {
             try {
                 Socket client = this.socket.accept();
-                System.out.println("Client connected: " + client.getInetAddress());
                 // QUI ANDREBBE GESTITO IL CASO DI RICONNESIONE
+                //
                 Thread t = new ClientHandler(client);
                 t.start();
                 threads.add(t);
@@ -34,6 +36,8 @@ public class ConnectionHandler extends Thread {
                 e.printStackTrace();
             }
         }
+
+
     }
 
     /**
@@ -44,11 +48,13 @@ public class ConnectionHandler extends Thread {
         return this.threads;
     }
 
-    /**
-     *
-     * @return the handler of all connection thread
-     */
-
-
-
+    private boolean startServer(int port) {
+        try {
+            this.socket = new ServerSocket(port);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
+        return true;
+    }
 }
