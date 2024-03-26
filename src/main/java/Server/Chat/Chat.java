@@ -3,7 +3,6 @@ package main.java.Server.Chat;
 import main.java.Server.Player.Player;
 
 import java.util.List;
-import java.sql.Timestamp;
 
 public class Chat {
     private List<Message> messages;
