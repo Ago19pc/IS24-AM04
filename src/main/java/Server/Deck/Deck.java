@@ -4,7 +4,6 @@ import main.java.Server.Enums.DeckPosition;
 import static main.java.Server.Enums.DeckPosition.*;
 import main.java.Server.Card.Card;
 import main.java.Server.Exception.IncorrectDeckPositionException;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;

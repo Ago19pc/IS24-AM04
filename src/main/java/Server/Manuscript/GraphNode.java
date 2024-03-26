@@ -2,26 +2,29 @@ package main.java.Server.Manuscript;
 
 import main.java.Server.Card.Card;
 import main.java.Server.Card.CardFace;
+import main.java.Server.Enums.CardCorners;
 
 import java.util.Map;
 
 public class GraphNode {
-    private final CardFace cardFace;
-    private Map<Integer, GraphNode> neighbors;
+    private CardFace root;
+    private Map<CardFace, Map<CardCorners, CardFace>> neighbors;
 
-    public GraphNode(CardFace cardFace){
-        this.cardFace = cardFace;
-        //this.neighbors.put(0, null);
-        //this.neighbors.put(1, null);
-        //this.neighbors.put(2, null);
-        //this.neighbors.put(3, null);
+    public GraphNode(CardFace startingCardFace){
+        this.root = startingCardFace;
+
     }
 
+    /* 
     public CardFace getCard(){
         return this.cardFace;
     }
+    */
+    public CardFace getRoot(){
+        return this.root;
+    }
 
-    public Map<Integer, GraphNode> getNeighbors(){
+    public Map<CardFace, Map<CardCorners, CardFace>> getNeighbors(){
         return this.neighbors;
     }
 }
