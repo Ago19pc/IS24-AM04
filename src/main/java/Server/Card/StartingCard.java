@@ -4,14 +4,14 @@ import main.java.Server.Enums.Face;
 
 public class StartingCard implements Card {
     private final StartingFrontFace frontFace;
-    private final RegularBackFace backFace;
+    private final CornerCardFace backFace;
 
     /**
      * Constructor for the StartingCard
      * @param frontFace the front face
      * @param backFace the back face
      */
-    public StartingCard(StartingFrontFace frontFace, RegularBackFace backFace) {
+    public StartingCard(StartingFrontFace frontFace, CornerCardFace backFace) {
         this.frontFace = frontFace;
         this.backFace = backFace;
     }

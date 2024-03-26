@@ -28,4 +28,6 @@ public class StartingFrontFace extends  CornerCardFace {
     public List<Symbol> getCenterSymbols() {
         return centerSymbols;
     }
+
+    
 }
