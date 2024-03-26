@@ -15,4 +15,6 @@ public interface CardFace {
 
     public List<Symbol> getCenterSymbols();
 
+    public int getScore();
+
 }
