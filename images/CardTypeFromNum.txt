@@ -1,0 +1,13 @@
+0 -> 9 : ResourceCard Fungus
+10 -> 19 : ResourceCard Plant
+20 -> 29 : ResourceCard Animal
+30 -> 39 : ResourceCard Bug
+
+40 -> 49 : GoldCard Fungus
+50 -> 59 : GoldCard Plant
+60 -> 69 : GoldCard Animal
+70 -> 79 : GoldCard Bug
+
+80 -> 85 : StartingCard
+
+86 -> 101 : AchievementCard

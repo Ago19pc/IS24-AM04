@@ -1,0 +1,21 @@
+package main.java.Messages;
+
+import main.java.Player.Player;
+
+import java.util.Map;
+
+public class LeaderboardMessage implements GeneralMessage {
+
+        private final Map<Player, Integer> points;
+
+        public LeaderboardMessage(Map<Player, Integer> points){
+            this.points = points;
+        }
+        @Override
+        public void printData() {
+            System.out.println("Leaderboard: ");
+            for (Player player : points.keySet()) {
+                System.out.println(player.getName() + ": " + points.get(player) + " points");
+            }
+        }
+}
