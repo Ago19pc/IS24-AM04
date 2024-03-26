@@ -1,7 +1,41 @@
-//Gli angoli sono tutti EMPTY e al centro hanno
-// un simbolo secono lo schema di cui sotto
-// l'ordine è lo stesso del file "GoldFrontFace.txt"
-Riga da 1 a 10 -> FUNGUS
-Riga da 11 a 20 -> PLANT
-Riga da 21 a 30 -> ANIMAL
-Riga da 31 a 40 -> BUG
+FUNGUS
+FUNGUS
+FUNGUS
+FUNGUS
+FUNGUS
+FUNGUS
+FUNGUS
+FUNGUS
+FUNGUS
+FUNGUS
+PLANT
+PLANT
+PLANT
+PLANT
+PLANT
+PLANT
+PLANT
+PLANT
+PLANT
+PLANT
+ANIMAL
+ANIMAL
+ANIMAL
+ANIMAL
+ANIMAL
+ANIMAL
+ANIMAL
+ANIMAL
+ANIMAL
+ANIMAL
+BUG
+BUG
+BUG
+BUG
+BUG
+BUG
+BUG
+BUG
+BUG
+BUG
+
