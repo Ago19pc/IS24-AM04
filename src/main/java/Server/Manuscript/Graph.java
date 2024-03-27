@@ -7,63 +7,95 @@ import main.java.Server.Enums.CardCorners;
 import java.util.Map;
 
 public class Graph {
-    private CardFace root;
-    private Map<CardFace, Map<CardCorners, CardFace>> neighbors;
-
-    public Graph(CardFace startingCardFace){
+    private CornerCardFace root;
+    private Map<CornerCardFace, Map<CardCorners, CornerCardFace>> neighbors;
+    /**
+     * Constructor for the Graph. Sets the root, creates the card map, and adds the starting card
+     * @param startingCardFace the starting card face
+     */
+    public Graph(CornerCardFace startingCardFace){
         this.root = startingCardFace;
         this.neighbors = new HashMap<>();
-        Map<CardCorners, CardFace> corners = new HashMap<>();
-        corners.put(CardCorners.TOP_LEFT, null);
-        corners.put(CardCorners.TOP_RIGHT, null);
-        corners.put(CardCorners.BOTTOM_LEFT, null);
-        corners.put(CardCorners.BOTTOM_RIGHT, null);
-        this.neighbors.put(startingCardFace, corners);
+        addNode(root);
     }
-    public CardFace getRoot(){
+    /**
+     * Returns the root of the graph
+     * @return CornerCardFace the root of the graph
+     */
+    public CornerCardFace getRoot(){
         return this.root;
     }
 
-    public Map<CardFace, Map<CardCorners, CardFace>> getNeighbors(CardFace node
-
+    /**
+     * Returns the neighbors of a node
+     * @param node the node to get the neighbors of
+     * @return Map<CardCorners, CornerCardFace> the neighbors of the node
+     */
+    public Map<CardCorners, CornerCardFace> getNeighbors(CornerCardFace node){
       return this.neighbors.get(node);
+    }
+    /**
+     * Returns the neighbors of a node that were placed after the node
+     * @param node the node to get the neighbors of
+     * @return Map<CardCorners, CornerCardFace> the neighbors of the node
+     */
+    public Map<CardCorners, CornerCardFace> getCardsOver(CardFace node){
+        Map<CardCorners, CornerCardFace> cardsOver = new HashMap<>();
+        cardsOver = getNeighbors(node).entrySet().stream()
+                .filter(neighbor -> neighbor.getValue().getPlacementTurn() > node.getPlacementTurn())
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+        return cardsOver;
+    }
+    /**
+     * Returns the neighbors of a node that were placed before the node
+     * @param node the node to get the neighbors of
+     * @return Map<CardCorners, CornerCardFace> the neighbors of the node
+     */
+    public Map<CardCorners, CornerCardFace> getCardsUnder(CardFace node){
+        Map<CardCorners, CornerCardFace> cardsUnder = new HashMap<>();
+        cardsUnder = getNeighbors(node).entrySet().stream()
+                .filter(neighbor -> neighbor.getValue().getPlacementTurn() < node.getPlacementTurn())
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+        return cardsUnder;
+    }
 
-    }
-    public Map<CardCorners, CardFace> getCardsOver(CardFace node){
-        Map<CardCorners, CardFace> allCorners = this.neighbors.get(node);
-        Map<CardCorners, CardFace> cardsOver = new HashMap<>();
-        allCorners.keySet().forEach(corner -> {
-            CardFace card = allCorners.get(corner);
-            if(card != null && card.getPlacementTurn() > node.getPlacementTurn()){
-                cardsOver.put(corner, card);
-            } else {
-                cardsOver.put(corner, null);
-            }
-        })
-    }
-    public Map<CardCorners, CardFace> getCardsUnder(CardFace node){
-        Map<CardCorners, CardFace> allCorners = this.neighbors.get(node);
-        Map<CardCorners, CardFace> cardsUnder = new HashMap<>();
-        allCorners.keySet().forEach(corner -> {
-            CardFace card = allCorners.get(corner);
-            if(card != null && card.getPlacementTurn() < node.getPlacementTurn()){
-                cardsUnder.put(corner, card);
-            } else {
-                cardsUnder.put(corner, null);
-            }
-        })
-    }
-    public void addNode(CornerCardFace node){
-        Map<CardCorners, CardFace> corners = new HashMap<>();
+    /**
+     * Adds a node to the graph and sets the neighbors to null
+     * @param node the node to add
+     */
+    private void addNode(CornerCardFace node){
+        Map<CardCorners, CornerCardFace> corners = new HashMap<>();
         corners.put(CardCorners.TOP_LEFT, null);
         corners.put(CardCorners.TOP_RIGHT, null);
         corners.put(CardCorners.BOTTOM_LEFT, null);
         corners.put(CardCorners.BOTTOM_RIGHT, null);
         this.neighbors.put(node, corners);
     }
-    public void addEdge(CornerCardFace overCard, CardCorners corner, CardFace underCard){
-        this.neighbors.get(overCard).put(corner, underCard);
-        this.neighbors.get(underard).put(corner.getOppositeCorner(), overCard);
-        overCard.setPlacementTurn(turn);
+
+    /**
+     * Adds an edge between two nodes
+     * @param firstCard the first card
+     * @param corner the corner of the first card. It will be the opposite corner of the second card
+     * @param secondCard the second card
+     */
+    private void addEdge(CornerCardFace firstCard, CardCorners corner, CornerCardFace secondCard){
+        this.neighbors.get(firstCard).put(corner, secondCard);
+        this.neighbors.get(secondCard).put(corner.getOppositeCorner(), firstCard);
+    }
+
+    /**
+     * Adds a card to the graph, setting the placement turn and adding the edges
+     * @param card the card to add
+     * @param positions the neighbors of the card
+     * @param turnPlaced the turn when the card gets placed
+     */
+    public void addCard(CornerCardFace card, Map<CardCorners, CornerCardFace> positions, int turnPlaced){
+        card.setPlacementTurn(turnPlaced);
+        addNode(card);
+        positions.keySet().forEach(corner -> {
+            if(positions.get(corner) != null) {
+                addEdge(card, corner, positions.get(corner));
+            }
+        });
     }
 }

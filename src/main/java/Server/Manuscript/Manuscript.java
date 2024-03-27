@@ -32,13 +32,8 @@ public class Manuscript {
      * @param cardFace which face to add
      * @param turn the turn the card was placed
      */
-    public void addCard(Map<CardCorners, CardFace> positions, CornerCardFace cardFace, int turn){
-        this.graph.addNode(cardFace);
-        positions.keySet().forEach(corner -> {
-            if(positions.get(corner) != null) {
-                this.graph.addEdge(cardFace, corner, positions.get(corner));
-            }
-        });
+    public void addCard(Map<CardCorners, CornerCardFace> positions, CornerCardFace cardFace, int turn){
+        this.graph.addCard(cardFace, positions, turn)
     }
 
     /**
