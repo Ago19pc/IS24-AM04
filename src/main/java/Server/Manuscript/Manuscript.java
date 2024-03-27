@@ -12,11 +12,11 @@ import java.util.List;
 import java.util.Map;
 
 public class Manuscript {
-    private final GraphNode root;
+    private final Graph graph;
     private Map<Symbol, Integer> activeSymbols;
 
     public Manuscript(StartingCard card, Face face){
-        root = new GraphNode(card.getFace(face));
+        root = new Graph(card.getFace(face));
     }
 
     /**
@@ -30,9 +30,15 @@ public class Manuscript {
      * Add a card to the manuscript
      * @param positions where to add the card
      * @param cardFace which face to add
+     * @param turn the turn the card was placed
      */
-    public void addCard(List<CornerCardFace> positions, ResourceFrontFace cardFace){
-        System.out.println(this.toString() + " addCard");
+    public void addCard(Map<CardCorners, CardFace> positions, CornerCardFace cardFace, int turn){
+        this.graph.addNode(cardFace);
+        positions.keySet().forEach(corner -> {
+            if(positions.get(corner) != null) {
+                this.graph.addEdge(cardFace, corner, positions.get(corner));
+            }
+        });
     }
 
     /**
