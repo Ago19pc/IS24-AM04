@@ -7,7 +7,7 @@ import java.util.Map;
 
 public class GoldFrontFace extends ResourceFrontFace {
     private final Map<Symbol, Integer> placementRequirements;
-    private final List<Symbol> scoreRequirements;
+    private final Map<Symbol, Integer> scoreRequirements;
 
     /**
      * Constructor for the GoldFrontFace
@@ -18,7 +18,7 @@ public class GoldFrontFace extends ResourceFrontFace {
      * @param placementRequirements the placement requirements
      * @param scoreRequirements the score requirements
      */
-    public GoldFrontFace(String imageURI, Map<Integer, Symbol> cornerSymbols, int score, Map<Symbol, Integer> placementRequirements, List<Symbol> scoreRequirements) {
+    public GoldFrontFace(String imageURI, Map<Integer, Symbol> cornerSymbols, int score, Map<Symbol, Integer> placementRequirements, Map<Symbol, Integer> scoreRequirements) {
         super(imageURI, cornerSymbols, score);
         this.placementRequirements = placementRequirements;
         this.scoreRequirements = scoreRequirements;
@@ -36,7 +36,7 @@ public class GoldFrontFace extends ResourceFrontFace {
      * Returns the score requirements
      * @return List<Symbol> the score requirements
      */
-    public List<Symbol> getScoreRequirements() {
+    public Map<Symbol, Integer> getScoreRequirements() {
         return scoreRequirements;
     }
 }

@@ -12,6 +12,7 @@ import main.java.Server.Enums.EventType;
 
 public class Main {
     public static void main(String[] args) {
+
         EventManager eventManager = new EventManager( );
         ColorListener listener1 = new ColorListener();
         ColorListener listener2 = new ColorListener();
@@ -21,8 +22,10 @@ public class Main {
         player.setColor(Color.RED);
 
         GameModel gameModel = new GameModelInstance();
-        
-        /*try {
+
+
+        /*
+        try {
             ConnectionHandler connectionHandler = new ConnectionHandler(1234);
         } catch (Exception e) {
             e.printStackTrace();

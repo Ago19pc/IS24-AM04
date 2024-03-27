@@ -36,7 +36,11 @@ public class EmptyCardFace implements CardFace {
         return null;
     }
 
-    public List<Symbol> getScoreRequirements() {
+    public Map<Symbol, Integer> getScoreRequirements() {
+        return null;
+    }
+
+    public Map<Symbol, Integer> getPlacementRequirements() {
         return null;
     }
 }
