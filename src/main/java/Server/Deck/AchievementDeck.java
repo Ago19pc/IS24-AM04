@@ -3,9 +3,7 @@ package main.java.Server.Deck;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 import main.java.Server.Card.AchievementCard;
 import main.java.Server.Card.AchievementFrontFace;
@@ -44,14 +42,19 @@ public class AchievementDeck extends Deck {
 
                 String[] partsF = lineF.split(" ");
 
-                List<Symbol> scoreRequirements = new ArrayList<>();
+                Map<Symbol, Integer> scoreRequirements = new HashMap<>();
+                for (Symbol s : Symbol.values()) {
+                    scoreRequirements.put(s, 0);
+                }
                 int score = 0;
                 for (int i = 0; i < partsF.length; i++) {
                     if (i == partsF.length - 1) {
                         score = Integer.parseInt(partsF[i]);
                     } else {
+                        int quantity = Integer.parseInt(partsF[i]);
                         //System.out.println(partsF[i]);
-                        scoreRequirements.add(Symbol.valueOf(partsF[i]));
+                        scoreRequirements.put(Symbol.valueOf(partsF[i + 1]), quantity);
+                        i++;
                     }
                 }
             
@@ -65,10 +68,10 @@ public class AchievementDeck extends Deck {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        /*This is to print to check if the cards are generated correctly 
+        /*This is to print to check if the cards are generated correctly
          for(Card card : this.cards) {
             System.out.println("Requirements Symbols:");
-            card.getFace(FRONT).getScoreRequirements().forEach((symbol) -> {System.out.println(symbol);});
+            card.getFace(FRONT).getScoreRequirements().forEach((symbol, quantity) -> {if (quantity > 0) System.out.println(symbol + " " + quantity);});
             System.out.println("Points:");
             System.out.println(card.getFace(FRONT).getScore());
             System.out.println();

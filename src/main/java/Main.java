@@ -10,8 +10,12 @@ import main.java.Server.Player.PlayerInstance;
 import main.java.Server.Enums.Color;
 import main.java.Server.Enums.EventType;
 
+import java.util.Scanner;
+
 public class Main {
     public static void main(String[] args) {
+        Scanner inputReader = new Scanner(System.in);
+
         EventManager eventManager = new EventManager( );
         ColorListener listener1 = new ColorListener();
         ColorListener listener2 = new ColorListener();
@@ -21,13 +25,16 @@ public class Main {
         player.setColor(Color.RED);
 
         GameModel gameModel = new GameModelInstance();
-        
-        /*try {
-            ConnectionHandler connectionHandler = new ConnectionHandler(1234);
+
+        System.out.println("Hello my man, what port would you like to start your server on?");
+        int port = inputReader.nextInt();
+
+        try {
+            ConnectionHandler connectionHandler = new ConnectionHandler(port);
         } catch (Exception e) {
             e.printStackTrace();
         }
-        */
+
 
     }
 }

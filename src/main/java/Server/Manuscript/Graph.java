@@ -2,9 +2,12 @@ package main.java.Server.Manuscript;
 
 import main.java.Server.Card.Card;
 import main.java.Server.Card.CardFace;
+import main.java.Server.Card.CornerCardFace;
 import main.java.Server.Enums.CardCorners;
 
+import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class Graph {
     private CornerCardFace root;
@@ -39,7 +42,7 @@ public class Graph {
      * @param node the node to get the neighbors of
      * @return Map<CardCorners, CornerCardFace> the neighbors of the node
      */
-    public Map<CardCorners, CornerCardFace> getCardsOver(CardFace node){
+    public Map<CardCorners, CornerCardFace> getCardsOver(CornerCardFace node){
         Map<CardCorners, CornerCardFace> cardsOver = new HashMap<>();
         cardsOver = getNeighbors(node).entrySet().stream()
                 .filter(neighbor -> neighbor.getValue().getPlacementTurn() > node.getPlacementTurn())
@@ -51,7 +54,7 @@ public class Graph {
      * @param node the node to get the neighbors of
      * @return Map<CardCorners, CornerCardFace> the neighbors of the node
      */
-    public Map<CardCorners, CornerCardFace> getCardsUnder(CardFace node){
+    public Map<CardCorners, CornerCardFace> getCardsUnder(CornerCardFace node){
         Map<CardCorners, CornerCardFace> cardsUnder = new HashMap<>();
         cardsUnder = getNeighbors(node).entrySet().stream()
                 .filter(neighbor -> neighbor.getValue().getPlacementTurn() < node.getPlacementTurn())

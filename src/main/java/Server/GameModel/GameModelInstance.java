@@ -1,7 +1,6 @@
 package main.java.Server.GameModel;
 
 import main.java.Server.Card.CornerCardFace;
-import main.java.Server.Card.RegularBackFace;
 import main.java.Server.Card.StartingCard;
 import main.java.Server.Card.StartingFrontFace;
 import main.java.Server.Chat.Chat;
@@ -9,8 +8,6 @@ import main.java.Server.Deck.AchievementDeck;
 import main.java.Server.Deck.GoldDeck;
 import main.java.Server.Deck.ResourceDeck;
 import main.java.Server.Enums.Symbol;
-import static main.java.Server.Enums.Face.BACK;
-import static main.java.Server.Enums.Face.FRONT;
 import main.java.Server.Player.Player;
 
 import java.io.BufferedReader;
@@ -61,10 +58,8 @@ public class GameModelInstance implements GameModel {
         while ((lineF = readerFRONT.readLine()) != null) {
 
             String[] partsF = lineF.split(" ");
-            //System.out.println(lineF);
 
             String[] partsB = readerBACK.readLine().split(" ");
-            //System.out.println(partsB);
 
             // La faccia davanti ha sia angoli che centrali
 
@@ -90,25 +85,9 @@ public class GameModelInstance implements GameModel {
         }
     } catch (Exception e) {
         e.printStackTrace();
-    }
-        /*
-         * This is to print to check if the cards are generated correctly 
-         for(StartingCard card : startingCards) {
-             System.out.println("Front Center Symbols:");
-             card.getFace(FRONT).getCenterSymbols().forEach(symbol -> System.out.println(symbol));
-             System.out.println("Front Corner Symbols:");
-             card.getFace(FRONT).getCornerSymbols().forEach((key, value) -> System.out.println(key + " " + value));
-             
-             System.out.println("Back Corner Symbols:");
-             card.getFace(BACK).getCornerSymbols().forEach((key, value) -> System.out.println(key + " " + value));
-             System.out.println();
-            }
-        */
-            
-        Collections.shuffle(startingCards);
-
-
-        
+    }       
+       Collections.shuffle(startingCards);
+    
     }
 
     public List<Player> getPlayerList() {

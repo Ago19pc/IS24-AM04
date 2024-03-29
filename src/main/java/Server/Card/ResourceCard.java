@@ -24,4 +24,13 @@ public class ResourceCard implements Card {
     public CardFace getFace(Face face){
         return face == Face.FRONT ? frontFace : backFace;
     }
+
+    /**
+     * Returns the corner face of the card
+     * @param face to return
+     * @return CornerCardFace the face of the card
+     */
+    public CornerCardFace getCornerFace(Face face) {
+        return face == Face.FRONT ? frontFace : backFace;
+    }
 }

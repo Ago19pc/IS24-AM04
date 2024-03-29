@@ -4,9 +4,10 @@ import main.java.Server.Enums.Symbol;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class AchievementFrontFace extends EmptyCardFace {
-    private final List<Symbol> scoreRequirements;
+    private final Map<Symbol, Integer> scoreRequirements;
     private final int score;
 
     /**
@@ -16,9 +17,9 @@ public class AchievementFrontFace extends EmptyCardFace {
      * @param scoreRequirements the score requirements
      * @param score the score
      */
-    public AchievementFrontFace(String imageURI, List<Symbol> scoreRequirements, int score) {
+    public AchievementFrontFace(String imageURI, Map<Symbol, Integer> scoreRequirements, int score) {
         super(imageURI);
-        this.scoreRequirements = new ArrayList<Symbol>(scoreRequirements);
+        this.scoreRequirements = scoreRequirements;
         this.score = score;
     }
 
@@ -26,7 +27,7 @@ public class AchievementFrontFace extends EmptyCardFace {
      * Returns the score requirements
      * @return List<Symbol> the score requirements
      */
-    public List<Symbol> getScoreRequirements() {
+    public Map<Symbol, Integer> getScoreRequirements() {
         return scoreRequirements;
     }
 

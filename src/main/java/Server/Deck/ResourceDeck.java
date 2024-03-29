@@ -12,10 +12,7 @@ import java.util.Map;
 import main.java.Server.Card.RegularBackFace;
 import main.java.Server.Card.ResourceFrontFace;
 import main.java.Server.Card.ResourceCard;
-import main.java.Server.Card.Card;
 import main.java.Server.Enums.Symbol;
-import static main.java.Server.Enums.Face.BACK;
-import static main.java.Server.Enums.Face.FRONT;
 
 public class ResourceDeck extends Deck {
     public ResourceDeck(){
@@ -45,10 +42,8 @@ public class ResourceDeck extends Deck {
         while ((lineF = readerFRONT.readLine()) != null) {
 
             String[] partsF = lineF.split(" ");
-            //System.out.println(lineF);
 
             String partsB = readerBACK.readLine();
-            //System.out.println(partsB);
 
            
 
@@ -74,20 +69,6 @@ public class ResourceDeck extends Deck {
     } catch (Exception e) {
         e.printStackTrace();
     }
-        /*This is to print to check if the cards are generated correctly 
-         for(Card card : this.cards) {
-             System.out.println("Front Corner Symbols:");
-             card.getFace(FRONT).getCornerSymbols().forEach((key, value) -> System.out.println(key + " " + value));
-             System.out.println("Front Points:");
-             System.out.println(card.getFace(FRONT).getScore());
-             
-             System.out.println("Back Corner Symbols:");
-             card.getFace(BACK).getCornerSymbols().forEach((key, value) -> System.out.println(key + " " + value));
-             System.out.println("back Center Symbols:");
-             card.getFace(BACK).getCenterSymbols().forEach(symbol -> System.out.println(symbol));
-             System.out.println();
-            }
-        */
             
         Collections.shuffle(this.cards);
 

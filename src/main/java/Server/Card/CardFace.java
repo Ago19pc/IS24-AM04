@@ -17,6 +17,9 @@ public interface CardFace {
 
     public int getScore();
 
-    public List<Symbol> getScoreRequirements();
+    public Map<Symbol, Integer> getScoreRequirements();
 
+    Map<Symbol, Integer> getPlacementRequirements();
+
+    public int getPlacementTurn();
 }
