@@ -3,6 +3,7 @@ package main.java.Server.Manuscript;
 import main.java.Server.Card.CornerCardFace;
 import main.java.Server.Card.ResourceFrontFace;
 import main.java.Server.Card.StartingCard;
+import main.java.Server.Enums.CardCorners;
 import main.java.Server.Enums.Symbol;
 import main.java.Server.Enums.Face;
 
@@ -16,7 +17,7 @@ public class Manuscript {
     private Map<Symbol, Integer> activeSymbols;
 
     public Manuscript(StartingCard card, Face face){
-        root = new Graph(card.getFace(face));
+        graph = new Graph(card.getCornerFace(face));
     }
 
     /**
@@ -33,7 +34,7 @@ public class Manuscript {
      * @param turn the turn the card was placed
      */
     public void addCard(Map<CardCorners, CornerCardFace> positions, CornerCardFace cardFace, int turn){
-        this.graph.addCard(cardFace, positions, turn)
+        this.graph.addCard(cardFace, positions, turn);
     }
 
     /**

@@ -12,4 +12,6 @@ public interface Card {
      * @return CardFace the face of the card
      */
     public CardFace getFace(Face face);
+
+    public CornerCardFace getCornerFace(Face face);
 }
