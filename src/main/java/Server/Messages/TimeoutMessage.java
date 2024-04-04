@@ -1,6 +1,6 @@
-package main.java.Server.Messages;
+package Server.Messages;
 
-import main.java.Server.Player.Player;
+import Server.Player.Player;
 public class TimeoutMessage implements GeneralMessage {
         private final Player player;
 

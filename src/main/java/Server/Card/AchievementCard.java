@@ -1,6 +1,6 @@
-package main.java.Server.Card;
+package Server.Card;
 
-import main.java.Server.Enums.Face;
+import Server.Enums.Face;
 public class AchievementCard implements Card {
     private final AchievementFrontFace frontFace;
     private final EmptyCardFace backFace;

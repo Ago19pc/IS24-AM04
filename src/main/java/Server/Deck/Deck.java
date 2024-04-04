@@ -1,9 +1,9 @@
-package main.java.Server.Deck;
+package Server.Deck;
 
-import main.java.Server.Enums.DeckPosition;
-import static main.java.Server.Enums.DeckPosition.*;
-import main.java.Server.Card.Card;
-import main.java.Server.Exception.IncorrectDeckPositionException;
+import Server.Enums.DeckPosition;
+import static Server.Enums.DeckPosition.*;
+import Server.Card.Card;
+import Server.Exception.IncorrectDeckPositionException;
 
 import java.util.ArrayList;
 import java.util.Collections;

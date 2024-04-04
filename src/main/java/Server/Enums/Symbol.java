@@ -1,4 +1,4 @@
-package main.java.Server.Enums;
+package Server.Enums;
 
 public enum Symbol {
     ANIMAL, FUNGUS, PLANT, BUG,

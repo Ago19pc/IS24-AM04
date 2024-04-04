@@ -1,4 +1,4 @@
-package main.java.Server.Deck;
+package Server.Deck;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -9,10 +9,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import main.java.Server.Card.RegularBackFace;
-import main.java.Server.Card.ResourceFrontFace;
-import main.java.Server.Card.ResourceCard;
-import main.java.Server.Enums.Symbol;
+import Server.Card.RegularBackFace;
+import Server.Card.ResourceFrontFace;
+import Server.Card.ResourceCard;
+import Server.Enums.Symbol;
 
 public class ResourceDeck extends Deck {
     public ResourceDeck(){

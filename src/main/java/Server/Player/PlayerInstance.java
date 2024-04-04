@@ -1,14 +1,14 @@
-package main.java.Server.Player;
+package Server.Player;
 
-import main.java.Server.Card.AchievementCard;
-import main.java.Server.Card.Card;
-import main.java.Server.Card.StartingCard;
-import main.java.Server.EventManager.EventManager;
-import main.java.Server.Enums.Color;
-import main.java.Server.Enums.EventType;
-import main.java.Server.Enums.Face;
-import main.java.Server.Manuscript.Manuscript;
-import main.java.Server.Messages.ColorMessage;
+import Server.Card.AchievementCard;
+import Server.Card.Card;
+import Server.Card.StartingCard;
+import Server.EventManager.EventManager;
+import Server.Enums.Color;
+import Server.Enums.EventType;
+import Server.Enums.Face;
+import Server.Manuscript.Manuscript;
+import Server.Messages.ColorMessage;
 
 import java.util.List;
 

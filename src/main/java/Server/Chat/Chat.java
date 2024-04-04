@@ -1,6 +1,6 @@
-package main.java.Server.Chat;
+package Server.Chat;
 
-import main.java.Server.Player.Player;
+import Server.Player.Player;
 
 import java.util.List;
 

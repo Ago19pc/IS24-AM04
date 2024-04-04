@@ -1,11 +1,11 @@
-package main.java.Server.Manuscript;
+package Server.Manuscript;
 
-import main.java.Server.Card.CornerCardFace;
-import main.java.Server.Card.ResourceFrontFace;
-import main.java.Server.Card.StartingCard;
-import main.java.Server.Enums.CardCorners;
-import main.java.Server.Enums.Symbol;
-import main.java.Server.Enums.Face;
+import Server.Card.CornerCardFace;
+import Server.Card.ResourceFrontFace;
+import Server.Card.StartingCard;
+import Server.Enums.CardCorners;
+import Server.Enums.Symbol;
+import Server.Enums.Face;
 
 
 

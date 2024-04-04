@@ -1,6 +1,6 @@
-package main.java.Server.Messages;
+package Server.Messages;
 
-import main.java.Server.Player.Player;
+import Server.Player.Player;
 
 import java.util.Map;
 

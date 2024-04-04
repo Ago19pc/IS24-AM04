@@ -1,10 +1,10 @@
-package main.java.Server.GameModel;
+package Server.GameModel;
 
-import main.java.Server.Card.StartingCard;
-import main.java.Server.Deck.AchievementDeck;
-import main.java.Server.Deck.GoldDeck;
-import main.java.Server.Deck.ResourceDeck;
-import main.java.Server.Chat.Chat;
+import Server.Card.StartingCard;
+import Server.Deck.AchievementDeck;
+import Server.Deck.GoldDeck;
+import Server.Deck.ResourceDeck;
+import Server.Chat.Chat;
 
 import java.util.List;
 

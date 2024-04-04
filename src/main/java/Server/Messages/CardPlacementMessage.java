@@ -1,7 +1,7 @@
-package main.java.Server.Messages;
+package Server.Messages;
 
-import main.java.Server.Card.CardFace;
-import main.java.Server.Player.Player;
+import Server.Card.CardFace;
+import Server.Player.Player;
 public class CardPlacementMessage implements GeneralMessage {
 
     private final Player player;

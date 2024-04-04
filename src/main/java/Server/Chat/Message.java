@@ -1,7 +1,7 @@
-package main.java.Server.Chat;
+package Server.Chat;
 
 import java.sql.Timestamp;
-import main.java.Server.Player.Player;
+import Server.Player.Player;
 
 public class Message {
     private final String message;

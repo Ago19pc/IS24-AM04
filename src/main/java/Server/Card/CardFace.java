@@ -1,9 +1,9 @@
-package main.java.Server.Card;
+package Server.Card;
 
 import java.util.List;
 import java.util.Map;
 
-import main.java.Server.Enums.Symbol;
+import Server.Enums.Symbol;
 
 public interface CardFace {
     /**

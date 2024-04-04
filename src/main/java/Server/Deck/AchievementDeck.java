@@ -1,16 +1,16 @@
-package main.java.Server.Deck;
+package Server.Deck;
 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.util.*;
 
-import main.java.Server.Card.AchievementCard;
-import main.java.Server.Card.AchievementFrontFace;
-import main.java.Server.Card.EmptyCardFace;
-import main.java.Server.Enums.Symbol;
-import static main.java.Server.Enums.Face.FRONT;
-import main.java.Server.Card.Card;
+import Server.Card.AchievementCard;
+import Server.Card.AchievementFrontFace;
+import Server.Card.EmptyCardFace;
+import Server.Enums.Symbol;
+import static Server.Enums.Face.FRONT;
+import Server.Card.Card;
 
 
 public class AchievementDeck extends Deck {

@@ -1,9 +1,9 @@
-package main.java.Server.Controller;
+package Server.Controller;
 
-import main.java.Server.Client.Client;
-import main.java.Server.Enums.Color;
-import main.java.Server.GameModel.GameModel;
-import main.java.Server.GameModel.GameModelInstance;
+import Server.Client.Client;
+import Server.Enums.Color;
+import Server.GameModel.GameModel;
+import Server.GameModel.GameModelInstance;
 
 import java.beans.EventHandler;
 import java.util.List;
@@ -117,7 +117,7 @@ public class Controller {
     private static GameModel gameModel;
     private static EventHandler eventHandler;
     /**
-     * Main method, here goes the program
+     * main.Main method, here goes the program
      * @param args the arguments, that I don't know, they're useless, just like me :'(
      */
     public static void main(String[] args) {
