@@ -1,6 +1,6 @@
-package main.java.Server.Messages;
+package Server.Messages;
 
-import main.java.Server.GameModel.GameModel;
+import Server.GameModel.GameModel;
 
 public class GameStateMessage implements GeneralMessage {
 

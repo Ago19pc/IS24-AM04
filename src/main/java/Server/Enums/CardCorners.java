@@ -1,4 +1,4 @@
-package main.java.Server.Enums;
+package Server.Enums;
 
 public enum CardCorners {
     TOP_LEFT, TOP_RIGHT, BOTTOM_LEFT, BOTTOM_RIGHT;

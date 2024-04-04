@@ -1,9 +1,9 @@
-package main.java.Server.Manuscript;
+package Server.Manuscript;
 
-import main.java.Server.Card.Card;
-import main.java.Server.Card.CardFace;
-import main.java.Server.Card.CornerCardFace;
-import main.java.Server.Enums.CardCorners;
+import Server.Card.Card;
+import Server.Card.CardFace;
+import Server.Card.CornerCardFace;
+import Server.Enums.CardCorners;
 
 import java.util.HashMap;
 import java.util.Map;

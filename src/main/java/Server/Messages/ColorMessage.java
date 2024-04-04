@@ -1,7 +1,7 @@
-package main.java.Server.Messages;
+package Server.Messages;
 
-import main.java.Server.Enums.Color;
-import main.java.Server.Player.Player;
+import Server.Enums.Color;
+import Server.Player.Player;
 
 public class ColorMessage implements GeneralMessage {
 

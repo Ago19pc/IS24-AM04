@@ -1,14 +1,14 @@
-package main.java.Server.GameModel;
+package Server.GameModel;
 
-import main.java.Server.Card.CornerCardFace;
-import main.java.Server.Card.StartingCard;
-import main.java.Server.Card.StartingFrontFace;
-import main.java.Server.Chat.Chat;
-import main.java.Server.Deck.AchievementDeck;
-import main.java.Server.Deck.GoldDeck;
-import main.java.Server.Deck.ResourceDeck;
-import main.java.Server.Enums.Symbol;
-import main.java.Server.Player.Player;
+import Server.Card.CornerCardFace;
+import Server.Card.StartingCard;
+import Server.Card.StartingFrontFace;
+import Server.Chat.Chat;
+import Server.Deck.AchievementDeck;
+import Server.Deck.GoldDeck;
+import Server.Deck.ResourceDeck;
+import Server.Enums.Symbol;
+import Server.Player.Player;
 
 import java.io.BufferedReader;
 import java.io.File;

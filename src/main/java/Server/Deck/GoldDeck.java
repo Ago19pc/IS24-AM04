@@ -1,8 +1,8 @@
-package main.java.Server.Deck;
+package Server.Deck;
 
-import main.java.Server.Card.*;
-import main.java.Server.Enums.Symbol;
-import static main.java.Server.Enums.Face.*;
+import Server.Card.*;
+import Server.Enums.Symbol;
+import static Server.Enums.Face.*;
 
 import java.io.BufferedReader;
 import java.io.File;

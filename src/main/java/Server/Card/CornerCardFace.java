@@ -1,6 +1,6 @@
-package main.java.Server.Card;
+package Server.Card;
 
-import main.java.Server.Enums.Symbol;
+import Server.Enums.Symbol;
 
 import java.util.HashMap;
 import java.util.Map;

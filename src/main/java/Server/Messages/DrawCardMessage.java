@@ -1,8 +1,8 @@
-package main.java.Server.Messages;
+package Server.Messages;
 
-import main.java.Server.Card.Card;
-import main.java.Server.Deck.Deck;
-import main.java.Server.Player.Player;
+import Server.Card.Card;
+import Server.Deck.Deck;
+import Server.Player.Player;
 
 public class DrawCardMessage implements GeneralMessage {
     private final Card card;

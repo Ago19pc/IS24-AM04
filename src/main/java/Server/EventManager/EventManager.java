@@ -1,8 +1,8 @@
-package main.java.Server.EventManager;
+package Server.EventManager;
 
-import main.java.Server.Listener.Listener;
-import main.java.Server.Enums.EventType;
-import main.java.Server.Messages.GeneralMessage;
+import Server.Listener.Listener;
+import Server.Enums.EventType;
+import Server.Messages.GeneralMessage;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;

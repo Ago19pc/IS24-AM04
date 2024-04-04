@@ -1,4 +1,4 @@
-package main.java.Server.Messages;
+package Server.Messages;
 
 public class EndGamePhaseMessage implements GeneralMessage {
 

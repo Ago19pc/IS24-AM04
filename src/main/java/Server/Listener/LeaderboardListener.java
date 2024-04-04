@@ -1,6 +1,6 @@
-package main.java.Server.Listener;
+package Server.Listener;
 
-import main.java.Server.Messages.GeneralMessage;
+import Server.Messages.GeneralMessage;
 public class LeaderboardListener implements Listener {
     public LeaderboardListener(){}
 

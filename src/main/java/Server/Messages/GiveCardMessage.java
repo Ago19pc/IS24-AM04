@@ -1,7 +1,7 @@
-package main.java.Server.Messages;
+package Server.Messages;
 
-import main.java.Server.Card.Card;
-import main.java.Server.Player.Player;
+import Server.Card.Card;
+import Server.Player.Player;
 
 import java.util.List;
 import java.util.Map;

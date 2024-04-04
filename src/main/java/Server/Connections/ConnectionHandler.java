@@ -1,4 +1,4 @@
-package main.java.Server.Connections;
+package Server.Connections;
 
 import java.net.*;
 import java.io.*;
@@ -27,6 +27,7 @@ public class ConnectionHandler {
         while (true) {
             try {
                 Socket client = this.socket.accept();
+                System.out.println("Received connection");
                 // QUI ANDREBBE GESTITO IL CASO DI RICONNESIONE
                 //
                 Thread t = new ClientHandler(client);

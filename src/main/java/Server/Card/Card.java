@@ -1,6 +1,6 @@
-package main.java.Server.Card;
+package Server.Card;
 
-import main.java.Server.Enums.Face;
+import Server.Enums.Face;
 
 /**
  * This is the interface for handling the cards in the game.

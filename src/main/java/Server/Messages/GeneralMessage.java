@@ -1,4 +1,4 @@
-package main.java.Server.Messages;
+package Server.Messages;
 
 public interface GeneralMessage {
     public abstract void printData() ;

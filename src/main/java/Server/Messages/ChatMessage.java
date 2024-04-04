@@ -1,6 +1,6 @@
-package main.java.Server.Messages;
+package Server.Messages;
 
-import main.java.Server.Chat.Message;
+import Server.Chat.Message;
 
 public class ChatMessage implements GeneralMessage {
     private final Message message;
