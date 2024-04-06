@@ -44,7 +44,63 @@ public class EmptyCardFace implements CardFace {
         throw new UnsupportedOperationException("Empty cards do not have placement requirements");
     }
 
+    /**
+     * Returns the x coordinate of the CardFace
+     *
+     * @return int the x coordinate
+     */
+    @Override
+    public int getXCoord() throws UnsupportedOperationException{
+        throw new UnsupportedOperationException("Empty cards do not have coordinates");
+    }
+    /**
+     * Returns the y coordinate of the CardFace
+     *
+     * @return int the y coordinate
+     */
+    @Override
+    public int getYCoord() throws UnsupportedOperationException{
+        throw new UnsupportedOperationException("Empty cards do not have coordinates");
+    }
+
+    /**
+     * sets the turn in which the card was placed
+     *
+     * @param placementTurn the placement turn
+     */
+    @Override
+    public void setPlacementTurn(int placementTurn) throws UnsupportedOperationException{
+        throw new UnsupportedOperationException("Empty cards do not have placement turns");
+
+    }
+
+    /**
+     * sets the x coordinate of the CardFace
+     *
+     * @param xCoord the x coordinate
+     */
+    @Override
+    public void setXCoord(int xCoord) throws UnsupportedOperationException{
+        throw new UnsupportedOperationException("Empty cards do not have coordinates");
+
+    }
+
+    /**
+     * sets the y coordinate of the CardFace
+     *
+     * @param yCoord the y coordinate
+     */
+    @Override
+    public void setYCoord(int yCoord) throws UnsupportedOperationException{
+        throw new UnsupportedOperationException("Empty cards do not have coordinates");
+
+    }
+
     public int getPlacementTurn() throws UnsupportedOperationException {
         throw new UnsupportedOperationException("Empty cards do not have placement turns");
     }
 }
+
+
+
+

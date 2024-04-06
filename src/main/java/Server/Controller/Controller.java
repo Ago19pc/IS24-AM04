@@ -25,7 +25,6 @@ import java.util.List;
  *          gameModel = new GamemodelInstance()
  *              shufflePlayers() (nel costruttore)
  *          eventHandler::notify(Event.playersOrder, )
- *
  *  2.2: PLAYER SCEGLIE NOME, COLORE - PARALLELO -> RICEVI DATI (CONTROLLO NOME DIVERSO)
  *        gameModel.getPlayers[].setName() (dentro setplayerData)
  *  2.3: CONFERMA PER IL COLORE -> INVIA DATI
@@ -137,6 +136,13 @@ public class Controller {
     private void setEndGamePhase() {};
     private void reset() {};
     private void chat() {};
+    /**
+     * Calculates achievement points forall players
+     * @return void
+     */
+    private void calculatePoints() {//todo: forall players and forall achievements call manuscript.calculatepoints and sum them up};
+    };
+
 }
 
 

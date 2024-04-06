@@ -9,17 +9,63 @@ public interface CardFace {
     /**
      * @return String the URI of the image
      */
-    public String getImageURI();
+    String getImageURI();
 
-    public Map<Integer, Symbol> getCornerSymbols();
+    /**
+     * Returns the corner symbols
+     * @return Map<Integer, Symbol> the corner symbols
+     */
+    Map<Integer, Symbol> getCornerSymbols();
+    /**
+     * Returns the center symbols
+     * @return List<Symbol> the center symbols
+     */
+    List<Symbol> getCenterSymbols();
 
-    public List<Symbol> getCenterSymbols();
-
-    public int getScore();
-
-    public Map<Symbol, Integer> getScoreRequirements();
-
+    /**
+     * Returns the obtainable score
+     * @return int the score
+     */
+    int getScore();
+   /**
+     * Returns the score requirements
+     * @return Map<Symbol, Integer> the score requirements for each symbol
+     */
+    Map<Symbol, Integer> getScoreRequirements();
+    /**
+     * Returns the placement requirements
+     * @return Map<Symbol, Integer> the placement requirements for each symbol
+     */
     Map<Symbol, Integer> getPlacementRequirements();
 
-    public int getPlacementTurn();
+    /**
+     * Returns the x coordinate of the CardFace
+     * @return int the x coordinate
+     */
+     int getXCoord();
+    /**
+     * Returns the y coordinate of the CardFace
+     * @return int the y coordinate
+     */
+     int getYCoord();
+    /**
+     * sets the turn in which the card was placed
+     * @param placementTurn the placement turn
+     */
+     void setPlacementTurn(int placementTurn);
+    /**
+     * sets the x coordinate of the CardFace
+     * @param xCoord the x coordinate
+     */
+     void setXCoord(int xCoord);
+    /**
+     * sets the y coordinate of the CardFace
+     * @param yCoord the y coordinate
+     */
+     void setYCoord(int yCoord);
+    /**
+     * Returns the placement turn of card to know what card is on top
+     * @return int the placement turn
+     */
+     int getPlacementTurn();
 }

@@ -1,7 +1,7 @@
 package Server.Manuscript;
 
-import Server.Card.Card;
-import Server.Card.CardFace;
+
+
 import Server.Card.CornerCardFace;
 import Server.Enums.CardCorners;
 
@@ -10,8 +10,8 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 public class Graph {
-    private CornerCardFace root;
-    private Map<CornerCardFace, Map<CardCorners, CornerCardFace>> neighbors;
+    private final CornerCardFace root;
+    private final Map<CornerCardFace, Map<CardCorners, CornerCardFace>> neighbors;
     /**
      * Constructor for the Graph. Sets the root, creates the card map, and adds the starting card
      * @param startingCardFace the starting card face
@@ -43,7 +43,7 @@ public class Graph {
      * @return Map<CardCorners, CornerCardFace> the neighbors of the node
      */
     public Map<CardCorners, CornerCardFace> getCardsOver(CornerCardFace node){
-        Map<CardCorners, CornerCardFace> cardsOver = new HashMap<>();
+        Map<CardCorners, CornerCardFace> cardsOver;
         cardsOver = getNeighbors(node).entrySet().stream()
                 .filter(neighbor -> neighbor.getValue().getPlacementTurn() > node.getPlacementTurn())
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
@@ -55,7 +55,7 @@ public class Graph {
      * @return Map<CardCorners, CornerCardFace> the neighbors of the node
      */
     public Map<CardCorners, CornerCardFace> getCardsUnder(CornerCardFace node){
-        Map<CardCorners, CornerCardFace> cardsUnder = new HashMap<>();
+        Map<CardCorners, CornerCardFace> cardsUnder;
         cardsUnder = getNeighbors(node).entrySet().stream()
                 .filter(neighbor -> neighbor.getValue().getPlacementTurn() < node.getPlacementTurn())
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
@@ -100,5 +100,19 @@ public class Graph {
                 addEdge(card, corner, positions.get(corner));
             }
         });
+    }
+    /**
+     * get the card at the specified coordinates
+     * @param x the x coordinate
+     * @param y the y coordinate
+     * @return CornerCardFace the card at the specified coordinates
+     */
+    public CornerCardFace getCardByCoord(int x, int y){
+        for(CornerCardFace card : this.neighbors.keySet()){
+            if(card.getXCoord() == x && card.getYCoord() == y){
+                return card;
+            }
+        }
+        return null;
     }
 }
