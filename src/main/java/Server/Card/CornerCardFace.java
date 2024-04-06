@@ -20,7 +20,7 @@ public class CornerCardFace extends EmptyCardFace {
      */
     public CornerCardFace(String imageURI, Map<Integer, Symbol> cornerSymbols) {
         super(imageURI);
-        this.cornerSymbols = new HashMap<Integer, Symbol>(cornerSymbols);
+        this.cornerSymbols = new HashMap<>(cornerSymbols);
 
     }
 

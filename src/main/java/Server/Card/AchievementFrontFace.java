@@ -2,8 +2,8 @@ package Server.Card;
 
 import Server.Enums.Symbol;
 
-import java.util.ArrayList;
-import java.util.List;
+
+
 import java.util.Map;
 
 public class AchievementFrontFace extends EmptyCardFace {
