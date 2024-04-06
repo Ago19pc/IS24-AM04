@@ -13,9 +13,9 @@ public class AchievementFrontFace extends EmptyCardFace {
     /**
      * Constructor for the AchievementFrontFace
      *
-     * @param imageURI the URI of the image
+     * @param imageURI          the URI of the image
      * @param scoreRequirements the score requirements
-     * @param score the score
+     * @param score             the score
      */
     public AchievementFrontFace(String imageURI, Map<Symbol, Integer> scoreRequirements, int score) {
         super(imageURI);
@@ -25,6 +25,7 @@ public class AchievementFrontFace extends EmptyCardFace {
 
     /**
      * Returns the score requirements
+     *
      * @return List<Symbol> the score requirements
      */
     public Map<Symbol, Integer> getScoreRequirements() {
@@ -33,6 +34,7 @@ public class AchievementFrontFace extends EmptyCardFace {
 
     /**
      * Returns the score
+     *
      * @return int the score
      */
     public int getScore() {

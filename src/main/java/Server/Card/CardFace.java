@@ -11,15 +11,61 @@ public interface CardFace {
      */
     public String getImageURI();
 
+    /**
+     * Returns the corner symbols
+     * @return Map<Integer, Symbol> the corner symbols
+     */
     public Map<Integer, Symbol> getCornerSymbols();
-
+    /**
+     * Returns the center symbols
+     * @return List<Symbol> the center symbols
+     */
     public List<Symbol> getCenterSymbols();
 
+    /**
+     * Returns the obtainable score
+     * @return int the score
+     */
     public int getScore();
-
+   /**
+     * Returns the score requirements
+     * @return Map<Symbol, Integer> the score requirements for each symbol
+     */
     public Map<Symbol, Integer> getScoreRequirements();
-
+    /**
+     * Returns the placement requirements
+     * @return Map<Symbol, Integer> the placement requirements for each symbol
+     */
     Map<Symbol, Integer> getPlacementRequirements();
 
+    /**
+     * Returns the x coordinate of the CardFace
+     * @return int the x coordinate
+     */
+    public int getXCoord();
+    /**
+     * Returns the y coordinate of the CardFace
+     * @return int the y coordinate
+     */
+    public int getYCoord();
+    /**
+     * sets the turn in which the card was placed
+     * @param placementTurn the placement turn
+     */
+    public void setPlacementTurn(int placementTurn);
+    /**
+     * sets the x coordinate of the CardFace
+     * @param xCoord the x coordinate
+     */
+    public void setXCoord(int xCoord);
+    /**
+     * sets the y coordinate of the CardFace
+     * @param yCoord the y coordinate
+     */
+    public void setYCoord(int yCoord);
+    /**
+     * Returns the placement turn of card to know what card is on top
+     * @return int the placement turn
+     */
     public int getPlacementTurn();
 }
