@@ -2,7 +2,6 @@ package Server.Manuscript;
 
 import Server.Card.AchievementCard;
 import Server.Card.CornerCardFace;
-import Server.Card.ResourceFrontFace;
 import Server.Card.StartingCard;
 import Server.Enums.CardCorners;
 import Server.Enums.Symbol;
@@ -10,22 +9,28 @@ import Server.Enums.Face;
 
 
 import java.util.HashMap;
-import java.util.List;
+
 import java.util.Map;
 
 public class Manuscript {
     private final Graph graph;
     private Map<Symbol, Integer> activeSymbols;
 
+
     public Manuscript(StartingCard card, Face face){
+
         graph = new Graph(card.getCornerFace(face));
+        activeSymbols = new HashMap<>();
+        for (Symbol symbol : Symbol.values()) {
+            activeSymbols.put(symbol, 0);
+        }
     }
 
     /**
      * Update the symbol count for the manuscript
      */
     private void updateSymbolCount() {
-        System.out.println(this.toString() + " updateSymbolCount");
+        System.out.println(" updateSymbolCount");
     }
 
     /**
