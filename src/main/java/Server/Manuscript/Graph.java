@@ -101,4 +101,18 @@ public class Graph {
             }
         });
     }
+    /**
+     * get the card at the specified coordinates
+     * @param x the x coordinate
+     * @param y the y coordinate
+     * @return CornerCardFace the card at the specified coordinates
+     */
+    public CornerCardFace getCardByCoord(int x, int y){
+        for(CornerCardFace card : this.neighbors.keySet()){
+            if(card.getXCoord() == x && card.getYCoord() == y){
+                return card;
+            }
+        }
+        return null;
+    }
 }

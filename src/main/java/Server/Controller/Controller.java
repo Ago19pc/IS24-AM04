@@ -137,6 +137,13 @@ public class Controller {
     private void setEndGamePhase() {};
     private void reset() {};
     private void chat() {};
+    /**
+     * Calculates achievement points forall players
+     * @return void
+     */
+    private void calculatePoints() {//todo: forall players and forall achievements call manuscript.calculatepoints and sum them up};
+    };
+
 }
 
 
