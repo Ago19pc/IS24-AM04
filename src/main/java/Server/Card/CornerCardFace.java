@@ -1,12 +1,13 @@
 package Server.Card;
 
+import Server.Enums.CardCorners;
 import Server.Enums.Symbol;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public class CornerCardFace extends EmptyCardFace {
-    private final Map<Integer, Symbol> cornerSymbols;
+    private final Map<CardCorners, Symbol> cornerSymbols;
     private int placementTurn;
     private int xCoord;
     private int yCoord;
@@ -18,17 +19,16 @@ public class CornerCardFace extends EmptyCardFace {
      * @param imageURI the URI of the image
      * @param cornerSymbols the corner symbols
      */
-    public CornerCardFace(String imageURI, Map<Integer, Symbol> cornerSymbols) {
+    public CornerCardFace(String imageURI, Map<CardCorners, Symbol> cornerSymbols) {
         super(imageURI);
         this.cornerSymbols = new HashMap<>(cornerSymbols);
-
     }
 
     /**
      * Returns the corner symbols
      * @return Map<Integer, Symbol> the corner symbols
      */
-    public Map<Integer, Symbol> getCornerSymbols() {
+    public Map<CardCorners, Symbol> getCornerSymbols() {
         return cornerSymbols;
     }
 

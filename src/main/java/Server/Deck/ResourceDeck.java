@@ -9,9 +9,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import Server.Card.CardFace;
 import Server.Card.RegularBackFace;
 import Server.Card.ResourceFrontFace;
 import Server.Card.ResourceCard;
+import Server.Enums.CardCorners;
 import Server.Enums.Symbol;
 
 public class ResourceDeck extends Deck {
@@ -47,13 +49,11 @@ public class ResourceDeck extends Deck {
 
            
 
-            Map<Integer, Symbol> cornerSymbolsF = new HashMap<Integer, Symbol>();
+            Map<CardCorners, Symbol> cornerSymbolsF = new HashMap<>();
             int point = 0;
-            for (int i = 0; i < partsF.length; i++) {
-                if (i < 4) cornerSymbolsF.put(i, Symbol.valueOf(partsF[i]));
-                else point = Integer.parseInt(partsF[i]);
+            for (CardCorners c : CardCorners.values()) {
+                cornerSymbolsF.put(c, Symbol.valueOf(partsF[c.ordinal()]));
             }
-            
             ResourceFrontFace frontFace = new ResourceFrontFace("RESOURCEFRONT", cornerSymbolsF, point);
             
             

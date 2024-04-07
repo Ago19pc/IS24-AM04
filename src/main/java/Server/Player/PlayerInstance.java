@@ -10,6 +10,7 @@ import Server.Enums.Face;
 import Server.Manuscript.Manuscript;
 import Server.Messages.ColorMessage;
 
+import java.util.LinkedList;
 import java.util.List;
 
 public class PlayerInstance implements Player {
@@ -25,7 +26,7 @@ public class PlayerInstance implements Player {
     public PlayerInstance(String name, EventManager eventManager) {
         this.name = name;
         this.eventManager = eventManager;
-
+        this.handCards = new LinkedList<>();
     }
 
     /**

@@ -1,5 +1,6 @@
 package Server.Card;
 
+import Server.Enums.CardCorners;
 import Server.Enums.Symbol;
 
 import java.util.List;
@@ -17,7 +18,11 @@ public class RegularBackFace extends CornerCardFace {
      * @param centerSymbols the center symbols
      */
     public RegularBackFace(String imageURI, List<Symbol> centerSymbols) {
-        super(imageURI, Map.of(0, EMPTY, 1, EMPTY, 2, EMPTY, 3, EMPTY));
+        super(imageURI, Map.of(
+                CardCorners.TOP_LEFT, EMPTY,
+                CardCorners.TOP_RIGHT, EMPTY,
+                CardCorners.BOTTOM_RIGHT, EMPTY,
+                CardCorners.BOTTOM_LEFT, EMPTY));
         this.centerSymbols = centerSymbols;
     }
 

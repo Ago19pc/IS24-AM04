@@ -1,5 +1,6 @@
 package Server.Card;
 
+import Server.Enums.CardCorners;
 import Server.Enums.Symbol;
 
 
@@ -15,7 +16,7 @@ public class ResourceFrontFace extends CornerCardFace {
      * @param cornerSymbols the corner symbols
      * @param score the score
      */
-    public ResourceFrontFace(String imageURI, Map<Integer, Symbol> cornerSymbols, int score) {
+    public ResourceFrontFace(String imageURI, Map<CardCorners, Symbol> cornerSymbols, int score) {
         super(imageURI, cornerSymbols);
         this.score = score;
     }

@@ -3,6 +3,7 @@ package Server.Card;
 import java.util.List;
 import java.util.Map;
 
+import Server.Enums.CardCorners;
 import Server.Enums.Symbol;
 
 public interface CardFace {
@@ -15,7 +16,7 @@ public interface CardFace {
      * Returns the corner symbols
      * @return Map<Integer, Symbol> the corner symbols
      */
-    Map<Integer, Symbol> getCornerSymbols();
+    Map<CardCorners, Symbol> getCornerSymbols();
     /**
      * Returns the center symbols
      * @return List<Symbol> the center symbols

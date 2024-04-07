@@ -1,5 +1,6 @@
 package Server.Card;
 
+import Server.Enums.CardCorners;
 import Server.Enums.Symbol;
 
 import java.util.ArrayList;
@@ -16,7 +17,7 @@ public class StartingFrontFace extends  CornerCardFace {
      * @param cornerSymbols the corner symbols
      * @param centerSymbols the center symbols
      */
-    public StartingFrontFace(String imageURI, Map<Integer, Symbol> cornerSymbols, List<Symbol> centerSymbols) {
+    public StartingFrontFace(String imageURI, Map<CardCorners, Symbol> cornerSymbols, List<Symbol> centerSymbols) {
         super(imageURI, cornerSymbols);
         this.centerSymbols = new ArrayList<Symbol>(centerSymbols);
     }

@@ -1,8 +1,8 @@
 package Server.Card;
 
+import Server.Enums.CardCorners;
 import Server.Enums.Symbol;
 
-import java.util.List;
 import java.util.Map;
 
 public class GoldFrontFace extends ResourceFrontFace {
@@ -18,7 +18,7 @@ public class GoldFrontFace extends ResourceFrontFace {
      * @param placementRequirements the placement requirements
      * @param scoreRequirements the score requirements
      */
-    public GoldFrontFace(String imageURI, Map<Integer, Symbol> cornerSymbols, int score, Map<Symbol, Integer> placementRequirements, Map<Symbol, Integer> scoreRequirements) {
+    public GoldFrontFace(String imageURI, Map<CardCorners, Symbol> cornerSymbols, int score, Map<Symbol, Integer> placementRequirements, Map<Symbol, Integer> scoreRequirements) {
         super(imageURI, cornerSymbols, score);
         this.placementRequirements = placementRequirements;
         this.scoreRequirements = scoreRequirements;

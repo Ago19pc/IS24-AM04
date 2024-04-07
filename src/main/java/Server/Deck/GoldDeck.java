@@ -1,6 +1,7 @@
 package Server.Deck;
 
 import Server.Card.*;
+import Server.Enums.CardCorners;
 import Server.Enums.Symbol;
 import static Server.Enums.Face.*;
 
@@ -43,7 +44,7 @@ public class GoldDeck extends Deck {
 
 
 
-                Map<Integer, Symbol> cornerSymbolsF = new HashMap<Integer, Symbol>();
+                Map<CardCorners, Symbol> cornerSymbolsF = new HashMap<>();
 
                 Map<Symbol, Integer> scoreRequirementsF = new HashMap<Symbol, Integer>();
                 for (Symbol s: Symbol.values()) {
@@ -60,7 +61,7 @@ public class GoldDeck extends Deck {
 
                 int point = 0;
                 for (int i = 0; i < partsF.length; i++) {
-                    if (i < 4) cornerSymbolsF.put(i, Symbol.valueOf(partsF[i]));
+                    if (i < 4) cornerSymbolsF.put(CardCorners.values()[i], Symbol.valueOf(partsF[i]));
                     else if (i ==  partsF.length - 1) point = Integer.parseInt(partsF[i]);
                     else {
                         // SCORE REQUIREMENT DOPO LA ,
