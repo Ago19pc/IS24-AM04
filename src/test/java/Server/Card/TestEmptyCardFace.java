@@ -16,15 +16,15 @@ public class TestEmptyCardFace {
         );
         assertEquals("Empty cards do not have scores", exceptionThrown.getMessage());
     }
-    /*@Test
+    @Test
     public void testGetCornerSymbols() {
         EmptyCardFace emptyCardFace = new EmptyCardFace("imageURI");
-        try {
-            emptyCardFace.getCornerSymbols();
-        } catch (UnsupportedOperationException e) {
-            assertEquals("Empty cards do not have corner symbols", e.getMessage());
-        }
+        UnsupportedOperationException exceptionThrown = assertThrows(
+                UnsupportedOperationException.class, emptyCardFace::getCornerSymbols
+        );
+        assertEquals("Empty cards do not have corner symbols", exceptionThrown.getMessage());
     }
+    /*
     @Test
     public void testGetCenterSymbols() {
         EmptyCardFace emptyCardFace = new EmptyCardFace("imageURI");
