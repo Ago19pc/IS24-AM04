@@ -12,12 +12,13 @@ import java.util.Map;
 import Server.Card.RegularBackFace;
 import Server.Card.ResourceFrontFace;
 import Server.Card.ResourceCard;
+import Server.Enums.CardCorners;
 import Server.Enums.Symbol;
 
 public class ResourceDeck extends Deck {
     public ResourceDeck(){
         super();
-        System.out.println(this.toString() + "ResourceDeck");
+        System.out.println("ResourceDeck");
         this.createCards();
     }
 
@@ -25,10 +26,10 @@ public class ResourceDeck extends Deck {
      * generate the cards
      */
     private void createCards() {
-        File fileFRONT = null;
-        File fileBACK = null;
-        BufferedReader readerFRONT = null;
-        BufferedReader readerBACK = null;
+        File fileFRONT;
+        File fileBACK;
+        BufferedReader readerFRONT;
+        BufferedReader readerBACK;
 
         try {
             fileFRONT = new File("images\\ResourceFrontFace.txt");
@@ -47,17 +48,15 @@ public class ResourceDeck extends Deck {
 
            
 
-            Map<Integer, Symbol> cornerSymbolsF = new HashMap<Integer, Symbol>();
+            Map<CardCorners, Symbol> cornerSymbolsF = new HashMap<>();
             int point = 0;
-            for (int i = 0; i < partsF.length; i++) {
-                if (i < 4) cornerSymbolsF.put(i, Symbol.valueOf(partsF[i]));
-                else point = Integer.parseInt(partsF[i]);
+            for (CardCorners c : CardCorners.values()) {
+                cornerSymbolsF.put(c, Symbol.valueOf(partsF[c.ordinal()]));
             }
-            
             ResourceFrontFace frontFace = new ResourceFrontFace("RESOURCEFRONT", cornerSymbolsF, point);
             
             
-            List<Symbol> centerSymbolsB = new ArrayList<Symbol>();
+            List<Symbol> centerSymbolsB = new ArrayList<>();
             centerSymbolsB.add(Symbol.valueOf(partsB));
             
 

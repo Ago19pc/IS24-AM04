@@ -3,6 +3,7 @@ package Server.Card;
 import java.util.List;
 import java.util.Map;
 
+import Server.Enums.CardCorners;
 import Server.Enums.Symbol;
 
 public class EmptyCardFace implements CardFace {
@@ -28,7 +29,7 @@ public class EmptyCardFace implements CardFace {
         throw new UnsupportedOperationException("Empty cards do not have scores");
     }
 
-    public Map<Integer, Symbol> getCornerSymbols() throws UnsupportedOperationException {
+    public Map<CardCorners, Symbol> getCornerSymbols() throws UnsupportedOperationException {
         throw new UnsupportedOperationException("Empty cards do not have corner symbols");
     }
 

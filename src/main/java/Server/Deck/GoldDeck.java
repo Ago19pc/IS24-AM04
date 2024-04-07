@@ -1,8 +1,8 @@
 package Server.Deck;
 
 import Server.Card.*;
+import Server.Enums.CardCorners;
 import Server.Enums.Symbol;
-import static Server.Enums.Face.*;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -11,7 +11,7 @@ import java.util.*;
 
 public class GoldDeck extends Deck {
     public GoldDeck(){
-        System.out.println(this.toString() + "GoldDeck");
+        System.out.println("GoldDeck");
         this.createCards();
     }
 
@@ -19,10 +19,10 @@ public class GoldDeck extends Deck {
      * generate the cards
      */
     private void createCards() {
-        File fileFRONT = null;
-        File fileBACK = null;
-        BufferedReader readerFRONT = null;
-        BufferedReader readerBACK = null;
+        File fileFRONT;
+        File fileBACK;
+        BufferedReader readerFRONT;
+        BufferedReader readerBACK;
 
         try {
             fileFRONT = new File("images\\GoldFrontFace.txt");
@@ -43,14 +43,14 @@ public class GoldDeck extends Deck {
 
 
 
-                Map<Integer, Symbol> cornerSymbolsF = new HashMap<Integer, Symbol>();
+                Map<CardCorners, Symbol> cornerSymbolsF = new HashMap<>();
 
-                Map<Symbol, Integer> scoreRequirementsF = new HashMap<Symbol, Integer>();
+                Map<Symbol, Integer> scoreRequirementsF = new HashMap<>();
                 for (Symbol s: Symbol.values()) {
                     scoreRequirementsF.put(s, 0);
                 }
 
-                Map<Symbol, Integer> placementRequirementsF = new HashMap<Symbol, Integer>();
+                Map<Symbol, Integer> placementRequirementsF = new HashMap<>();
                 for (Symbol s: Symbol.values()) {
                     placementRequirementsF.put(s, 0);
                 }
@@ -60,7 +60,7 @@ public class GoldDeck extends Deck {
 
                 int point = 0;
                 for (int i = 0; i < partsF.length; i++) {
-                    if (i < 4) cornerSymbolsF.put(i, Symbol.valueOf(partsF[i]));
+                    if (i < 4) cornerSymbolsF.put(CardCorners.values()[i], Symbol.valueOf(partsF[i]));
                     else if (i ==  partsF.length - 1) point = Integer.parseInt(partsF[i]);
                     else {
                         // SCORE REQUIREMENT DOPO LA ,
@@ -81,7 +81,7 @@ public class GoldDeck extends Deck {
                 ResourceFrontFace frontFace = new GoldFrontFace("GOLDFRONT", cornerSymbolsF, point, placementRequirementsF, scoreRequirementsF);
 
                 // DA QUI E DA VEDERE
-                List<Symbol> centerSymbolsB = new ArrayList<Symbol>();
+                List<Symbol> centerSymbolsB = new ArrayList<>();
                 centerSymbolsB.add(Symbol.valueOf(partsB));
 
 

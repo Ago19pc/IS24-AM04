@@ -7,6 +7,7 @@ import Server.Chat.Chat;
 import Server.Deck.AchievementDeck;
 import Server.Deck.GoldDeck;
 import Server.Deck.ResourceDeck;
+import Server.Enums.CardCorners;
 import Server.Enums.Symbol;
 import Server.Player.Player;
 
@@ -17,34 +18,34 @@ import java.util.*;
 
 
 public class GameModelInstance implements GameModel {
-    private ResourceDeck resourceDeck;
-    private GoldDeck goldDeck;
-    private AchievementDeck achievementDeck;
-    private List<StartingCard> startingCards;
+    private final ResourceDeck resourceDeck;
+    private final GoldDeck goldDeck;
+    private final AchievementDeck achievementDeck;
+    private final List<StartingCard> startingCards;
     private int turn;
     private boolean isEndGamePhase;
-    private Chat chat;
+    private final Chat chat;
 
     private List<Player> playerList;
 
     public GameModelInstance() {
-        System.out.println(this.toString() + " GameModelInstance");
+        System.out.println("GameModelInstance");
         resourceDeck = new ResourceDeck();
         goldDeck = new GoldDeck();
         achievementDeck = new AchievementDeck();
         chat = new Chat();
         isEndGamePhase = false;
         turn = 0;
-        startingCards = new ArrayList<StartingCard>();
+        startingCards = new ArrayList<>();
         generateStartingCards();
 
     }
 
     private void generateStartingCards() {
-        File fileFRONT = null;
-        File fileBACK = null;
-        BufferedReader readerFRONT = null;
-        BufferedReader readerBACK = null;
+        File fileFRONT;
+        File fileBACK;
+        BufferedReader readerFRONT;
+        BufferedReader readerBACK;
 
         try {
             fileFRONT = new File("images\\StartingCardsFRONT.txt");
@@ -63,19 +64,19 @@ public class GameModelInstance implements GameModel {
 
             // La faccia davanti ha sia angoli che centrali
 
-            Map<Integer, Symbol> cornerSymbolsF = new HashMap<Integer, Symbol>();
-            List<Symbol> centerSymbols = new ArrayList<Symbol>();
+            Map<CardCorners, Symbol> cornerSymbolsF = new HashMap<>();
+            List<Symbol> centerSymbols = new ArrayList<>();
             for (int i = 0; i < partsF.length; i++) {
-                if (i < 4) cornerSymbolsF.put(i, Symbol.valueOf(partsF[i]));
+                if (i < 4) cornerSymbolsF.put(CardCorners.values()[i], Symbol.valueOf(partsF[i]));
                 else centerSymbols.add(Symbol.valueOf(partsF[i]));
             }
             
             StartingFrontFace frontFace = new StartingFrontFace("STARTINGFRONT", cornerSymbolsF, centerSymbols);
             
             // La faccia dietro ha solo angoli
-            Map<Integer, Symbol> cornerSymbolsB = new HashMap<Integer, Symbol>();
+            Map<CardCorners, Symbol> cornerSymbolsB = new HashMap<>();
             for (int i = 0; i < partsB.length; i++) {
-                cornerSymbolsB.put(i, Symbol.valueOf(partsB[i]));
+                cornerSymbolsB.put(CardCorners.values()[i], Symbol.valueOf(partsB[i]));
             }
 
             CornerCardFace backFace = new CornerCardFace("STARTINGBACK", cornerSymbolsB);
