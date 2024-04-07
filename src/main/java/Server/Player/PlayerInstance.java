@@ -15,13 +15,13 @@ import java.util.List;
 
 public class PlayerInstance implements Player {
     private AchievementCard secretObjective;
-    private List<Card> handCards;
+    private final List<Card> handCards;
     private Color color;
     private final String name;
     private int points;
     private Manuscript manuscript;
 
-    private EventManager eventManager;
+    private final EventManager eventManager;
 
     public PlayerInstance(String name, EventManager eventManager) {
         this.name = name;
@@ -37,7 +37,7 @@ public class PlayerInstance implements Player {
     @Override
     public void addCardToHand(Card card) {
         handCards.add(card);
-        System.out.println(this.toString() + " addCardToHand");
+        System.out.println("addCardToHand");
     }
 
     /**
@@ -48,7 +48,7 @@ public class PlayerInstance implements Player {
     @Override
     public void removeCardFromHand(Card card) {
         handCards.remove(card);
-        System.out.println(this.toString() + " removeCardFromHand");
+        System.out.println("removeCardFromHand");
     }
 
     /**
@@ -56,7 +56,7 @@ public class PlayerInstance implements Player {
      */
     @Override
     public List<Card> getHand() {
-        System.out.println(this.toString() + " getHand");
+        System.out.println("getHand");
         return handCards;
     }
 
@@ -65,7 +65,7 @@ public class PlayerInstance implements Player {
      */
     @Override
     public Manuscript getManuscript() {
-        System.out.println(this.toString() + " getManuscript");
+        System.out.println("getManuscript");
         return manuscript;
     }
 
@@ -74,7 +74,7 @@ public class PlayerInstance implements Player {
      */
     @Override
     public String getName() {
-        System.out.println(this.toString() + " getName");
+        System.out.println("getName");
         return name;
     }
 
@@ -83,7 +83,7 @@ public class PlayerInstance implements Player {
      */
     @Override
     public Color getColor() {
-        System.out.println(this.toString() + " getColor");
+        System.out.println("getColor");
         return color;
     }
 
@@ -92,7 +92,7 @@ public class PlayerInstance implements Player {
      */
     @Override
     public AchievementCard getSecretObjective() {
-        System.out.println(this.toString() + " getSecretObjective");
+        System.out.println("getSecretObjective");
         return secretObjective;
     }
 
@@ -101,7 +101,7 @@ public class PlayerInstance implements Player {
      */
     @Override
     public int getPoints() {
-        System.out.println(this.toString() + " getPoints");
+        System.out.println("getPoints");
         return points;
     }
 
@@ -113,7 +113,7 @@ public class PlayerInstance implements Player {
     @Override
     public void setSecretObjective(AchievementCard achievementCard) {
         this.secretObjective = achievementCard;
-        System.out.println(this.toString() + " setSecretObjective");
+        System.out.println("setSecretObjective");
     }
 
     /**
@@ -135,7 +135,7 @@ public class PlayerInstance implements Player {
     @Override
     public void addPoints(int num) {
         this.points += num;
-        System.out.println(this.toString() + " addPoints");
+        System.out.println("addPoints");
     }
 
     /**
@@ -147,6 +147,6 @@ public class PlayerInstance implements Player {
     @Override
     public void initializeManuscript(StartingCard startingCard, Face face) {
         this.manuscript = new Manuscript(startingCard, face);
-        System.out.println(this.toString() + " initializeManuscript");
+        System.out.println("initializeManuscript");
     }
 }
