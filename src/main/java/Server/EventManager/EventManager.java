@@ -12,7 +12,9 @@ public class EventManager {
     private final Map<EventType, List<Listener>> listeners;
     public EventManager(){
         listeners = new HashMap<>();
-        listeners.put(EventType.SET_COLOR, new LinkedList<Listener>());
+        for(EventType eventType : EventType.values()){
+            listeners.put(eventType, new LinkedList<>());
+        }
     }
     public void subscribe(EventType eventType, Listener listener) {
         listeners.get(eventType).add(listener);
@@ -21,9 +23,12 @@ public class EventManager {
         listeners.get(eventType).remove(listener);
     }
     public void notify(EventType eventType, GeneralMessage data) {
-        for (Listener listener : listeners.get(eventType)) {
+        for (Listener listener : getListenersByEventType(eventType)) {
             listener.update(data);
         }
+    }
+    public List<Listener> getListenersByEventType(EventType eventType) {
+        return listeners.get(eventType);
     }
 
 }
