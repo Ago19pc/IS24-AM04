@@ -24,41 +24,82 @@ public class TestEmptyCardFace {
         );
         assertEquals("Empty cards do not have corner symbols", exceptionThrown.getMessage());
     }
-    /*
+
     @Test
     public void testGetCenterSymbols() {
         EmptyCardFace emptyCardFace = new EmptyCardFace("imageURI");
-        try {
-            emptyCardFace.getCenterSymbols();
-        } catch (UnsupportedOperationException e) {
-            assertEquals("Empty cards do not have center symbols", e.getMessage());
-        }
+        UnsupportedOperationException exceptionThrown = assertThrows(
+                UnsupportedOperationException.class, emptyCardFace::getCenterSymbols
+        );
+        assertEquals("Empty cards do not have center symbols", exceptionThrown.getMessage());
     }
+
     @Test
     public void testGetScoreRequirements() {
         EmptyCardFace emptyCardFace = new EmptyCardFace("imageURI");
-        try {
-            emptyCardFace.getScoreRequirements();
-        } catch (UnsupportedOperationException e) {
-            assertEquals("Empty cards do not have score requirements", e.getMessage());
-        }
+        UnsupportedOperationException exceptionThrown = assertThrows(
+                UnsupportedOperationException.class, emptyCardFace::getScoreRequirements
+        );
+        assertEquals("Empty cards do not have score requirements", exceptionThrown.getMessage());
     }
+
+
     @Test
     public void testGetPlacementRequirements() {
         EmptyCardFace emptyCardFace = new EmptyCardFace("imageURI");
-        try {
-            emptyCardFace.getPlacementRequirements();
-        } catch (UnsupportedOperationException e) {
-            assertEquals("Empty cards do not have placement requirements", e.getMessage());
-        }
+        UnsupportedOperationException exceptionThrown = assertThrows(
+                UnsupportedOperationException.class, emptyCardFace::getPlacementRequirements
+        );
+        assertEquals("Empty cards do not have placement requirements", exceptionThrown.getMessage());
     }
+
+
     @Test
     public void testGetXCoord() {
         EmptyCardFace emptyCardFace = new EmptyCardFace("imageURI");
-        try {
-            emptyCardFace.getXCoord();
-        } catch (UnsupportedOperationException e) {
-            assertEquals("Empty cards do not have coordinates", e.getMessage());
-        }
-    }*/
+        UnsupportedOperationException exceptionThrown = assertThrows(
+                UnsupportedOperationException.class, emptyCardFace::getXCoord
+        );
+        assertEquals("Empty cards do not have coordinates", exceptionThrown.getMessage());
+    }
+    @Test
+    public void testGetYCoord() {
+        EmptyCardFace emptyCardFace = new EmptyCardFace("imageURI");
+        UnsupportedOperationException exceptionThrown = assertThrows(
+                UnsupportedOperationException.class, emptyCardFace::getYCoord
+        );
+        assertEquals("Empty cards do not have coordinates", exceptionThrown.getMessage());
+    }
+    @Test
+    public void testSetPlacementTurn() {
+        EmptyCardFace emptyCardFace = new EmptyCardFace("imageURI");
+        UnsupportedOperationException exceptionThrown = assertThrows(
+                UnsupportedOperationException.class, () -> emptyCardFace.setPlacementTurn(1)
+        );
+        assertEquals("Empty cards do not have placement turns", exceptionThrown.getMessage());
+    }
+    @Test
+    public void testSetXCoord() {
+        EmptyCardFace emptyCardFace = new EmptyCardFace("imageURI");
+        UnsupportedOperationException exceptionThrown = assertThrows(
+                UnsupportedOperationException.class, () -> emptyCardFace.setXCoord(1)
+        );
+        assertEquals("Empty cards do not have coordinates", exceptionThrown.getMessage());
+    }
+    @Test
+    public void testSetYCoord() {
+        EmptyCardFace emptyCardFace = new EmptyCardFace("imageURI");
+        UnsupportedOperationException exceptionThrown = assertThrows(
+                UnsupportedOperationException.class, () -> emptyCardFace.setYCoord(1)
+        );
+        assertEquals("Empty cards do not have coordinates", exceptionThrown.getMessage());
+    }
+    @Test
+    public void testGetPlacementTurn() {
+        EmptyCardFace emptyCardFace = new EmptyCardFace("imageURI");
+        UnsupportedOperationException exceptionThrown = assertThrows(
+                UnsupportedOperationException.class, emptyCardFace::getPlacementTurn
+        );
+        assertEquals("Empty cards do not have placement turns", exceptionThrown.getMessage());
+    }
 }
