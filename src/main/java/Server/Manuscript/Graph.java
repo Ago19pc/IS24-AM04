@@ -5,7 +5,9 @@ package Server.Manuscript;
 import Server.Card.CornerCardFace;
 import Server.Enums.CardCorners;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -114,5 +116,12 @@ public class Graph {
             }
         }
         return null;
+    }
+
+    /**
+     * Get all cards in a list
+     */
+    public List<CornerCardFace> getAllCards(){
+        return new ArrayList<>(this.neighbors.keySet());
     }
 }

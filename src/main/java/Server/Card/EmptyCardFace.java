@@ -100,6 +100,10 @@ public class EmptyCardFace implements CardFace {
     public int getPlacementTurn() throws UnsupportedOperationException {
         throw new UnsupportedOperationException("Empty cards do not have placement turns");
     }
+
+    public Symbol getKingdom() throws UnsupportedOperationException {
+        throw new UnsupportedOperationException("Empty cards do not have kingdoms");
+    }
 }
 
 

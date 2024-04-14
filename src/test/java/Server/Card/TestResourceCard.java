@@ -11,7 +11,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class TestResourceCard {
     @Test
 public void testGetFace() {
-        ResourceFrontFace frontFace = new ResourceFrontFace("image1.jpg", new HashMap<>(), 1);
+        ResourceFrontFace frontFace = new ResourceFrontFace("image1.jpg", new HashMap<>(), 1, Symbol.FUNGUS);
         RegularBackFace backFace = new RegularBackFace("image2.jpg", List.of(Symbol.NONE));
         ResourceCard resourceCard = new ResourceCard(frontFace, backFace);
         assertEquals(frontFace, resourceCard.getFace(Face.FRONT));
@@ -20,7 +20,7 @@ public void testGetFace() {
 
     @Test
     public void testGetCornerFace() {
-        ResourceFrontFace frontFace = new ResourceFrontFace("image1.jpg", new HashMap<>(), 1);
+        ResourceFrontFace frontFace = new ResourceFrontFace("image1.jpg", new HashMap<>(), 1, Symbol.FUNGUS);
         RegularBackFace backFace = new RegularBackFace("image2.jpg", List.of(Symbol.NONE));
         ResourceCard resourceCard = new ResourceCard(frontFace, backFace);
         assertEquals(frontFace, resourceCard.getCornerFace(Face.FRONT));

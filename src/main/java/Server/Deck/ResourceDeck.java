@@ -53,7 +53,7 @@ public class ResourceDeck extends Deck {
             for (CardCorners c : CardCorners.values()) {
                 cornerSymbolsF.put(c, Symbol.valueOf(partsF[c.ordinal()]));
             }
-            ResourceFrontFace frontFace = new ResourceFrontFace("RESOURCEFRONT", cornerSymbolsF, point);
+            ResourceFrontFace frontFace = new ResourceFrontFace("RESOURCEFRONT", cornerSymbolsF, point, Symbol.FUNGUS);
             
             
             List<Symbol> centerSymbolsB = new ArrayList<>();

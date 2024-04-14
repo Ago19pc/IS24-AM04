@@ -18,8 +18,8 @@ public class GoldFrontFace extends ResourceFrontFace {
      * @param placementRequirements the placement requirements
      * @param scoreRequirements the score requirements
      */
-    public GoldFrontFace(String imageURI, Map<CardCorners, Symbol> cornerSymbols, int score, Map<Symbol, Integer> placementRequirements, Map<Symbol, Integer> scoreRequirements) {
-        super(imageURI, cornerSymbols, score);
+    public GoldFrontFace(String imageURI, Map<CardCorners, Symbol> cornerSymbols, int score, Map<Symbol, Integer> placementRequirements, Map<Symbol, Integer> scoreRequirements, Symbol kingdom){
+        super(imageURI, cornerSymbols, score, kingdom);
         this.placementRequirements = placementRequirements;
         this.scoreRequirements = scoreRequirements;
     }

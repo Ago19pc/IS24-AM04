@@ -10,6 +10,8 @@ import Server.Enums.Face;
 
 import java.util.HashMap;
 
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
 public class Manuscript {
@@ -88,6 +90,188 @@ public class Manuscript {
      */
     public int calculatePoints(AchievementCard achievementCard) {
         Map<Symbol, Integer> scoreRequirements = achievementCard.getFace(Face.FRONT).getScoreRequirements();
-
+        int points = 0;
+        int symbolCount = scoreRequirements.keySet().toArray().length; //symbolcount can be either 1 or 3.
+        if(symbolCount == 3){ //3 points for each set of the 3 symbols
+            int leastCommonSymbolCount = activeSymbols.entrySet().stream().filter(entry -> scoreRequirements.containsKey(entry.getKey()))
+                                                    .min(Map.Entry.comparingByValue()).get().getValue();
+            points = leastCommonSymbolCount * 3;
+        }
+        if(symbolCount == 1){
+            Symbol symbol = scoreRequirements.keySet().stream().findFirst().get();
+            if(symbol.isPattern()){ //symbol is a pattern
+                int patternCount = 0;
+                List<CornerCardFace> usedCards = new LinkedList<>();
+                switch (symbol){ //probably we can optimize these
+                    case PATTERN1F -> {
+                        for(CornerCardFace card : graph.getAllCards()){
+                            try{
+                                if(card.getKingdom() == Symbol.FUNGUS && !usedCards.contains(card)){
+                                    CornerCardFace secondCard = graph.getCardByCoord(card.getXCoord() + 1, card.getYCoord() + 1);
+                                    if(secondCard != null && secondCard.getKingdom() == Symbol.FUNGUS && !usedCards.contains(secondCard)){
+                                        CornerCardFace thirdCard = graph.getCardByCoord(card.getXCoord() + 2, card.getYCoord() + 2);
+                                        if(thirdCard != null && thirdCard.getKingdom() == Symbol.FUNGUS && !usedCards.contains(thirdCard)){
+                                            patternCount++;
+                                            usedCards.add(card);
+                                            usedCards.add(secondCard);
+                                            usedCards.add(thirdCard);
+                                        }
+                                    }
+                                }
+                            } catch (UnsupportedOperationException e){
+                                //do nothing and skip over the card
+                            }
+                        }
+                    }
+                    case PATTERN1A -> {
+                        for(CornerCardFace card : graph.getAllCards()){
+                            try{
+                                if(card.getKingdom() == Symbol.ANIMAL && !usedCards.contains(card)){
+                                    CornerCardFace secondCard = graph.getCardByCoord(card.getXCoord() + 1, card.getYCoord() + 1);
+                                    if(secondCard != null && secondCard.getKingdom() == Symbol.ANIMAL && !usedCards.contains(secondCard)){
+                                        CornerCardFace thirdCard = graph.getCardByCoord(card.getXCoord() + 2, card.getYCoord() + 2);
+                                        if(thirdCard != null && thirdCard.getKingdom() == Symbol.ANIMAL && !usedCards.contains(thirdCard)){
+                                            patternCount++;
+                                            usedCards.add(card);
+                                            usedCards.add(secondCard);
+                                            usedCards.add(thirdCard);
+                                        }
+                                    }
+                                }
+                            } catch (UnsupportedOperationException e){
+                                //do nothing and skip over the card
+                            }
+                        }
+                    }
+                    case PATTERN2P -> {
+                        for(CornerCardFace card : graph.getAllCards()){
+                            try{
+                                if(card.getKingdom() == Symbol.PLANT && !usedCards.contains(card)){
+                                    CornerCardFace secondCard = graph.getCardByCoord(card.getXCoord() + 1, card.getYCoord() - 1);
+                                    if(secondCard != null && secondCard.getKingdom() == Symbol.PLANT && !usedCards.contains(secondCard)){
+                                        CornerCardFace thirdCard = graph.getCardByCoord(card.getXCoord() + 2, card.getYCoord() - 2);
+                                        if(thirdCard != null && thirdCard.getKingdom() == Symbol.PLANT && !usedCards.contains(thirdCard)){
+                                            patternCount++;
+                                            usedCards.add(card);
+                                            usedCards.add(secondCard);
+                                            usedCards.add(thirdCard);
+                                        }
+                                    }
+                                }
+                            } catch (UnsupportedOperationException e){
+                                //do nothing and skip over the card
+                            }
+                        }
+                    }
+                    case PATTERN2B -> {
+                        for(CornerCardFace card : graph.getAllCards()){
+                            try{
+                                if(card.getKingdom() == Symbol.BUG&& !usedCards.contains(card)){
+                                    CornerCardFace secondCard = graph.getCardByCoord(card.getXCoord() + 1, card.getYCoord() - 1);
+                                    if(secondCard != null && secondCard.getKingdom() == Symbol.BUG && !usedCards.contains(secondCard)){
+                                        CornerCardFace thirdCard = graph.getCardByCoord(card.getXCoord() + 2, card.getYCoord() - 2);
+                                        if(thirdCard != null && thirdCard.getKingdom() == Symbol.BUG && !usedCards.contains(thirdCard)){
+                                            patternCount++;
+                                            usedCards.add(card);
+                                            usedCards.add(secondCard);
+                                            usedCards.add(thirdCard);
+                                        }
+                                    }
+                                }
+                            } catch (UnsupportedOperationException e){
+                                //do nothing and skip over the card
+                            }
+                        }
+                    }
+                    case PATTERN3 -> {
+                        for(CornerCardFace card : graph.getAllCards()){
+                            try{
+                                if(card.getKingdom() == Symbol.FUNGUS && !usedCards.contains(card)){
+                                    CornerCardFace secondCard = graph.getCardByCoord(card.getXCoord(), card.getYCoord() - 2);
+                                    if(secondCard != null && secondCard.getKingdom() == Symbol.FUNGUS && !usedCards.contains(secondCard)){
+                                        CornerCardFace thirdCard = graph.getCardByCoord(card.getXCoord() + 1, card.getYCoord() - 3);
+                                        if(thirdCard != null && thirdCard.getKingdom() == Symbol.PLANT && !usedCards.contains(thirdCard)){
+                                            patternCount++;
+                                            usedCards.add(card);
+                                            usedCards.add(secondCard);
+                                            usedCards.add(thirdCard);
+                                        }
+                                    }
+                                }
+                            } catch (UnsupportedOperationException e){
+                                //do nothing and skip over the card
+                            }
+                        }
+                    }
+                    case PATTERN4 -> {
+                        for(CornerCardFace card : graph.getAllCards()){
+                            try{
+                                if(card.getKingdom() == Symbol.PLANT && !usedCards.contains(card)){
+                                    CornerCardFace secondCard = graph.getCardByCoord(card.getXCoord(), card.getYCoord() - 2);
+                                    if(secondCard != null && secondCard.getKingdom() == Symbol.PLANT && !usedCards.contains(secondCard)){
+                                        CornerCardFace thirdCard = graph.getCardByCoord(card.getXCoord() - 1, card.getYCoord() - 3);
+                                        if(thirdCard != null && thirdCard.getKingdom() == Symbol.BUG && !usedCards.contains(thirdCard)){
+                                            patternCount++;
+                                            usedCards.add(card);
+                                            usedCards.add(secondCard);
+                                            usedCards.add(thirdCard);
+                                        }
+                                    }
+                                }
+                            } catch (UnsupportedOperationException e){
+                                //do nothing and skip over the card
+                            }
+                        }
+                    }
+                    case PATTERN5 -> {
+                        for(CornerCardFace card : graph.getAllCards()){
+                            try{
+                                if(card.getKingdom() == Symbol.ANIMAL && !usedCards.contains(card)){
+                                    CornerCardFace secondCard = graph.getCardByCoord(card.getXCoord(), card.getYCoord() + 2);
+                                    if(secondCard != null && secondCard.getKingdom() == Symbol.ANIMAL && !usedCards.contains(secondCard)){
+                                        CornerCardFace thirdCard = graph.getCardByCoord(card.getXCoord() + 1, card.getYCoord() + 3);
+                                        if(thirdCard != null && thirdCard.getKingdom() == Symbol.FUNGUS && !usedCards.contains(thirdCard)){
+                                            patternCount++;
+                                            usedCards.add(card);
+                                            usedCards.add(secondCard);
+                                            usedCards.add(thirdCard);
+                                        }
+                                    }
+                                }
+                            } catch (UnsupportedOperationException e){
+                                //do nothing and skip over the card
+                            }
+                        }
+                    }
+                    case PATTERN6 -> {
+                        for(CornerCardFace card : graph.getAllCards()){
+                            try{
+                                if(card.getKingdom() == Symbol.BUG && !usedCards.contains(card)){
+                                    CornerCardFace secondCard = graph.getCardByCoord(card.getXCoord(), card.getYCoord() + 2);
+                                    if(secondCard != null && secondCard.getKingdom() == Symbol.BUG && !usedCards.contains(secondCard)){
+                                        CornerCardFace thirdCard = graph.getCardByCoord(card.getXCoord() - 1, card.getYCoord() + 3);
+                                        if(thirdCard != null && thirdCard.getKingdom() == Symbol.ANIMAL && !usedCards.contains(thirdCard)){
+                                            patternCount++;
+                                            usedCards.add(card);
+                                            usedCards.add(secondCard);
+                                            usedCards.add(thirdCard);
+                                        }
+                                    }
+                                }
+                            } catch (UnsupportedOperationException e){
+                                //do nothing and skip over the card
+                            }
+                        }
+                    }
+                }
+                int pointsGained = scoreRequirements.get(symbol);
+                return patternCount * pointsGained;
+            } else {
+                int requiredSymbolCount = scoreRequirements.get(symbol); //can either be 2 or 3. 2 points for each set of 2 symbols or 3 points for each set of 3 symbols
+                int actualSymbolCount = activeSymbols.get(symbol);
+                points = actualSymbolCount / requiredSymbolCount * requiredSymbolCount;
+            }
+        }
+        return points;
     }
 }

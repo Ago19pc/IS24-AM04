@@ -1,6 +1,7 @@
 package Server.Player;
 import Server.Card.*;
 import Server.Enums.Color;
+import Server.Enums.Symbol;
 import Server.EventManager.EventManager;
 import org.junit.jupiter.api.Test;
 
@@ -17,7 +18,8 @@ public class TestPlayerInstance {
                 new HashMap<>(),
                 5,
                 null,
-                null
+                null,
+                Symbol.FUNGUS
         );
         RegularBackFace goldBackFace = new RegularBackFace(
                 "goldCardBack1.jpg",
@@ -33,7 +35,8 @@ public class TestPlayerInstance {
         ResourceFrontFace resourceFrontFace = new ResourceFrontFace(
                 "resourceCardFront1.jpg",
                 new HashMap<>(),
-                0
+                0,
+                Symbol.FUNGUS
         );
         RegularBackFace resourceBackFace = new RegularBackFace(
                 "resourceCardBack1.jpg",
