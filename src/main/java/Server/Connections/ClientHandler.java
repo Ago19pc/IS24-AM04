@@ -1,41 +1,39 @@
 package Server.Connections;
 
+import ConnectionUtils.Receiver;
+import ConnectionUtils.Sender;
+
 import java.io.*;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
 
 public class ClientHandler extends Thread {
     private final Socket socket;
-    BufferedReader in;
-    PrintWriter out;
+    Sender sender ;
+    Receiver receiver ;
     String s;
     public ClientHandler(Socket client) throws IOException {
         this.socket = client;
-        in = new BufferedReader(new InputStreamReader(socket.getInputStream(), StandardCharsets.UTF_8));
-        out = new PrintWriter(new OutputStreamWriter(socket.getOutputStream(), StandardCharsets.UTF_8), true);
+        sender = new Sender(this.socket);
+        receiver = new Receiver(this.socket);
+        sender.start();
     }
 
     public void run() {
 
         System.out.println("Client connected: " + this.socket.getInetAddress());
         try {
-            receiveMessages();
+            receiver.start();
         } catch (Exception e) {
             e.printStackTrace();
 
         }
     }
 
-    public void sendMessages(String message){
-        out.println(message);
+    public void sendMessages(){
+        sender.sendMessage();
     }
 
-    public void receiveMessages(){
-        try {
-            String message = in.readLine();
-            System.out.println("Received message: " + message);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
+
+
 }
