@@ -1,5 +1,6 @@
 package Server.Card;
 
+
 import Server.Enums.Face;
 
 public class GoldCard implements Card {
