@@ -18,19 +18,38 @@ public class Manuscript {
 
 
     public Manuscript(StartingCard card, Face face){
-
-        graph = new Graph(card.getCornerFace(face));
+        CornerCardFace cardFace = card.getCornerFace(face);
+        graph = new Graph(cardFace);
         activeSymbols = new HashMap<>();
         for (Symbol symbol : Symbol.values()) {
             activeSymbols.put(symbol, 0);
         }
+        updateSymbolCount(cardFace);
     }
 
     /**
      * Update the symbol count for the manuscript
+     * @param cardFace the card face that will be added
      */
-    private void updateSymbolCount() {
+    private void updateSymbolCount(CornerCardFace cardFace){
         System.out.println(" updateSymbolCount");
+        Map<CardCorners, CornerCardFace> cardsUnder = graph.getCardsUnder(cardFace);
+        for(CardCorners corner : cardsUnder.keySet()){
+            CornerCardFace neighbor = cardsUnder.get(corner);
+            Symbol symbol = neighbor.getCornerSymbols().get(corner.getOppositeCorner());
+            activeSymbols.put(symbol, activeSymbols.get(symbol) - 1);
+        }
+        try {
+            for(Symbol symbol : cardFace.getCenterSymbols()){
+                activeSymbols.put(symbol, activeSymbols.get(symbol) + 1);
+            }
+        } catch (UnsupportedOperationException e){
+            //do nothing
+        }
+        for(CardCorners corner : cardFace.getCornerSymbols().keySet()){
+            Symbol symbol = cardFace.getCornerSymbols().get(corner);
+            activeSymbols.put(symbol, activeSymbols.get(symbol) + 1);
+        }
     }
 
     /**
@@ -53,6 +72,7 @@ public class Manuscript {
         neighbor = this.graph.getCardByCoord(xcoordinate+1, ycoordinate-1);
         positions.put(CardCorners.BOTTOM_RIGHT, neighbor);
         this.graph.addCard(cardFace, positions, turn);
+        updateSymbolCount(cardFace);
     }
 
     /**
@@ -67,6 +87,7 @@ public class Manuscript {
      * @return int the points given by the achievement card
      */
     public int calculatePoints(AchievementCard achievementCard) {
-        return 19; //todo: implement
+        Map<Symbol, Integer> scoreRequirements = achievementCard.getFace(Face.FRONT).getScoreRequirements();
+
     }
 }
