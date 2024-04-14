@@ -19,9 +19,7 @@ public class ClientHandler extends Thread {
 
         System.out.println("Client connected: " + this.socket.getInetAddress());
         try {
-            while ((s = in.readLine()) != null) {
-                System.out.println(s);
-            }
+            receiveMessages();
         } catch (Exception e) {
             e.printStackTrace();
 
