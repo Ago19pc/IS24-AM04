@@ -16,7 +16,7 @@ import java.util.Map;
 
 public class Manuscript {
     private final Graph graph;
-    private Map<Symbol, Integer> activeSymbols;
+    private final Map<Symbol, Integer> activeSymbols;
 
 
     public Manuscript(StartingCard card, Face face){
