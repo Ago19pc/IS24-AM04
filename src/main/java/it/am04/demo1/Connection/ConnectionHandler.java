@@ -1,11 +1,10 @@
 package it.am04.demo1.Connection;
 
-import java.io.BufferedReader;
+import ConnectionUtils.Receiver;
+import ConnectionUtils.Sender;
+
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
 import java.net.Socket;
-import java.util.Scanner;
 
 public class ConnectionHandler {
     private Socket clientSocket;

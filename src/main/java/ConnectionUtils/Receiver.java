@@ -1,4 +1,4 @@
-package it.am04.demo1.Connection;
+package ConnectionUtils;
 
 import java.io.BufferedReader;
 import java.io.IOException;
