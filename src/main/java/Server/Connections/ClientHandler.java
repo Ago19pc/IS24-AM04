@@ -25,6 +25,18 @@ public class ClientHandler extends Thread {
 
         System.out.println("Client connected: " + this.socket.getInetAddress());
         try {
+            Thread.UncaughtExceptionHandler h = new Thread.UncaughtExceptionHandler() {
+                @Override
+                public void uncaughtException(Thread th, Throwable ex) {
+                    System.out.println("Uncaught exception: " + ex);
+                    try {
+                        socket.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            };
+            receiver.setUncaughtExceptionHandler(h);
             receiver.start();
             
         } catch (Exception e) {
