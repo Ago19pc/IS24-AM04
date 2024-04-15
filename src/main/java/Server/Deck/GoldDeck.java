@@ -78,7 +78,7 @@ public class GoldDeck extends Deck {
 
                 }
 
-                ResourceFrontFace frontFace = new GoldFrontFace("GOLDFRONT", cornerSymbolsF, point, placementRequirementsF, scoreRequirementsF);
+                ResourceFrontFace frontFace = new GoldFrontFace("GOLDFRONT", cornerSymbolsF, point, placementRequirementsF, scoreRequirementsF, Symbol.FUNGUS);
 
                 // DA QUI E DA VEDERE
                 List<Symbol> centerSymbolsB = new ArrayList<>();

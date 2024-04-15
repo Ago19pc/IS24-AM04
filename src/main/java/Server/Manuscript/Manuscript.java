@@ -65,16 +65,30 @@ public class Manuscript {
         cardFace.setXCoord(xcoordinate);
         cardFace.setYCoord(ycoordinate);
         Map<CardCorners, CornerCardFace> positions = new HashMap<>();
-        CornerCardFace neighbor = this.graph.getCardByCoord(xcoordinate-1, ycoordinate+1);
+        CornerCardFace neighbor = getCardByCoord(xcoordinate-1, ycoordinate+1);
         positions.put(CardCorners.TOP_LEFT, neighbor);
-        neighbor = this.graph.getCardByCoord(xcoordinate+1, ycoordinate+1);
+        neighbor = getCardByCoord(xcoordinate+1, ycoordinate+1);
         positions.put(CardCorners.TOP_RIGHT, neighbor);
-        neighbor = this.graph.getCardByCoord(xcoordinate-1, ycoordinate-1);
+        neighbor = getCardByCoord(xcoordinate-1, ycoordinate-1);
         positions.put(CardCorners.BOTTOM_LEFT, neighbor);
-        neighbor = this.graph.getCardByCoord(xcoordinate+1, ycoordinate-1);
+        neighbor = getCardByCoord(xcoordinate+1, ycoordinate-1);
         positions.put(CardCorners.BOTTOM_RIGHT, neighbor);
         this.graph.addCard(cardFace, positions, turn);
         updateSymbolCount(cardFace);
+    }
+    /**
+     * get the card at the specified coordinates
+     * @param x the x coordinate
+     * @param y the y coordinate
+     * @return CornerCardFace | null the card at the specified coordinates
+     */
+    public CornerCardFace getCardByCoord(int x, int y){
+        for(CornerCardFace card : this.graph.getAllCards()){
+            if(card.getXCoord() == x && card.getYCoord() == y){
+                return card;
+            }
+        }
+        return null;
     }
 
     /**
@@ -107,9 +121,9 @@ public class Manuscript {
                         for(CornerCardFace card : graph.getAllCards()){
                             try{
                                 if(card.getKingdom() == Symbol.FUNGUS && !usedCards.contains(card)){
-                                    CornerCardFace secondCard = graph.getCardByCoord(card.getXCoord() + 1, card.getYCoord() + 1);
+                                    CornerCardFace secondCard = getCardByCoord(card.getXCoord() + 1, card.getYCoord() + 1);
                                     if(secondCard != null && secondCard.getKingdom() == Symbol.FUNGUS && !usedCards.contains(secondCard)){
-                                        CornerCardFace thirdCard = graph.getCardByCoord(card.getXCoord() + 2, card.getYCoord() + 2);
+                                        CornerCardFace thirdCard = getCardByCoord(card.getXCoord() + 2, card.getYCoord() + 2);
                                         if(thirdCard != null && thirdCard.getKingdom() == Symbol.FUNGUS && !usedCards.contains(thirdCard)){
                                             patternCount++;
                                             usedCards.add(card);
@@ -127,9 +141,9 @@ public class Manuscript {
                         for(CornerCardFace card : graph.getAllCards()){
                             try{
                                 if(card.getKingdom() == Symbol.ANIMAL && !usedCards.contains(card)){
-                                    CornerCardFace secondCard = graph.getCardByCoord(card.getXCoord() + 1, card.getYCoord() + 1);
+                                    CornerCardFace secondCard = getCardByCoord(card.getXCoord() + 1, card.getYCoord() + 1);
                                     if(secondCard != null && secondCard.getKingdom() == Symbol.ANIMAL && !usedCards.contains(secondCard)){
-                                        CornerCardFace thirdCard = graph.getCardByCoord(card.getXCoord() + 2, card.getYCoord() + 2);
+                                        CornerCardFace thirdCard = getCardByCoord(card.getXCoord() + 2, card.getYCoord() + 2);
                                         if(thirdCard != null && thirdCard.getKingdom() == Symbol.ANIMAL && !usedCards.contains(thirdCard)){
                                             patternCount++;
                                             usedCards.add(card);
@@ -147,9 +161,9 @@ public class Manuscript {
                         for(CornerCardFace card : graph.getAllCards()){
                             try{
                                 if(card.getKingdom() == Symbol.PLANT && !usedCards.contains(card)){
-                                    CornerCardFace secondCard = graph.getCardByCoord(card.getXCoord() + 1, card.getYCoord() - 1);
+                                    CornerCardFace secondCard = getCardByCoord(card.getXCoord() + 1, card.getYCoord() - 1);
                                     if(secondCard != null && secondCard.getKingdom() == Symbol.PLANT && !usedCards.contains(secondCard)){
-                                        CornerCardFace thirdCard = graph.getCardByCoord(card.getXCoord() + 2, card.getYCoord() - 2);
+                                        CornerCardFace thirdCard = getCardByCoord(card.getXCoord() + 2, card.getYCoord() - 2);
                                         if(thirdCard != null && thirdCard.getKingdom() == Symbol.PLANT && !usedCards.contains(thirdCard)){
                                             patternCount++;
                                             usedCards.add(card);
@@ -167,9 +181,9 @@ public class Manuscript {
                         for(CornerCardFace card : graph.getAllCards()){
                             try{
                                 if(card.getKingdom() == Symbol.BUG&& !usedCards.contains(card)){
-                                    CornerCardFace secondCard = graph.getCardByCoord(card.getXCoord() + 1, card.getYCoord() - 1);
+                                    CornerCardFace secondCard = getCardByCoord(card.getXCoord() + 1, card.getYCoord() - 1);
                                     if(secondCard != null && secondCard.getKingdom() == Symbol.BUG && !usedCards.contains(secondCard)){
-                                        CornerCardFace thirdCard = graph.getCardByCoord(card.getXCoord() + 2, card.getYCoord() - 2);
+                                        CornerCardFace thirdCard = getCardByCoord(card.getXCoord() + 2, card.getYCoord() - 2);
                                         if(thirdCard != null && thirdCard.getKingdom() == Symbol.BUG && !usedCards.contains(thirdCard)){
                                             patternCount++;
                                             usedCards.add(card);
@@ -187,9 +201,9 @@ public class Manuscript {
                         for(CornerCardFace card : graph.getAllCards()){
                             try{
                                 if(card.getKingdom() == Symbol.FUNGUS && !usedCards.contains(card)){
-                                    CornerCardFace secondCard = graph.getCardByCoord(card.getXCoord(), card.getYCoord() - 2);
+                                    CornerCardFace secondCard = getCardByCoord(card.getXCoord(), card.getYCoord() - 2);
                                     if(secondCard != null && secondCard.getKingdom() == Symbol.FUNGUS && !usedCards.contains(secondCard)){
-                                        CornerCardFace thirdCard = graph.getCardByCoord(card.getXCoord() + 1, card.getYCoord() - 3);
+                                        CornerCardFace thirdCard = getCardByCoord(card.getXCoord() + 1, card.getYCoord() - 3);
                                         if(thirdCard != null && thirdCard.getKingdom() == Symbol.PLANT && !usedCards.contains(thirdCard)){
                                             patternCount++;
                                             usedCards.add(card);
@@ -207,9 +221,9 @@ public class Manuscript {
                         for(CornerCardFace card : graph.getAllCards()){
                             try{
                                 if(card.getKingdom() == Symbol.PLANT && !usedCards.contains(card)){
-                                    CornerCardFace secondCard = graph.getCardByCoord(card.getXCoord(), card.getYCoord() - 2);
+                                    CornerCardFace secondCard = getCardByCoord(card.getXCoord(), card.getYCoord() - 2);
                                     if(secondCard != null && secondCard.getKingdom() == Symbol.PLANT && !usedCards.contains(secondCard)){
-                                        CornerCardFace thirdCard = graph.getCardByCoord(card.getXCoord() - 1, card.getYCoord() - 3);
+                                        CornerCardFace thirdCard = getCardByCoord(card.getXCoord() - 1, card.getYCoord() - 3);
                                         if(thirdCard != null && thirdCard.getKingdom() == Symbol.BUG && !usedCards.contains(thirdCard)){
                                             patternCount++;
                                             usedCards.add(card);
@@ -227,9 +241,9 @@ public class Manuscript {
                         for(CornerCardFace card : graph.getAllCards()){
                             try{
                                 if(card.getKingdom() == Symbol.ANIMAL && !usedCards.contains(card)){
-                                    CornerCardFace secondCard = graph.getCardByCoord(card.getXCoord(), card.getYCoord() + 2);
+                                    CornerCardFace secondCard = getCardByCoord(card.getXCoord(), card.getYCoord() + 2);
                                     if(secondCard != null && secondCard.getKingdom() == Symbol.ANIMAL && !usedCards.contains(secondCard)){
-                                        CornerCardFace thirdCard = graph.getCardByCoord(card.getXCoord() + 1, card.getYCoord() + 3);
+                                        CornerCardFace thirdCard = getCardByCoord(card.getXCoord() + 1, card.getYCoord() + 3);
                                         if(thirdCard != null && thirdCard.getKingdom() == Symbol.FUNGUS && !usedCards.contains(thirdCard)){
                                             patternCount++;
                                             usedCards.add(card);
@@ -247,9 +261,9 @@ public class Manuscript {
                         for(CornerCardFace card : graph.getAllCards()){
                             try{
                                 if(card.getKingdom() == Symbol.BUG && !usedCards.contains(card)){
-                                    CornerCardFace secondCard = graph.getCardByCoord(card.getXCoord(), card.getYCoord() + 2);
+                                    CornerCardFace secondCard = getCardByCoord(card.getXCoord(), card.getYCoord() + 2);
                                     if(secondCard != null && secondCard.getKingdom() == Symbol.BUG && !usedCards.contains(secondCard)){
-                                        CornerCardFace thirdCard = graph.getCardByCoord(card.getXCoord() - 1, card.getYCoord() + 3);
+                                        CornerCardFace thirdCard = getCardByCoord(card.getXCoord() - 1, card.getYCoord() + 3);
                                         if(thirdCard != null && thirdCard.getKingdom() == Symbol.ANIMAL && !usedCards.contains(thirdCard)){
                                             patternCount++;
                                             usedCards.add(card);

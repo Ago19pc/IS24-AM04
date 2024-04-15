@@ -47,7 +47,7 @@ public class Graph {
     public Map<CardCorners, CornerCardFace> getCardsOver(CornerCardFace node){
         Map<CardCorners, CornerCardFace> cardsOver;
         cardsOver = getNeighbors(node).entrySet().stream()
-                .filter(neighbor -> neighbor.getValue().getPlacementTurn() > node.getPlacementTurn())
+                .filter(neighbor -> neighbor.getValue() != null && neighbor.getValue().getPlacementTurn() > node.getPlacementTurn())
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
         return cardsOver;
     }
@@ -59,7 +59,7 @@ public class Graph {
     public Map<CardCorners, CornerCardFace> getCardsUnder(CornerCardFace node){
         Map<CardCorners, CornerCardFace> cardsUnder;
         cardsUnder = getNeighbors(node).entrySet().stream()
-                .filter(neighbor -> neighbor.getValue().getPlacementTurn() < node.getPlacementTurn())
+                .filter(neighbor -> neighbor.getValue() != null && neighbor.getValue().getPlacementTurn() < node.getPlacementTurn())
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
         return cardsUnder;
     }
@@ -100,23 +100,12 @@ public class Graph {
         positions.keySet().forEach(corner -> {
             if(positions.get(corner) != null) {
                 addEdge(card, corner, positions.get(corner));
+                System.out.println(this.neighbors.get(positions.get(corner)));
             }
         });
+        System.out.println(this.neighbors.get(card));
     }
-    /**
-     * get the card at the specified coordinates
-     * @param x the x coordinate
-     * @param y the y coordinate
-     * @return CornerCardFace | null the card at the specified coordinates
-     */
-    public CornerCardFace getCardByCoord(int x, int y){
-        for(CornerCardFace card : this.neighbors.keySet()){
-            if(card.getXCoord() == x && card.getYCoord() == y){
-                return card;
-            }
-        }
-        return null;
-    }
+
 
     /**
      * Get all cards in a list

@@ -11,7 +11,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class TestAchievementFrontFace {
     @Test
     public void testGetScoreRequirements() {
-        Map map = new HashMap<Symbol, Integer>();
+        Map<Symbol, Integer> map = new HashMap<>();
         AchievementFrontFace frontFace = new AchievementFrontFace("image1.jpg", map , 0);
         assertEquals(map, frontFace.getScoreRequirements());
     }
