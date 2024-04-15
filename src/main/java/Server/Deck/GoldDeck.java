@@ -85,7 +85,7 @@ public class GoldDeck extends Deck {
                 centerSymbolsB.add(Symbol.valueOf(partsB));
 
 
-                RegularBackFace backFace = new RegularBackFace("GOLDBACK", centerSymbolsB);
+                RegularBackFace backFace = new RegularBackFace("GOLDBACK", centerSymbolsB, Symbol.FUNGUS);
 
                 ResourceCard card = new ResourceCard(frontFace, backFace);
                 this.cards.add(card);

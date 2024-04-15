@@ -1,4 +1,5 @@
 package Server.Card;
+import Server.Enums.CardCorners;
 import Server.Enums.Symbol;
 import org.junit.jupiter.api.Test;
 
@@ -10,15 +11,18 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class TestGoldFrontFace {
     @Test
 public void testGetPlacementRequirements() {
-        Map map = new HashMap<Symbol, Integer>();
-        GoldFrontFace frontFace = new GoldFrontFace("image1.jpg", map, 0, new HashMap<>(), new HashMap<>(), Symbol.FUNGUS);
-        assertEquals(map, frontFace.getPlacementRequirements());
+        Map<CardCorners, Symbol> map = new HashMap<>();
+        Map<Symbol, Integer> map2 = new HashMap<>();
+        GoldFrontFace frontFace = new GoldFrontFace("image1.jpg", map, 0, map2, new HashMap<>(), Symbol.FUNGUS);
+        assertEquals(map2, frontFace.getPlacementRequirements());
     }
     @Test
     public void testGetScoreRequirements() {
-        Map map = new HashMap<Symbol, Integer>();
-        GoldFrontFace frontFace = new GoldFrontFace("image1.jpg", map, 0, new HashMap<>(), new HashMap<>(), Symbol.FUNGUS);
-        assertEquals(map, frontFace.getScoreRequirements());
+        Map<CardCorners, Symbol> map = new HashMap<>();
+        Map<Symbol, Integer> map2 = new HashMap<>();
+
+        GoldFrontFace frontFace = new GoldFrontFace("image1.jpg", map, 0, new HashMap<>(), map2, Symbol.FUNGUS);
+        assertEquals(map2, frontFace.getScoreRequirements());
         //System.out.println(frontFace.getScoreRequirements().get(0));
     }
 

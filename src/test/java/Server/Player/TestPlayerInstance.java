@@ -23,7 +23,8 @@ public class TestPlayerInstance {
         );
         RegularBackFace goldBackFace = new RegularBackFace(
                 "goldCardBack1.jpg",
-                null
+                null,
+                Symbol.FUNGUS
         );
         GoldCard goldCard = new GoldCard(
                 goldFrontFace,
@@ -40,7 +41,8 @@ public class TestPlayerInstance {
         );
         RegularBackFace resourceBackFace = new RegularBackFace(
                 "resourceCardBack1.jpg",
-                null
+                null,
+                Symbol.FUNGUS
         );
         ResourceCard resourceCard = new ResourceCard(
                 resourceFrontFace,
@@ -64,7 +66,8 @@ public class TestPlayerInstance {
         );
         RegularBackFace goldBackFace = new RegularBackFace(
                 "goldCardBack1.jpg",
-                null
+                null,
+                Symbol.FUNGUS
         );
         GoldCard goldCard = new GoldCard(
                 goldFrontFace,
@@ -79,7 +82,8 @@ public class TestPlayerInstance {
         );
         RegularBackFace resourceBackFace = new RegularBackFace(
                 "resourceCardBack1.jpg",
-                null
+                null,
+                Symbol.FUNGUS
         );
         ResourceCard resourceCard = new ResourceCard(
                 resourceFrontFace,

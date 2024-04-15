@@ -60,7 +60,7 @@ public class ResourceDeck extends Deck {
             centerSymbolsB.add(Symbol.valueOf(partsB));
             
 
-            RegularBackFace backFace = new RegularBackFace("RESOURCEBACK", centerSymbolsB);
+            RegularBackFace backFace = new RegularBackFace("RESOURCEBACK", centerSymbolsB,  Symbol.FUNGUS);
             
             ResourceCard card = new ResourceCard(frontFace, backFace);
             this.cards.add(card);
