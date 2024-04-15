@@ -17,14 +17,14 @@ public class RegularBackFace extends CornerCardFace {
      * @param imageURI the URI of the image
      * @param centerSymbols the center symbols
      */
-    public RegularBackFace(String imageURI, List<Symbol> centerSymbols, Symbol kingdom) {
+    public RegularBackFace(String imageURI, List<Symbol> centerSymbols) {
         super(imageURI, Map.of(
                 CardCorners.TOP_LEFT, EMPTY,
                 CardCorners.TOP_RIGHT, EMPTY,
                 CardCorners.BOTTOM_RIGHT, EMPTY,
                 CardCorners.BOTTOM_LEFT, EMPTY));
         this.centerSymbols = centerSymbols;
-        this.kingdom = kingdom;
+        this.kingdom = centerSymbols.get(0);
     }
 
     /**

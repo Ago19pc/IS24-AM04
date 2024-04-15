@@ -11,8 +11,10 @@ import java.util.*;
 
 public class GoldDeck extends Deck {
     public GoldDeck(){
+        super();
+        createCards();
+        super.shuffle();
         System.out.println("GoldDeck");
-        this.createCards();
     }
 
     /**
@@ -25,14 +27,15 @@ public class GoldDeck extends Deck {
         BufferedReader readerBACK;
 
         try {
-            fileFRONT = new File("images\\GoldFrontFace.txt");
-            fileBACK = new File("images\\GoldBackFace.txt");
+            fileFRONT = new File("images/GoldFrontFace.txt");
+            fileBACK = new File("images/GoldBackFace.txt");
             readerFRONT = new BufferedReader(new FileReader(fileFRONT));
             readerBACK = new BufferedReader(new FileReader(fileBACK));
 
 
 
             String lineF;
+            int cardNumber = 0;
             while ((lineF = readerFRONT.readLine()) != null) {
 
                 String[] partsF = lineF.split(" ");
@@ -77,18 +80,36 @@ public class GoldDeck extends Deck {
                     }
 
                 }
-
-                ResourceFrontFace frontFace = new GoldFrontFace("GOLDFRONT", cornerSymbolsF, point, placementRequirementsF, scoreRequirementsF, Symbol.FUNGUS);
+                Symbol kingdom;
+                switch (cardNumber / 10) {
+                    case 0:
+                        kingdom = Symbol.FUNGUS;
+                        break;
+                    case 1:
+                        kingdom = Symbol.PLANT;
+                        break;
+                    case 2:
+                        kingdom = Symbol.ANIMAL;
+                        break;
+                    case 3:
+                        kingdom = Symbol.BUG;
+                        break;
+                    default:
+                        kingdom = Symbol.NONE;
+                        break;
+                }
+                GoldFrontFace frontFace = new GoldFrontFace("GOLDFRONT", cornerSymbolsF, point, placementRequirementsF, scoreRequirementsF, kingdom);
 
                 // DA QUI E DA VEDERE
                 List<Symbol> centerSymbolsB = new ArrayList<>();
                 centerSymbolsB.add(Symbol.valueOf(partsB));
 
 
-                RegularBackFace backFace = new RegularBackFace("GOLDBACK", centerSymbolsB, Symbol.FUNGUS);
+                RegularBackFace backFace = new RegularBackFace("GOLDBACK", centerSymbolsB);
 
-                ResourceCard card = new ResourceCard(frontFace, backFace);
+                GoldCard card = new GoldCard(frontFace, backFace);
                 this.cards.add(card);
+                cardNumber++;
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -110,6 +131,6 @@ public class GoldDeck extends Deck {
             }
         //*/
 
-        Collections.shuffle(this.cards);
+
     }
 }

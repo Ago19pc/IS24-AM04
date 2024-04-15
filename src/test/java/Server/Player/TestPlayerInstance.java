@@ -5,6 +5,7 @@ import Server.Enums.Symbol;
 import Server.EventManager.EventManager;
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -17,14 +18,13 @@ public class TestPlayerInstance {
                 "goldCardFront1.jpg",
                 new HashMap<>(),
                 5,
-                null,
-                null,
+                new HashMap<>(),
+                new HashMap<>(),
                 Symbol.FUNGUS
         );
         RegularBackFace goldBackFace = new RegularBackFace(
                 "goldCardBack1.jpg",
-                null,
-                Symbol.FUNGUS
+                new ArrayList<>()
         );
         GoldCard goldCard = new GoldCard(
                 goldFrontFace,
@@ -41,8 +41,7 @@ public class TestPlayerInstance {
         );
         RegularBackFace resourceBackFace = new RegularBackFace(
                 "resourceCardBack1.jpg",
-                null,
-                Symbol.FUNGUS
+                new ArrayList<>()
         );
         ResourceCard resourceCard = new ResourceCard(
                 resourceFrontFace,
@@ -66,8 +65,7 @@ public class TestPlayerInstance {
         );
         RegularBackFace goldBackFace = new RegularBackFace(
                 "goldCardBack1.jpg",
-                null,
-                Symbol.FUNGUS
+                new ArrayList<>()
         );
         GoldCard goldCard = new GoldCard(
                 goldFrontFace,
@@ -82,8 +80,7 @@ public class TestPlayerInstance {
         );
         RegularBackFace resourceBackFace = new RegularBackFace(
                 "resourceCardBack1.jpg",
-                null,
-                Symbol.FUNGUS
+                new ArrayList<>()
         );
         ResourceCard resourceCard = new ResourceCard(
                 resourceFrontFace,
@@ -129,7 +126,7 @@ public class TestPlayerInstance {
         assertEquals(achievementCard, playerInstance.getSecretObjective());
     }
     @Test
-    public void testPoints(){
+    public void testPoints() {
         PlayerInstance playerInstance = new PlayerInstance("pippo", new EventManager());
         assertEquals(0, playerInstance.getPoints());
         playerInstance.addPoints(5);

@@ -36,16 +36,17 @@ public class Manuscript {
     private void updateSymbolCount(CornerCardFace cardFace){
         System.out.println(" updateSymbolCount");
         Map<CardCorners, CornerCardFace> cardsUnder = graph.getCardsUnder(cardFace);
-        for(CardCorners corner : cardsUnder.keySet()){
-            CornerCardFace neighbor = cardsUnder.get(corner);
-            Symbol symbol = neighbor.getCornerSymbols().get(corner.getOppositeCorner());
-            activeSymbols.put(symbol, activeSymbols.get(symbol) - 1);
-        }
         try {
+            for(CardCorners corner : cardsUnder.keySet()) {
+                CornerCardFace neighbor = cardsUnder.get(corner);
+                Symbol symbol = neighbor.getCornerSymbols().get(corner.getOppositeCorner());
+                activeSymbols.put(symbol, activeSymbols.get(symbol) - 1);
+            }
+
             for(Symbol symbol : cardFace.getCenterSymbols()){
                 activeSymbols.put(symbol, activeSymbols.get(symbol) + 1);
             }
-        } catch (UnsupportedOperationException e){
+        } catch (Exception e){
             //do nothing
         }
         for(CardCorners corner : cardFace.getCornerSymbols().keySet()){
@@ -281,9 +282,9 @@ public class Manuscript {
                 int pointsGained = scoreRequirements.get(symbol);
                 return patternCount * pointsGained;
             } else {
-                int requiredSymbolCount = scoreRequirements.get(symbol); //can either be 2 or 3. 2 points for each set of 2 symbols or 3 points for each set of 3 symbols
+                int requiredSymbolCount = scoreRequirements.get(symbol); //can either be 2 or 3. 2 points for each set of 2 symbols or 2 points for each set of 3 symbols
                 int actualSymbolCount = activeSymbols.get(symbol);
-                points = actualSymbolCount / requiredSymbolCount * requiredSymbolCount;
+                points = actualSymbolCount / requiredSymbolCount * 2;
             }
         }
         return points;
