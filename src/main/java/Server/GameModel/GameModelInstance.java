@@ -48,8 +48,8 @@ public class GameModelInstance implements GameModel {
         BufferedReader readerBACK;
 
         try {
-            fileFRONT = new File("images\\StartingCardsFRONT.txt");
-            fileBACK = new File("images\\StartingCardsBACK.txt");
+            fileFRONT = new File("images/StartingCardsFRONT.txt");
+            fileBACK = new File("images/StartingCardsBACK.txt");
             readerFRONT = new BufferedReader(new FileReader(fileFRONT));
             readerBACK = new BufferedReader(new FileReader(fileBACK));
         

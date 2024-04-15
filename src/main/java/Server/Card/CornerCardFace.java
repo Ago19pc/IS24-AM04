@@ -22,6 +22,9 @@ public class CornerCardFace extends EmptyCardFace {
     public CornerCardFace(String imageURI, Map<CardCorners, Symbol> cornerSymbols) {
         super(imageURI);
         this.cornerSymbols = new HashMap<>(cornerSymbols);
+        this.placementTurn = 0;
+        this.xCoord = 0;
+        this.yCoord = 0;
     }
 
     /**

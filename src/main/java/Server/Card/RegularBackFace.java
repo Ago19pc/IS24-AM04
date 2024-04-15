@@ -10,7 +10,7 @@ import static Server.Enums.Symbol.EMPTY;
 
 public class RegularBackFace extends CornerCardFace {
     private final List<Symbol> centerSymbols;
-
+    private final Symbol kingdom;
     /**
      * Constructor for the RegularBackFace
      *
@@ -24,6 +24,7 @@ public class RegularBackFace extends CornerCardFace {
                 CardCorners.BOTTOM_RIGHT, EMPTY,
                 CardCorners.BOTTOM_LEFT, EMPTY));
         this.centerSymbols = centerSymbols;
+        this.kingdom = centerSymbols.get(0);
     }
 
     /**
@@ -32,5 +33,13 @@ public class RegularBackFace extends CornerCardFace {
      */
     public List<Symbol> getCenterSymbols() {
         return centerSymbols;
+    }
+
+    /**
+     * Returns the kingdom symbol
+     * @return Symbol the kingdom symbol
+     */
+    public Symbol getKingdom() {
+        return kingdom;
     }
 }

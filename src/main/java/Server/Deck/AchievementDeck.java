@@ -9,28 +9,28 @@ import Server.Card.AchievementCard;
 import Server.Card.AchievementFrontFace;
 import Server.Card.EmptyCardFace;
 import Server.Enums.Symbol;
-import static Server.Enums.Face.FRONT;
-import Server.Card.Card;
 
 
 public class AchievementDeck extends Deck {
 
     public AchievementDeck(){
-        System.out.println(this.toString() + "AchievementDeck");
-        this.createCards();
+        super();
+        createCards();
+        super.shuffle();
+        System.out.println("AchievementDeck");
     }
 
     /**
      * generate the cards
      */
     private void createCards() {
-        File fileFRONT = null;
+        File fileFRONT;
         
-        BufferedReader readerFRONT = null;
+        BufferedReader readerFRONT;
         
 
         try {
-            fileFRONT = new File("images\\AchievementFrontFace.txt");
+            fileFRONT = new File("images/AchievementFrontFace.txt");
             
             readerFRONT = new BufferedReader(new FileReader(fileFRONT));
             
@@ -78,7 +78,7 @@ public class AchievementDeck extends Deck {
             }
         */
             
-        Collections.shuffle(this.cards);
+
 
     }
     

@@ -27,6 +27,7 @@ public class PlayerInstance implements Player {
         this.name = name;
         this.eventManager = eventManager;
         this.handCards = new LinkedList<>();
+        this.points = 0;
     }
 
     /**

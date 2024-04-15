@@ -5,7 +5,9 @@ package Server.Manuscript;
 import Server.Card.CornerCardFace;
 import Server.Enums.CardCorners;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -45,7 +47,7 @@ public class Graph {
     public Map<CardCorners, CornerCardFace> getCardsOver(CornerCardFace node){
         Map<CardCorners, CornerCardFace> cardsOver;
         cardsOver = getNeighbors(node).entrySet().stream()
-                .filter(neighbor -> neighbor.getValue().getPlacementTurn() > node.getPlacementTurn())
+                .filter(neighbor -> neighbor.getValue() != null && neighbor.getValue().getPlacementTurn() > node.getPlacementTurn())
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
         return cardsOver;
     }
@@ -57,7 +59,7 @@ public class Graph {
     public Map<CardCorners, CornerCardFace> getCardsUnder(CornerCardFace node){
         Map<CardCorners, CornerCardFace> cardsUnder;
         cardsUnder = getNeighbors(node).entrySet().stream()
-                .filter(neighbor -> neighbor.getValue().getPlacementTurn() < node.getPlacementTurn())
+                .filter(neighbor -> neighbor.getValue() != null && neighbor.getValue().getPlacementTurn() < node.getPlacementTurn())
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
         return cardsUnder;
     }
@@ -98,21 +100,17 @@ public class Graph {
         positions.keySet().forEach(corner -> {
             if(positions.get(corner) != null) {
                 addEdge(card, corner, positions.get(corner));
+                System.out.println(this.neighbors.get(positions.get(corner)));
             }
         });
+        System.out.println(this.neighbors.get(card));
     }
+
+
     /**
-     * get the card at the specified coordinates
-     * @param x the x coordinate
-     * @param y the y coordinate
-     * @return CornerCardFace the card at the specified coordinates
+     * Get all cards in a list
      */
-    public CornerCardFace getCardByCoord(int x, int y){
-        for(CornerCardFace card : this.neighbors.keySet()){
-            if(card.getXCoord() == x && card.getYCoord() == y){
-                return card;
-            }
-        }
-        return null;
+    public List<CornerCardFace> getAllCards(){
+        return new ArrayList<>(this.neighbors.keySet());
     }
 }
