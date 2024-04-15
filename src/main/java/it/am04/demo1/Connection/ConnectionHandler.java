@@ -36,9 +36,27 @@ public class ConnectionHandler {
         sender = new Sender(clientSocket);
         receiver = new Receiver(clientSocket, eventManager);
 
-        sender.start();
-        receiver.start();
+        try {
+            Thread.UncaughtExceptionHandler h = new Thread.UncaughtExceptionHandler() {
+                @Override
+                public void uncaughtException(Thread th, Throwable ex) {
+                    System.out.println("Uncaught exception: " + ex);
+                    try {
+                        clientSocket.close();
 
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            };
+            receiver.setUncaughtExceptionHandler(h);
+            sender.setUncaughtExceptionHandler(h);
+
+            sender.start();
+            receiver.start();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         Gson gson = new Gson();
         PlayerNamePayload payload = new PlayerNamePayload("ciao");
         MessagePacket message = new MessagePacket(payload, EventType.PLAYERSDATA);

@@ -33,18 +33,31 @@ public class ConnectionHandler extends Thread {
     }
 
     public void run() {
-        while (true) {
-            try {
+        Thread.UncaughtExceptionHandler h = new Thread.UncaughtExceptionHandler() {
+            @Override
+            public void uncaughtException(Thread th, Throwable ex) {
+                System.out.println("Uncaught exception: " + ex);
+                th.interrupt();
+                System.out.println("SMT");
+            }
+        };
+        try {
+            while (true) {
+
                 Socket client = this.socket.accept();
                 System.out.println("Received connection");
                 // QUI ANDREBBE GESTITO IL CASO DI RICONNESIONE
                 //
                 Thread t = new ClientHandler(client, eventManager);
+
+                t.setUncaughtExceptionHandler(h);
+
                 t.start();
                 threads.add(t);
-            } catch (IOException e) {
-                e.printStackTrace();
             }
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("EDDIO SOLO SA PERCHE");
         }
     }
 

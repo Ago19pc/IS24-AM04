@@ -11,38 +11,56 @@ import java.nio.charset.StandardCharsets;
 public class ClientHandler extends Thread {
     private final Socket socket;
 
-    Sender sender ;
-    Receiver receiver ;
-    String s;
-    public ClientHandler(Socket client, EventManager eventManager) throws IOException {
+    private final Sender sender ;
+    private final Receiver receiver ;
+    private final Thread.UncaughtExceptionHandler h;
+    public ClientHandler(Socket client, EventManager eventManager) throws IOException, RuntimeException {
+
         this.socket = client;
-        sender = new Sender(this.socket);
-        receiver = new Receiver(this.socket, eventManager);
-        sender.start();
+        h = new Thread.UncaughtExceptionHandler() {
+            @Override
+            public void uncaughtException(Thread th, Throwable ex){
+                System.out.println("AGAGAG");
+                //Thread.currentThread().interrupt();
+                throw new RuntimeException("Error dioboia", ex);
+            }
+        };
+        try {
+            sender = new Sender(this.socket);
+            receiver = new Receiver(this.socket, eventManager);
+            sender.setUncaughtExceptionHandler(h);
+            sender.start();
+        } catch (Exception e) {
+            System.out.println("LOL2");
+            throw e;
+        }
     }
 
     public void run() {
-
+        //throw new RuntimeException("EHOLA");
+        /*
         System.out.println("Client connected: " + this.socket.getInetAddress());
         try {
-            Thread.UncaughtExceptionHandler h = new Thread.UncaughtExceptionHandler() {
-                @Override
-                public void uncaughtException(Thread th, Throwable ex) {
-                    System.out.println("Uncaught exception: " + ex);
-                    try {
-                        socket.close();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-            };
+
             receiver.setUncaughtExceptionHandler(h);
             receiver.start();
+
+            receiver.join();
+            sender.join();
             
         } catch (Exception e) {
-            e.printStackTrace();
+            System.out.println("LOL");
+            try {
+                throw e;
+            } catch (InterruptedException ex) {
+                throw new RuntimeException(ex);
+            }
+
 
         }
+        */
+
+
     }
 
     public void sendMessages(){

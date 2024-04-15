@@ -42,6 +42,7 @@ public class Receiver extends Thread {
 
 
             } catch (Exception e) {
+                System.out.println("MIIIINCHIA");
                 throw new RuntimeException("Error reading from socket", e);
             }
 
