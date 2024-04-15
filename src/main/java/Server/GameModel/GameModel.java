@@ -5,10 +5,21 @@ import Server.Deck.AchievementDeck;
 import Server.Deck.GoldDeck;
 import Server.Deck.ResourceDeck;
 import Server.Chat.Chat;
+import Server.EventManager.EventManager;
+import Server.Player.Player;
 
 import java.util.List;
 
 public interface GameModel {
+
+    public void setPlayerList(List<Player> playerList);
+
+    public List<Player> getPlayerList();
+
+    public void addPlayer(Player player);
+
+    public EventManager getEventManager();
+
     /**
      * Adds 1 to turn
      */

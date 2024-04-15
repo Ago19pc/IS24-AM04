@@ -13,7 +13,9 @@ import Server.Enums.EventType;
 import java.util.Scanner;
 
 public class Main {
+    private static EventManager eventManager;
     public static void main(String[] args) {
+        eventManager = new EventManager();
         Scanner inputReader = new Scanner(System.in);
 
         EventManager eventManager = new EventManager( );
@@ -24,13 +26,13 @@ public class Main {
         Player player = new PlayerInstance("Ago19", eventManager);
         player.setColor(Color.RED);
 
-        GameModel gameModel = new GameModelInstance();
+        GameModel gameModel = new GameModelInstance(eventManager);
 
         System.out.println("Hello my man, what port would you like to start your server on?");
         int port = inputReader.nextInt();
 
         try {
-            ConnectionHandler connectionHandler = new ConnectionHandler(port);
+            ConnectionHandler connectionHandler = new ConnectionHandler(port, eventManager);
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -1,7 +1,12 @@
 package it.am04.demo1.Connection;
 
+import ConnectionUtils.MessagePacket;
 import ConnectionUtils.Receiver;
 import ConnectionUtils.Sender;
+import Payloads.PlayerNamePayload;
+import Server.Enums.EventType;
+import Server.EventManager.EventManager;
+import com.google.gson.Gson;
 
 import java.io.IOException;
 import java.net.Socket;
@@ -12,7 +17,10 @@ public class ConnectionHandler {
     public Sender sender;
     public Receiver receiver;
 
-    public ConnectionHandler(String ip, int port) {
+    private EventManager eventManager;
+
+    public ConnectionHandler(String ip, int port, EventManager eventManager) {
+        this.eventManager = eventManager;
         try {
             startConnection(ip, port);
         } catch (IOException e) {
@@ -26,10 +34,16 @@ public class ConnectionHandler {
         clientSocket = new Socket(ip, port);
         System.out.println("Connection established");
         sender = new Sender(clientSocket);
-        receiver = new Receiver(clientSocket);
+        receiver = new Receiver(clientSocket, eventManager);
 
         sender.start();
         receiver.start();
+
+        Gson gson = new Gson();
+        PlayerNamePayload payload = new PlayerNamePayload("ciao");
+        MessagePacket message = new MessagePacket(payload, EventType.PLAYERSDATA);
+        //String json = gson.toJson(message);
+        //sender.sendMessage(json);
 
     }
 

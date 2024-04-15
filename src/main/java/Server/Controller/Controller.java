@@ -1,12 +1,18 @@
 package Server.Controller;
 
 import Server.Client.Client;
+import Server.Connections.ConnectionHandler;
 import Server.Enums.Color;
+import Server.EventManager.EventManager;
 import Server.GameModel.GameModel;
 import Server.GameModel.GameModelInstance;
+import Server.Listener.PlayersDataListener;
 
 import java.beans.EventHandler;
 import java.util.List;
+import java.util.Scanner;
+
+import static Server.Enums.EventType.PLAYERSDATA;
 
 /**
  *  FASE 0: INIZIALIZZAZIONE
@@ -121,9 +127,28 @@ public class Controller {
      */
     public static void main(String[] args) {
 
-        gameModel = new GameModelInstance();
+        Scanner inputReader = new Scanner(System.in);
+        EventManager eventManager = new EventManager( );
+        GameModel gameModel = new GameModelInstance(eventManager);
+        PlayersDataListener playersDataListener = new PlayersDataListener(gameModel);
+        eventManager.subscribe(PLAYERSDATA, playersDataListener);
+
+
+
+        System.out.println("Hello my man, what port would you like to start your server on?");
+        int port = inputReader.nextInt();
+
+        try {
+            ConnectionHandler connectionHandler = new ConnectionHandler(port, eventManager);
+            connectionHandler.start();
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("Something went wrong, try again");
+        }
+
 
     }
+
 
     private void setPlayerData(String name, Color color) {};
     private void giveSecretObjectiveCard() {};

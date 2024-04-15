@@ -69,6 +69,7 @@ public class PlayerInstance implements Player {
         return manuscript;
     }
 
+
     /**
      * @return String the player's name
      */
