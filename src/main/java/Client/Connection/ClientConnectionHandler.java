@@ -48,12 +48,13 @@ public class ClientConnectionHandler {
 
             sender.start();
             receiver.start();
+
         } catch (Exception e) {
             e.printStackTrace();
         }
 
         PlayerNameMessage pnm = new PlayerNameMessage("NOME1");
-        MessagePacket message = new MessagePacket(pnm, EventType.PLAYERSDATA);
+        MessagePacket message = new MessagePacket(pnm, EventType.PLAYERNAME);
         //sender.sendMessage(message.stringify());
         MessagePacket test = new MessagePacket(message.stringify());
         System.out.println(test.equals(message));
@@ -67,6 +68,15 @@ public class ClientConnectionHandler {
 
 
     }
+
+
+
+
+
+
+
+
+
 
     public void sendMessage(String msg) throws IOException {
         sender.sendMessage(msg);

@@ -11,7 +11,6 @@ public class ClientHandler extends Thread {
     private final ServerReceiver receiver ;
     private final Thread.UncaughtExceptionHandler h;
     public ClientHandler(ServerConnectionHandler connectionHandler, Socket client) throws IOException, RuntimeException {
-
         this.socket = client;
         h = new Thread.UncaughtExceptionHandler() {
             @Override
@@ -52,6 +51,8 @@ public class ClientHandler extends Thread {
 
 
         }
+
+
 
 
 

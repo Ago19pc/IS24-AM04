@@ -9,10 +9,11 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+import java.util.stream.Collectors;
 
 public class ServerConnectionHandler extends Thread {
     private ServerSocket socket;
-    private List<Thread> threads;
+    private List<ClientHandler> clients;
 
     private int port;
 
@@ -29,7 +30,7 @@ public class ServerConnectionHandler extends Thread {
         this.controller = controller;
         askForPort();
 
-        threads = new ArrayList<>();
+        clients = new ArrayList<>();
         while (!startServer(port)) {
             System.out.println("Port already in use, trying next port...");
             port++;
@@ -54,12 +55,12 @@ public class ServerConnectionHandler extends Thread {
                 System.out.println("Received connection");
                 // QUI ANDREBBE GESTITO IL CASO DI RICONNESIONE
                 //
-                Thread t = new ClientHandler(this, client);
+                ClientHandler t = new ClientHandler(this, client);
 
                 t.setUncaughtExceptionHandler(h);
 
                 t.start();
-                threads.add(t);
+                clients.add(t);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -71,8 +72,8 @@ public class ServerConnectionHandler extends Thread {
      * Get the client threads list
      * @return this.threads the list of all client thread
      */
-    List<Thread> getThreads() {
-        return this.threads;
+    List<ClientHandler> getThreads() {
+        return this.clients;
     }
 
     private boolean startServer(int port) {
@@ -89,6 +90,14 @@ public class ServerConnectionHandler extends Thread {
         Scanner inputReader = new Scanner(System.in);
         System.out.println("Hello my man, what port would you like to start your server on?");
         this.port = inputReader.nextInt();
+    }
+
+    public void killClient(ClientHandler target ) {
+        target.interrupt();
+        this.clients = this.clients.stream()
+                .filter(e -> e.getId() != (target.getId()))
+                .collect(Collectors.toList());
+
     }
 
 }

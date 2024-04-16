@@ -11,7 +11,7 @@ public class MessageUtils {
         Gson gson = new Gson();
         MessagePacket messagePacket = gson.fromJson(message, MessagePacket.class);
         switch (messagePacket.getType()){
-            case PLAYERSDATA:
+            case PLAYERNAME:
                 PlayerNameMessage payload = (PlayerNameMessage) messagePacket.getPayload();
 
 
