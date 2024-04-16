@@ -18,4 +18,13 @@ public class LeaderboardMessage implements GeneralMessage {
                 System.out.println(player.getName() + ": " + points.get(player) + " points");
             }
         }
+
+        public Map<Player, Integer> getPoints(){
+            return points;
+        }
+
+        public boolean equals(GeneralMessage other){
+            System.out.println("LeaderboardMessage equals still to be implemented.");
+            return this.points.equals(((LeaderboardMessage) other).getPoints());
+        }
 }

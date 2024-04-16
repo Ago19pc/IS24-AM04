@@ -19,4 +19,9 @@ public class PlayersMessage implements GeneralMessage {
     public List<Player> getPlayers(){
         return players;
     }
+
+    public boolean equals(GeneralMessage other){
+        System.out.println("PlayersMessage equals still to be implemented.");
+        return this.players.equals(((PlayersMessage) other).getPlayers());
+    }
 }

@@ -41,8 +41,8 @@ public class MessagePacket implements Serializable {
         return Base64.getEncoder().encodeToString(bos.toByteArray());
     }
 
-    //public boolean equals(MessagePacket other){
-    //    return this.payload.equals(other.getPayload()) && this.type.equals(other.getType());
-    //}
+    public boolean equals(MessagePacket other){
+        return this.payload.equals(other.getPayload()) && this.type.equals(other.getType());
+    }
 
 }

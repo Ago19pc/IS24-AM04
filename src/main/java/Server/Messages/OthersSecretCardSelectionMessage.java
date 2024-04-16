@@ -12,7 +12,18 @@ public class OthersSecretCardSelectionMessage implements GeneralMessage {
         this.player = player;
     }
 
+    public Card getCard(){
+        return card;
+    }
+    public Player getPlayer(){
+        return player;
+    }
     public void printData(){
         System.out.println("Player " + player.getName() + " selected a secret card.");
+    }
+
+    public boolean equals(GeneralMessage other){
+        System.out.println("OthersSecretCardSelectionMessage equals still to be implemented.");
+        return this.card.equals(((OthersSecretCardSelectionMessage) other).getCard()) && this.player.equals(((OthersSecretCardSelectionMessage) other).getPlayer());
     }
 }

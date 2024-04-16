@@ -18,4 +18,8 @@ public class PlayerNameMessage implements GeneralMessage, Serializable {
     public String getName(){
         return name;
     }
+
+    public boolean equals(GeneralMessage other){
+        return this.name.equals(((PlayerNameMessage) other).getName());
+    }
 }
