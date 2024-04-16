@@ -5,6 +5,7 @@ import Server.Deck.AchievementDeck;
 import Server.Deck.GoldDeck;
 import Server.Deck.ResourceDeck;
 import Server.Chat.Chat;
+import Server.Player.Player;
 
 import java.util.List;
 
@@ -46,7 +47,7 @@ public interface GameModel {
 
     /**
      * Set the game to the end game phase
-     * @param endGamePhase boolean true or false
+     *
      */
     public void setEndGamePhase();
 
@@ -54,5 +55,16 @@ public interface GameModel {
      * @return Chat the chat
      */
     public Chat getChat();
+    /**
+     * adds a player to the list of players
+     * @param player the player
+     */
+    public void addPlayer(Player player);
+    /**
+     * removes a player from the list of players
+     * @param player the player
+     */
+    public void removePlayer(Player player);
+
 
 }

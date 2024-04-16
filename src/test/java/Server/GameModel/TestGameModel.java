@@ -1,6 +1,8 @@
 package Server.GameModel;
 
 import Server.Card.*;
+import Server.Player.Player;
+import Server.Player.PlayerInstance;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -44,11 +46,29 @@ public class TestGameModel {
         assertEquals(2, gameModelInstance.getTurn());
     }
     @Test
-    public void testEndGamePhase()
-    {
+    public void testEndGamePhase() {
         GameModelInstance gameModelInstance = new GameModelInstance();
         assertFalse(gameModelInstance.isEndGamePhase());
         gameModelInstance.setEndGamePhase();
         assertTrue(gameModelInstance.isEndGamePhase());
+    }
+    @Test
+    public void testNewPlayer() {
+        GameModelInstance gameModelInstance = new GameModelInstance();
+        Player player = new PlayerInstance("player1",null);
+        gameModelInstance.addPlayer(player);
+        List<Player> playerList = gameModelInstance.getPlayerList();
+        assertEquals(1, playerList.size());
+        assertEquals(player, playerList.get(0));
+    }
+    @Test
+    public void testRemovePlayer() {
+        GameModelInstance gameModelInstance = new GameModelInstance();
+        Player player = new PlayerInstance("player1",null);
+        gameModelInstance.addPlayer(player);
+        List<Player> playerList = gameModelInstance.getPlayerList();
+        assertEquals(1, playerList.size());
+        gameModelInstance.removePlayer(player);
+        assertEquals(0, playerList.size());
     }
 }

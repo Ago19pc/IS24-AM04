@@ -26,7 +26,7 @@ public class GameModelInstance implements GameModel {
     private boolean isEndGamePhase;
     private final Chat chat;
 
-    private List<Player> playerList;
+    private final List<Player> playerList;
 
     public GameModelInstance() {
         System.out.println("GameModelInstance");
@@ -38,6 +38,7 @@ public class GameModelInstance implements GameModel {
         turn = 0;
         startingCards = new ArrayList<>();
         generateStartingCards();
+        playerList = new ArrayList<>();
 
     }
 
@@ -165,5 +166,13 @@ public class GameModelInstance implements GameModel {
     @Override
     public Chat getChat() {
         return this.chat;
+    }
+    public void addPlayer(Player player) {
+        if(playerList.size()<4) {
+            playerList.add(player);
+        }
+    }
+    public void removePlayer(Player player) {
+        playerList.remove(player);
     }
 }
