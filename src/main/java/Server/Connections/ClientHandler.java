@@ -2,7 +2,7 @@ package Server.Connections;
 
 import ConnectionUtils.Receiver;
 import ConnectionUtils.Sender;
-import Server.EventManager.EventManager;
+
 
 import java.io.*;
 import java.net.Socket;
@@ -14,7 +14,7 @@ public class ClientHandler extends Thread {
     private final Sender sender ;
     private final Receiver receiver ;
     private final Thread.UncaughtExceptionHandler h;
-    public ClientHandler(Socket client, EventManager eventManager) throws IOException, RuntimeException {
+    public ClientHandler(Socket client) throws IOException, RuntimeException {
 
         this.socket = client;
         h = new Thread.UncaughtExceptionHandler() {
@@ -27,7 +27,7 @@ public class ClientHandler extends Thread {
         };
         try {
             sender = new Sender(this.socket);
-            receiver = new Receiver(this.socket, eventManager);
+            receiver = new Receiver(this.socket);
             sender.setUncaughtExceptionHandler(h);
             sender.start();
         } catch (Exception e) {

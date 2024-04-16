@@ -9,7 +9,6 @@ import Server.Deck.GoldDeck;
 import Server.Deck.ResourceDeck;
 import Server.Enums.CardCorners;
 import Server.Enums.Symbol;
-import Server.EventManager.EventManager;
 import Server.Player.Player;
 
 import java.io.BufferedReader;
@@ -29,9 +28,8 @@ public class GameModelInstance implements GameModel {
 
     private List<Player> playerList;
 
-    private final EventManager eventManager;
 
-    public GameModelInstance(EventManager eventManager) {
+    public GameModelInstance() {
         System.out.println("GameModelInstance");
         resourceDeck = new ResourceDeck();
         goldDeck = new GoldDeck();
@@ -40,14 +38,11 @@ public class GameModelInstance implements GameModel {
         isEndGamePhase = false;
         turn = 0;
         startingCards = new ArrayList<>();
-        this.eventManager = eventManager;
         generateStartingCards();
 
     }
 
-    public EventManager getEventManager() {
-        return eventManager;
-    }
+
 
     private void generateStartingCards() {
         File fileFRONT;

@@ -3,10 +3,8 @@ package Server.Controller;
 import Server.Client.Client;
 import Server.Connections.ConnectionHandler;
 import Server.Enums.Color;
-import Server.EventManager.EventManager;
 import Server.GameModel.GameModel;
 import Server.GameModel.GameModelInstance;
-import Server.Listener.PlayersDataListener;
 
 import java.beans.EventHandler;
 import java.util.List;
@@ -118,33 +116,13 @@ import static Server.Enums.EventType.PLAYERSDATA;
  *          clear all variables for reset
 */
 public class Controller {
-    private static List<Client> clients;
-    private static GameModel gameModel;
-    private static EventHandler eventHandler;
-    /**
-     * main.Main method, here goes the program
-     * @param args the arguments, that I don't know, they're useless, just like me :'(
-     */
-    public static void main(String[] args) {
-
-        Scanner inputReader = new Scanner(System.in);
-        EventManager eventManager = new EventManager( );
-        GameModel gameModel = new GameModelInstance(eventManager);
-        PlayersDataListener playersDataListener = new PlayersDataListener(gameModel);
-        eventManager.subscribe(PLAYERSDATA, playersDataListener);
+    private GameModel gameModel;
 
 
+    public void start() {
 
-        System.out.println("Hello my man, what port would you like to start your server on?");
-        int port = inputReader.nextInt();
+        GameModel gameModel = new GameModelInstance();
 
-        try {
-            ConnectionHandler connectionHandler = new ConnectionHandler(port, eventManager);
-            connectionHandler.start();
-        } catch (Exception e) {
-            e.printStackTrace();
-            System.out.println("Something went wrong, try again");
-        }
 
 
     }

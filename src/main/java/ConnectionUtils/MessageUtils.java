@@ -2,7 +2,6 @@ package ConnectionUtils;
 
 import Payloads.PlayerNamePayload;
 import Server.Enums.EventType;
-import Server.EventManager.EventManager;
 import Server.Messages.PlayerNameMessage;
 import Server.Messages.PlayersMessage;
 import Server.Player.Player;
@@ -17,11 +16,6 @@ import static Server.Enums.EventType.PLAYERSDATA;
 
 public class MessageUtils {
 
-    EventManager eventManager;
-
-    public MessageUtils(EventManager eventManager){
-        this.eventManager = eventManager;
-    }
 
     //server side demux
     public void server_demux(String message){
@@ -32,7 +26,6 @@ public class MessageUtils {
                 PlayerNamePayload payload = (PlayerNamePayload) messagePacket.getPayload();
                 PlayerNameMessage playerNameMessage = new PlayerNameMessage(payload.getPlayerName());
 
-                eventManager.notify(PLAYERSDATA, playerNameMessage);
                 break;
         }
 

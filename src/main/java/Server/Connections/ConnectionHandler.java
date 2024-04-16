@@ -1,11 +1,14 @@
 package Server.Connections;
 
-import Server.EventManager.EventManager;
+
+
+import Server.Controller.Controller;
 
 import java.net.*;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
 import static java.lang.System.exit;
 
@@ -13,16 +16,21 @@ public class ConnectionHandler extends Thread {
     private ServerSocket socket;
     private List<Thread> threads;
 
-    private EventManager eventManager;
+    private int port;
+
+    private Controller controller;
+
 
 
     /**
      * Create the server socket, needed to choose port
      *
-     * @param port port to listen to for connections
+     * @param controller controller instance
      */
-    public ConnectionHandler(int port, EventManager eventManager) throws IOException {
-        this.eventManager = eventManager;
+    public ConnectionHandler(Controller controller) throws IOException {
+        this.controller = controller;
+        askForPort();
+
         threads = new ArrayList<>();
         while (!startServer(port)) {
             System.out.println("Port already in use, trying next port...");
@@ -48,7 +56,7 @@ public class ConnectionHandler extends Thread {
                 System.out.println("Received connection");
                 // QUI ANDREBBE GESTITO IL CASO DI RICONNESIONE
                 //
-                Thread t = new ClientHandler(client, eventManager);
+                Thread t = new ClientHandler(client);
 
                 t.setUncaughtExceptionHandler(h);
 
@@ -78,4 +86,11 @@ public class ConnectionHandler extends Thread {
         }
         return true;
     }
+
+    private void askForPort() {
+        Scanner inputReader = new Scanner(System.in);
+        System.out.println("Hello my man, what port would you like to start your server on?");
+        this.port = inputReader.nextInt();
+    }
+
 }
