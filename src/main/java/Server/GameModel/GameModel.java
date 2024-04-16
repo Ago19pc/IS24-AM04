@@ -5,7 +5,6 @@ import Server.Deck.AchievementDeck;
 import Server.Deck.GoldDeck;
 import Server.Deck.ResourceDeck;
 import Server.Chat.Chat;
-import Server.EventManager.EventManager;
 import Server.Player.Player;
 
 import java.util.List;

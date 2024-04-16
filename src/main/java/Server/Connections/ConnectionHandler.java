@@ -56,7 +56,7 @@ public class ConnectionHandler extends Thread {
                 System.out.println("Received connection");
                 // QUI ANDREBBE GESTITO IL CASO DI RICONNESIONE
                 //
-                Thread t = new ClientHandler(client);
+                Thread t = new ClientHandler(this, client);
 
                 t.setUncaughtExceptionHandler(h);
 

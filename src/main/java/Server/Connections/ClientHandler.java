@@ -14,7 +14,7 @@ public class ClientHandler extends Thread {
     private final Sender sender ;
     private final Receiver receiver ;
     private final Thread.UncaughtExceptionHandler h;
-    public ClientHandler(Socket client) throws IOException, RuntimeException {
+    public ClientHandler(ConnectionHandler connectionHandler,Socket client) throws IOException, RuntimeException {
 
         this.socket = client;
         h = new Thread.UncaughtExceptionHandler() {

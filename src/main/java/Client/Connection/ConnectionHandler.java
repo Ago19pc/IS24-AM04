@@ -5,7 +5,6 @@ import ConnectionUtils.Receiver;
 import ConnectionUtils.Sender;
 import Payloads.PlayerNamePayload;
 import Server.Enums.EventType;
-import Server.EventManager.EventManager;
 import com.google.gson.Gson;
 
 import java.io.IOException;
@@ -17,10 +16,8 @@ public class ConnectionHandler {
     public Sender sender;
     public Receiver receiver;
 
-    private EventManager eventManager;
 
-    public ConnectionHandler(String ip, int port, EventManager eventManager) {
-        this.eventManager = eventManager;
+    public ConnectionHandler(String ip, int port) {
         try {
             startConnection(ip, port);
         } catch (IOException e) {

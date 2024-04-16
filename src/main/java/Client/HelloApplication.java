@@ -1,6 +1,5 @@
 package Client;
 
-import Server.EventManager.EventManager;
 import Client.Connection.ConnectionHandler;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -14,7 +13,6 @@ public class HelloApplication extends Application {
 
     private static ConnectionHandler connectionHandler;
 
-    private static EventManager eventManager = new EventManager();
     @Override
     public void start(Stage stage) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("hello-view.fxml"));
@@ -30,7 +28,7 @@ public class HelloApplication extends Application {
         String ip = inputReader.nextLine();
         System.out.println("Inserisci la porta del server");
         int port = inputReader.nextInt();
-        connectionHandler = new ConnectionHandler(ip, port, eventManager);
+        connectionHandler = new ConnectionHandler(ip, port);
 
 
 

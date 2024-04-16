@@ -1,6 +1,5 @@
 package Server;
 
-import Server.Client.Client;
 import Server.Connections.ConnectionHandler;
 import Server.Controller.Controller;
 
