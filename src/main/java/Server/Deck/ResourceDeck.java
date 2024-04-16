@@ -14,13 +14,21 @@ import Server.Card.ResourceCard;
 import Server.Enums.CardCorners;
 import Server.Enums.Symbol;
 
+import static Server.Enums.DeckPosition.FIRST_CARD;
+import static Server.Enums.DeckPosition.SECOND_CARD;
+
 public class ResourceDeck extends Deck {
     public ResourceDeck(){
         super();
         createCards();
         super.shuffle();
         System.out.println("ResourceDeck");
-
+        try {
+            moveCardToBoard(FIRST_CARD);
+            moveCardToBoard(SECOND_CARD);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     /**

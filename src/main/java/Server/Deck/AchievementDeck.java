@@ -10,6 +10,8 @@ import Server.Card.AchievementFrontFace;
 import Server.Card.EmptyCardFace;
 import Server.Enums.Symbol;
 
+import static Server.Enums.DeckPosition.*;
+
 
 public class AchievementDeck extends Deck {
 
@@ -18,6 +20,12 @@ public class AchievementDeck extends Deck {
         createCards();
         super.shuffle();
         System.out.println("AchievementDeck");
+        try {
+            moveCardToBoard(FIRST_CARD);
+            moveCardToBoard(SECOND_CARD);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     /**

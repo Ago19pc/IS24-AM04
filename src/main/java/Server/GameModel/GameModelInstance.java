@@ -168,11 +168,12 @@ public class GameModelInstance implements GameModel {
         return this.chat;
     }
     public void addPlayer(Player player) {
-        if(playerList.size()<4) {
-            playerList.add(player);
-        }
+        playerList.add(player);
     }
     public void removePlayer(Player player) {
         playerList.remove(player);
+    }
+    public void shufflePlayerList() {
+        Collections.shuffle(playerList);
     }
 }

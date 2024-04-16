@@ -66,5 +66,14 @@ public interface GameModel {
      */
     public void removePlayer(Player player);
 
+    /**
+     * @return List<Player> the list of players
+     */
+    public List<Player> getPlayerList();
+    /**
+     * shuffles the player list
+     * @return void
+     */
+    public void shufflePlayerList();
 
 }

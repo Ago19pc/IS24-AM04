@@ -1,11 +1,16 @@
 package Server.Controller;
 
-import Server.Client.Client;
+import Server.Card.AchievementCard;
+import Server.Card.Card;
+import Server.Card.StartingCard;
+import Server.Connections.ConnectionHandler;
 import Server.Enums.Color;
+import Server.Enums.DeckPosition;
+import Server.Enums.Face;
 import Server.GameModel.GameModel;
 import Server.GameModel.GameModelInstance;
+import Server.Player.Player;
 
-import java.beans.EventHandler;
 import java.util.List;
 
 /**
@@ -111,26 +116,11 @@ import java.util.List;
  *  FASE 5: NUOVA PARTITA / TERMINA
  *          clear all variables for reset
 */
-public class ControllerInstance {
-    private static List<Client> clients;
-    private static GameModel gameModel;
-    private static EventHandler eventHandler;
-    /**
-     * main.Main method, here goes the program
-     * @param args the arguments, that I don't know, they're useless, just like me :'(
-     */
-    public static void main(String[] args) {
-
-        gameModel = new GameModelInstance();
-
-    }
-
-    private void setPlayerData(String name, Color color) {};
-    private void giveSecretObjectiveCard() {};
+public class ControllerInstance implements Controller{
+    private final GameModel gameModel;
+    private final ConnectionHandler connectionHandler;
     private void subscribeClients() {};
     private void setupMatch() {};
-    private void giveStartingCards() {};
-    private void giveInitialHand() {};
     private void playerTurn() {};
     private void saveData() {};
     private void setEndGamePhase() {};
@@ -143,6 +133,85 @@ public class ControllerInstance {
     private void calculatePoints() {//todo: forall players and forall achievements call manuscript.calculatepoints and sum them up};
     };
 
+    public ControllerInstance(ConnectionHandler connectionHandler) {
+        this.connectionHandler = connectionHandler;
+        this.gameModel = new GameModelInstance();
+    }
+    public void addPlayer(Player player) {
+        if(gameModel.getPlayerList().size()<4) {
+            gameModel.addPlayer(player);
+        }
+        //Notify
+    }
+
+    public void removePlayer(Player player) {
+        gameModel.removePlayer(player);
+        //Notify
+    }
+    public List<Player> getPlayerList() {
+        return gameModel.getPlayerList();
+    }
+    public void shufflePlayerList() {
+        gameModel.shufflePlayerList();
+        //Notify
+    }
+    public void start()
+    {
+        shufflePlayerList();
+        //TODO : implementare il resto
+        //Notify
+    }
+    public void setPlayerColor(Color color, Player player) {
+        List<Color> colors = getPlayerList().stream().map(Player::getColor).toList();
+        if(!colors.contains(color)){
+            player.setColor(color);
+        }
+        //Notify
+    }
+    public void giveSecretObjectiveCards() {
+        getPlayerList().forEach(player -> {
+            Card card1 = gameModel.getAchievementDeck().popCard(DeckPosition.DECK);
+            Card card2 = gameModel.getAchievementDeck().popCard(DeckPosition.DECK);
+        });
+        //Notify
+    }
+
+    public void setSecretObjectiveCard(Player player, AchievementCard card) {
+        player.setSecretObjective(card);
+    }
+    public void giveStartingCards() {
+        List<StartingCard> startingCards = gameModel.getStartingCards();
+        getPlayerList().forEach(player -> {
+            Card card = startingCards.remove(0);
+        });
+        //Notify
+    }
+    public void setStartingCard(Player player, StartingCard card, Face face) {
+        player.initializeManuscript(card, face);
+        //Notify
+    }
+    public void giveInitialHand() {
+        getPlayerList().forEach(player -> {
+            Card card1 = gameModel.getResourceDeck().popCard(DeckPosition.DECK);
+            Card card2 = gameModel.getResourceDeck().popCard(DeckPosition.DECK);
+            Card card3 = gameModel.getGoldDeck().popCard(DeckPosition.DECK);
+            player.addCardToHand(card1);
+            player.addCardToHand(card2);
+            player.addCardToHand(card3);
+        });
+        //Notify
+    }
+    public void nextTurn() {
+        gameModel.nextTurn();
+        //Notify
+    }
+    public int getTurn() {
+        return gameModel.getTurn();
+    }
+    public boolean isOnline(Player player) {
+        //Todo implementare
+        return true;
+    }
 }
 
 

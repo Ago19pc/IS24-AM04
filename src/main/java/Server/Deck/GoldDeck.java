@@ -9,12 +9,21 @@ import java.io.File;
 import java.io.FileReader;
 import java.util.*;
 
+import static Server.Enums.DeckPosition.FIRST_CARD;
+import static Server.Enums.DeckPosition.SECOND_CARD;
+
 public class GoldDeck extends Deck {
     public GoldDeck(){
         super();
         createCards();
         super.shuffle();
         System.out.println("GoldDeck");
+        try {
+            moveCardToBoard(FIRST_CARD);
+            moveCardToBoard(SECOND_CARD);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     /**

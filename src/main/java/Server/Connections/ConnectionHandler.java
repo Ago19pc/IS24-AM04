@@ -24,7 +24,7 @@ public class ConnectionHandler {
             port++;
         }
         System.out.println("Server started on port: " + port);
-        while (true) {
+        /*while (true) {
             try {
                 Socket client = this.socket.accept();
                 System.out.println("Received connection");
@@ -36,7 +36,7 @@ public class ConnectionHandler {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-        }
+        }*/
 
 
     }

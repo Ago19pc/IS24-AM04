@@ -5,19 +5,18 @@ import static Server.Enums.DeckPosition.*;
 import Server.Card.Card;
 import Server.Exception.IncorrectDeckPositionException;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-
+import java.util.*;
 
 
 public abstract  class Deck implements Deckable {
     protected List<Card> cards;
-    private Map<DeckPosition, Card> boardCards;
+    private final Map<DeckPosition, Card> boardCards;
 
     public Deck(){
         this.cards = new ArrayList<Card>();
+        this.boardCards = new HashMap<>();
+        boardCards.put(FIRST_CARD, null);
+        boardCards.put(SECOND_CARD, null);
     }
 
     /**
@@ -37,6 +36,8 @@ public abstract  class Deck implements Deckable {
             throw new IncorrectDeckPositionException("Cannot add card to the deck, only to FIST_CARD or SECOND_CARD.");
         else
             System.out.println(this.toString() + "moveCardToBoard");
+            Card cardToMove = popCard(DECK);
+            addCard(cardToMove, where_to);
     }
 
     /**
