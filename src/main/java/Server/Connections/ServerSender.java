@@ -1,19 +1,20 @@
-package ConnectionUtils;
+package Server.Connections;
 
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.Scanner;
 
-public class Sender extends Thread {
+public class ServerSender extends Thread {
     private Socket clientSocket;
 
     private Scanner in;
 
     private PrintWriter out;
+    private ClientHandler clientHandler;
 
-    public Sender(Socket clientSocket) throws IOException {
+    public ServerSender(ClientHandler clientHandler, Socket clientSocket) throws IOException {
+        this.clientHandler = clientHandler;
         this.clientSocket = clientSocket;
         out = new PrintWriter(clientSocket.getOutputStream(), true);
         in = new Scanner(System.in);

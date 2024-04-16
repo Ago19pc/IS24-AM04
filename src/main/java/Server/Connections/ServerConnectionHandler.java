@@ -10,9 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-import static java.lang.System.exit;
-
-public class ConnectionHandler extends Thread {
+public class ServerConnectionHandler extends Thread {
     private ServerSocket socket;
     private List<Thread> threads;
 
@@ -27,7 +25,7 @@ public class ConnectionHandler extends Thread {
      *
      * @param controller controller instance
      */
-    public ConnectionHandler(Controller controller) throws IOException {
+    public ServerConnectionHandler(Controller controller) throws IOException {
         this.controller = controller;
         askForPort();
 

@@ -1,16 +1,8 @@
 package Server.Controller;
 
-import Server.Client.Client;
-import Server.Connections.ConnectionHandler;
 import Server.Enums.Color;
 import Server.GameModel.GameModel;
 import Server.GameModel.GameModelInstance;
-
-import java.beans.EventHandler;
-import java.util.List;
-import java.util.Scanner;
-
-import static Server.Enums.EventType.PLAYERSDATA;
 
 /**
  *  FASE 0: INIZIALIZZAZIONE

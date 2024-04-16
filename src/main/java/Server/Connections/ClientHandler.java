@@ -1,20 +1,16 @@
 package Server.Connections;
 
-import ConnectionUtils.Receiver;
-import ConnectionUtils.Sender;
-
 
 import java.io.*;
 import java.net.Socket;
-import java.nio.charset.StandardCharsets;
 
 public class ClientHandler extends Thread {
     private final Socket socket;
 
-    private final Sender sender ;
-    private final Receiver receiver ;
+    private final ServerSender sender ;
+    private final ServerReceiver receiver ;
     private final Thread.UncaughtExceptionHandler h;
-    public ClientHandler(ConnectionHandler connectionHandler,Socket client) throws IOException, RuntimeException {
+    public ClientHandler(ServerConnectionHandler connectionHandler, Socket client) throws IOException, RuntimeException {
 
         this.socket = client;
         h = new Thread.UncaughtExceptionHandler() {
@@ -26,8 +22,8 @@ public class ClientHandler extends Thread {
             }
         };
         try {
-            sender = new Sender(this.socket);
-            receiver = new Receiver(this.socket);
+            sender = new ServerSender(this, this.socket);
+            receiver = new ServerReceiver(this, this.socket);
             sender.setUncaughtExceptionHandler(h);
             sender.start();
         } catch (Exception e) {
@@ -37,8 +33,6 @@ public class ClientHandler extends Thread {
     }
 
     public void run() {
-        //throw new RuntimeException("EHOLA");
-        /*
         System.out.println("Client connected: " + this.socket.getInetAddress());
         try {
 
@@ -58,7 +52,7 @@ public class ClientHandler extends Thread {
 
 
         }
-        */
+
 
 
     }

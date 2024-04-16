@@ -1,6 +1,6 @@
 package Client;
 
-import Client.Connection.ConnectionHandler;
+import Client.Connection.ClientConnectionHandler;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -11,7 +11,7 @@ import java.util.Scanner;
 
 public class HelloApplication extends Application {
 
-    private static ConnectionHandler connectionHandler;
+    private static ClientConnectionHandler connectionHandler;
 
     @Override
     public void start(Stage stage) throws IOException {
@@ -28,7 +28,7 @@ public class HelloApplication extends Application {
         String ip = inputReader.nextLine();
         System.out.println("Inserisci la porta del server");
         int port = inputReader.nextInt();
-        connectionHandler = new ConnectionHandler(ip, port);
+        connectionHandler = new ClientConnectionHandler(ip, port);
 
 
 

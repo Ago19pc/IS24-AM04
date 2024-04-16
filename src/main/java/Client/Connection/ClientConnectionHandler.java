@@ -1,8 +1,6 @@
 package Client.Connection;
 
 import ConnectionUtils.MessagePacket;
-import ConnectionUtils.Receiver;
-import ConnectionUtils.Sender;
 import Payloads.PlayerNamePayload;
 import Server.Enums.EventType;
 import com.google.gson.Gson;
@@ -10,14 +8,14 @@ import com.google.gson.Gson;
 import java.io.IOException;
 import java.net.Socket;
 
-public class ConnectionHandler {
+public class ClientConnectionHandler {
     private Socket clientSocket;
 
-    public Sender sender;
-    public Receiver receiver;
+    public ClientSender sender;
+    public ClientReceiver receiver;
 
 
-    public ConnectionHandler(String ip, int port) {
+    public ClientConnectionHandler(String ip, int port) {
         try {
             startConnection(ip, port);
         } catch (IOException e) {
@@ -30,8 +28,8 @@ public class ConnectionHandler {
     public void startConnection(String ip, int port) throws IOException {
         clientSocket = new Socket(ip, port);
         System.out.println("Connection established");
-        sender = new Sender(clientSocket);
-        receiver = new Receiver(clientSocket);
+        sender = new ClientSender(this, clientSocket);
+        receiver = new ClientReceiver(this, clientSocket);
 
         try {
             Thread.UncaughtExceptionHandler h = new Thread.UncaughtExceptionHandler() {
@@ -54,12 +52,12 @@ public class ConnectionHandler {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        Gson gson = new Gson();
-        PlayerNamePayload payload = new PlayerNamePayload("ciao");
-        MessagePacket message = new MessagePacket(payload, EventType.PLAYERSDATA);
-        String json = gson.toJson(message);
-        System.out.println(json);
-        //sender.sendMessage(json);
+        //Gson gson = new Gson();
+        //PlayerNamePayload payload = new PlayerNamePayload("ciao");
+        //MessagePacket message = new MessagePacket(payload, EventType.PLAYERSDATA);
+        //String json = gson.toJson(message);
+        //System.out.println(json);
+
 
     }
 
