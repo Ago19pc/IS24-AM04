@@ -1,18 +1,7 @@
 package ConnectionUtils;
 
-import Payloads.PlayerNamePayload;
-import Server.Enums.EventType;
 import Server.Messages.PlayerNameMessage;
-import Server.Messages.PlayersMessage;
-import Server.Player.Player;
-import Server.Player.PlayerInstance;
 import com.google.gson.Gson;
-
-
-import java.util.ArrayList;
-import java.util.List;
-
-import static Server.Enums.EventType.PLAYERSDATA;
 
 public class MessageUtils {
 
@@ -23,8 +12,8 @@ public class MessageUtils {
         MessagePacket messagePacket = gson.fromJson(message, MessagePacket.class);
         switch (messagePacket.getType()){
             case PLAYERSDATA:
-                PlayerNamePayload payload = (PlayerNamePayload) messagePacket.getPayload();
-                PlayerNameMessage playerNameMessage = new PlayerNameMessage(payload.getPlayerName());
+                PlayerNameMessage payload = (PlayerNameMessage) messagePacket.getPayload();
+
 
                 break;
         }

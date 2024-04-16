@@ -1,9 +1,8 @@
 package Client.Connection;
 
 import ConnectionUtils.MessagePacket;
-import Payloads.PlayerNamePayload;
 import Server.Enums.EventType;
-import com.google.gson.Gson;
+import Server.Messages.PlayerNameMessage;
 
 import java.io.IOException;
 import java.net.Socket;
@@ -18,14 +17,14 @@ public class ClientConnectionHandler {
     public ClientConnectionHandler(String ip, int port) {
         try {
             startConnection(ip, port);
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
 
     }
 
-    public void startConnection(String ip, int port) throws IOException {
+    public void startConnection(String ip, int port) throws IOException, ClassNotFoundException {
         clientSocket = new Socket(ip, port);
         System.out.println("Connection established");
         sender = new ClientSender(this, clientSocket);
@@ -52,11 +51,19 @@ public class ClientConnectionHandler {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        //Gson gson = new Gson();
-        //PlayerNamePayload payload = new PlayerNamePayload("ciao");
-        //MessagePacket message = new MessagePacket(payload, EventType.PLAYERSDATA);
-        //String json = gson.toJson(message);
-        //System.out.println(json);
+
+        PlayerNameMessage pnm = new PlayerNameMessage("NOME1");
+        MessagePacket message = new MessagePacket(pnm, EventType.PLAYERSDATA);
+        //sender.sendMessage(message.stringify());
+        MessagePacket test = new MessagePacket(message.stringify());
+        System.out.println(test.equals(message));
+
+        System.out.println(message.getType());
+        System.out.println(test.getType());
+
+        message.getPayload().printData();
+        test.getPayload().printData();
+
 
 
     }
