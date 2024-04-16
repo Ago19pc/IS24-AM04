@@ -1,4 +1,4 @@
-package it.am04.demo1.Connection;
+package Client.Connection;
 
 import ConnectionUtils.MessagePacket;
 import ConnectionUtils.Receiver;
@@ -34,7 +34,7 @@ public class ConnectionHandler {
         clientSocket = new Socket(ip, port);
         System.out.println("Connection established");
         sender = new Sender(clientSocket);
-        receiver = new Receiver(clientSocket, eventManager);
+        receiver = new Receiver(clientSocket);
 
         try {
             Thread.UncaughtExceptionHandler h = new Thread.UncaughtExceptionHandler() {
@@ -60,7 +60,8 @@ public class ConnectionHandler {
         Gson gson = new Gson();
         PlayerNamePayload payload = new PlayerNamePayload("ciao");
         MessagePacket message = new MessagePacket(payload, EventType.PLAYERSDATA);
-        //String json = gson.toJson(message);
+        String json = gson.toJson(message);
+        System.out.println(json);
         //sender.sendMessage(json);
 
     }

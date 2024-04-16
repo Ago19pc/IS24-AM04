@@ -1,7 +1,7 @@
-package it.am04.demo1;
+package Client;
 
 import Server.EventManager.EventManager;
-import it.am04.demo1.Connection.ConnectionHandler;
+import Client.Connection.ConnectionHandler;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;

@@ -1,7 +1,6 @@
 package ConnectionUtils;
 
 import Server.Enums.EventType;
-import Server.EventManager.EventManager;
 import Server.Messages.PlayersMessage;
 import Server.Player.Player;
 import ConnectionUtils.MessageUtils;
@@ -19,10 +18,9 @@ public class Receiver extends Thread {
 
     private BufferedReader in;
 
-    private EventManager eventManager;
-    public Receiver(Socket clientSocket, EventManager eventManager) throws IOException {
+
+    public Receiver(Socket clientSocket) throws IOException {
         this.clientSocket = clientSocket;
-        this.eventManager = eventManager;
         in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
     }
 
@@ -36,7 +34,7 @@ public class Receiver extends Thread {
                 
                 System.out.println(resp);
                 // Capisci il tipo di messaggio dal prefisso (serve a scegliere il tipo di evento)
-                MessageUtils messageUtils = new MessageUtils(eventManager);
+                MessageUtils messageUtils = new MessageUtils();
                 messageUtils.server_demux(resp);
 
 

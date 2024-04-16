@@ -18,7 +18,6 @@ public interface GameModel {
 
     public void addPlayer(Player player);
 
-    public EventManager getEventManager();
 
     /**
      * Adds 1 to turn
