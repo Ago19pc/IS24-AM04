@@ -6,18 +6,21 @@ import java.net.Socket;
 
 public class ClientHandler extends Thread {
     private final Socket socket;
-
+    private final ServerConnectionHandler connectionHandler;
     private final ServerSender sender ;
     private final ServerReceiver receiver ;
     private final Thread.UncaughtExceptionHandler h;
+
+
+    ClientHandler me = this;
     public ClientHandler(ServerConnectionHandler connectionHandler, Socket client) throws IOException, RuntimeException {
         this.socket = client;
+        this.connectionHandler = connectionHandler;
         h = new Thread.UncaughtExceptionHandler() {
             @Override
             public void uncaughtException(Thread th, Throwable ex){
-                System.out.println("AGAGAG");
-                //Thread.currentThread().interrupt();
-                throw new RuntimeException("Error dioboia", ex);
+                System.out.println("Exception, killing ClientHandler Thread " + ex);
+                connectionHandler.killClient(me);
             }
         };
         try {

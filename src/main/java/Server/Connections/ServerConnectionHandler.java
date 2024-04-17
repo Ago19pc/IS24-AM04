@@ -4,16 +4,16 @@ package Server.Connections;
 
 import Server.Controller.Controller;
 
+
 import java.net.*;
 import java.io.*;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class ServerConnectionHandler extends Thread {
     private ServerSocket socket;
     private List<ClientHandler> clients;
+    private Map<Long, String> clientNames;
 
     private int port;
 
@@ -27,6 +27,8 @@ public class ServerConnectionHandler extends Thread {
      * @param controller controller instance
      */
     public ServerConnectionHandler(Controller controller) throws IOException {
+        this.clientNames = new HashMap<Long, String>();
+
         this.controller = controller;
         askForPort();
 
@@ -50,15 +52,10 @@ public class ServerConnectionHandler extends Thread {
         };
         try {
             while (true) {
-
                 Socket client = this.socket.accept();
                 System.out.println("Received connection");
-                // QUI ANDREBBE GESTITO IL CASO DI RICONNESIONE
-                //
                 ClientHandler t = new ClientHandler(this, client);
-
                 t.setUncaughtExceptionHandler(h);
-
                 t.start();
                 clients.add(t);
             }
@@ -95,9 +92,44 @@ public class ServerConnectionHandler extends Thread {
     public void killClient(ClientHandler target ) {
         target.interrupt();
         this.clients = this.clients.stream()
-                .filter(e -> e.getId() != (target.getId()))
+                .filter(e -> e.threadId() != (target.threadId()))
                 .collect(Collectors.toList());
+        //String/Player offlineplayer = target.getPlayer()
+        //controller.setOffline(offlineplayer);
+    }
 
+    /**
+     * Adds client name to the map of names and thread.
+     * It also handles when a client reconnects with the same name, but the thread id is different.
+     * @param threadID the id of the thread
+     * @param name the name of the client
+     */
+    public void addClientName(Long threadID, String name) {
+        if (clientNames.containsValue(name)){
+            this.clientNames.put(threadID, name);
+        } else {
+            // get old id
+            Long oldID = this.clientNames.entrySet().stream()
+                    .filter(e -> e.getValue().equals(name))
+                    .map(Map.Entry::getKey)
+                    .findFirst()
+                    .orElse(null);
+            // replace old id with new id
+            this.replaceID(oldID, threadID);
+
+        }
+
+    }
+
+    public void removeClientName(Long threadID) {
+        this.clientNames.remove(threadID);
+    }
+
+    private void replaceID(Long oldID, Long newID) {
+        String name = this.clientNames.get(oldID);
+        this.clientNames.remove(oldID);
+        this.clientNames.put(newID, name);
+        //controller.reconnectPlayer(name);
     }
 
 }
