@@ -77,4 +77,8 @@ public interface Player {
      * @param face the face of the starting card
      */
     public void initializeManuscript(StartingCard startingCard, Face face);
+
+    public void setOnline(boolean isOnline);
+
+    public boolean isOnline();
 }

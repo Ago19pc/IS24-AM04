@@ -1,12 +1,8 @@
 package Server.Controller;
 
-import Server.Client.Client;
 import Server.Enums.Color;
 import Server.GameModel.GameModel;
 import Server.GameModel.GameModelInstance;
-
-import java.beans.EventHandler;
-import java.util.List;
 
 /**
  *  FASE 0: INIZIALIZZAZIONE
@@ -112,18 +108,17 @@ import java.util.List;
  *          clear all variables for reset
 */
 public class Controller {
-    private static List<Client> clients;
-    private static GameModel gameModel;
-    private static EventHandler eventHandler;
-    /**
-     * main.Main method, here goes the program
-     * @param args the arguments, that I don't know, they're useless, just like me :'(
-     */
-    public static void main(String[] args) {
+    private GameModel gameModel;
 
-        gameModel = new GameModelInstance();
+
+    public void start() {
+
+        GameModel gameModel = new GameModelInstance();
+
+
 
     }
+
 
     private void setPlayerData(String name, Color color) {};
     private void giveSecretObjectiveCard() {};

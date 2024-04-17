@@ -13,7 +13,7 @@ import static org.junit.jupiter.api.Assertions.*;
 public class TestPlayerInstance {
     @Test
     public void testAddCardToHand() {
-        PlayerInstance playerInstance = new PlayerInstance("pippo", null);
+        PlayerInstance playerInstance = new PlayerInstance("pippo");
         GoldFrontFace goldFrontFace = new GoldFrontFace(
                 "goldCardFront1.jpg",
                 new HashMap<>(),
@@ -54,7 +54,7 @@ public class TestPlayerInstance {
     }
     @Test
     public void testRemoveCardFromHand(){
-        PlayerInstance playerInstance = new PlayerInstance("pippo", null);
+        PlayerInstance playerInstance = new PlayerInstance("pippo");
         GoldFrontFace goldFrontFace = new GoldFrontFace(
                 "goldCardFront1.jpg",
                 new HashMap<>(),
@@ -98,18 +98,18 @@ public class TestPlayerInstance {
     }
     @Test
     public void testName(){
-        PlayerInstance playerInstance = new PlayerInstance("pippo", null);
+        PlayerInstance playerInstance = new PlayerInstance("pippo");
         assertEquals("pippo", playerInstance.getName());
     }
     @Test
     public void testColor(){
-        PlayerInstance playerInstance = new PlayerInstance("pippo", new EventManager());
+        PlayerInstance playerInstance = new PlayerInstance("pippo");
         playerInstance.setColor(Color.RED);
         assertEquals(Color.RED, playerInstance.getColor());
     }
     @Test
     public void testSecretAchievement() {
-        PlayerInstance playerInstance = new PlayerInstance("pippo", new EventManager());
+        PlayerInstance playerInstance = new PlayerInstance("pippo");
         AchievementFrontFace achievementFrontFace = new AchievementFrontFace(
                 "achievementCardFront1.jpg",
                 new HashMap<>(),
@@ -127,7 +127,7 @@ public class TestPlayerInstance {
     }
     @Test
     public void testPoints() {
-        PlayerInstance playerInstance = new PlayerInstance("pippo", new EventManager());
+        PlayerInstance playerInstance = new PlayerInstance("pippo");
         assertEquals(0, playerInstance.getPoints());
         playerInstance.addPoints(5);
         assertEquals(5, playerInstance.getPoints());

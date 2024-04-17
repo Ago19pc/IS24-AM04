@@ -1,43 +1,75 @@
 package Server.Connections;
 
+
 import java.io.*;
+import java.net.ConnectException;
 import java.net.Socket;
-import java.nio.charset.StandardCharsets;
 
 public class ClientHandler extends Thread {
     private final Socket socket;
-    BufferedReader in;
-    PrintWriter out;
-    String s;
-    public ClientHandler(Socket client) throws IOException {
+    private final ServerConnectionHandler connectionHandler;
+    private final ServerSender sender ;
+    private final ServerReceiver receiver ;
+    private final Thread.UncaughtExceptionHandler h;
+
+
+    ClientHandler me = this;
+    public ClientHandler(ServerConnectionHandler connectionHandler, Socket client) throws IOException, RuntimeException {
         this.socket = client;
-        in = new BufferedReader(new InputStreamReader(socket.getInputStream(), StandardCharsets.UTF_8));
-        out = new PrintWriter(new OutputStreamWriter(socket.getOutputStream(), StandardCharsets.UTF_8), true);
+        this.connectionHandler = connectionHandler;
+        h = new Thread.UncaughtExceptionHandler() {
+            @Override
+            public void uncaughtException(Thread th, Throwable ex){
+                System.out.println("Exception, killing ClientHandler Thread " + ex);
+                connectionHandler.killClient(me);
+            }
+        };
+        try {
+            sender = new ServerSender(this, this.socket);
+            receiver = new ServerReceiver(this, this.socket);
+            sender.setUncaughtExceptionHandler(h);
+            sender.start();
+        } catch (Exception e) {
+            System.out.println("LOL2");
+            throw e;
+        }
     }
 
     public void run() {
-
         System.out.println("Client connected: " + this.socket.getInetAddress());
         try {
-            while ((s = in.readLine()) != null) {
-                System.out.println(s);
-            }
+
+            receiver.setUncaughtExceptionHandler(h);
+            receiver.start();
+
+            receiver.join();
+            sender.join();
+            
         } catch (Exception e) {
-            e.printStackTrace();
+            System.out.println("LOL");
+            try {
+                throw e;
+            } catch (InterruptedException ex) {
+                throw new RuntimeException(ex);
+            }
+
 
         }
+
+
+
+
+
     }
 
-    public void sendMessages(String message){
-        out.println(message);
+    public void sendMessages(){
+        sender.sendMessage();
     }
 
-    public void receiveMessages(){
-        try {
-            String message = in.readLine();
-            System.out.println("Received message: " + message);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    public ServerConnectionHandler getServerConnectionHandler() {
+        return connectionHandler;
     }
+
+
+
 }

@@ -28,6 +28,7 @@ public class GameModelInstance implements GameModel {
 
     private List<Player> playerList;
 
+
     public GameModelInstance() {
         System.out.println("GameModelInstance");
         resourceDeck = new ResourceDeck();
@@ -40,6 +41,8 @@ public class GameModelInstance implements GameModel {
         generateStartingCards();
 
     }
+
+
 
     private void generateStartingCards() {
         File fileFRONT;
@@ -93,6 +96,18 @@ public class GameModelInstance implements GameModel {
 
     public List<Player> getPlayerList() {
         return playerList;
+    }
+
+    public void setPlayerList(List<Player> playerList) {
+        this.playerList = playerList;
+    }
+
+    public void addPlayer(Player player) {
+        playerList.add(player);
+    }
+
+    List<Player> getPlayers() {
+        return this.playerList;
     }
 
     /**

@@ -12,4 +12,13 @@ public class ChatMessage implements GeneralMessage {
     public void printData(){
         System.out.println("Chat Message: " + message.getMessage());
     }
+
+    public Message getMessage(){
+        return message;
+    }
+    public boolean equals(GeneralMessage other){
+        System.out.println("ChatMessage equals still to be implemented.");
+        return this.message.equals(((ChatMessage) other).getMessage());
+    }
+
 }
