@@ -5,11 +5,10 @@ import Server.Controller.Controller;
 
 
 public class Main {
-    private static Controller controller;
+    private static Controller controller = new Controller();
     private static ServerConnectionHandler connectionHandler;
 
     public static void main(String[] args) {
-        controller = new Controller();
         try {
             connectionHandler = new ServerConnectionHandler(controller);
             connectionHandler.start();

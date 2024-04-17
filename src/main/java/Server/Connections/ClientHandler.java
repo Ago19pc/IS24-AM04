@@ -2,6 +2,7 @@ package Server.Connections;
 
 
 import java.io.*;
+import java.net.ConnectException;
 import java.net.Socket;
 
 public class ClientHandler extends Thread {
@@ -63,6 +64,10 @@ public class ClientHandler extends Thread {
 
     public void sendMessages(){
         sender.sendMessage();
+    }
+
+    public ServerConnectionHandler getServerConnectionHandler() {
+        return connectionHandler;
     }
 
 

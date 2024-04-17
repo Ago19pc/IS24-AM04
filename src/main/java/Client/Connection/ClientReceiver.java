@@ -9,7 +9,7 @@ import java.net.Socket;
 
 public class ClientReceiver extends Thread {
     private Socket clientSocket;
-
+    private MessageUtils messageUtils = new MessageUtils();
     private BufferedReader in;
     private ClientConnectionHandler clientConnectionHandler;
 
@@ -21,7 +21,10 @@ public class ClientReceiver extends Thread {
     }
 
 
-
+    /**
+     * Run method
+     * Receives messages from the server and acts accordingly
+     */
     @Override
     public void run() {
         while (true) {
@@ -31,7 +34,7 @@ public class ClientReceiver extends Thread {
                 System.out.println(resp);
                 // Capisci il tipo di messaggio dal prefisso (serve a scegliere il tipo di evento)
                 //MessageUtils messageUtils = new MessageUtils();
-                //messageUtils.server_demux(resp);
+                //messageUtils.client_demux(resp);
 
 
 

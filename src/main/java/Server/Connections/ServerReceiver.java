@@ -12,26 +12,32 @@ public class ServerReceiver extends Thread {
     private Socket clientSocket;
     private BufferedReader in;
     private ClientHandler clientHandler;
+    private MessageUtils messageUtils;
+
+    private ServerConnectionHandler serverConnectionHandler;
 
 
     public ServerReceiver(ClientHandler clientHanlder, Socket clientSocket) throws IOException {
         this.clientSocket = clientSocket;
         this.clientHandler = clientHanlder;
-        in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+        this.in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+        this.serverConnectionHandler = clientHanlder.getServerConnectionHandler();
+        this.messageUtils = new MessageUtils(serverConnectionHandler);
     }
 
 
-
+    /**
+     * Run method for the thread
+     * This method reads the messages from the server and calls the demuxe them to apply the correct event
+     */
     @Override
     public void run() {
         while (true) {
             try {
                 String resp = in.readLine();
-
                 System.out.println(resp);
                 // Capisci il tipo di messaggio dal prefisso (serve a scegliere il tipo di evento)
-                //MessageUtils messageUtils = new MessageUtils();
-                //messageUtils.server_demux(resp);
+                messageUtils.server_demux(resp, clientHandler.threadId());
 
 
 

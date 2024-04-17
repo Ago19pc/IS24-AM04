@@ -19,6 +19,7 @@ public class PlayerInstance implements Player {
     private final String name;
     private int points;
     private Manuscript manuscript;
+    private boolean isOnline;
 
 
     public PlayerInstance(String name) {
@@ -146,5 +147,23 @@ public class PlayerInstance implements Player {
     public void initializeManuscript(StartingCard startingCard, Face face) {
         this.manuscript = new Manuscript(startingCard, face);
         System.out.println("initializeManuscript");
+    }
+
+    /**
+     * Set the player's online status
+     *
+     * @param isOnline the player's online status
+     */
+    @Override
+    public void setOnline(boolean isOnline) {
+        this.isOnline = isOnline;
+    }
+
+    /**
+     * @return boolean the player's online status
+     */
+    @Override
+    public boolean isOnline() {
+        return isOnline;
     }
 }

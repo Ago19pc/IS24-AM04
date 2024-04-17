@@ -9,14 +9,30 @@ import java.io.IOException;
 public class MessageUtils {
     ServerConnectionHandler serverConnectionHandler;
 
+    /**
+     * Constructor for MessageUtils for server
+     * @param serverConnectionHandler the server connection handler
+     */
     public MessageUtils(ServerConnectionHandler serverConnectionHandler) {
         this.serverConnectionHandler = serverConnectionHandler;
     }
 
+    /**
+     * Constructor for MessageUtils for client
+     */
     public MessageUtils() {}
 
-    //server side demux
+    /**
+     * Demultiplexes the message and calls the appropriate method
+     * @param message the message to demultiplex
+     * @param threadID the thread ID of the client
+     * @throws IOException if the server connection handler is not set
+     * @throws ClassNotFoundException if the message type is not recognized
+     */
     public void server_demux(String message, Long threadID) throws IOException, ClassNotFoundException {
+        if (serverConnectionHandler == null) {
+            throw new IOException("ServerConnectionHandler not set, put parameter in MessageUtils constructor");
+        }
         MessagePacket messagePacket = new MessagePacket(message);
         switch (messagePacket.getType()){
             case PLAYERNAME:

@@ -11,7 +11,7 @@ import java.util.Scanner;
 
 public class HelloApplication extends Application {
 
-    private static ClientConnectionHandler connectionHandler;
+    private static ClientConnectionHandler connectionHandler = new ClientConnectionHandler();
 
     @Override
     public void start(Stage stage) throws IOException {
@@ -23,16 +23,7 @@ public class HelloApplication extends Application {
     }
 
     public static void main(String[] args) {
-        Scanner inputReader = new Scanner(System.in);
-        System.out.println("Inserisci l'indirizzo IP del server");
-        String ip = inputReader.nextLine();
-        System.out.println("Inserisci la porta del server");
-        int port = inputReader.nextInt();
-        connectionHandler = new ClientConnectionHandler(ip, port);
-
-
-
-
+        connectionHandler.start();
 
 
         launch();
