@@ -2,16 +2,20 @@ package Server.Controller;
 
 import Server.Card.*;
 import Server.Connections.ConnectionHandler;
+import Server.Enums.CardCorners;
 import Server.Enums.Color;
 import Server.Enums.Face;
+import Server.Enums.Symbol;
 import Server.EventManager.EventManager;
 import Server.Player.Player;
 import Server.Player.PlayerInstance;
 import org.junit.jupiter.api.Test;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -127,11 +131,43 @@ public class TestController {
         });
     }
     @Test
-    public void testNextTurn() throws Exception
-    {
+    public void testNextTurn() throws Exception {
         ConnectionHandler connectionHandler = new ConnectionHandler(0);
         Controller controller = new ControllerInstance(connectionHandler);
         controller.nextTurn();
         assertEquals(1, controller.getTurn());
+    }
+    @Test
+    public void testPlayCard() throws Exception {
+        ConnectionHandler connectionHandler = new ConnectionHandler(0);
+        Controller controller = new ControllerInstance(connectionHandler);
+        Player player = new PlayerInstance("player1",new EventManager());
+        StartingCard startingCard = new StartingCard(new StartingFrontFace("image.jpg", new HashMap<>(), new ArrayList<>()), new CornerCardFace("image.jpg", new HashMap<>()));
+        controller.addPlayer(player);
+        controller.setStartingCard(player,startingCard,Face.FRONT);
+        controller.giveInitialHand();
+        Map<CardCorners, Symbol> cornerSymbols = new HashMap<>(player.getHand().get(0).getCornerFace(Face.FRONT).getCornerSymbols());
+        List<Symbol> centerSymbols = new ArrayList<>(player.getHand().get(0).getFace(Face.BACK).getCenterSymbols());
+        ResourceCard resourceCard = new ResourceCard(
+                new ResourceFrontFace("image1.jpg", cornerSymbols , 0, Symbol.FUNGUS),
+                new RegularBackFace("image2.jpg", centerSymbols)
+        );
+        Map<CardCorners,Symbol> cornerSymbols2 = new HashMap<>(player.getHand().get(1).getCornerFace(Face.FRONT).getCornerSymbols());
+        List<Symbol> centerSymbols2 = new ArrayList<>(player.getHand().get(1).getFace(Face.BACK).getCenterSymbols());
+        ResourceCard resourceCard2 = new ResourceCard(
+                new ResourceFrontFace("image3.jpg", cornerSymbols2 , 0, Symbol.FUNGUS),
+                new RegularBackFace("image4.jpg", centerSymbols2)
+        );
+        controller.playCard(player, player.getHand().get(0),1,1,Face.BACK);
+        assertEquals(resourceCard.getCornerFace(Face.BACK).getCornerSymbols(), player.getManuscript().getCardByCoord(1,1).getCornerSymbols());
+        assertEquals(resourceCard.getFace(Face.BACK).getPlacementTurn(), player.getManuscript().getCardByCoord(1,1).getPlacementTurn());
+        assertEquals(resourceCard.getFace(Face.BACK).getCenterSymbols(), player.getManuscript().getCardByCoord(1,1).getCenterSymbols());
+        controller.playCard(player, player.getHand().get(0),-1,1,Face.FRONT);
+        assertEquals(resourceCard2.getCornerFace(Face.FRONT).getCornerSymbols(), player.getManuscript().getCardByCoord(-1,1).getCornerSymbols());
+        assertEquals(resourceCard2.getFace(Face.FRONT).getPlacementTurn(), player.getManuscript().getCardByCoord(-1,1).getPlacementTurn());
+        assertEquals(resourceCard2.getCornerFace(Face.FRONT).getScore(), player.getManuscript().getCardByCoord(-1,1).getScore());
+        System.out.println(resourceCard.getCornerFace(Face.BACK)==player.getManuscript().getCardByCoord(1,1));
+        //riga 169 da false
+
     }
 }

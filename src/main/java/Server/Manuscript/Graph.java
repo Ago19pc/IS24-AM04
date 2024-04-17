@@ -113,4 +113,5 @@ public class Graph {
     public List<CornerCardFace> getAllCards(){
         return new ArrayList<>(this.neighbors.keySet());
     }
+
 }

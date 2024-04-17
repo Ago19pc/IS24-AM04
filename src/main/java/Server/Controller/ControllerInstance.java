@@ -2,16 +2,22 @@ package Server.Controller;
 
 import Server.Card.AchievementCard;
 import Server.Card.Card;
+import Server.Card.ResourceFrontFace;
 import Server.Card.StartingCard;
 import Server.Connections.ConnectionHandler;
 import Server.Enums.Color;
 import Server.Enums.DeckPosition;
 import Server.Enums.Face;
+import Server.Enums.Symbol;
 import Server.GameModel.GameModel;
 import Server.GameModel.GameModelInstance;
+import Server.Manuscript.Manuscript;
 import Server.Player.Player;
 
+import java.util.HashMap;
 import java.util.List;
+
+import static java.lang.System.in;
 
 /**
  *  FASE 0: INIZIALIZZAZIONE
@@ -211,6 +217,18 @@ public class ControllerInstance implements Controller{
     public boolean isOnline(Player player) {
         //Todo implementare
         return true;
+    }
+    public void playCard(Player player, Card card, int xCoord, int yCoord, Face face)
+    {
+            player.removeCardFromHand(card);
+            if(card.getCornerFace((Face.FRONT)).equals(card.getCornerFace(face)))
+            {
+                player.getManuscript().addCard(xCoord,yCoord,card.getCornerFace(Face.FRONT),getTurn());
+            }
+            if(card.getCornerFace((Face.BACK)).equals(card.getCornerFace(face)))
+            {
+                player.getManuscript().addCard(xCoord,yCoord,card.getCornerFace(Face.BACK),getTurn());
+            }
     }
 }
 

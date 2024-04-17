@@ -1,9 +1,11 @@
 package Server.Controller;
 
 import Server.Card.AchievementCard;
+import Server.Card.Card;
 import Server.Card.StartingCard;
 import Server.Enums.Color;
 import Server.Enums.Face;
+import Server.Manuscript.Manuscript;
 import Server.Player.Player;
 
 import java.util.List;
@@ -80,6 +82,15 @@ public interface Controller {
      * @return boolean true if the player is online
      */
     public boolean isOnline(Player player);
+    /**
+     * play a card from the hand to the manuscript
+     * @param player the player
+     * @param card the card
+     * @param xCoord the x coordinate
+     * @param yCoord the y coordinate
+     * @param face the face choosen by the player
+     */
+    public void playCard(Player player, Card card, int xCoord, int yCoord, Face face);
 
 }
 
