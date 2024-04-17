@@ -69,4 +69,10 @@ public interface CardFace {
      * @return int the placement turn
      */
      int getPlacementTurn();
+
+    /**
+     * Returns the kingdom of the card
+     * @return Symbol the kingdom symbol
+     */
+    Symbol getKingdom();
 }

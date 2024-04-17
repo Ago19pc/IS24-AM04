@@ -23,7 +23,7 @@ public abstract  class Deck implements Deckable {
     /**
      * Shuffle the deck
      */
-    private void shuffle() {
+    void shuffle() {
         // shuffle the deck
         Collections.shuffle(cards);
         System.out.println(this.toString() + "shuffle");
@@ -32,7 +32,7 @@ public abstract  class Deck implements Deckable {
     /**
      * @param where_to the position to add the card to
      */
-    private void moveCardToBoard(DeckPosition where_to) throws IncorrectDeckPositionException {
+    public void moveCardToBoard(DeckPosition where_to) throws IncorrectDeckPositionException {
         if (where_to == DECK)
             throw new IncorrectDeckPositionException("Cannot add card to the deck, only to FIST_CARD or SECOND_CARD.");
         else
@@ -82,5 +82,11 @@ public abstract  class Deck implements Deckable {
             throw new IncorrectDeckPositionException("Cannot add card to the deck, only to FIST_CARD or SECOND_CARD.");
         else
             boardCards.put(position, card);
+    }
+    /**
+     * @return int the number of cards in the deck
+     */
+    public int getNumberOfCards() {
+        return cards.size();
     }
 }

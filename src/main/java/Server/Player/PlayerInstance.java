@@ -24,6 +24,7 @@ public class PlayerInstance implements Player {
     public PlayerInstance(String name) {
         this.name = name;
         this.handCards = new LinkedList<>();
+        this.points = 0;
     }
 
     /**
