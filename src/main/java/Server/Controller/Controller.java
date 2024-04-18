@@ -3,7 +3,10 @@ package Server.Controller;
 import Server.Card.AchievementCard;
 import Server.Card.Card;
 import Server.Card.StartingCard;
+import Server.Deck.Deck;
 import Server.Enums.Color;
+import Server.Enums.DeckPosition;
+import Server.Enums.Decks;
 import Server.Enums.Face;
 import Server.Manuscript.Manuscript;
 import Server.Player.Player;
@@ -91,6 +94,14 @@ public interface Controller {
      * @param face the face choosen by the player
      */
     public void playCard(Player player, Card card, int xCoord, int yCoord, Face face);
+
+    /**
+     * draw a card from one of the decks
+     * @param player the player
+     * @param deckposition where i want to draw the card from
+     * @param deck the deck
+     */
+    public void drawCard(Player player, DeckPosition deckposition, Decks deck);
 
 }
 

@@ -5,10 +5,7 @@ import Server.Card.Card;
 import Server.Card.ResourceFrontFace;
 import Server.Card.StartingCard;
 import Server.Connections.ConnectionHandler;
-import Server.Enums.Color;
-import Server.Enums.DeckPosition;
-import Server.Enums.Face;
-import Server.Enums.Symbol;
+import Server.Enums.*;
 import Server.GameModel.GameModel;
 import Server.GameModel.GameModelInstance;
 import Server.Manuscript.Manuscript;
@@ -218,17 +215,30 @@ public class ControllerInstance implements Controller{
         //Todo implementare
         return true;
     }
-    public void playCard(Player player, Card card, int xCoord, int yCoord, Face face)
-    {
-            player.removeCardFromHand(card);
-            if(card.getCornerFace((Face.FRONT)).equals(card.getCornerFace(face)))
-            {
-                player.getManuscript().addCard(xCoord,yCoord,card.getCornerFace(Face.FRONT),getTurn());
+    public void playCard(Player player, Card card, int xCoord, int yCoord, Face face) {
+        player.removeCardFromHand(card);
+        if (card.getCornerFace((Face.FRONT)).equals(card.getCornerFace(face))) {
+            player.getManuscript().addCard(xCoord, yCoord, card.getCornerFace(Face.FRONT), getTurn());
+        }
+        if (card.getCornerFace((Face.BACK)).equals(card.getCornerFace(face))) {
+            player.getManuscript().addCard(xCoord, yCoord, card.getCornerFace(Face.BACK), getTurn());
+        }
+    }
+    public void drawCard(Player player, DeckPosition deckPosition, Decks deck) {
+        switch (deck) {
+            case RESOURCE -> {
+                Card card = gameModel.getResourceDeck().popCard(deckPosition);
+                player.addCardToHand(card);
             }
-            if(card.getCornerFace((Face.BACK)).equals(card.getCornerFace(face)))
-            {
-                player.getManuscript().addCard(xCoord,yCoord,card.getCornerFace(Face.BACK),getTurn());
+            case GOLD -> {
+                Card card = gameModel.getGoldDeck().popCard(deckPosition);
+                player.addCardToHand(card);
             }
+            default -> {
+                throw new IllegalArgumentException("Invalid deck");
+            }
+        }
+        //Notify
     }
 }
 

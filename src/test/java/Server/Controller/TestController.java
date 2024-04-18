@@ -2,10 +2,8 @@ package Server.Controller;
 
 import Server.Card.*;
 import Server.Connections.ConnectionHandler;
-import Server.Enums.CardCorners;
-import Server.Enums.Color;
-import Server.Enums.Face;
-import Server.Enums.Symbol;
+import Server.Deck.ResourceDeck;
+import Server.Enums.*;
 import Server.EventManager.EventManager;
 import Server.Player.Player;
 import Server.Player.PlayerInstance;
@@ -16,6 +14,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -166,8 +165,56 @@ public class TestController {
         assertEquals(resourceCard2.getCornerFace(Face.FRONT).getCornerSymbols(), player.getManuscript().getCardByCoord(-1,1).getCornerSymbols());
         assertEquals(resourceCard2.getFace(Face.FRONT).getPlacementTurn(), player.getManuscript().getCardByCoord(-1,1).getPlacementTurn());
         assertEquals(resourceCard2.getCornerFace(Face.FRONT).getScore(), player.getManuscript().getCardByCoord(-1,1).getScore());
-        System.out.println(resourceCard.getCornerFace(Face.BACK)==player.getManuscript().getCardByCoord(1,1));
+
+        //System.out.println(resourceCard.getCornerFace(Face.BACK)==player.getManuscript().getCardByCoord(1,1));
         //riga 169 da false
 
+    }
+    @Test
+    public void testDrawCard() throws Exception {
+        int sentinel = 0, i = 0;
+        ConnectionHandler connectionHandler = new ConnectionHandler(0);
+        Controller controller = new ControllerInstance(connectionHandler);
+        Player player = new PlayerInstance("player1",new EventManager());
+        controller.addPlayer(player);
+        Map <CardCorners, Symbol> cornerSymbols = new HashMap<>();
+        List <Symbol> centerSymbols = new ArrayList<>();
+        centerSymbols.add(Symbol.FUNGUS);
+        Card card = new ResourceCard(
+                new ResourceFrontFace("image.jpg", cornerSymbols, 0, Symbol.FUNGUS),
+                new RegularBackFace("image.jpg", centerSymbols)
+        );
+        controller.drawCard(player, DeckPosition.DECK, Decks.RESOURCE);
+        assertEquals(1, player.getHand().size());
+        assertThrows(ClassCastException.class, () -> {
+            GoldCard card1 = (GoldCard) player.getHand().get(0);
+        });
+        assertThrows(ClassCastException.class, () -> {
+            StartingCard card1 = (StartingCard) player.getHand().get(0);
+        });
+        assertThrows(ClassCastException.class, () -> {
+            AchievementCard card1 = (AchievementCard) player.getHand().get(0);
+        });
+        ResourceDeck resourceDeck2 = new ResourceDeck();
+        List<ResourceCard> cards = new ArrayList<>();
+        for (i = 0 ;  i < 38 ; i++){
+            card = (ResourceCard) resourceDeck2.popCard(DeckPosition.DECK);
+            System.out.println(card.getCornerFace(Face.FRONT).getCornerSymbols());
+            System.out.println(card.getCornerFace(Face.FRONT).getScore());
+            if(card.getFace(Face.FRONT).getCornerSymbols().equals(player.getHand().get(0).getFace(Face.FRONT).getCornerSymbols()) &&
+                    card.getFace(Face.BACK).getCenterSymbols().equals(player.getHand().get(0).getFace(Face.BACK).getCenterSymbols()) &&
+                    card.getCornerFace(Face.FRONT).getScore() == player.getHand().get(0).getCornerFace(Face.FRONT).getScore() &&
+                    card.getFace(Face.FRONT).getKingdom().equals(player.getHand().get(0).getFace(Face.BACK).getKingdom())){
+                sentinel++;
+            }
+        }
+        if(sentinel == 0 && resourceDeck2.popCard(DeckPosition.FIRST_CARD).getFace(Face.FRONT).getCornerSymbols().equals(player.getHand().get(0).getFace(Face.FRONT).getCornerSymbols())){
+            sentinel++;
+        }
+        if(sentinel == 0 && resourceDeck2.popCard(DeckPosition.SECOND_CARD).getFace(Face.FRONT).getCornerSymbols().equals(player.getHand().get(0).getFace(Face.FRONT).getCornerSymbols()))
+            {
+            sentinel++;
+            }
+        assertEquals(1, sentinel);
     }
 }

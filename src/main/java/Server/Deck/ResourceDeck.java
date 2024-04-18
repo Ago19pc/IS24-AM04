@@ -67,15 +67,25 @@ public class ResourceDeck extends Deck {
             switch(cardNumber / 10){
                 case 0:
                     kingdom = Symbol.FUNGUS;
+                    if(cardNumber%10 > 6){
+                        point = 1;
+                    }
                     break;
                 case 1:
                     kingdom = Symbol.PLANT;
+                    if(cardNumber%10 > 6){
+                        point = 1;
+                    }
                     break;
                 case 2:
                     kingdom = Symbol.ANIMAL;
+                    if(cardNumber%10 > 6){
+                        point = 1;
+                    }
                     break;
                 case 3:
                     kingdom = Symbol.BUG;
+                    if(cardNumber%10 > 6){point = 1;}
                     break;
                 default:
                     kingdom = Symbol.NONE;
