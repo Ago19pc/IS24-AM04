@@ -102,7 +102,13 @@ public interface Controller {
      * @param deck the deck
      */
     public void drawCard(Player player, DeckPosition deckposition, Decks deck);
-
+    /**
+     * check if a card can be placed
+     * @param card the card
+     * @param face the cardface
+     * @return boolean true if tha card is playable
+     */
+    //public Boolean isPlayable(Card card, Face face);
 
 }
 

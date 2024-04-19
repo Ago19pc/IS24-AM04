@@ -1,5 +1,6 @@
 package Server.Card;
 
+import Server.Enums.Decks;
 import Server.Enums.Face;
 public class AchievementCard implements Card {
     private final AchievementFrontFace frontFace;
@@ -31,5 +32,10 @@ public class AchievementCard implements Card {
      */
     public CornerCardFace getCornerFace(Face face) throws UnsupportedOperationException {
         throw new UnsupportedOperationException("Achievement cards do not have corner faces");
+    }
+
+    @Override
+    public Decks getType() {
+        return Decks.ACHIEVEMENT;
     }
 }

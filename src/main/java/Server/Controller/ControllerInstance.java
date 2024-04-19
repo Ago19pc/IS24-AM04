@@ -223,6 +223,7 @@ public class ControllerInstance implements Controller{
         if (card.getCornerFace((Face.BACK)).equals(card.getCornerFace(face))) {
             player.getManuscript().addCard(xCoord, yCoord, card.getCornerFace(Face.BACK), getTurn());
         }
+        //Notify
     }
     public void drawCard(Player player, DeckPosition deckPosition, Decks deck) {
         switch (deck) {
@@ -240,6 +241,17 @@ public class ControllerInstance implements Controller{
         }
         //Notify
     }
+    /*public Boolean isPlayable(Card card , Face face)
+    {
+        if(face.equals(Face.BACK)) return Boolean.TRUE;
+        if(card.getType() == Decks.GOLD && card.getFace(Face.FRONT).getScore() == 1 //&& gli angoli mi permetono di giocarla
+            )
+        {
+
+        }
+        return null;
+    }*/
+
 }
 
 

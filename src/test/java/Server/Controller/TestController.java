@@ -293,7 +293,6 @@ public class TestController {
                 card.getFace(Face.FRONT).getKingdom().equals(player.getHand().get(2).getFace(Face.BACK).getKingdom()))
         {
             sentinel++;
-            assertEquals(3 , sentinel );
         }
         assertEquals(3 , sentinel );
 

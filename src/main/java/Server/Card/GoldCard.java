@@ -1,6 +1,7 @@
 package Server.Card;
 
 
+import Server.Enums.Decks;
 import Server.Enums.Face;
 
 public class GoldCard implements Card {
@@ -33,5 +34,10 @@ public class GoldCard implements Card {
      */
     public CornerCardFace getCornerFace(Face face) {
         return face == Face.FRONT ? frontFace : backFace;
+    }
+
+    @Override
+    public Decks getType() {
+        return Decks.GOLD;
     }
 }
