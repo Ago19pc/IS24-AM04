@@ -46,6 +46,7 @@ public class GoldDeck extends Deck {
             String lineF;
             int cardNumber = 0;
             while ((lineF = readerFRONT.readLine()) != null) {
+                System.out.println("generating card " + cardNumber);
 
                 String[] partsF = lineF.split(" ");
                 //System.out.println(lineF);
@@ -72,7 +73,11 @@ public class GoldDeck extends Deck {
 
                 int point = 0;
                 for (int i = 0; i < partsF.length; i++) {
-                    if (i < 4) cornerSymbolsF.put(CardCorners.values()[i], Symbol.valueOf(partsF[i]));
+
+                    if (i < 4) {
+                        System.out.println("corner: " + CardCorners.values()[i] + " symbol: " + Symbol.valueOf(partsF[i]));
+                        cornerSymbolsF.put(CardCorners.values()[i], Symbol.valueOf(partsF[i]));
+                    }
                     else if (i ==  partsF.length - 1) point = Integer.parseInt(partsF[i]);
                     else {
                         // SCORE REQUIREMENT DOPO LA ,

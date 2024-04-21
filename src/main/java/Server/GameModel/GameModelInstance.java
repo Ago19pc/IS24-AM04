@@ -66,7 +66,12 @@ public class GameModelInstance implements GameModel{
             Map<CardCorners, Symbol> cornerSymbolsF = new HashMap<>();
             List<Symbol> centerSymbols = new ArrayList<>();
             for (int i = 0; i < partsF.length; i++) {
-                if (i < 4) cornerSymbolsF.put(CardCorners.values()[i], Symbol.valueOf(partsF[i]));
+                if (i < 4) {
+                    System.out.print(CardCorners.values()[i]);
+                    System.out.print(" ");
+                    System.out.println(Symbol.valueOf(partsF[i]));
+                    cornerSymbolsF.put(CardCorners.values()[i], Symbol.valueOf(partsF[i]));
+                }
                 else centerSymbols.add(Symbol.valueOf(partsF[i]));
             }
             
