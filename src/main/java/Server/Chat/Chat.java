@@ -2,12 +2,14 @@ package Server.Chat;
 
 import Server.Player.Player;
 
+import java.util.LinkedList;
 import java.util.List;
 
 public class Chat {
-    private List<Message> messages;
+    private final List<Message> messages;
 
     public Chat(){
+        this.messages = new LinkedList<>();
         System.out.println(this.toString() + "Chat created");
     }
 

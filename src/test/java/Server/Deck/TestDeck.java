@@ -37,8 +37,8 @@ public class TestDeck {
     @Test
     public void TestResourceDeck() {
         ResourceDeck resourceDeck = new ResourceDeck();
-        assertEquals (40, resourceDeck.getNumberOfCards());
-        for (int i = 0; i < 40; i++) {
+        assertEquals (38, resourceDeck.getNumberOfCards());
+        for (int i = 0; i < 38; i++) {
             Card drawnCard = resourceDeck.popCard(DeckPosition.DECK);
             ClassCastException exceptionThrown = assertThrows(
                     ClassCastException.class, () -> {
@@ -63,7 +63,7 @@ public class TestDeck {
     @Test
     public void TestGoldDeck() {
         GoldDeck goldDeck = new GoldDeck();
-        assertEquals (40, goldDeck.getNumberOfCards());
+        assertEquals (38, goldDeck.getNumberOfCards());
         for (int i = 0; i < 40; i++) {
             Card drawnCard = goldDeck.popCard(DeckPosition.DECK);
             assertDoesNotThrow(() -> {

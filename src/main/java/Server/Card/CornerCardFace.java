@@ -68,4 +68,14 @@ public class CornerCardFace extends EmptyCardFace {
     public void setYCoord(int yCoord) {
         this.yCoord = yCoord;
     }
+
+    @Override
+    public Map<Symbol, Integer> getScoreRequirements(){
+        return null;
+    }
+
+    @Override
+    public int getScore(){
+        return 0;
+    }
 }

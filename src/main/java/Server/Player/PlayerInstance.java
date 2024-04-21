@@ -3,6 +3,7 @@ package Server.Player;
 import Server.Card.AchievementCard;
 import Server.Card.Card;
 import Server.Card.StartingCard;
+import Server.EventManager.EventManager;
 import Server.Enums.Color;
 import Server.Enums.Face;
 import Server.Manuscript.Manuscript;
@@ -17,13 +18,15 @@ public class PlayerInstance implements Player {
     private final String name;
     private int points;
     private Manuscript manuscript;
-    private boolean isOnline;
 
-
-    public PlayerInstance(String name) {
+    private final EventManager eventManager;
+    private boolean ready;
+    public PlayerInstance(String name, EventManager eventManager) {
         this.name = name;
+        this.eventManager = eventManager;
         this.handCards = new LinkedList<>();
         this.points = 0;
+        this.ready = false;
     }
 
     /**
@@ -65,7 +68,6 @@ public class PlayerInstance implements Player {
         System.out.println("getManuscript");
         return manuscript;
     }
-
 
     /**
      * @return String the player's name
@@ -122,6 +124,7 @@ public class PlayerInstance implements Player {
     @Override
     public void setColor(Color color) {
         this.color = color;
+        eventManager.notify(EventType.SET_COLOR,new ColorMessage(this, color));
     }
 
     /**
@@ -147,21 +150,11 @@ public class PlayerInstance implements Player {
         System.out.println("initializeManuscript");
     }
 
-    /**
-     * Set the player's online status
-     *
-     * @param isOnline the player's online status
-     */
-    @Override
-    public void setOnline(boolean isOnline) {
-        this.isOnline = isOnline;
+    public void setReady(boolean ready) {
+        this.ready = ready;
     }
 
-    /**
-     * @return boolean the player's online status
-     */
-    @Override
-    public boolean isOnline() {
-        return isOnline;
+    public boolean isReady() {
+        return ready;
     }
 }

@@ -78,7 +78,13 @@ public interface Player {
      */
     public void initializeManuscript(StartingCard startingCard, Face face);
 
-    public void setOnline(boolean isOnline);
+    /**
+     * Sets a player ready status
+     */
+    public void setReady(boolean ready);
 
-    public boolean isOnline();
+    /**
+     * @return boolean the player's ready status
+     */
+    public boolean isReady();
 }
