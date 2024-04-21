@@ -16,6 +16,7 @@ public enum EventType {
     LEADERBOARD,
     GAMEOVER,
     NEWMESSAGE,
-    RECONNECTION
+    RECONNECTION,
+    PLAYERNAME
 
 }

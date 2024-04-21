@@ -1,13 +1,18 @@
-package it.am04.demo1;
+package Client;
 
+import Client.Connection.ClientConnectionHandler;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.util.Scanner;
 
 public class HelloApplication extends Application {
+
+    private static ClientConnectionHandler connectionHandler = new ClientConnectionHandler();
+
     @Override
     public void start(Stage stage) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("hello-view.fxml"));
@@ -18,8 +23,8 @@ public class HelloApplication extends Application {
     }
 
     public static void main(String[] args) {
+        connectionHandler.start();
 
-        System.out.println("Hello World");
 
         launch();
     }

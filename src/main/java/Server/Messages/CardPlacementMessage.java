@@ -19,4 +19,25 @@ public class CardPlacementMessage implements GeneralMessage {
     public void printData(){
         System.out.println("Player " + player.getName() + " placed a card on turn " + placementTurn + " at position " + where + " with card face " + cardFace);
     }
+
+    public Player getPlayer(){
+        return player;
+    }
+
+    public CardFace getCardFace(){
+        return cardFace;
+    }
+
+    public int getPlacementTurn(){
+        return placementTurn;
+    }
+
+    public int getWhere(){
+        return where;
+    }
+
+    public boolean equals(GeneralMessage other){
+        System.out.println("CardPlacementMessage equals still to be implemented.");
+        return this.player.equals(((CardPlacementMessage) other).getPlayer()) && this.cardFace.equals(((CardPlacementMessage) other).getCardFace()) && this.placementTurn == ((CardPlacementMessage) other).getPlacementTurn() && this.where == ((CardPlacementMessage) other).getWhere();
+    }
 }

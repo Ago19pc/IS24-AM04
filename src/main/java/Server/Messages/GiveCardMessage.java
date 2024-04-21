@@ -22,4 +22,13 @@ public class GiveCardMessage implements GeneralMessage {
             }
         }
     }
+
+    public Map<Player, List<Card>> getCards(){
+        return cards;
+    }
+
+    public boolean equals(GeneralMessage other){
+        System.out.println("GiveCardMessage equals still to be implemented.");
+        return this.cards.equals(((GiveCardMessage) other).getCards());
+    }
 }

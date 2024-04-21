@@ -16,4 +16,19 @@ public class ColorMessage implements GeneralMessage {
     public void printData() {
         System.out.println(player.getName() + " has chosen the color " + color);
     }
+
+    public Player getPlayer(){
+        return player;
+    }
+
+    public Color getColor(){
+        return color;
+    }
+
+    public boolean equals(GeneralMessage other){
+        System.out.println("ColorMessage equals still to be implemented.");
+        return this.player.equals(((ColorMessage) other).getPlayer()) && this.color.equals(((ColorMessage) other).getColor());
+    }
+
+
 }
