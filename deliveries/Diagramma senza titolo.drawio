@@ -1,4 +1,4 @@
-<mxfile host="app.diagrams.net" modified="2024-04-21T14:47:56.348Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Safari/537.36" etag="iZv_UvZVvWjsz0HcehRS" version="24.0.4" type="github">
+<mxfile host="app.diagrams.net" modified="2024-04-21T14:48:40.261Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Safari/537.36" etag="OcoxAxwB6FWbc32XX-kA" version="24.0.4" type="github">
   <diagram name="Page-1" id="2YBvvXClWsGukQMizWep">
     <mxGraphModel dx="1918" dy="1064" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="0" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
       <root>
@@ -354,7 +354,7 @@
         </mxCell>
         <mxCell id="TzS1LCkyJQZkEgtBNQex-147" value="OTHERSCHATMESSAGE" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;" edge="1" parent="1" target="TzS1LCkyJQZkEgtBNQex-141">
           <mxGeometry width="80" relative="1" as="geometry">
-            <mxPoint x="2680" y="130" as="sourcePoint" />
+            <mxPoint x="2690" y="130" as="sourcePoint" />
             <mxPoint x="2760" y="130" as="targetPoint" />
           </mxGeometry>
         </mxCell>
@@ -365,7 +365,7 @@
           <mxGeometry x="750" y="-100" width="275" height="50" as="geometry" />
         </mxCell>
         <mxCell id="TzS1LCkyJQZkEgtBNQex-150" value="RICONNESSIONE" style="html=1;whiteSpace=wrap;" vertex="1" parent="1">
-          <mxGeometry x="1510" y="-110" width="275" height="50" as="geometry" />
+          <mxGeometry x="1510" y="-100" width="275" height="50" as="geometry" />
         </mxCell>
         <mxCell id="TzS1LCkyJQZkEgtBNQex-151" value="CHAT" style="html=1;whiteSpace=wrap;" vertex="1" parent="1">
           <mxGeometry x="2560" y="-110" width="275" height="50" as="geometry" />
