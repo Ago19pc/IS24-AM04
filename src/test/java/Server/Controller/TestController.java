@@ -583,4 +583,44 @@ public class TestController {
         assertEquals(commonPoints, player2.getPoints() - 3);
         assertEquals(commonPoints, player3.getPoints() - 4);
     }
+
+    @Test
+    public void testClearGame() throws IOException {
+        ConnectionHandler connectionHandler = new ConnectionHandler(0);
+        Controller controller = new ControllerInstance(connectionHandler);
+        Player player = new PlayerInstance("player1",new EventManager());
+        controller.addPlayer(player);
+        Player player2 = new PlayerInstance("player2",new EventManager());
+        controller.addPlayer(player2);
+        controller.nextTurn();
+        controller.clear();
+        assertEquals(0, controller.getPlayerList().size());
+        assertEquals(0, controller.getTurn());
+    }
+
+    @Test
+    public void testReady() throws IOException {
+        ConnectionHandler connectionHandler = new ConnectionHandler(0);
+        Controller controller = new ControllerInstance(connectionHandler);
+        Player player = new PlayerInstance("player1",new EventManager());
+        controller.addPlayer(player);
+        assertFalse(player.isReady());
+        controller.setReady(player);
+        assertTrue(player.isReady());
+        controller.setNotReady(player);
+        assertFalse(player.isReady());
+    }
+
+    @Test
+    public void testChat() throws IOException {
+        ConnectionHandler connectionHandler = new ConnectionHandler(0);
+        Controller controller = new ControllerInstance(connectionHandler);
+        Player player = new PlayerInstance("player1",new EventManager());
+        controller.addPlayer(player);
+        assertEquals(0, controller.getChatMessages().size());
+        controller.addMessage("Hello", player);
+        assertEquals(1, controller.getChatMessages().size());
+        assertEquals("Hello", controller.getChatMessages().get(0).getMessage());
+        assertEquals(player, controller.getChatMessages().get(0).getSender());
+    }
 }

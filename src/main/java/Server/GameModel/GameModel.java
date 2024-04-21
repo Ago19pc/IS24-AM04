@@ -1,10 +1,10 @@
 package Server.GameModel;
 
 import Server.Card.StartingCard;
+import Server.Chat.Chat;
 import Server.Deck.AchievementDeck;
 import Server.Deck.GoldDeck;
 import Server.Deck.ResourceDeck;
-import Server.Chat.Chat;
 import Server.Player.Player;
 
 import java.util.List;

@@ -22,12 +22,13 @@ public class PlayerInstance implements Player {
     private Manuscript manuscript;
 
     private final EventManager eventManager;
-
+    private boolean ready;
     public PlayerInstance(String name, EventManager eventManager) {
         this.name = name;
         this.eventManager = eventManager;
         this.handCards = new LinkedList<>();
         this.points = 0;
+        this.ready = false;
     }
 
     /**
@@ -149,5 +150,13 @@ public class PlayerInstance implements Player {
     public void initializeManuscript(StartingCard startingCard, Face face) {
         this.manuscript = new Manuscript(startingCard, face);
         System.out.println("initializeManuscript");
+    }
+
+    public void setReady(boolean ready) {
+        this.ready = ready;
+    }
+
+    public boolean isReady() {
+        return ready;
     }
 }

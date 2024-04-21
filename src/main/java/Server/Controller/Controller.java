@@ -3,14 +3,14 @@ package Server.Controller;
 import Server.Card.AchievementCard;
 import Server.Card.Card;
 import Server.Card.StartingCard;
-import Server.Deck.Deck;
+import Server.Chat.Message;
 import Server.Enums.Color;
 import Server.Enums.DeckPosition;
 import Server.Enums.Decks;
 import Server.Enums.Face;
-import Server.Manuscript.Manuscript;
 import Server.Player.Player;
 
+import java.io.IOException;
 import java.util.List;
 
 public interface Controller {
@@ -125,6 +125,40 @@ public interface Controller {
      * clears everything, preparing for a new game
      */
     public void clear();
+
+    /**
+     * sets a player ready status to ready
+     * @param player the player
+     */
+    public void setReady(Player player);
+    /**
+     * sets a player status to not ready
+     * @param player the player
+     */
+    public void setNotReady(Player player);
+    /**
+     * returns a player's ready status
+     * @param player the player
+     * @return boolean true if the player is ready
+     */
+    public boolean isReady(Player player);
+
+    /**
+     * adds a message to the chat
+     * @param message the message string
+     * @param player the player who sent the message
+     */
+    public void addMessage(String message, Player player);
+
+    /**
+     * @return List<Message> the chat messages
+     */
+    public List<Message> getChatMessages();
+
+    /**
+     * saves a game to a json file
+     */
+    public void saveGame() throws IOException;
 
 }
 

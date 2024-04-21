@@ -11,13 +11,11 @@ import Server.Enums.CardCorners;
 import Server.Enums.Symbol;
 import Server.Player.Player;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
+import java.io.*;
 import java.util.*;
 
 
-public class GameModelInstance implements GameModel {
+public class GameModelInstance implements GameModel{
     private final ResourceDeck resourceDeck;
     private final GoldDeck goldDeck;
     private final AchievementDeck achievementDeck;

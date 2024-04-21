@@ -77,4 +77,14 @@ public interface Player {
      * @param face the face of the starting card
      */
     public void initializeManuscript(StartingCard startingCard, Face face);
+
+    /**
+     * Sets a player ready status
+     */
+    public void setReady(boolean ready);
+
+    /**
+     * @return boolean the player's ready status
+     */
+    public boolean isReady();
 }
