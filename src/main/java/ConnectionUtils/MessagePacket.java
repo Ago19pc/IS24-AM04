@@ -37,10 +37,10 @@ public class MessagePacket implements Serializable {
      */
     public MessagePacket(String serialized) throws IOException, ClassNotFoundException {
         byte[] data = Base64.getDecoder().decode(serialized);
-
         ObjectInputStream oInputStream = new ObjectInputStream(new ByteArrayInputStream(data));
         MessagePacket restored = (MessagePacket) oInputStream.readObject();
         oInputStream.close();
+
         this.payload = restored.getPayload();
         this.type = restored.getType();
     }

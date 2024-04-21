@@ -42,65 +42,59 @@ public class MessageUtils {
 
                 // CALL CONTROLLER RELATIVE ACTION CHE DEVE SETTARE ONLINE_STATUS A TRUE SE IL PLAYER GIA ESISTE
                 break;
-            case SET_COLOR:
-                // ColorMessage payload = (ColorMessage) messagePacket.getPayload();
-                // CALL CONTROLLER RELATIVE ACTION
+            case PLAYERCOLOR:
+                break;
+            case UNAVAILABLECOLORS:
                 break;
             case PLAYERSORDER:
-                // PlayersOrderMessage payload = (PlayersOrderMessage) messagePacket.getPayload();
-                // CALL CONTROLLER RELATIVE ACTION
+                break;
+            case NEWPLAYER:
                 break;
             case SECRETCARDSELECTION:
-                // SecretCardSelectionMessage payload = (SecretCardSelectionMessage) messagePacket.getPayload();
-                // CALL CONTROLLER RELATIVE ACTION
                 break;
-            case OTHERSSECRETCARDSELECTION:
-                // OthersSecretCardSelectionMessage payload = (OthersSecretCardSelectionMessage) messagePacket.getPayload();
-                // CALL CONTROLLER RELATIVE ACTION
+            case OTHERSSECRETCARD:
                 break;
-            case STARTINGCARDS:
-                // StartingCardsMessage payload = (StartingCardsMessage) messagePacket.getPayload();
-                // CALL CONTROLLER RELATIVE ACTION
+            case STARTINGCARD:
                 break;
-            case OTHERSSTARTINGCARDS:
-                // OthersStartingCardsMessage payload = (OthersStartingCardsMessage) messagePacket.getPayload();
-                // CALL CONTROLLER RELATIVE ACTION
+            case OTHERSSTARTINGCARD:
                 break;
             case DRAWCARD:
-                // DrawCardMessage payload = (DrawCardMessage) messagePacket.getPayload();
-                // CALL CONTROLLER RELATIVE ACTION
+                break;
+            case OTHERSDRAWCARD:
                 break;
             case TIMEOUT:
-                // TimeoutMessage payload = (TimeoutMessage) messagePacket.getPayload();
-                // CALL CONTROLLER RELATIVE ACTION
                 break;
             case NEXTTURN:
-                // NextTurnMessage payload = (NextTurnMessage) messagePacket.getPayload();
-                // CALL CONTROLLER RELATIVE ACTION
                 break;
             case CARDPLACEMENT:
-                // CardPlacementMessage payload = (CardPlacementMessage) messagePacket.getPayload();
-                // CALL CONTROLLER RELATIVE ACTION
+                break;
+            case OTHERSCARDPLACEMENT:
                 break;
             case ENDGAMEPHASE:
-                // EndGamePhaseMessage payload = (EndGamePhaseMessage) messagePacket.getPayload();
-                // CALL CONTROLLER RELATIVE ACTION
                 break;
             case LEADERBOARD:
-                // LeaderboardMessage payload = (LeaderboardMessage) messagePacket.getPayload();
-                // CALL CONTROLLER RELATIVE ACTION
                 break;
             case GAMEOVER:
-                // GameOverMessage payload = (GameOverMessage) messagePacket.getPayload();
-                // CALL CONTROLLER RELATIVE ACTION
                 break;
             case NEWMESSAGE:
-                // NewMessageMessage payload = (NewMessageMessage) messagePacket.getPayload();
-                // CALL CONTROLLER RELATIVE ACTION
                 break;
             case RECONNECTION:
-                // ReconnectionMessage payload = (ReconnectionMessage) messagePacket.getPayload();
-                // CALL CONTROLLER RELATIVE ACTION
+                break;
+            case OHTERRECONECTION:
+                break;
+            case READYSTATUS:
+                break;
+            case BOARDINIT:
+                break;
+            case NEWPOINTS:
+                break;
+            case OTHERSNEWPOINTS:
+                break;
+            case NEWSYMBOLS:
+                break;
+            case QUITORPLAYAGAIN:
+                break;
+            case MATCHALREADYFULL:
                 break;
             default:
                 break;
@@ -109,5 +103,68 @@ public class MessageUtils {
 
     }
 
+    public void client_demux (String message) throws IOException, ClassNotFoundException {
+        MessagePacket messagePacket = new MessagePacket(message);
+        switch (messagePacket.getType()){
+            case PLAYERNAME:
+                break;
+            case PLAYERCOLOR:
+                break;
+            case UNAVAILABLECOLORS:
+                break;
+            case PLAYERSORDER:
+                break;
+            case NEWPLAYER:
+                break;
+            case SECRETCARDSELECTION:
+                break;
+            case OTHERSSECRETCARD:
+                break;
+            case STARTINGCARD:
+                break;
+            case OTHERSSTARTINGCARD:
+                break;
+            case DRAWCARD:
+                break;
+            case OTHERSDRAWCARD:
+                break;
+            case TIMEOUT:
+                break;
+            case NEXTTURN:
+                break;
+            case CARDPLACEMENT:
+                break;
+            case OTHERSCARDPLACEMENT:
+                break;
+            case ENDGAMEPHASE:
+                break;
+            case LEADERBOARD:
+                break;
+            case GAMEOVER:
+                break;
+            case NEWMESSAGE:
+                break;
+            case RECONNECTION:
+                break;
+            case OHTERRECONECTION:
+                break;
+            case READYSTATUS:
+                break;
+            case BOARDINIT:
+                break;
+            case NEWPOINTS:
+                break;
+            case OTHERSNEWPOINTS:
+                break;
+            case NEWSYMBOLS:
+                break;
+            case QUITORPLAYAGAIN:
+                break;
+            case MATCHALREADYFULL:
+                break;
+
+        }
+    }
 
 }
+
