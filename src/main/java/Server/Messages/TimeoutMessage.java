@@ -1,7 +1,10 @@
 package Server.Messages;
 
 import Server.Player.Player;
-public class TimeoutMessage implements GeneralMessage {
+
+import java.io.Serializable;
+
+public class TimeoutMessage implements Serializable, GeneralMessage{
         private final Player player;
 
         public TimeoutMessage(Player player){

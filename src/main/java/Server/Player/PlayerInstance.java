@@ -4,10 +4,8 @@ import Server.Card.AchievementCard;
 import Server.Card.Card;
 import Server.Card.StartingCard;
 import Server.Enums.Color;
-import Server.Enums.EventType;
 import Server.Enums.Face;
 import Server.Manuscript.Manuscript;
-import Server.Messages.ColorMessage;
 
 import java.util.LinkedList;
 import java.util.List;

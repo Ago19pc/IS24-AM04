@@ -1,7 +1,10 @@
 package Server.Messages;
 
 import Server.Player.Player;
-public class NextTurnMessage implements GeneralMessage {
+
+import java.io.Serializable;
+
+public class NextTurnMessage implements Serializable, GeneralMessage {
     private final Player player;
 
     private final int turn;

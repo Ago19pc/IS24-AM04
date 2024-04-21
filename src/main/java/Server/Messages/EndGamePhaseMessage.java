@@ -1,6 +1,8 @@
 package Server.Messages;
 
-public class EndGamePhaseMessage implements GeneralMessage {
+import java.io.Serializable;
+
+public class EndGamePhaseMessage implements Serializable, GeneralMessage {
 
         @Override
         public void printData() {

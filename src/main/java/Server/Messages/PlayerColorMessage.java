@@ -3,11 +3,13 @@ package Server.Messages;
 import Server.Enums.Color;
 import Server.Player.Player;
 
-public class ColorMessage implements GeneralMessage {
+import java.io.Serializable;
+
+public class PlayerColorMessage implements Serializable, GeneralMessage {
 
     private final Player player;
     private final Color color;
-    public ColorMessage(Player player, Color color)
+    public PlayerColorMessage(Player player, Color color)
     {
         this.player = player;
         this.color = color;
@@ -27,7 +29,7 @@ public class ColorMessage implements GeneralMessage {
 
     public boolean equals(GeneralMessage other){
         System.out.println("ColorMessage equals still to be implemented.");
-        return this.player.equals(((ColorMessage) other).getPlayer()) && this.color.equals(((ColorMessage) other).getColor());
+        return this.player.equals(((PlayerColorMessage) other).getPlayer()) && this.color.equals(((PlayerColorMessage) other).getColor());
     }
 
 

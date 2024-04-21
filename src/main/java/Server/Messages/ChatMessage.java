@@ -2,7 +2,7 @@ package Server.Messages;
 
 import Server.Chat.Message;
 
-public class ChatMessage implements GeneralMessage {
+public class ChatMessage implements Serializable, GeneralMessage {
     private final Message message;
 
     public ChatMessage(Message message){

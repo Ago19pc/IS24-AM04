@@ -4,7 +4,9 @@ import Server.Card.Card;
 import Server.Deck.Deck;
 import Server.Player.Player;
 
-public class DrawCardMessage implements GeneralMessage {
+import java.io.Serializable;
+
+public class DrawCardMessage implements Serializable, GeneralMessage {
     private final Card card;
     private final Player player;
     private final Deck from;

@@ -2,7 +2,10 @@ package Server.Messages;
 
 import Server.Card.CardFace;
 import Server.Player.Player;
-public class CardPlacementMessage implements GeneralMessage {
+
+import java.io.Serializable;
+
+public class CardPlacementMessage implements Serializable, GeneralMessage {
 
     private final Player player;
     private final CardFace cardFace;

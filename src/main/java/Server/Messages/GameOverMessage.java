@@ -1,6 +1,8 @@
 package Server.Messages;
 
-public class GameOverMessage implements GeneralMessage {
+import java.io.Serializable;
+
+public class GameOverMessage implements Serializable, GeneralMessage {
 
     @Override
     public void printData() {

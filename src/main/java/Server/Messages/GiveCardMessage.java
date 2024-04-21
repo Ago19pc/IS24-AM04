@@ -3,10 +3,11 @@ package Server.Messages;
 import Server.Card.Card;
 import Server.Player.Player;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 
-public class GiveCardMessage implements GeneralMessage {
+public class GiveCardMessage implements Serializable, GeneralMessage {
 
     private final Map<Player, List<Card>> cards;
 

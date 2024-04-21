@@ -3,11 +3,13 @@ package Server.Messages;
 import Server.Card.Card;
 import Server.Player.Player;
 
-public class OthersSecretCardSelectionMessage implements GeneralMessage {
+import java.io.Serializable;
+
+public class OthersSecretCardMessage implements Serializable, GeneralMessage {
     private final Card card;
     private final Player player;
 
-    public OthersSecretCardSelectionMessage(Card card, Player player){
+    public OthersSecretCardMessage(Card card, Player player){
         this.card = card;
         this.player = player;
     }
@@ -24,6 +26,6 @@ public class OthersSecretCardSelectionMessage implements GeneralMessage {
 
     public boolean equals(GeneralMessage other){
         System.out.println("OthersSecretCardSelectionMessage equals still to be implemented.");
-        return this.card.equals(((OthersSecretCardSelectionMessage) other).getCard()) && this.player.equals(((OthersSecretCardSelectionMessage) other).getPlayer());
+        return this.card.equals(((OthersSecretCardMessage) other).getCard()) && this.player.equals(((OthersSecretCardMessage) other).getPlayer());
     }
 }

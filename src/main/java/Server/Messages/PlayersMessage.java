@@ -2,8 +2,9 @@ package Server.Messages;
 
 import Server.Player.Player;
 
+import java.io.Serializable;
 import java.util.List;
-public class PlayersMessage implements GeneralMessage {
+public class PlayersMessage implements Serializable, GeneralMessage {
     private final List<Player> players;
 
     public PlayersMessage(List<Player> players){

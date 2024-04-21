@@ -2,9 +2,10 @@ package Server.Messages;
 
 import Server.Player.Player;
 
+import java.io.Serializable;
 import java.util.Map;
 
-public class LeaderboardMessage implements GeneralMessage {
+public class LeaderboardMessage implements Serializable, GeneralMessage {
 
         private final Map<Player, Integer> points;
 
