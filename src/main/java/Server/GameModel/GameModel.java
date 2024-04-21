@@ -1,23 +1,15 @@
 package Server.GameModel;
 
 import Server.Card.StartingCard;
+import Server.Chat.Chat;
 import Server.Deck.AchievementDeck;
 import Server.Deck.GoldDeck;
 import Server.Deck.ResourceDeck;
-import Server.Chat.Chat;
 import Server.Player.Player;
 
 import java.util.List;
 
 public interface GameModel {
-
-    public void setPlayerList(List<Player> playerList);
-
-    public List<Player> getPlayerList();
-
-    public void addPlayer(Player player);
-
-
     /**
      * Adds 1 to turn
      */
@@ -55,7 +47,7 @@ public interface GameModel {
 
     /**
      * Set the game to the end game phase
-     * @param endGamePhase boolean true or false
+     *
      */
     public void setEndGamePhase();
 
@@ -63,5 +55,25 @@ public interface GameModel {
      * @return Chat the chat
      */
     public Chat getChat();
+    /**
+     * adds a player to the list of players
+     * @param player the player
+     */
+    public void addPlayer(Player player);
+    /**
+     * removes a player from the list of players
+     * @param player the player
+     */
+    public void removePlayer(Player player);
+
+    /**
+     * @return List<Player> the list of players
+     */
+    public List<Player> getPlayerList();
+    /**
+     * shuffles the player list
+     * @return void
+     */
+    public void shufflePlayerList();
 
 }

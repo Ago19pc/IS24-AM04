@@ -108,9 +108,16 @@ public class Graph {
 
 
     /**
-     * Get all cards in a list
+     * Get all cards in a list, a copy of the original list
      */
-    public List<CornerCardFace> getAllCards(){
+    public List<CornerCardFace> getAllCardsCopy(){
         return new ArrayList<>(this.neighbors.keySet());
+    }
+
+    /**
+     * Get all cards in a list, the original list
+     */
+    public List<CornerCardFace> getAllCards() {
+        return this.neighbors.keySet().stream().collect(Collectors.toList());
     }
 }

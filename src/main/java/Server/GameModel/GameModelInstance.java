@@ -11,13 +11,11 @@ import Server.Enums.CardCorners;
 import Server.Enums.Symbol;
 import Server.Player.Player;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
+import java.io.*;
 import java.util.*;
 
 
-public class GameModelInstance implements GameModel {
+public class GameModelInstance implements GameModel{
     private final ResourceDeck resourceDeck;
     private final GoldDeck goldDeck;
     private final AchievementDeck achievementDeck;
@@ -26,7 +24,7 @@ public class GameModelInstance implements GameModel {
     private boolean isEndGamePhase;
     private final Chat chat;
 
-    private List<Player> playerList;
+    private final List<Player> playerList;
 
 
     public GameModelInstance() {
@@ -39,6 +37,7 @@ public class GameModelInstance implements GameModel {
         turn = 0;
         startingCards = new ArrayList<>();
         generateStartingCards();
+        playerList = new ArrayList<>();
 
     }
 
@@ -70,7 +69,12 @@ public class GameModelInstance implements GameModel {
             Map<CardCorners, Symbol> cornerSymbolsF = new HashMap<>();
             List<Symbol> centerSymbols = new ArrayList<>();
             for (int i = 0; i < partsF.length; i++) {
-                if (i < 4) cornerSymbolsF.put(CardCorners.values()[i], Symbol.valueOf(partsF[i]));
+                if (i < 4) {
+                    System.out.print(CardCorners.values()[i]);
+                    System.out.print(" ");
+                    System.out.println(Symbol.valueOf(partsF[i]));
+                    cornerSymbolsF.put(CardCorners.values()[i], Symbol.valueOf(partsF[i]));
+                }
                 else centerSymbols.add(Symbol.valueOf(partsF[i]));
             }
             
@@ -180,5 +184,14 @@ public class GameModelInstance implements GameModel {
     @Override
     public Chat getChat() {
         return this.chat;
+    }
+    public void addPlayer(Player player) {
+        playerList.add(player);
+    }
+    public void removePlayer(Player player) {
+        playerList.remove(player);
+    }
+    public void shufflePlayerList() {
+        Collections.shuffle(playerList);
     }
 }

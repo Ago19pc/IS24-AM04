@@ -1,5 +1,6 @@
 package Server.Card;
 
+import Server.Enums.Decks;
 import Server.Enums.Face;
 
 public class StartingCard implements Card {
@@ -33,4 +34,5 @@ public class StartingCard implements Card {
     public CornerCardFace getCornerFace(Face face) {
         return face == Face.FRONT ? frontFace : backFace;
     }
+
 }

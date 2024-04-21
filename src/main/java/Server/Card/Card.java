@@ -1,5 +1,6 @@
 package Server.Card;
 
+import Server.Enums.Decks;
 import Server.Enums.Face;
 
 /**
@@ -14,4 +15,10 @@ public interface Card {
     public CardFace getFace(Face face);
 
     public CornerCardFace getCornerFace(Face face);
+
+    /**
+     * return the Decks' card
+     * @return Decks the type of the card
+     */
+
 }

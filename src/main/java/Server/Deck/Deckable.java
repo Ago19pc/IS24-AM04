@@ -17,7 +17,7 @@ public interface Deckable {
      * @param position the position pop the card from
      * @return Card the card from the position
      */
-    public Card popCard(DeckPosition position);
+    public Card popCard(DeckPosition position) throws IncorrectDeckPositionException;
 
     /**
      * @return boolean true if the deck is empty
