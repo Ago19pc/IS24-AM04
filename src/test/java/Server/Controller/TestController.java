@@ -168,7 +168,7 @@ public class TestController {
         assertEquals(resourceCard2.getCornerFace(Face.FRONT).getScore(), player.getManuscript().getCardByCoord(-1,1).getScore());
 
         //System.out.println(resourceCard.getCornerFace(Face.BACK)==player.getManuscript().getCardByCoord(1,1));
-        //riga 169 da false
+        //riga 169 da false perché non è stato fatto l'equals delle cardFace
 
     }
     @Test

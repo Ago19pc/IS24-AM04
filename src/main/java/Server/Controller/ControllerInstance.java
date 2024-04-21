@@ -1,9 +1,6 @@
 package Server.Controller;
 
-import Server.Card.AchievementCard;
-import Server.Card.Card;
-import Server.Card.ResourceFrontFace;
-import Server.Card.StartingCard;
+import Server.Card.*;
 import Server.Connections.ConnectionHandler;
 import Server.Enums.*;
 import Server.GameModel.GameModel;
@@ -13,6 +10,8 @@ import Server.Player.Player;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import static java.lang.System.in;
 
@@ -165,7 +164,7 @@ public class ControllerInstance implements Controller{
         //Notify
     }
     public void setPlayerColor(Color color, Player player) {
-        List<Color> colors = getPlayerList().stream().map(Player::getColor).toList();
+        List<Color> colors = getPlayerList().stream().map(Player::getColor).collect(Collectors.toList());
         if(!colors.contains(color)){
             player.setColor(color);
         }
@@ -216,12 +215,23 @@ public class ControllerInstance implements Controller{
         return true;
     }
     public void playCard(Player player, Card card, int xCoord, int yCoord, Face face) {
+        CornerCardFace cardFace = card.getCornerFace(face);
         player.removeCardFromHand(card);
-        if (card.getCornerFace((Face.FRONT)).equals(card.getCornerFace(face))) {
-            player.getManuscript().addCard(xCoord, yCoord, card.getCornerFace(Face.FRONT), getTurn());
-        }
-        if (card.getCornerFace((Face.BACK)).equals(card.getCornerFace(face))) {
-            player.getManuscript().addCard(xCoord, yCoord, card.getCornerFace(Face.BACK), getTurn());
+        player.getManuscript().addCard(xCoord, yCoord, cardFace, getTurn());
+        int cardPoints = cardFace.getScore();
+        Map<Symbol, Integer> scoreRequirements = cardFace.getScoreRequirements();
+        if(scoreRequirements != null){
+            Symbol requiredSymbol = (Symbol) scoreRequirements.keySet().toArray()[0];
+            int requiredQuantity = scoreRequirements.get(requiredSymbol);
+            int actualQuantity;
+            if(requiredSymbol == Symbol.COVERED_CORNER){
+                actualQuantity = player.getManuscript().getCardsUnder(cardFace).size();
+            } else {
+                actualQuantity = player.getManuscript().getSymbolCount(requiredSymbol);
+            }
+            player.addPoints(actualQuantity / requiredQuantity * cardPoints);
+        } else {
+            player.addPoints(cardPoints);
         }
         //Notify
     }

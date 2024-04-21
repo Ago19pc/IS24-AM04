@@ -118,6 +118,6 @@ public class Graph {
      * Get all cards in a list, the original list
      */
     public List<CornerCardFace> getAllCards() {
-        return this.neighbors.keySet().stream().toList();
+        return this.neighbors.keySet().stream().collect(Collectors.toList());
     }
 }

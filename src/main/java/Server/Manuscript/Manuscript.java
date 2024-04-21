@@ -289,4 +289,8 @@ public class Manuscript {
         }
         return points;
     }
+
+    public Map<CardCorners, CornerCardFace> getCardsUnder(CornerCardFace cardFace){
+        return this.graph.getCardsUnder(cardFace);
+    }
 }
