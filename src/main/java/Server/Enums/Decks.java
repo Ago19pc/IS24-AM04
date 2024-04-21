@@ -1,5 +1,5 @@
 package Server.Enums;
 
 public enum Decks {
-    ACHIEVEMENT, GOLD, RESOURCE, STARTING
+    ACHIEVEMENT, GOLD, RESOURCE
 }

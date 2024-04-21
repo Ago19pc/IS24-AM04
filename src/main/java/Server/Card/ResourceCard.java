@@ -34,8 +34,5 @@ public class ResourceCard implements Card {
     public CornerCardFace getCornerFace(Face face) {
         return face == Face.FRONT ? frontFace : backFace;
     }
-    public Decks getType()
-    {
-        return Decks.RESOURCE;
-    }
+
 }

@@ -2,6 +2,7 @@ package Server.Controller;
 
 import Server.Card.*;
 import Server.Connections.ConnectionHandler;
+import Server.Deck.AchievementDeck;
 import Server.Enums.*;
 import Server.GameModel.GameModel;
 import Server.GameModel.GameModelInstance;
@@ -119,15 +120,8 @@ import static java.lang.System.in;
  *          clear all variables for reset
 */
 public class ControllerInstance implements Controller{
-    private final GameModel gameModel;
+    private GameModel gameModel;
     private final ConnectionHandler connectionHandler;
-    private void subscribeClients() {};
-    private void setupMatch() {};
-    private void playerTurn() {};
-    private void saveData() {};
-    private void setEndGamePhase() {};
-    private void reset() {};
-    private void chat() {};
     /**
      * Calculates achievement points forall players
      * @return void
@@ -217,7 +211,6 @@ public class ControllerInstance implements Controller{
     public void playCard(Player player, Card card, int xCoord, int yCoord, Face face) {
         CornerCardFace cardFace = card.getCornerFace(face);
         player.removeCardFromHand(card);
-        player.getManuscript().addCard(xCoord, yCoord, cardFace, getTurn());
         int cardPoints = cardFace.getScore();
         Map<Symbol, Integer> scoreRequirements = cardFace.getScoreRequirements();
         if(scoreRequirements != null){
@@ -228,11 +221,16 @@ public class ControllerInstance implements Controller{
                 actualQuantity = player.getManuscript().getCardsUnder(cardFace).size();
             } else {
                 actualQuantity = player.getManuscript().getSymbolCount(requiredSymbol);
+                int quantityOnCard = cardFace.getCornerSymbols().entrySet().stream()
+                        .filter(entry -> entry.getValue() == requiredSymbol).collect(Collectors.toList()).size();
+                actualQuantity += quantityOnCard;
             }
             player.addPoints(actualQuantity / requiredQuantity * cardPoints);
         } else {
             player.addPoints(cardPoints);
         }
+        player.getManuscript().addCard(xCoord, yCoord, cardFace, getTurn());
+
         //Notify
     }
     public void drawCard(Player player, DeckPosition deckPosition, Decks deck) {
@@ -240,6 +238,7 @@ public class ControllerInstance implements Controller{
             case RESOURCE -> {
                 Card card = gameModel.getResourceDeck().popCard(deckPosition);
                 player.addCardToHand(card);
+
             }
             case GOLD -> {
                 Card card = gameModel.getGoldDeck().popCard(deckPosition);
@@ -262,6 +261,29 @@ public class ControllerInstance implements Controller{
         return null;
     }*/
 
+    @Override
+    public void endGame() {
+        gameModel.setEndGamePhase();
+        //Notify
+    }
+
+    public List<Player> computeLeaderboard() {
+        for (Player player : getPlayerList()) {
+            Manuscript manuscript = player.getManuscript();
+            AchievementDeck achievementDeck = gameModel.getAchievementDeck();
+            int points = manuscript.calculatePoints(achievementDeck.popCard(DeckPosition.FIRST_CARD));
+            points += manuscript.calculatePoints(achievementDeck.popCard(DeckPosition.SECOND_CARD));
+            points += manuscript.calculatePoints(player.getSecretObjective());
+            player.addPoints(points);
+        }
+        List<Player> leaderboard = getPlayerList().stream().sorted((p1, p2) -> p2.getPoints() - p1.getPoints()).collect(Collectors.toList());
+        //Notify
+        return leaderboard;
+    }
+
+    public void clear() {
+        gameModel = new GameModelInstance();
+    }
 }
 
 

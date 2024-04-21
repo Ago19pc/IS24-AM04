@@ -34,8 +34,5 @@ public class AchievementCard implements Card {
         throw new UnsupportedOperationException("Achievement cards do not have corner faces");
     }
 
-    @Override
-    public Decks getType() {
-        return Decks.ACHIEVEMENT;
-    }
+
 }

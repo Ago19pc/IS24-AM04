@@ -20,5 +20,5 @@ public interface Card {
      * return the Decks' card
      * @return Decks the type of the card
      */
-    public Decks getType();
+
 }

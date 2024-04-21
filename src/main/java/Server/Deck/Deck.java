@@ -58,12 +58,19 @@ public abstract  class Deck implements Deckable {
      * @param position the position pop the card from
      * @return Card the popped card
      */
-    public Card popCard(DeckPosition position) {
-        return switch (position) {
-            case DECK -> cards.remove(0);
-            case FIRST_CARD -> boardCards.remove(FIRST_CARD);
-            case SECOND_CARD -> boardCards.remove(SECOND_CARD);
-        };
+    public Card popCard(DeckPosition position){
+        try {
+            if (position == DECK) {
+                return cards.remove(0);
+            } else {
+                Card drawnCard = boardCards.remove(position);
+                moveCardToBoard(position);
+                return drawnCard;
+            }
+        } catch (IncorrectDeckPositionException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     /**

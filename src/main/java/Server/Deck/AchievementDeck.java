@@ -8,6 +8,7 @@ import java.util.*;
 import Server.Card.AchievementCard;
 import Server.Card.AchievementFrontFace;
 import Server.Card.EmptyCardFace;
+import Server.Enums.DeckPosition;
 import Server.Enums.Symbol;
 
 import static Server.Enums.DeckPosition.*;
@@ -89,7 +90,15 @@ public class AchievementDeck extends Deck {
 
 
     }
-    
+    @Override
+    public AchievementCard popCard(DeckPosition position) {
+        if(position == DECK){
+            return (AchievementCard) super.popCard(DECK);
+        } else {
+            System.out.println(getBoardCard().get(position));
+            return (AchievementCard) getBoardCard().get(position);
+        }
+    }
 
 
 }

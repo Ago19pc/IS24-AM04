@@ -36,8 +36,5 @@ public class GoldCard implements Card {
         return face == Face.FRONT ? frontFace : backFace;
     }
 
-    @Override
-    public Decks getType() {
-        return Decks.GOLD;
-    }
+
 }

@@ -109,6 +109,22 @@ public interface Controller {
      * @return boolean true if tha card is playable
      */
     //public Boolean isPlayable(Card card, Face face);
+    /**
+     * sets the game to ending phase
+     *
+     */
+    public void endGame();
+
+    /**
+     * compute achievement points and leaderboard
+     * @return List<Player> the leaderboard
+     */
+    public List<Player> computeLeaderboard();
+
+    /**
+     * clears everything, preparing for a new game
+     */
+    public void clear();
 
 }
 
