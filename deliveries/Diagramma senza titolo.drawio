@@ -1,4 +1,4 @@
-<mxfile host="app.diagrams.net" modified="2024-04-21T14:26:29.684Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Safari/537.36" etag="lTcrDit-Dyh1HLTKySzl" version="24.0.4" type="github">
+<mxfile host="app.diagrams.net" modified="2024-04-21T14:33:03.335Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Safari/537.36" etag="wJZudesJV5oDKnofxLzE" version="24.0.4" type="github">
   <diagram name="Page-1" id="2YBvvXClWsGukQMizWep">
     <mxGraphModel dx="1918" dy="664" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="0" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
       <root>
@@ -286,6 +286,30 @@
           <mxGeometry width="80" relative="1" as="geometry">
             <mxPoint x="769" y="600" as="sourcePoint" />
             <mxPoint x="849" y="600" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="TzS1LCkyJQZkEgtBNQex-129" value="Client" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=0;dropTarget=0;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;newEdgeStyle={&quot;edgeStyle&quot;:&quot;elbowEdgeStyle&quot;,&quot;elbow&quot;:&quot;vertical&quot;,&quot;curved&quot;:0,&quot;rounded&quot;:0};" vertex="1" parent="1">
+          <mxGeometry x="1410" y="15" width="100" height="1010" as="geometry" />
+        </mxCell>
+        <mxCell id="TzS1LCkyJQZkEgtBNQex-130" value="Server" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=0;dropTarget=0;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;newEdgeStyle={&quot;edgeStyle&quot;:&quot;elbowEdgeStyle&quot;,&quot;elbow&quot;:&quot;vertical&quot;,&quot;curved&quot;:0,&quot;rounded&quot;:0};" vertex="1" parent="1">
+          <mxGeometry x="1590" y="15" width="100" height="1000" as="geometry" />
+        </mxCell>
+        <mxCell id="TzS1LCkyJQZkEgtBNQex-131" value="OtherClients" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=0;dropTarget=0;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;newEdgeStyle={&quot;edgeStyle&quot;:&quot;elbowEdgeStyle&quot;,&quot;elbow&quot;:&quot;vertical&quot;,&quot;curved&quot;:0,&quot;rounded&quot;:0};" vertex="1" parent="1">
+          <mxGeometry x="1780" y="20" width="100" height="990" as="geometry" />
+        </mxCell>
+        <mxCell id="TzS1LCkyJQZkEgtBNQex-132" value="PLAYERNAME" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;" edge="1" parent="1" target="TzS1LCkyJQZkEgtBNQex-130">
+          <mxGeometry width="80" relative="1" as="geometry">
+            <mxPoint x="1460" y="100" as="sourcePoint" />
+            <mxPoint x="1540" y="100" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="TzS1LCkyJQZkEgtBNQex-135" value="RECONNECTION&amp;nbsp;" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;" edge="1" parent="1">
+          <mxGeometry width="80" relative="1" as="geometry">
+            <mxPoint x="1639.4999999999995" y="160" as="sourcePoint" />
+            <mxPoint x="1459.3235294117649" y="160" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="1600" y="160" />
+            </Array>
           </mxGeometry>
         </mxCell>
       </root>
