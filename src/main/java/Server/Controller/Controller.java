@@ -4,12 +4,10 @@ import Server.Card.AchievementCard;
 import Server.Card.Card;
 import Server.Card.StartingCard;
 import Server.Chat.Message;
-import Server.Connections.ServerConnectionHandler;
 import Server.Enums.Color;
 import Server.Enums.DeckPosition;
 import Server.Enums.Decks;
 import Server.Enums.Face;
-import Server.Exception.PlayerNotFoundByNameException;
 import Server.Player.Player;
 
 import java.io.IOException;
@@ -18,9 +16,9 @@ import java.util.List;
 public interface Controller {
     /**
      * adds a player to the list of players
-     * @param name the player
+     * @param player the player
      */
-    public void addPlayer(String name);
+    public void addPlayer(Player player);
 
     /**
      * removes a player from the list of players
@@ -162,15 +160,10 @@ public interface Controller {
      */
     public void saveGame() throws IOException;
 
-    public ServerConnectionHandler getConnectionHandler();
-
-    public Player getPlayerByName(String name) throws PlayerNotFoundByNameException;
-
-
-
-
-
-
+    /**
+     * loads a game from a json file
+     */
+    public void loadGame() throws IOException;
 
 }
 

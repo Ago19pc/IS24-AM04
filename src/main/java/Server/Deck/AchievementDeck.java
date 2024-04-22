@@ -1,25 +1,32 @@
 package Server.Deck;
 
+import Server.Card.AchievementCard;
+import Server.Card.AchievementFrontFace;
+import Server.Card.Card;
+import Server.Card.EmptyCardFace;
+import Server.Enums.DeckPosition;
+import Server.Enums.Symbol;
+import Server.Exception.IncorrectDeckPositionException;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.util.*;
 
-import Server.Card.AchievementCard;
-import Server.Card.AchievementFrontFace;
-import Server.Card.EmptyCardFace;
-import Server.Enums.DeckPosition;
-import Server.Enums.Symbol;
-
 import static Server.Enums.DeckPosition.*;
 
 
-public class AchievementDeck extends Deck {
+public class AchievementDeck implements Deckable{
+    protected List<AchievementCard> cards;
+    private final Map<DeckPosition, AchievementCard> boardCards;
 
     public AchievementDeck(){
-        super();
+        this.boardCards = new HashMap<>();
+        this.cards = new ArrayList<>();
+        boardCards.put(FIRST_CARD, null);
+        boardCards.put(SECOND_CARD, null);
         createCards();
-        super.shuffle();
+        shuffle();
         System.out.println("AchievementDeck");
         try {
             moveCardToBoard(FIRST_CARD);
@@ -27,6 +34,38 @@ public class AchievementDeck extends Deck {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    /**
+     * Shuffle the deck
+     */
+    void shuffle() {
+        // shuffle the deck
+        Collections.shuffle(cards);
+        System.out.println(this.toString() + "shuffle");
+    }
+
+    /**
+     * @param where_to the position to add the card to
+     */
+    public void moveCardToBoard(DeckPosition where_to) throws IncorrectDeckPositionException {
+        if (where_to == DECK)
+            throw new IncorrectDeckPositionException("Cannot add card to the deck, only to FIST_CARD or SECOND_CARD.");
+        else
+            System.out.println(this.toString() + "moveCardToBoard");
+        Card cardToMove = popCard(DECK);
+        addCard(cardToMove, where_to);
+    }
+
+    /**
+     * @return Card the card from the position
+     */
+    public Map<DeckPosition, Card> getBoardCard() {
+        Map<DeckPosition, Card> boardCardsToReturn = new HashMap<>();
+        for (DeckPosition position : boardCards.keySet()) {
+            boardCardsToReturn.put(position, (Card) boardCards.get(position));
+        }
+        return boardCardsToReturn;
     }
 
     /**
@@ -77,15 +116,6 @@ public class AchievementDeck extends Deck {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        /*This is to print to check if the cards are generated correctly
-         for(Card card : this.cards) {
-            System.out.println("Requirements Symbols:");
-            card.getFace(FRONT).getScoreRequirements().forEach((symbol, quantity) -> {if (quantity > 0) System.out.println(symbol + " " + quantity);});
-            System.out.println("Points:");
-            System.out.println(card.getFace(FRONT).getScore());
-            System.out.println();
-            }
-        */
             
 
 
@@ -93,11 +123,37 @@ public class AchievementDeck extends Deck {
     @Override
     public AchievementCard popCard(DeckPosition position) {
         if(position == DECK){
-            return (AchievementCard) super.popCard(DECK);
+            return (AchievementCard) cards.remove(0);
         } else {
             System.out.println(getBoardCard().get(position));
             return (AchievementCard) getBoardCard().get(position);
         }
+    }
+
+    /**
+     * @return boolean true if the deck is empty
+     */
+    public boolean isEmpty() {
+        return cards.isEmpty();
+    }
+
+    /**
+     * Add card to the board in the specified position
+     * @param card card to add
+     * @param position position to add the card to
+     */
+    public void addCard(Card card, DeckPosition position) throws IncorrectDeckPositionException {
+        if (position == DECK)
+            throw new IncorrectDeckPositionException("Cannot add card to the deck, only to FIST_CARD or SECOND_CARD.");
+        else
+            boardCards.put(position, (AchievementCard) card);
+    }
+
+    /**
+     * @return int the number of cards in the deck
+     */
+    public int getNumberOfCards() {
+        return cards.size();
     }
 
 

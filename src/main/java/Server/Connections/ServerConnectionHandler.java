@@ -24,11 +24,9 @@ public class ServerConnectionHandler extends Thread {
     /**
      * Create the server socket, needed to choose port
      *
-     * @param controller controller instance
      */
     public ServerConnectionHandler() throws IOException {
         this.clientNames = new HashMap<Long, String>();
-
         askForPort();
 
         clients = new ArrayList<>();
@@ -38,6 +36,28 @@ public class ServerConnectionHandler extends Thread {
         }
         System.out.println("Server started on port: " + port);
 
+    }
+
+    public ServerConnectionHandler(boolean debugMode){
+        this.clientNames = new HashMap<Long, String>();
+        if(debugMode)
+            this.port = 1234;
+        else
+            askForPort();
+        clients = new ArrayList<>();
+        while (!startServer(port)) {
+            System.out.println("Port already in use, trying next port...");
+            port++;
+        }
+        System.out.println("Server started on port: " + port);
+    }
+
+    /**
+     * Set the controller instance
+     * @param controller the controller instance
+     */
+    public void setController(Controller controller) {
+        this.controller = controller;
     }
 
     public void run() {
@@ -96,23 +116,6 @@ public class ServerConnectionHandler extends Thread {
         //String/Player offlineplayer = target.getPlayer()
         //controller.setOffline(offlineplayer);
     }
-    public void killClient(String name) {
-        for (Long id : clientNames.keySet()) {
-            if (clientNames.get(id).equals(name)) {
-                for (ClientHandler c: clients) {
-                    if (c.threadId() == id) {
-                        c.interrupt();
-                        this.clients = this.clients.stream()
-                                .filter(e -> e.threadId() != (c.threadId()))
-                                .collect(Collectors.toList());
-                    }
-                }
-
-
-            }
-            return;
-        }
-    }
 
     /**
      * Adds client name to the map of names and thread.
@@ -146,10 +149,6 @@ public class ServerConnectionHandler extends Thread {
         this.clientNames.remove(oldID);
         this.clientNames.put(newID, name);
         //controller.reconnectPlayer(name);
-    }
-
-    public void setController(Controller controller) {
-        this.controller = controller;
     }
 
 }

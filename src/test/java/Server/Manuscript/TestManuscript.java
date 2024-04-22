@@ -42,11 +42,11 @@ public class TestManuscript {
         StartingFrontFace startingFrontFace = new StartingFrontFace("startingfront.jpeg", new HashMap<>(), new ArrayList<>());
         CornerCardFace startingBackFace = new CornerCardFace("startingback.jpeg", new HashMap<>());
         ResourceFrontFace resourceFrontFace = new ResourceFrontFace("resourcefront.jpeg", new HashMap<>(), 0, Symbol.ANIMAL);
-        RegularBackFace resourceBackFace = new RegularBackFace("regularback.jpeg", new ArrayList<>());
+        RegularBackFace resourceBackFace = new RegularBackFace("regularback.jpeg", new ArrayList<>(List.of(Symbol.ANIMAL)));
         GoldFrontFace goldFrontFace = new GoldFrontFace("goldfront.jpeg", new HashMap<>(), 0, new HashMap<>(), new HashMap<>(), Symbol.BUG);
-        RegularBackFace goldBackFace = new RegularBackFace("regularback2.jpeg", new ArrayList<>());
+        RegularBackFace goldBackFace = new RegularBackFace("regularback2.jpeg", new ArrayList<>(List.of(Symbol.BUG)));
         ResourceFrontFace resourceFrontFace2 = new ResourceFrontFace("resourcefront2.jpeg", new HashMap<>(), 0, Symbol.FUNGUS);
-        RegularBackFace resourceBackFace2 = new RegularBackFace("regularback3.jpeg", new ArrayList<>());
+        RegularBackFace resourceBackFace2 = new RegularBackFace("regularback3.jpeg", new ArrayList<>(List.of(Symbol.FUNGUS)));
         StartingCard startingCard = new StartingCard(startingFrontFace, startingBackFace);
         /*ResourceCard resourceCard = new ResourceCard(resourceFrontFace, resourceBackFace);
         GoldCard goldCard = new GoldCard(goldFrontFace, goldBackFace);

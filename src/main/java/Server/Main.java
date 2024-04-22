@@ -4,17 +4,17 @@ import Server.Connections.ServerConnectionHandler;
 import Server.Controller.Controller;
 import Server.Controller.ControllerInstance;
 
-import java.io.IOException;
-
 
 public class Main {
+    private static ServerConnectionHandler connectionHandler;
+    private static Controller controller;
 
 
-    public static void main(String[] args) throws IOException {
-        ServerConnectionHandler connectionHandler = new ServerConnectionHandler();
-        Controller controller = new ControllerInstance(connectionHandler);
+    public static void main(String[] args) {
         try {
             connectionHandler = new ServerConnectionHandler();
+            controller = new ControllerInstance(connectionHandler);
+            connectionHandler.setController(controller);
             connectionHandler.start();
         } catch (Exception e) {
             e.printStackTrace();

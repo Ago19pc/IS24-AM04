@@ -17,7 +17,6 @@ public class PlayerInstance implements Player {
     private final String name;
     private int points;
     private Manuscript manuscript;
-
     private boolean ready;
     public PlayerInstance(String name) {
         this.name = name;
@@ -71,7 +70,6 @@ public class PlayerInstance implements Player {
      */
     @Override
     public String getName() {
-        System.out.println("getName");
         return name;
     }
 

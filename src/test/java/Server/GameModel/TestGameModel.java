@@ -1,14 +1,10 @@
 package Server.GameModel;
 
 import Server.Card.*;
-import Server.Connections.ConnectionHandler;
-import Server.Controller.Controller;
-import Server.Controller.ControllerInstance;
 import Server.Player.Player;
 import Server.Player.PlayerInstance;
 import org.junit.jupiter.api.Test;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -60,7 +56,7 @@ public class TestGameModel {
     @Test
     public void testNewPlayer() {
         GameModelInstance gameModelInstance = new GameModelInstance();
-        Player player = new PlayerInstance("player1",null);
+        Player player = new PlayerInstance("player1");
         gameModelInstance.addPlayer(player);
         List<Player> playerList = gameModelInstance.getPlayerList();
         assertEquals(1, playerList.size());
@@ -69,20 +65,21 @@ public class TestGameModel {
     @Test
     public void testRemovePlayer() {
         GameModelInstance gameModelInstance = new GameModelInstance();
-        Player player = new PlayerInstance("player1",null);
+        Player player = new PlayerInstance("player1");
         gameModelInstance.addPlayer(player);
         List<Player> playerList = gameModelInstance.getPlayerList();
         assertEquals(1, playerList.size());
         gameModelInstance.removePlayer(player);
+        playerList = gameModelInstance.getPlayerList();
         assertEquals(0, playerList.size());
     }
     @Test
     public void testShufflePlayers() {
         GameModelInstance gameModelInstance = new GameModelInstance();
-        Player player1 = new PlayerInstance("player1", null);
-        Player player2 = new PlayerInstance("player2", null);
-        Player player3 = new PlayerInstance("player3", null);
-        Player player4 = new PlayerInstance("player4", null);
+        Player player1 = new PlayerInstance("player1");
+        Player player2 = new PlayerInstance("player2");
+        Player player3 = new PlayerInstance("player3");
+        Player player4 = new PlayerInstance("player4");
         gameModelInstance.addPlayer(player1);
         gameModelInstance.addPlayer(player2);
         gameModelInstance.addPlayer(player3);
@@ -104,10 +101,5 @@ public class TestGameModel {
         }
         assertTrue(isShuffled);
     }
-    @Test
-    public void testSave() throws IOException {
-        ConnectionHandler connectionHandler = new ConnectionHandler(0);
-        Controller controllerInstance = new ControllerInstance(connectionHandler);
-        controllerInstance.saveGame();
-    }
+
 }

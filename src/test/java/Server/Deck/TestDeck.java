@@ -11,8 +11,8 @@ public class TestDeck {
     @Test
     public void TestAchievementDeck() {
         AchievementDeck achievementDeck = new AchievementDeck();
-        assertEquals (16, achievementDeck.getNumberOfCards());
-        for (int i = 0; i < 16; i++) {
+        assertEquals (14, achievementDeck.getNumberOfCards());
+        for (int i = 0; i < 14; i++) {
             Card drawnCard = achievementDeck.popCard(DeckPosition.DECK);
             assertThrows(
                     ClassCastException.class, () -> {
@@ -64,7 +64,7 @@ public class TestDeck {
     public void TestGoldDeck() {
         GoldDeck goldDeck = new GoldDeck();
         assertEquals (38, goldDeck.getNumberOfCards());
-        for (int i = 0; i < 40; i++) {
+        for (int i = 0; i < 38; i++) {
             Card drawnCard = goldDeck.popCard(DeckPosition.DECK);
             assertDoesNotThrow(() -> {
                 GoldCard card = (GoldCard) drawnCard;

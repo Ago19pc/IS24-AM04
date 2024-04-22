@@ -8,13 +8,14 @@ import Server.Chat.Message;
 import Server.Connections.ServerConnectionHandler;
 import Server.Deck.AchievementDeck;
 import Server.Enums.*;
-import Server.Exception.PlayerNotFoundByNameException;
 import Server.GameModel.GameModel;
 import Server.GameModel.GameModelInstance;
 import Server.Manuscript.Manuscript;
 import Server.Player.Player;
-import Server.Player.PlayerInstance;
+import com.google.gson.Gson;
 
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
@@ -137,11 +138,9 @@ public class ControllerInstance implements Controller{
         this.connectionHandler = connectionHandler;
         this.gameModel = new GameModelInstance();
     }
-    public void addPlayer(String name) {
-        Player player= new PlayerInstance(name);
+    public void addPlayer(Player player) {
         if(gameModel.getPlayerList().size()<4) {
             gameModel.addPlayer(player);
-
         }
         //Notify
     }
@@ -305,8 +304,8 @@ public class ControllerInstance implements Controller{
         return player.isReady();
     }
 
-    public void addMessage(String message, Player player) {
-        gameModel.getChat().addMessage(message, player);
+    public void addMessage(String message, Player sender) {
+        gameModel.getChat().addMessage(message, sender);
         //Notify
     }
 
@@ -317,23 +316,19 @@ public class ControllerInstance implements Controller{
     }
 
     public void saveGame() throws IOException {
-        //System.out.println(this.gameModel);
+        Gson gson = new Gson();
+        FileWriter fileWriter = new FileWriter("saves/game.json");
+        gson.toJson(gameModel, fileWriter);
+        fileWriter.close();
     }
 
-    public Player getPlayerByName(String name) throws PlayerNotFoundByNameException{
-        for(Player p: this.gameModel.getPlayerList()){
-            if (p.getName().equals(name))
-                return p;
-        }
-        throw new PlayerNotFoundByNameException(name);
-    }
-
-    public ServerConnectionHandler getConnectionHandler(){
-        return this.connectionHandler;
+    public void loadGame() throws IOException {
+        Gson gson = new Gson();
+        FileReader fileReader = new FileReader("saves/game.json");
+        gameModel = gson.fromJson(fileReader, GameModelInstance.class);
+        fileReader.close();
     }
 }
-
-
 
 
 

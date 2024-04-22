@@ -1,37 +1,45 @@
 package Server.Messages;
 
 import Server.Card.Card;
-import Server.Controller.Controller;
-import Server.Deck.Deck;
-import Server.Enums.DeckPosition;
 import Server.Enums.Decks;
-import Server.Exception.PlayerNotFoundByNameException;
 import Server.Player.Player;
-import java.io.Serializable;
 
-public class DrawCardMessage implements Serializable, GeneralMessage {
-
-    private final String  name;
+public class DrawCardMessage implements GeneralMessage {
+    private final Card card;
+    private final Player player;
     private final Decks from;
-    private final DeckPosition deckPosition;
+    private final Card newBoardCard;
 
-    public DrawCardMessage(String name, DeckPosition deckPosition, Decks from) {
-        this.name = name;
+    public DrawCardMessage(Player player, Card card, Decks from, Card newBoardCard) {
+        this.player = player;
+        this.card = card;
         this.from = from;
-        this.deckPosition= deckPosition;
+        this.newBoardCard = newBoardCard;
+    }
+    public void printData() {
+        System.out.println(player.getName() + " has drawn a card from " + from.toString() + " and placed it on the board");
+    }
+
+    public Card getCard() {
+        return card;
+    }
+
+    public Player getPlayer() {
+        return player;
+    }
+
+    public Decks getFrom() {
+        return from;
+    }
+
+    public Card getNewBoardCard() {
+        return newBoardCard;
+    }
+
+    public boolean equals(GeneralMessage other) {
+        System.out.println("DrawCardMessage equals still to be implemented.");
+        return this.card.equals(((DrawCardMessage) other).getCard()) && this.player.equals(((DrawCardMessage) other).getPlayer()) && this.from.equals(((DrawCardMessage) other).getFrom()) && this.newBoardCard.equals(((DrawCardMessage) other).getNewBoardCard());
     }
 
 
-    @Override
-    public void serverExecute(Controller controller) {
-        try {
-            controller.drawCard(controller.getPlayerByName(name), this.deckPosition, this.from);
-        }catch (PlayerNotFoundByNameException e){
-            e.printStackTrace();
-        }
-    }
-    @Override
-    public void clientExecute() {
-
-    }
 }
