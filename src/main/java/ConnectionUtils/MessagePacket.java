@@ -1,7 +1,7 @@
 package ConnectionUtils;
 
 
-import Server.Enums.EventType;
+import Server.Enums.MessageType;
 import Server.Messages.GeneralMessage;
 
 import java.io.*;
@@ -17,14 +17,14 @@ public class MessagePacket implements Serializable {
      * type: EventType object
      */
     GeneralMessage payload;
-    EventType type;
+    MessageType type;
 
     /**
      * Constructor
      * @param payload: GeneralMessage object
      * @param type: EventType object
      */
-    public MessagePacket(GeneralMessage payload, EventType type) {
+    public MessagePacket(GeneralMessage payload, MessageType type) {
         this.payload = payload;
         this.type = type;
     }
@@ -55,7 +55,7 @@ public class MessagePacket implements Serializable {
     /**
      * @return type: EventType object, aka the event type of the packet
      */
-    public EventType getType() {
+    public MessageType getType() {
         return type;
     }
 
@@ -78,5 +78,7 @@ public class MessagePacket implements Serializable {
     public boolean equals(MessagePacket other){
         return this.payload.equals(other.getPayload()) && this.type.equals(other.getType());
     }
+
+
 
 }

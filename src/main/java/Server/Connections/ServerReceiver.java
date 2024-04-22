@@ -1,6 +1,7 @@
 package Server.Connections;
 
 import Client.Connection.ClientConnectionHandler;
+import ConnectionUtils.MessagePacket;
 import ConnectionUtils.MessageUtils;
 
 import java.io.BufferedReader;
@@ -36,8 +37,8 @@ public class ServerReceiver extends Thread {
             try {
                 String resp = in.readLine();
                 System.out.println(resp);
-                // Capisci il tipo di messaggio dal prefisso (serve a scegliere il tipo di evento)
-                messageUtils.server_demux(resp, clientHandler.threadId());
+                MessagePacket packet = new MessagePacket(resp);
+                packet.getPayload().serverExecute(serverConnectionHandler.getController());
 
 
 

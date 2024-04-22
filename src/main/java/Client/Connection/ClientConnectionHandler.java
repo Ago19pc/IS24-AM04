@@ -2,7 +2,7 @@ package Client.Connection;
 
 import ConnectionUtils.MessagePacket;
 import ConnectionUtils.MessageUtils;
-import Server.Enums.EventType;
+import Server.Enums.MessageType;
 import Server.Messages.PlayerNameMessage;
 
 import java.io.IOException;
@@ -81,7 +81,7 @@ public class ClientConnectionHandler extends Thread {
 
         // TEST CODE
         PlayerNameMessage pnm = new PlayerNameMessage("NOME1");
-        MessagePacket message = new MessagePacket(pnm, EventType.PLAYERNAME);
+        MessagePacket message = new MessagePacket(pnm, MessageType.PLAYERNAME);
         //sender.sendMessage(message.stringify());
         MessagePacket test = null;
         try {
@@ -96,8 +96,6 @@ public class ClientConnectionHandler extends Thread {
         System.out.println(message.getType());
         System.out.println(test.getType());
 
-        message.getPayload().printData();
-        test.getPayload().printData();
     }
 
 

@@ -8,10 +8,12 @@ import Server.Chat.Message;
 import Server.Connections.ServerConnectionHandler;
 import Server.Deck.AchievementDeck;
 import Server.Enums.*;
+import Server.Exception.PlayerNotFoundByNameException;
 import Server.GameModel.GameModel;
 import Server.GameModel.GameModelInstance;
 import Server.Manuscript.Manuscript;
 import Server.Player.Player;
+import Server.Player.PlayerInstance;
 import com.google.gson.Gson;
 
 import java.io.FileReader;
@@ -145,6 +147,13 @@ public class ControllerInstance implements Controller{
         //Notify
     }
 
+    public void addPlayer(String name) {
+        Player player = new PlayerInstance(name);
+        if(gameModel.getPlayerList().size()<4) {
+            gameModel.addPlayer(player);
+        }
+        //Notify
+    }
     public void removePlayer(Player player) {
         gameModel.removePlayer(player);
         //Notify
@@ -327,6 +336,19 @@ public class ControllerInstance implements Controller{
         FileReader fileReader = new FileReader("saves/game.json");
         gameModel = gson.fromJson(fileReader, GameModelInstance.class);
         fileReader.close();
+    }
+
+    @Override
+    public Player getPlayerByName(String name) throws PlayerNotFoundByNameException {
+        for (Player p : this.gameModel.getPlayerList()){
+            if (p.getName().equals(name)) return p;
+        }
+        throw new PlayerNotFoundByNameException(name);
+    }
+
+    @Override
+    public ServerConnectionHandler getConnectionHandler() {
+        return this.connectionHandler;
     }
 }
 

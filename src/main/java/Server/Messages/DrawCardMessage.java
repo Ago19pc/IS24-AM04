@@ -1,44 +1,35 @@
 package Server.Messages;
 
 import Server.Card.Card;
+import Server.Controller.Controller;
+import Server.Enums.DeckPosition;
 import Server.Enums.Decks;
+import Server.Exception.PlayerNotFoundByNameException;
 import Server.Player.Player;
 
 public class DrawCardMessage implements GeneralMessage {
-    private final Card card;
-    private final Player player;
+    private final String  name;
     private final Decks from;
-    private final Card newBoardCard;
+    private final DeckPosition deckPosition;
 
-    public DrawCardMessage(Player player, Card card, Decks from, Card newBoardCard) {
-        this.player = player;
-        this.card = card;
+    public DrawCardMessage(String name, DeckPosition deckPosition, Decks from) {
+        this.name = name;
         this.from = from;
-        this.newBoardCard = newBoardCard;
-    }
-    public void printData() {
-        System.out.println(player.getName() + " has drawn a card from " + from.toString() + " and placed it on the board");
+        this.deckPosition= deckPosition;
     }
 
-    public Card getCard() {
-        return card;
-    }
 
-    public Player getPlayer() {
-        return player;
+    @Override
+    public void serverExecute(Controller controller) {
+        try {
+            controller.drawCard(controller.getPlayerByName(name), this.deckPosition, this.from);
+        }catch (PlayerNotFoundByNameException e){
+            e.printStackTrace();
+        }
     }
+    @Override
+    public void clientExecute() {
 
-    public Decks getFrom() {
-        return from;
-    }
-
-    public Card getNewBoardCard() {
-        return newBoardCard;
-    }
-
-    public boolean equals(GeneralMessage other) {
-        System.out.println("DrawCardMessage equals still to be implemented.");
-        return this.card.equals(((DrawCardMessage) other).getCard()) && this.player.equals(((DrawCardMessage) other).getPlayer()) && this.from.equals(((DrawCardMessage) other).getFrom()) && this.newBoardCard.equals(((DrawCardMessage) other).getNewBoardCard());
     }
 
 
