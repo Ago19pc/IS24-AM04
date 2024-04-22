@@ -2,6 +2,7 @@ package Server.Messages;
 
 import Server.Card.Card;
 import Server.Controller.Controller;
+import Server.Exception.ServerExecuteNotCallableException;
 import Server.Player.Player;
 
 import java.io.Serializable;
@@ -18,8 +19,8 @@ public class InitialHandMessage implements Serializable, GeneralMessage {
 
 
     @Override
-    public void serverExecute(Controller controller) {
-
+    public void serverExecute(Controller controller)throws ServerExecuteNotCallableException {
+        throw new ServerExecuteNotCallableException();
 
     }
 

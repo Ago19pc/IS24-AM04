@@ -4,6 +4,7 @@ import Server.Controller.Controller;
 import Server.Deck.AchievementDeck;
 import Server.Deck.GoldDeck;
 import Server.Deck.ResourceDeck;
+import Server.Exception.ServerExecuteNotCallableException;
 
 import java.io.Serializable;
 
@@ -20,8 +21,8 @@ public class BoardInitMessage implements Serializable, GeneralMessage {
         this.achievementDeck = achievementDeck;
     }
 
-    public void serverExecute(Controller controller){
-
+    public void serverExecute(Controller controller)throws ServerExecuteNotCallableException {
+        throw new ServerExecuteNotCallableException();
     }
     public void clientExecute(){
 
