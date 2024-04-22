@@ -9,10 +9,13 @@ import Server.Deck.GoldDeck;
 import Server.Deck.ResourceDeck;
 import Server.Enums.CardCorners;
 import Server.Enums.Symbol;
+import Server.Exception.AlreadySetException;
 import Server.Player.Player;
 import Server.Player.PlayerInstance;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
 import java.util.*;
 
 
@@ -93,7 +96,8 @@ public class GameModelInstance implements GameModel{
             startingCards.add(card);
         }
     } catch (Exception e) {
-        e.printStackTrace();
+            System.out.println("An error occurred while generating starting cards");
+            e.printStackTrace();
     }       
        Collections.shuffle(startingCards);
     
@@ -108,7 +112,12 @@ public class GameModelInstance implements GameModel{
     }
 
 
-    public void addPlayer(Player player) {
+    public void addPlayer(Player player) throws IllegalArgumentException{
+        for (PlayerInstance playerInstance : playerList) {
+            if (playerInstance.getName().equals(player.getName())) {
+                throw new IllegalArgumentException("Player with same name already exists");
+            }
+        }
         PlayerInstance playerInstance = (PlayerInstance) player;
         System.out.println(playerInstance.getName());
         playerList.add(playerInstance);
@@ -175,7 +184,10 @@ public class GameModelInstance implements GameModel{
      * Set the game to the end game phase
      */
     @Override
-    public void setEndGamePhase() {
+    public void setEndGamePhase() throws AlreadySetException {
+        if(isEndGamePhase){
+            throw new AlreadySetException("The game is already in the end game phase");
+        }
         this.isEndGamePhase = true;
     }
 
@@ -187,8 +199,18 @@ public class GameModelInstance implements GameModel{
         return this.chat;
     }
 
-    public void removePlayer(Player player) {
-        playerList.remove(player);
+    public void removePlayer(Player player) throws IllegalArgumentException{
+        boolean removed = false;
+        for (PlayerInstance playerInstance : playerList) {
+            if (playerInstance.getName().equals(player.getName())) {
+                playerList.remove(playerInstance);
+                removed = true;
+                break;
+            }
+        }
+        if (!removed) {
+            throw new IllegalArgumentException("Player not found");
+        }
     }
     public void shufflePlayerList() {
         Collections.shuffle(playerList);

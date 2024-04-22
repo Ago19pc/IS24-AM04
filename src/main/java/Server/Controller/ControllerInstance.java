@@ -8,6 +8,8 @@ import Server.Chat.Message;
 import Server.Connections.ServerConnectionHandler;
 import Server.Deck.AchievementDeck;
 import Server.Enums.*;
+import Server.Exception.AlreadySetException;
+import Server.Exception.TooManyPlayersException;
 import Server.GameModel.GameModel;
 import Server.GameModel.GameModelInstance;
 import Server.Manuscript.Manuscript;
@@ -138,9 +140,11 @@ public class ControllerInstance implements Controller{
         this.connectionHandler = connectionHandler;
         this.gameModel = new GameModelInstance();
     }
-    public void addPlayer(Player player) {
+    public void addPlayer(Player player) throws TooManyPlayersException {
         if(gameModel.getPlayerList().size()<4) {
             gameModel.addPlayer(player);
+        } else {
+            throw new TooManyPlayersException("Too many players");
         }
         //Notify
     }
@@ -267,7 +271,7 @@ public class ControllerInstance implements Controller{
     }*/
 
     @Override
-    public void endGame() {
+    public void endGame() throws AlreadySetException {
         gameModel.setEndGamePhase();
         //Notify
     }

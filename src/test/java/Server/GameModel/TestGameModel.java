@@ -1,6 +1,7 @@
 package Server.GameModel;
 
 import Server.Card.*;
+import Server.Exception.AlreadySetException;
 import Server.Player.Player;
 import Server.Player.PlayerInstance;
 import org.junit.jupiter.api.Test;
@@ -47,7 +48,7 @@ public class TestGameModel {
         assertEquals(2, gameModelInstance.getTurn());
     }
     @Test
-    public void testEndGamePhase() {
+    public void testEndGamePhase() throws AlreadySetException {
         GameModelInstance gameModelInstance = new GameModelInstance();
         assertFalse(gameModelInstance.isEndGamePhase());
         gameModelInstance.setEndGamePhase();

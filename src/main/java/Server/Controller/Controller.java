@@ -8,6 +8,8 @@ import Server.Enums.Color;
 import Server.Enums.DeckPosition;
 import Server.Enums.Decks;
 import Server.Enums.Face;
+import Server.Exception.AlreadySetException;
+import Server.Exception.TooManyPlayersException;
 import Server.Player.Player;
 
 import java.io.IOException;
@@ -18,7 +20,7 @@ public interface Controller {
      * adds a player to the list of players
      * @param player the player
      */
-    public void addPlayer(Player player);
+    public void addPlayer(Player player) throws TooManyPlayersException;
 
     /**
      * removes a player from the list of players
@@ -113,7 +115,7 @@ public interface Controller {
      * sets the game to ending phase
      *
      */
-    public void endGame();
+    public void endGame() throws AlreadySetException;
 
     /**
      * compute achievement points and leaderboard
