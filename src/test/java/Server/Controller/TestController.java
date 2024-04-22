@@ -620,7 +620,7 @@ public class TestController {
         controller.addMessage("Hello", player);
         assertEquals(1, controller.getChatMessages().size());
         assertEquals("Hello", controller.getChatMessages().get(0).getMessage());
-        assertEquals(player, controller.getChatMessages().get(0).getSender());
+        assertEquals(player.getName(), controller.getChatMessages().get(0).getName());
     }
 
     @Test
