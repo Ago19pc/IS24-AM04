@@ -2,15 +2,19 @@ package Server;
 
 import Server.Connections.ServerConnectionHandler;
 import Server.Controller.Controller;
+import Server.Controller.ControllerInstance;
+
+import java.io.IOException;
 
 
 public class Main {
-    private static Controller controller = new Controller();
-    private static ServerConnectionHandler connectionHandler;
 
-    public static void main(String[] args) {
+
+    public static void main(String[] args) throws IOException {
+        ServerConnectionHandler connectionHandler = new ServerConnectionHandler();
+        Controller controller = new ControllerInstance(connectionHandler);
         try {
-            connectionHandler = new ServerConnectionHandler(controller);
+            connectionHandler = new ServerConnectionHandler();
             connectionHandler.start();
         } catch (Exception e) {
             e.printStackTrace();

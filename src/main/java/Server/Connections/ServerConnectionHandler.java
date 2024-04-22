@@ -26,10 +26,9 @@ public class ServerConnectionHandler extends Thread {
      *
      * @param controller controller instance
      */
-    public ServerConnectionHandler(Controller controller) throws IOException {
+    public ServerConnectionHandler() throws IOException {
         this.clientNames = new HashMap<Long, String>();
 
-        this.controller = controller;
         askForPort();
 
         clients = new ArrayList<>();
@@ -147,6 +146,10 @@ public class ServerConnectionHandler extends Thread {
         this.clientNames.remove(oldID);
         this.clientNames.put(newID, name);
         //controller.reconnectPlayer(name);
+    }
+
+    public void setController(Controller controller) {
+        this.controller = controller;
     }
 
 }
