@@ -1,4 +1,4 @@
-<mxfile host="app.diagrams.net" modified="2024-04-22T17:02:42.107Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36 OPR/108.0.0.0" etag="SBCrJAh4q25y6Kshz_sX" version="24.2.7" type="github">
+<mxfile host="app.diagrams.net" modified="2024-04-22T17:50:43.930Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36 OPR/108.0.0.0" etag="lcQV4_mA23KQGMSCkf3n" version="24.2.7" type="github">
   <diagram name="Page-1" id="2YBvvXClWsGukQMizWep">
     <mxGraphModel dx="1854" dy="1058" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="0" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
       <root>
@@ -322,7 +322,7 @@
             <mxPoint x="2760" y="130" as="targetPoint" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="TzS1LCkyJQZkEgtBNQex-148" value="INIZIALIZZAZIONE" style="html=1;whiteSpace=wrap;" parent="1" vertex="1">
+        <mxCell id="TzS1LCkyJQZkEgtBNQex-148" value="PREPARAZIONE" style="html=1;whiteSpace=wrap;" parent="1" vertex="1">
           <mxGeometry x="85" y="-100" width="275" height="50" as="geometry" />
         </mxCell>
         <mxCell id="TzS1LCkyJQZkEgtBNQex-149" value="FASI DI GIOCO&amp;nbsp;" style="html=1;whiteSpace=wrap;" parent="1" vertex="1">
