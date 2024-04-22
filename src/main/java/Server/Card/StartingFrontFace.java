@@ -30,5 +30,25 @@ public class StartingFrontFace extends  CornerCardFace {
         return centerSymbols;
     }
 
+    @Override
+    public Map<Symbol, Integer> getScoreRequirements() {
+        throw new UnsupportedOperationException("Starting cards do not have score requirements");
+    }
+
+    @Override
+    public Map<Symbol, Integer> getPlacementRequirements() {
+        throw new UnsupportedOperationException("Starting cards do not have placement requirements");
+    }
+
+    @Override
+    public int getScore() {
+        throw new UnsupportedOperationException("Starting cards do not have scores");
+    }
+
+    @Override
+    public Symbol getKingdom() {
+        throw new UnsupportedOperationException("Starting cards do not have kingdoms");
+    }
+
     
 }

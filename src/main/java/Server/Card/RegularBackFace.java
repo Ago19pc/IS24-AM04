@@ -42,4 +42,16 @@ public class RegularBackFace extends CornerCardFace {
     public Symbol getKingdom() {
         return kingdom;
     }
+    @Override
+    public Map<Symbol, Integer> getScoreRequirements() {
+        throw new UnsupportedOperationException("Regular cards do not have score requirements");
+    }
+    @Override
+    public Map<Symbol, Integer> getPlacementRequirements() {
+        throw new UnsupportedOperationException("Regular cards do not have placement requirements");
+    }
+    @Override
+    public int getScore() {
+        throw new UnsupportedOperationException("Regular cards do not have scores");
+    }
 }

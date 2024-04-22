@@ -4,6 +4,7 @@ import Server.Enums.CardCorners;
 import Server.Enums.Symbol;
 
 
+import java.util.List;
 import java.util.Map;
 
 public class ResourceFrontFace extends CornerCardFace {
@@ -34,4 +35,20 @@ public class ResourceFrontFace extends CornerCardFace {
     public Symbol getKingdom() {
         return kingdom;
     }
+
+    @Override
+    public Map<Symbol, Integer> getScoreRequirements() {
+        throw new UnsupportedOperationException("Resource cards do not have score requirements");
+    }
+
+    @Override
+    public Map<Symbol, Integer> getPlacementRequirements() {
+        throw new UnsupportedOperationException("Resource cards do not have placement requirements");
+    }
+
+    @Override
+    public List<Symbol> getCenterSymbols() {
+        throw new UnsupportedOperationException("Resource cards do not have center symbols");
+    }
+
 }

@@ -1,9 +1,9 @@
 package Server.Card;
 
+import Server.Enums.CardCorners;
 import Server.Enums.Symbol;
 
-
-
+import java.util.List;
 import java.util.Map;
 
 public class AchievementFrontFace extends EmptyCardFace {
@@ -39,6 +39,56 @@ public class AchievementFrontFace extends EmptyCardFace {
      */
     public int getScore() {
         return score;
+    }
+
+    @Override
+    public Map<CardCorners, Symbol> getCornerSymbols() {
+        throw new UnsupportedOperationException("Achievement cards do not have corner symbols");
+    }
+
+    @Override
+    public List<Symbol> getCenterSymbols() {
+        throw new UnsupportedOperationException("Achievement cards do not have center symbols");
+    }
+
+    @Override
+    public Map<Symbol, Integer> getPlacementRequirements() {
+        throw new UnsupportedOperationException("Achievement cards do not have placement requirements");
+    }
+
+    @Override
+    public int getXCoord() {
+        throw new UnsupportedOperationException("Achievement cards do not have coordinates");
+    }
+
+    @Override
+    public int getYCoord() {
+        throw new UnsupportedOperationException("Achievement cards do not have coordinates");
+    }
+
+    @Override
+    public void setPlacementTurn(int placementTurn) {
+        throw new UnsupportedOperationException("Achievement cards do not have placement turns");
+    }
+
+    @Override
+    public void setXCoord(int xCoord) {
+        throw new UnsupportedOperationException("Achievement cards do not have coordinates");
+    }
+
+    @Override
+    public void setYCoord(int yCoord) {
+        throw new UnsupportedOperationException("Achievement cards do not have coordinates");
+    }
+
+    @Override
+    public int getPlacementTurn() {
+        throw new UnsupportedOperationException("Achievement cards do not have placement turns");
+    }
+
+    @Override
+    public Symbol getKingdom() {
+        throw new UnsupportedOperationException("Achievement cards do not have kingdoms");
     }
 
 }

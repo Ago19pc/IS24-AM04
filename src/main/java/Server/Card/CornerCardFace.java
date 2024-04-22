@@ -4,6 +4,7 @@ import Server.Enums.CardCorners;
 import Server.Enums.Symbol;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class CornerCardFace extends EmptyCardFace {
@@ -71,11 +72,26 @@ public class CornerCardFace extends EmptyCardFace {
 
     @Override
     public Map<Symbol, Integer> getScoreRequirements(){
-        return null;
+        throw new UnsupportedOperationException("Corner card Faces do not have score requirements");
     }
 
     @Override
-    public int getScore(){
-        return 0;
+    public int getScore() {
+        throw new UnsupportedOperationException("Corner card Faces do not have scores");
+    }
+
+    @Override
+    public List<Symbol> getCenterSymbols() {
+        throw new UnsupportedOperationException("Corner card Faces do not have center symbols");
+    }
+
+    @Override
+    public Map<Symbol, Integer> getPlacementRequirements() {
+        throw new UnsupportedOperationException("Corner card Faces do not have placement requirements");
+    }
+
+    @Override
+    public Symbol getKingdom(){
+        throw new UnsupportedOperationException("Corner card Faces do not have kingdom symbols");
     }
 }

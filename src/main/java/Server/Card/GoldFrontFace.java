@@ -3,6 +3,7 @@ package Server.Card;
 import Server.Enums.CardCorners;
 import Server.Enums.Symbol;
 
+import java.util.List;
 import java.util.Map;
 
 public class GoldFrontFace extends ResourceFrontFace {
@@ -38,5 +39,10 @@ public class GoldFrontFace extends ResourceFrontFace {
      */
     public Map<Symbol, Integer> getScoreRequirements() {
         return scoreRequirements;
+    }
+
+    @Override
+    public List<Symbol> getCenterSymbols() {
+        throw new UnsupportedOperationException("Gold cards do not have center symbols");
     }
 }
