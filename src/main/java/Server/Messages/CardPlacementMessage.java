@@ -1,46 +1,42 @@
 package Server.Messages;
 
+import Server.Card.Card;
 import Server.Card.CardFace;
+import Server.Controller.Controller;
+import Server.Enums.Face;
+import Server.Exception.PlayerNotFoundByNameException;
 import Server.Player.Player;
 
 import java.io.Serializable;
 
 public class CardPlacementMessage implements Serializable, GeneralMessage {
 
-    private final Player player;
-    private final CardFace cardFace;
-    private final int placementTurn;
-    private final int where; // THIS IS TO CORRECT
+    private final String name;
+    private final Card card;
+    private final int xCoord;
+    private final int yCoord;
+    private final Face face;
 
-    CardPlacementMessage(Player player, CardFace cardFace, int placementTurn, int where){
-        this.player = player;
-        this.cardFace = cardFace;
-        this.placementTurn = placementTurn;
-        this.where = where;
+    public CardPlacementMessage(String name, Card card, int xCoord, int yCoord, Face face) {
+        this.name = name;
+        this.face = face;
+        this.card = card;
+        this.xCoord = xCoord;
+        this.yCoord = yCoord;
+    }
+    public void serverExecute(Controller controller)  {
+        try {
+            controller.playCard(controller.getPlayerByName(name), this.card, this.xCoord, this.yCoord, this.face);
+        } catch (PlayerNotFoundByNameException e) {
+            e.printStackTrace();
+        }
+
+    }
+    public void clientExecute(){
+        // dare il nuovo punteggio del player e il nuovo symbols count oltre alla conferma di mossa valida//
+
     }
 
-    public void printData(){
-        System.out.println("Player " + player.getName() + " placed a card on turn " + placementTurn + " at position " + where + " with card face " + cardFace);
-    }
 
-    public Player getPlayer(){
-        return player;
-    }
 
-    public CardFace getCardFace(){
-        return cardFace;
-    }
-
-    public int getPlacementTurn(){
-        return placementTurn;
-    }
-
-    public int getWhere(){
-        return where;
-    }
-
-    public boolean equals(GeneralMessage other){
-        System.out.println("CardPlacementMessage equals still to be implemented.");
-        return this.player.equals(((CardPlacementMessage) other).getPlayer()) && this.cardFace.equals(((CardPlacementMessage) other).getCardFace()) && this.placementTurn == ((CardPlacementMessage) other).getPlacementTurn() && this.where == ((CardPlacementMessage) other).getWhere();
-    }
 }

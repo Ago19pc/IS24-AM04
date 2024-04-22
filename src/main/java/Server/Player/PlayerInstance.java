@@ -19,11 +19,9 @@ public class PlayerInstance implements Player {
     private int points;
     private Manuscript manuscript;
 
-    private final EventManager eventManager;
     private boolean ready;
-    public PlayerInstance(String name, EventManager eventManager) {
+    public PlayerInstance(String name) {
         this.name = name;
-        this.eventManager = eventManager;
         this.handCards = new LinkedList<>();
         this.points = 0;
         this.ready = false;
@@ -124,7 +122,6 @@ public class PlayerInstance implements Player {
     @Override
     public void setColor(Color color) {
         this.color = color;
-        eventManager.notify(EventType.SET_COLOR,new ColorMessage(this, color));
     }
 
     /**

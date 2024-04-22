@@ -5,19 +5,21 @@ import Server.Controller.Controller;
 import Server.Player.Player;
 
 import java.io.Serializable;
+import java.util.List;
+import java.util.Map;
 
-public class OthersSecretCardMessage implements Serializable, GeneralMessage {
-    private final Card card;
-    private final Player player;
+public class InitialHandMessage implements Serializable, GeneralMessage {
 
-    public OthersSecretCardMessage(Card card, Player player){
-        this.card = card;
-        this.player = player;
+    private final Map<Player, List<Card>> cards;
+
+    public InitialHandMessage(Map<Player, List<Card>> cards){
+        this.cards = cards;
     }
 
 
     @Override
     public void serverExecute(Controller controller) {
+
 
     }
 

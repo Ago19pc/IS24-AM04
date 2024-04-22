@@ -1,13 +1,12 @@
 package Server.Messages;
 
+import Server.Controller.Controller;
+
 import java.io.Serializable;
 
 public interface GeneralMessage extends Serializable {
-    public abstract void printData();
 
-    public boolean equals(GeneralMessage other);
-
-    public void serverExecute();
+    public void serverExecute(Controller controller);
     public void clientExecute();
 
 

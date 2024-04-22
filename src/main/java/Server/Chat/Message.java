@@ -1,21 +1,20 @@
 package Server.Chat;
 
 import java.sql.Timestamp;
-import Server.Player.Player;
 
 public class Message {
     private final String message;
-    private final Player sender;
+    private final String name;
     private final Timestamp timestamp;
 
     /**
      * Generates the message
      * @param message
-     * @param sender
+     * @param name
      */
-    public Message(String message, Player sender) {
+    public Message(String message, String name) {
         this.message = message;
-        this.sender = sender;
+        this.name = name;
         this.timestamp = new Timestamp(System.currentTimeMillis());
     }
 
@@ -29,8 +28,8 @@ public class Message {
     /**
      * @return Player the sender
      */
-    public Player getSender() {
-        return sender;
+    public String getName() {
+        return name;
     }
 
     /**

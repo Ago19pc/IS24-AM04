@@ -5,13 +5,15 @@ import Server.Card.Card;
 import Server.Card.CornerCardFace;
 import Server.Card.StartingCard;
 import Server.Chat.Message;
-import Server.Connections.ConnectionHandler;
+import Server.Connections.ServerConnectionHandler;
 import Server.Deck.AchievementDeck;
 import Server.Enums.*;
+import Server.Exception.PlayerNotFoundByNameException;
 import Server.GameModel.GameModel;
 import Server.GameModel.GameModelInstance;
 import Server.Manuscript.Manuscript;
 import Server.Player.Player;
+import Server.Player.PlayerInstance;
 
 import java.io.IOException;
 import java.util.List;
@@ -123,7 +125,7 @@ import java.util.stream.Collectors;
 */
 public class ControllerInstance implements Controller{
     private GameModel gameModel;
-    private final ConnectionHandler connectionHandler;
+    private final ServerConnectionHandler connectionHandler;
     /**
      * Calculates achievement points forall players
      * @return void
@@ -131,13 +133,15 @@ public class ControllerInstance implements Controller{
     private void calculatePoints() {//todo: forall players and forall achievements call manuscript.calculatepoints and sum them up};
     };
 
-    public ControllerInstance(ConnectionHandler connectionHandler) {
+    public ControllerInstance(ServerConnectionHandler connectionHandler) {
         this.connectionHandler = connectionHandler;
         this.gameModel = new GameModelInstance();
     }
-    public void addPlayer(Player player) {
+    public void addPlayer(String name) {
+        Player player= new PlayerInstance(name);
         if(gameModel.getPlayerList().size()<4) {
             gameModel.addPlayer(player);
+
         }
         //Notify
     }
@@ -301,8 +305,8 @@ public class ControllerInstance implements Controller{
         return player.isReady();
     }
 
-    public void addMessage(String message, Player sender) {
-        gameModel.getChat().addMessage(message, sender);
+    public void addMessage(String message, Player player) {
+        gameModel.getChat().addMessage(message, player);
         //Notify
     }
 
@@ -315,7 +319,21 @@ public class ControllerInstance implements Controller{
     public void saveGame() throws IOException {
         //System.out.println(this.gameModel);
     }
+
+    public Player getPlayerByName(String name) throws PlayerNotFoundByNameException{
+        for(Player p: this.gameModel.getPlayerList()){
+            if (p.getName().equals(name))
+                return p;
+        }
+        throw new PlayerNotFoundByNameException(name);
+    }
+
+    public ServerConnectionHandler getConnectionHandler(){
+        return this.connectionHandler;
+    }
 }
+
+
 
 
 

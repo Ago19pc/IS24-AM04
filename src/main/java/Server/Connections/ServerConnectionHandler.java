@@ -97,6 +97,23 @@ public class ServerConnectionHandler extends Thread {
         //String/Player offlineplayer = target.getPlayer()
         //controller.setOffline(offlineplayer);
     }
+    public void killClient(String name) {
+        for (Long id : clientNames.keySet()) {
+            if (clientNames.get(id).equals(name)) {
+                for (ClientHandler c: clients) {
+                    if (c.threadId() == id) {
+                        c.interrupt();
+                        this.clients = this.clients.stream()
+                                .filter(e -> e.threadId() != (c.threadId()))
+                                .collect(Collectors.toList());
+                    }
+                }
+
+
+            }
+            return;
+        }
+    }
 
     /**
      * Adds client name to the map of names and thread.

@@ -1,36 +1,34 @@
 package Server.Messages;
 
+import Server.Controller.Controller;
 import Server.Enums.Color;
+import Server.Exception.PlayerNotFoundByNameException;
 import Server.Player.Player;
 
 import java.io.Serializable;
 
 public class PlayerColorMessage implements Serializable, GeneralMessage {
 
-    private final Player player;
+    private final String name;
     private final Color color;
-    public PlayerColorMessage(Player player, Color color)
+    public PlayerColorMessage(String name, Color color)
     {
-        this.player = player;
+        this.name = name;
         this.color = color;
     }
+
     @Override
-    public void printData() {
-        System.out.println(player.getName() + " has chosen the color " + color);
+    public void serverExecute(Controller controller) {
+       try{
+           controller.setPlayerColor(this.color, controller.getPlayerByName(this.name));
+       }catch (PlayerNotFoundByNameException e){
+           e.printStackTrace();
+       }
+
     }
 
-    public Player getPlayer(){
-        return player;
+    @Override
+    public void clientExecute() {
+
     }
-
-    public Color getColor(){
-        return color;
-    }
-
-    public boolean equals(GeneralMessage other){
-        System.out.println("ColorMessage equals still to be implemented.");
-        return this.player.equals(((PlayerColorMessage) other).getPlayer()) && this.color.equals(((PlayerColorMessage) other).getColor());
-    }
-
-
 }
