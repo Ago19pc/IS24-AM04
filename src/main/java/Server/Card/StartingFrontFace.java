@@ -26,27 +26,27 @@ public class StartingFrontFace extends  CornerCardFace {
      * Returns the center symbols
      * @return List<Symbol> the center symbols
      */
-    public List<Symbol> getCenterSymbols() {
+    public List<Symbol> getCenterSymbols() throws UnsupportedOperationException{
         return centerSymbols;
     }
 
     @Override
-    public Map<Symbol, Integer> getScoreRequirements() {
+    public Map<Symbol, Integer> getScoreRequirements() throws UnsupportedOperationException{
         throw new UnsupportedOperationException("Starting cards do not have score requirements");
     }
 
     @Override
-    public Map<Symbol, Integer> getPlacementRequirements() {
+    public Map<Symbol, Integer> getPlacementRequirements() throws UnsupportedOperationException{
         throw new UnsupportedOperationException("Starting cards do not have placement requirements");
     }
 
     @Override
-    public int getScore() {
+    public int getScore() throws UnsupportedOperationException{
         throw new UnsupportedOperationException("Starting cards do not have scores");
     }
 
     @Override
-    public Symbol getKingdom() {
+    public Symbol getKingdom() throws UnsupportedOperationException{
         throw new UnsupportedOperationException("Starting cards do not have kingdoms");
     }
 

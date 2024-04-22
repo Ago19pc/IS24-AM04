@@ -29,7 +29,7 @@ public class GoldFrontFace extends ResourceFrontFace {
      * Returns the placement requirements
      * @return Map<Symbol, Integer> the placement requirements
      */
-    public Map<Symbol, Integer> getPlacementRequirements() {
+    public Map<Symbol, Integer> getPlacementRequirements() throws UnsupportedOperationException{
         return placementRequirements;
     }
 
@@ -37,12 +37,12 @@ public class GoldFrontFace extends ResourceFrontFace {
      * Returns the score requirements
      * @return List<Symbol> the score requirements
      */
-    public Map<Symbol, Integer> getScoreRequirements() {
+    public Map<Symbol, Integer> getScoreRequirements() throws UnsupportedOperationException {
         return scoreRequirements;
     }
 
     @Override
-    public List<Symbol> getCenterSymbols() {
+    public List<Symbol> getCenterSymbols() throws UnsupportedOperationException{
         throw new UnsupportedOperationException("Gold cards do not have center symbols");
     }
 }

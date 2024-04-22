@@ -28,7 +28,7 @@ public class AchievementFrontFace extends EmptyCardFace {
      *
      * @return List<Symbol> the score requirements
      */
-    public Map<Symbol, Integer> getScoreRequirements() {
+    public Map<Symbol, Integer> getScoreRequirements() throws UnsupportedOperationException{
         return scoreRequirements;
     }
 
@@ -37,52 +37,52 @@ public class AchievementFrontFace extends EmptyCardFace {
      *
      * @return int the score
      */
-    public int getScore() {
+    public int getScore() throws UnsupportedOperationException {
         return score;
     }
 
     @Override
-    public Map<CardCorners, Symbol> getCornerSymbols() {
+    public Map<CardCorners, Symbol> getCornerSymbols() throws UnsupportedOperationException{
         throw new UnsupportedOperationException("Achievement cards do not have corner symbols");
     }
 
     @Override
-    public List<Symbol> getCenterSymbols() {
+    public List<Symbol> getCenterSymbols() throws UnsupportedOperationException{
         throw new UnsupportedOperationException("Achievement cards do not have center symbols");
     }
 
     @Override
-    public Map<Symbol, Integer> getPlacementRequirements() {
+    public Map<Symbol, Integer> getPlacementRequirements() throws UnsupportedOperationException{
         throw new UnsupportedOperationException("Achievement cards do not have placement requirements");
     }
 
     @Override
-    public int getXCoord() {
+    public int getXCoord() throws UnsupportedOperationException {
         throw new UnsupportedOperationException("Achievement cards do not have coordinates");
     }
 
     @Override
-    public int getYCoord() {
+    public int getYCoord() throws UnsupportedOperationException {
         throw new UnsupportedOperationException("Achievement cards do not have coordinates");
     }
 
     @Override
-    public void setPlacementTurn(int placementTurn) {
+    public void setPlacementTurn(int placementTurn) throws UnsupportedOperationException{
         throw new UnsupportedOperationException("Achievement cards do not have placement turns");
     }
 
     @Override
-    public void setXCoord(int xCoord) {
+    public void setXCoord(int xCoord) throws UnsupportedOperationException{
         throw new UnsupportedOperationException("Achievement cards do not have coordinates");
     }
 
     @Override
-    public void setYCoord(int yCoord) {
+    public void setYCoord(int yCoord) throws UnsupportedOperationException{
         throw new UnsupportedOperationException("Achievement cards do not have coordinates");
     }
 
     @Override
-    public int getPlacementTurn() {
+    public int getPlacementTurn() throws UnsupportedOperationException{
         throw new UnsupportedOperationException("Achievement cards do not have placement turns");
     }
 

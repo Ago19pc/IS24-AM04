@@ -31,7 +31,7 @@ public class RegularBackFace extends CornerCardFace {
      * Returns the center symbols
      * @return List<Symbol> the center symbols
      */
-    public List<Symbol> getCenterSymbols() {
+    public List<Symbol> getCenterSymbols() throws UnsupportedOperationException{
         return centerSymbols;
     }
 
@@ -39,19 +39,19 @@ public class RegularBackFace extends CornerCardFace {
      * Returns the kingdom symbol
      * @return Symbol the kingdom symbol
      */
-    public Symbol getKingdom() {
+    public Symbol getKingdom() throws UnsupportedOperationException{
         return kingdom;
     }
     @Override
-    public Map<Symbol, Integer> getScoreRequirements() {
+    public Map<Symbol, Integer> getScoreRequirements() throws UnsupportedOperationException{
         throw new UnsupportedOperationException("Regular cards do not have score requirements");
     }
     @Override
-    public Map<Symbol, Integer> getPlacementRequirements() {
+    public Map<Symbol, Integer> getPlacementRequirements() throws UnsupportedOperationException{
         throw new UnsupportedOperationException("Regular cards do not have placement requirements");
     }
     @Override
-    public int getScore() {
+    public int getScore() throws UnsupportedOperationException{
         throw new UnsupportedOperationException("Regular cards do not have scores");
     }
 }
