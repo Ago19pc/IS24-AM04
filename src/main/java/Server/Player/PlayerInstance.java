@@ -3,7 +3,6 @@ package Server.Player;
 import Server.Card.AchievementCard;
 import Server.Card.Card;
 import Server.Card.StartingCard;
-import Server.EventManager.EventManager;
 import Server.Enums.Color;
 import Server.Enums.Face;
 import Server.Manuscript.Manuscript;
