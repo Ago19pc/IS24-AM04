@@ -69,16 +69,8 @@ public class TestDeck {
             assertDoesNotThrow(() -> {
                 GoldCard card = (GoldCard) drawnCard;
             });
-            ClassCastException exceptionThrown2 = assertThrows(
-                    ClassCastException.class, () -> {
-                        ResourceCard card = (ResourceCard) drawnCard;
-                    }
-            );
-            ClassCastException exceptionThrown3 = assertThrows(
-                    ClassCastException.class, () -> {
-                        StartingCard card = (StartingCard) drawnCard;
-                    }
-            );
+
+
 
 
         }

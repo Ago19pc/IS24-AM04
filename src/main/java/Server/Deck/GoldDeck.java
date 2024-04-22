@@ -210,6 +210,8 @@ public class GoldDeck implements Deckable {
                 cardNumber++;
             }
         } catch (Exception e) {
+            System.out.println("An error occurred while generating cards");
+
             e.printStackTrace();
         }
         /*This is to print to check if the cards are generated correctly

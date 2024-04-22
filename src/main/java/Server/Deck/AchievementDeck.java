@@ -114,6 +114,7 @@ public class AchievementDeck implements Deckable{
                 this.cards.add(card);
             }
         } catch (Exception e) {
+            System.out.println("An error occurred while generating cards");
             e.printStackTrace();
         }
             

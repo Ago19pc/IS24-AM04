@@ -3,8 +3,8 @@ package Server.Card;
 import Server.Enums.Face;
 
 public class ResourceCard implements Card {
-    private final ResourceFrontFace frontFace;
-    private final RegularBackFace backFace;
+    protected final ResourceFrontFace frontFace;
+    protected final RegularBackFace backFace;
 
     /**
      * Constructor for the ResourceCard

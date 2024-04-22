@@ -4,6 +4,9 @@ import Server.Enums.Color;
 import Server.Enums.Symbol;
 
 
+import Server.Exception.AlreadySetException;
+import Server.Exception.TooFewElementsException;
+import Server.Exception.TooManyElementsException;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
@@ -14,7 +17,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class TestPlayerInstance {
     @Test
-    public void testAddCardToHand() {
+    public void testAddCardToHand() throws TooManyElementsException {
         PlayerInstance playerInstance = new PlayerInstance("pippo");
         GoldFrontFace goldFrontFace = new GoldFrontFace(
                 "goldCardFront1.jpg",
@@ -55,7 +58,7 @@ public class TestPlayerInstance {
         assertTrue(playerInstance.getHand().contains(goldCard));
     }
     @Test
-    public void testRemoveCardFromHand(){
+    public void testRemoveCardFromHand() throws TooFewElementsException, TooManyElementsException {
         PlayerInstance playerInstance = new PlayerInstance("pippo");
         GoldFrontFace goldFrontFace = new GoldFrontFace(
                 "goldCardFront1.jpg",
@@ -89,14 +92,20 @@ public class TestPlayerInstance {
                 resourceBackFace
         );
         playerInstance.addCardToHand(resourceCard);
-        playerInstance.removeCardFromHand(goldCard);
-        assertEquals(1, playerInstance.getHand().size());
+        ResourceCard resourceCard2 = new ResourceCard(
+                resourceFrontFace,
+                resourceBackFace
+        );
+        playerInstance.addCardToHand(resourceCard2);
+        playerInstance.removeCardFromHand(0);
+        assertEquals(2, playerInstance.getHand().size());
         assertTrue(playerInstance.getHand().contains(resourceCard));
         assertFalse(playerInstance.getHand().contains(goldCard));
-        playerInstance.removeCardFromHand(resourceCard);
-        assertEquals(0, playerInstance.getHand().size());
+        playerInstance.addCardToHand(goldCard);
+        playerInstance.removeCardFromHand(0);
+        assertEquals(2, playerInstance.getHand().size());
         assertFalse(playerInstance.getHand().contains(resourceCard));
-        assertFalse(playerInstance.getHand().contains(goldCard));
+        assertTrue(playerInstance.getHand().contains(goldCard));
     }
     @Test
     public void testName(){
@@ -110,7 +119,7 @@ public class TestPlayerInstance {
         assertEquals(Color.RED, playerInstance.getColor());
     }
     @Test
-    public void testSecretAchievement() {
+    public void testSecretAchievement() throws AlreadySetException {
         PlayerInstance playerInstance = new PlayerInstance("pippo");
         AchievementFrontFace achievementFrontFace = new AchievementFrontFace(
                 "achievementCardFront1.jpg",

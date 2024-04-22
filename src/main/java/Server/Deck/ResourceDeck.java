@@ -187,6 +187,7 @@ public class ResourceDeck implements Deckable {
                 cardNumber++;
             }
         } catch (Exception e) {
+            System.out.println("An error occurred while generating starting cards");
             e.printStackTrace();
         }
 

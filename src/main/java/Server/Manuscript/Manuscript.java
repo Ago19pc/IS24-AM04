@@ -33,7 +33,7 @@ public class Manuscript {
      * Update the symbol count for the manuscript
      * @param cardFace the card face that will be added
      */
-    private void updateSymbolCount(CornerCardFace cardFace){
+    private void updateSymbolCount(CornerCardFace cardFace) throws IllegalArgumentException{
         System.out.println(" updateSymbolCount");
         Map<CardCorners, CornerCardFace> cardsUnder = graph.getCardsUnder(cardFace);
         try {
@@ -62,7 +62,7 @@ public class Manuscript {
      * @param cardFace which face to add
      * @param turn the turn the card was placed
      */
-    public void addCard(int xcoordinate, int ycoordinate, CornerCardFace cardFace, int turn){
+    public void addCard(int xcoordinate, int ycoordinate, CornerCardFace cardFace, int turn) throws IllegalArgumentException{
         cardFace.setXCoord(xcoordinate);
         cardFace.setYCoord(ycoordinate);
         Map<CardCorners, CornerCardFace> positions = new HashMap<>();
@@ -290,7 +290,7 @@ public class Manuscript {
         return points;
     }
 
-    public Map<CardCorners, CornerCardFace> getCardsUnder(CornerCardFace cardFace){
+    public Map<CardCorners, CornerCardFace> getCardsUnder(CornerCardFace cardFace) throws IllegalArgumentException{
         return this.graph.getCardsUnder(cardFace);
     }
 }

@@ -5,6 +5,9 @@ import Server.Card.Card;
 import Server.Card.StartingCard;
 import Server.Enums.Color;
 import Server.Enums.Face;
+import Server.Exception.AlreadySetException;
+import Server.Exception.TooFewElementsException;
+import Server.Exception.TooManyElementsException;
 import Server.Manuscript.Manuscript;
 
 import java.util.List;
@@ -14,13 +17,13 @@ public interface Player {
      * Add a card to the player's hand
      * @param card the card to add
      */
-    public void addCardToHand(Card card);
+    public void addCardToHand(Card card) throws TooManyElementsException;
 
     /**
      * Remove a card from the player's hand
-     * @param card the card to remove
+     * @param position the position card to remove
      */
-    public void removeCardFromHand(Card card);
+    public void removeCardFromHand(int position) throws IndexOutOfBoundsException, TooFewElementsException;
 
     /**
      * Returns the player's hand
@@ -57,7 +60,7 @@ public interface Player {
      * Set the player's secret objective
      * @param achievementCard the secret objective card
      */
-    public void setSecretObjective(AchievementCard achievementCard);
+    public void setSecretObjective(AchievementCard achievementCard) throws AlreadySetException;
 
     /**
      * Set the player's color
@@ -76,7 +79,7 @@ public interface Player {
      * @param startingCard the manuscript's starting card
      * @param face the face of the starting card
      */
-    public void initializeManuscript(StartingCard startingCard, Face face);
+    public void initializeManuscript(StartingCard startingCard, Face face) throws AlreadySetException;
 
     /**
      * Sets a player ready status

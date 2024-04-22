@@ -36,15 +36,18 @@ public class Graph {
      * @param node the node to get the neighbors of
      * @return Map<CardCorners, CornerCardFace> the neighbors of the node
      */
-    public Map<CardCorners, CornerCardFace> getNeighbors(CornerCardFace node){
-      return this.neighbors.get(node);
+    public Map<CardCorners, CornerCardFace> getNeighbors(CornerCardFace node) throws IllegalArgumentException{
+        if(!this.neighbors.containsKey(node)){
+            throw new IllegalArgumentException("Node not in graph");
+        }
+        return this.neighbors.get(node);
     }
     /**
      * Returns the neighbors of a node that were placed after the node
      * @param node the node to get the neighbors of
      * @return Map<CardCorners, CornerCardFace> the neighbors of the node
      */
-    public Map<CardCorners, CornerCardFace> getCardsOver(CornerCardFace node){
+    public Map<CardCorners, CornerCardFace> getCardsOver(CornerCardFace node) throws IllegalArgumentException{
         Map<CardCorners, CornerCardFace> cardsOver;
         cardsOver = getNeighbors(node).entrySet().stream()
                 .filter(neighbor -> neighbor.getValue() != null && neighbor.getValue().getPlacementTurn() > node.getPlacementTurn())
@@ -56,7 +59,7 @@ public class Graph {
      * @param node the node to get the neighbors of
      * @return Map<CardCorners, CornerCardFace> the neighbors of the node
      */
-    public Map<CardCorners, CornerCardFace> getCardsUnder(CornerCardFace node){
+    public Map<CardCorners, CornerCardFace> getCardsUnder(CornerCardFace node) throws IllegalArgumentException{
         Map<CardCorners, CornerCardFace> cardsUnder;
         cardsUnder = getNeighbors(node).entrySet().stream()
                 .filter(neighbor -> neighbor.getValue() != null && neighbor.getValue().getPlacementTurn() < node.getPlacementTurn())
@@ -68,7 +71,10 @@ public class Graph {
      * Adds a node to the graph and sets the neighbors to null
      * @param node the node to add
      */
-    private void addNode(CornerCardFace node){
+    private void addNode(CornerCardFace node) throws IllegalArgumentException{
+        if(this.neighbors.containsKey(node)){
+            throw new IllegalArgumentException("Node already in graph");
+        }
         Map<CardCorners, CornerCardFace> corners = new HashMap<>();
         corners.put(CardCorners.TOP_LEFT, null);
         corners.put(CardCorners.TOP_RIGHT, null);
@@ -83,7 +89,10 @@ public class Graph {
      * @param corner the corner of the first card. It will be the opposite corner of the second card
      * @param secondCard the second card
      */
-    private void addEdge(CornerCardFace firstCard, CardCorners corner, CornerCardFace secondCard){
+    private void addEdge(CornerCardFace firstCard, CardCorners corner, CornerCardFace secondCard) throws IllegalArgumentException{
+        if(!this.neighbors.containsKey(firstCard) || !this.neighbors.containsKey(secondCard)){
+            throw new IllegalArgumentException("At least one of the nodes is not in graph");
+        }
         this.neighbors.get(firstCard).put(corner, secondCard);
         this.neighbors.get(secondCard).put(corner.getOppositeCorner(), firstCard);
     }
@@ -94,7 +103,15 @@ public class Graph {
      * @param positions the neighbors of the card
      * @param turnPlaced the turn when the card gets placed
      */
-    public void addCard(CornerCardFace card, Map<CardCorners, CornerCardFace> positions, int turnPlaced){
+    public void addCard(CornerCardFace card, Map<CardCorners, CornerCardFace> positions, int turnPlaced) throws IllegalArgumentException{
+        if(this.neighbors.containsKey(card)) {
+            throw new IllegalArgumentException("Node already in graph");
+        }
+        for (CornerCardFace neighbor : positions.values()) {
+            if (positions.get(neighbor) != null && !this.neighbors.containsKey(positions.get(neighbor))) {
+                throw new IllegalArgumentException("At least one of the nodes is not in graph");
+            }
+        }
         card.setPlacementTurn(turnPlaced);
         addNode(card);
         positions.keySet().forEach(corner -> {

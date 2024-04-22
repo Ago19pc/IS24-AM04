@@ -1,7 +1,6 @@
 package Server.Controller;
 
 import Server.Card.AchievementCard;
-import Server.Card.Card;
 import Server.Card.StartingCard;
 import Server.Chat.Message;
 import Server.Enums.Color;
@@ -9,6 +8,8 @@ import Server.Enums.DeckPosition;
 import Server.Enums.Decks;
 import Server.Enums.Face;
 import Server.Exception.AlreadySetException;
+import Server.Exception.TooFewElementsException;
+import Server.Exception.TooManyElementsException;
 import Server.Exception.TooManyPlayersException;
 import Server.Player.Player;
 
@@ -20,13 +21,13 @@ public interface Controller {
      * adds a player to the list of players
      * @param player the player
      */
-    public void addPlayer(Player player) throws TooManyPlayersException;
+    public void addPlayer(Player player) throws TooManyPlayersException, IllegalArgumentException;
 
     /**
      * removes a player from the list of players
      * @param player the player
      */
-    public void removePlayer(Player player);
+    public void removePlayer(Player player) throws IllegalArgumentException;
     /**
      * @return List<Player> the list of players
      */
@@ -38,14 +39,14 @@ public interface Controller {
     /**
      * initialize the game
      */
-    public void start();
+    public void start(); //todo: implement this
 
     /**
      * set the player color
      * @param color the color
      * @param player the player
      */
-    public void setPlayerColor(Color color, Player player);
+    public void setPlayerColor(Color color, Player player) throws IllegalArgumentException;
 
     /**
      * gives 2 achievement cards to all players
@@ -57,7 +58,7 @@ public interface Controller {
      * @param player the player
      * @param card the card
      */
-    public void setSecretObjectiveCard(Player player, AchievementCard card);
+    public void setSecretObjectiveCard(Player player, AchievementCard card) throws AlreadySetException;
     /**
      * give starting cards to all players
      */
@@ -68,11 +69,11 @@ public interface Controller {
      * @param card the card
      * @param face the face
      */
-    public void setStartingCard(Player player, StartingCard card, Face face);
+    public void setStartingCard(Player player, StartingCard card, Face face) throws AlreadySetException;
     /**
      * gives all players their initial hand
      */
-    public void giveInitialHand();
+    public void giveInitialHand() throws AlreadySetException;
     /**
      * goes to next turn
      */
@@ -90,12 +91,12 @@ public interface Controller {
     /**
      * play a card from the hand to the manuscript
      * @param player the player
-     * @param card the card
+     * @param position the card position in the hand
      * @param xCoord the x coordinate
      * @param yCoord the y coordinate
      * @param face the face choosen by the player
      */
-    public void playCard(Player player, Card card, int xCoord, int yCoord, Face face);
+    public void playCard(Player player, int position, int xCoord, int yCoord, Face face) throws TooFewElementsException;
 
     /**
      * draw a card from one of the decks
@@ -103,7 +104,7 @@ public interface Controller {
      * @param deckposition where i want to draw the card from
      * @param deck the deck
      */
-    public void drawCard(Player player, DeckPosition deckposition, Decks deck);
+    public void drawCard(Player player, DeckPosition deckposition, Decks deck) throws TooManyElementsException;
     /**
      * check if a card can be placed
      * @param card the card

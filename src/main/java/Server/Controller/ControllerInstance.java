@@ -9,6 +9,8 @@ import Server.Connections.ServerConnectionHandler;
 import Server.Deck.AchievementDeck;
 import Server.Enums.*;
 import Server.Exception.AlreadySetException;
+import Server.Exception.TooFewElementsException;
+import Server.Exception.TooManyElementsException;
 import Server.Exception.TooManyPlayersException;
 import Server.GameModel.GameModel;
 import Server.GameModel.GameModelInstance;
@@ -140,7 +142,7 @@ public class ControllerInstance implements Controller{
         this.connectionHandler = connectionHandler;
         this.gameModel = new GameModelInstance();
     }
-    public void addPlayer(Player player) throws TooManyPlayersException {
+    public void addPlayer(Player player) throws TooManyPlayersException, IllegalArgumentException {
         if(gameModel.getPlayerList().size()<4) {
             gameModel.addPlayer(player);
         } else {
@@ -149,7 +151,7 @@ public class ControllerInstance implements Controller{
         //Notify
     }
 
-    public void removePlayer(Player player) {
+    public void removePlayer(Player player) throws IllegalArgumentException{
         gameModel.removePlayer(player);
         //Notify
     }
@@ -166,10 +168,12 @@ public class ControllerInstance implements Controller{
         //TODO : implementare il resto
         //Notify
     }
-    public void setPlayerColor(Color color, Player player) {
+    public void setPlayerColor(Color color, Player player) throws IllegalArgumentException{
         List<Color> colors = getPlayerList().stream().map(Player::getColor).collect(Collectors.toList());
         if(!colors.contains(color)){
             player.setColor(color);
+        } else {
+            throw new IllegalArgumentException("Color already taken");
         }
         //Notify
     }
@@ -181,7 +185,7 @@ public class ControllerInstance implements Controller{
         //Notify
     }
 
-    public void setSecretObjectiveCard(Player player, AchievementCard card) {
+    public void setSecretObjectiveCard(Player player, AchievementCard card) throws AlreadySetException {
         player.setSecretObjective(card);
     }
     public void giveStartingCards() {
@@ -191,19 +195,25 @@ public class ControllerInstance implements Controller{
         });
         //Notify
     }
-    public void setStartingCard(Player player, StartingCard card, Face face) {
+    public void setStartingCard(Player player, StartingCard card, Face face) throws AlreadySetException {
         player.initializeManuscript(card, face);
         //Notify
     }
-    public void giveInitialHand() {
-        getPlayerList().forEach(player -> {
+    public void giveInitialHand() throws AlreadySetException{
+        for(Player player : getPlayerList()){
             Card card1 = gameModel.getResourceDeck().popCard(DeckPosition.DECK);
             Card card2 = gameModel.getResourceDeck().popCard(DeckPosition.DECK);
             Card card3 = gameModel.getGoldDeck().popCard(DeckPosition.DECK);
-            player.addCardToHand(card1);
-            player.addCardToHand(card2);
-            player.addCardToHand(card3);
-        });
+            try{
+                player.addCardToHand(card1);
+                player.addCardToHand(card2);
+                player.addCardToHand(card3);
+            } catch (TooManyElementsException e) {
+                throw new AlreadySetException("Initial Hand already given");
+            }
+
+        }
+
         //Notify
     }
     public void nextTurn() {
@@ -217,11 +227,23 @@ public class ControllerInstance implements Controller{
         //Todo implementare
         return true;
     }
-    public void playCard(Player player, Card card, int xCoord, int yCoord, Face face) {
-        CornerCardFace cardFace = card.getCornerFace(face);
-        player.removeCardFromHand(card);
-        int cardPoints = cardFace.getScore();
-        Map<Symbol, Integer> scoreRequirements = cardFace.getScoreRequirements();
+    public void playCard(Player player, int position, int xCoord, int yCoord, Face face) throws TooFewElementsException {
+        CornerCardFace cardFace = player.getHand().get(position).getCornerFace(face);
+        player.removeCardFromHand(position);
+        int cardPoints;
+        try{
+            cardPoints = cardFace.getScore();
+        } catch (UnsupportedOperationException e) {
+            if(e.getMessage() == "Regular cards do not have scores");
+            cardPoints = 0;
+        }
+        Map<Symbol, Integer> scoreRequirements;
+        try {
+            scoreRequirements = cardFace.getScoreRequirements();
+        } catch (UnsupportedOperationException e) {
+            if(e.getMessage() == "Regular cards do not have score requirements");
+            scoreRequirements = null;
+        }
         if(scoreRequirements != null){
             Symbol requiredSymbol = (Symbol) scoreRequirements.keySet().toArray()[0];
             int requiredQuantity = scoreRequirements.get(requiredSymbol);
@@ -242,7 +264,7 @@ public class ControllerInstance implements Controller{
 
         //Notify
     }
-    public void drawCard(Player player, DeckPosition deckPosition, Decks deck) {
+    public void drawCard(Player player, DeckPosition deckPosition, Decks deck) throws TooManyElementsException {
         switch (deck) {
             case RESOURCE -> {
                 Card card = gameModel.getResourceDeck().popCard(deckPosition);

@@ -3,9 +3,7 @@ package Server.Card;
 
 import Server.Enums.Face;
 
-public class GoldCard implements Card {
-    private final GoldFrontFace frontFace;
-    private final RegularBackFace backFace;
+public class GoldCard extends ResourceCard implements Card{
 
     /**
      * Constructor for the GoldCard
@@ -13,8 +11,7 @@ public class GoldCard implements Card {
      * @param backFace the back face
      */
     public GoldCard(GoldFrontFace frontFace, RegularBackFace backFace) {
-        this.frontFace = frontFace;
-        this.backFace = backFace;
+        super(frontFace, backFace);
     }
 
     /**
