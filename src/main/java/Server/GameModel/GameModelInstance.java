@@ -10,6 +10,7 @@ import Server.Deck.ResourceDeck;
 import Server.Enums.CardCorners;
 import Server.Enums.Symbol;
 import Server.Player.Player;
+import Server.Player.PlayerInstance;
 
 import java.io.*;
 import java.util.*;
@@ -24,7 +25,7 @@ public class GameModelInstance implements GameModel{
     private boolean isEndGamePhase;
     private final Chat chat;
 
-    private final List<Player> playerList;
+    private final List<PlayerInstance> playerList;
 
 
     public GameModelInstance() {
@@ -99,19 +100,19 @@ public class GameModelInstance implements GameModel{
     }
 
     public List<Player> getPlayerList() {
-        return playerList;
+        List<Player> playerListToReturn = new ArrayList<>();
+        for (PlayerInstance player : playerList) {
+            playerListToReturn.add((Player) player);
+        }
+        return playerListToReturn;
     }
 
-    public void setPlayerList(List<Player> playerList) {
-        this.playerList = playerList;
-    }
 
     public void addPlayer(Player player) {
-        playerList.add(player);
-    }
-
-    List<Player> getPlayers() {
-        return this.playerList;
+        PlayerInstance playerInstance = (PlayerInstance) player;
+        System.out.println(playerInstance.getName());
+        playerList.add(playerInstance);
+        System.out.println(playerList.size());
     }
 
     /**
@@ -185,9 +186,7 @@ public class GameModelInstance implements GameModel{
     public Chat getChat() {
         return this.chat;
     }
-    public void addPlayer(Player player) {
-        playerList.add(player);
-    }
+
     public void removePlayer(Player player) {
         playerList.remove(player);
     }

@@ -1,24 +1,32 @@
 package Server.Deck;
 
+import Server.Card.Card;
 import Server.Card.RegularBackFace;
 import Server.Card.ResourceCard;
 import Server.Card.ResourceFrontFace;
 import Server.Enums.CardCorners;
+import Server.Enums.DeckPosition;
 import Server.Enums.Symbol;
+import Server.Exception.IncorrectDeckPositionException;
 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.util.*;
 
-import static Server.Enums.DeckPosition.FIRST_CARD;
-import static Server.Enums.DeckPosition.SECOND_CARD;
+import static Server.Enums.DeckPosition.*;
+import static Server.Enums.DeckPosition.DECK;
 
-public class ResourceDeck extends Deck {
+public class ResourceDeck implements Deckable {
+    protected List<ResourceCard> cards;
+    private final Map<DeckPosition, ResourceCard> boardCards;
     public ResourceDeck(){
-        super();
+        this.boardCards = new HashMap<>();
+        this.cards = new ArrayList<>();
+        boardCards.put(FIRST_CARD, null);
+        boardCards.put(SECOND_CARD, null);
         createCards();
-        super.shuffle();
+        shuffle();
         System.out.println("ResourceDeck");
         try {
             moveCardToBoard(FIRST_CARD);
@@ -26,6 +34,83 @@ public class ResourceDeck extends Deck {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    /**
+     * Shuffle the deck
+     */
+    void shuffle() {
+        // shuffle the deck
+        Collections.shuffle(cards);
+        System.out.println(this.toString() + "shuffle");
+    }
+
+    /**
+     * @param where_to the position to add the card to
+     */
+    public void moveCardToBoard(DeckPosition where_to) throws IncorrectDeckPositionException {
+        if (where_to == DECK)
+            throw new IncorrectDeckPositionException("Cannot add card to the deck, only to FIST_CARD or SECOND_CARD.");
+        else
+            System.out.println(this.toString() + "moveCardToBoard");
+        Card cardToMove = popCard(DECK);
+        addCard(cardToMove, where_to);
+    }
+
+    /**
+     * @return Card the card from the position
+     */
+    public Map<DeckPosition, Card> getBoardCard() {
+        Map<DeckPosition, Card> boardCardsToReturn = new HashMap<>();
+        for (DeckPosition position : boardCards.keySet()) {
+            boardCardsToReturn.put(position, (Card) boardCards.get(position));
+        }
+        return boardCardsToReturn;
+    }
+
+    /**
+     * @param position the position pop the card from
+     * @return Card the popped card
+     */
+    public ResourceCard popCard(DeckPosition position){
+        try {
+            if (position == DECK) {
+                return cards.remove(0);
+            } else {
+                ResourceCard drawnCard = boardCards.remove(position);
+                moveCardToBoard(position);
+                return drawnCard;
+            }
+        } catch (IncorrectDeckPositionException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    /**
+     * @return boolean true if the deck is empty
+     */
+    public boolean isEmpty() {
+        return cards.isEmpty();
+    }
+
+    /**
+     * Add card to the board in the specified position
+     * @param card card to add
+     * @param position position to add the card to
+     */
+    public void addCard(Card card, DeckPosition position) throws IncorrectDeckPositionException {
+        if (position == DECK)
+            throw new IncorrectDeckPositionException("Cannot add card to the deck, only to FIST_CARD or SECOND_CARD.");
+        else
+            boardCards.put(position, (ResourceCard) card);
+    }
+
+    /**
+     * @return int the number of cards in the deck
+     */
+    public int getNumberOfCards() {
+        return cards.size();
     }
 
     /**

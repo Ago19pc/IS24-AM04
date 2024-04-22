@@ -1,12 +1,10 @@
 package Server.Controller;
 
 import Server.Card.*;
-import Server.Connections.ConnectionHandler;
+import Server.Connections.ServerConnectionHandler;
 import Server.Deck.GoldDeck;
 import Server.Deck.ResourceDeck;
 import Server.Enums.*;
-import Server.EventManager.EventManager;
-import Server.Manuscript.Manuscript;
 import Server.Player.Player;
 import Server.Player.PlayerInstance;
 import org.junit.jupiter.api.Test;
@@ -16,50 +14,51 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 public class TestController {
     @Test
     public void testAddPlayer() throws Exception {
-        ConnectionHandler connectionHandler = new ConnectionHandler(0);
+        ServerConnectionHandler connectionHandler = new ServerConnectionHandler(true);
         Controller controller = new ControllerInstance(connectionHandler);
-        Player player = new PlayerInstance("player1",null);
+        Player player = new PlayerInstance("player1");
         controller.addPlayer(player);
         List<Player> playerList = controller.getPlayerList();
         assertEquals(1, playerList.size());
         assertEquals(player, playerList.get(0));
-        Player player2 = new PlayerInstance("player2",null);
-        Player player3 = new PlayerInstance("player3",null);
-        Player player4 = new PlayerInstance("player4",null);
-        Player player5 = new PlayerInstance("player5",null);
+        Player player2 = new PlayerInstance("player2");
+        Player player3 = new PlayerInstance("player3");
+        Player player4 = new PlayerInstance("player4");
+        Player player5 = new PlayerInstance("player5");
         controller.addPlayer(player2);
         controller.addPlayer(player3);
         controller.addPlayer(player4);
         controller.addPlayer(player5);
+        playerList = controller.getPlayerList();
         assertEquals(4, playerList.size());
         assertFalse(playerList.contains(player5));
     }
     @Test
     public void testRemovePlayer() throws Exception {
-        ConnectionHandler connectionHandler = new ConnectionHandler(0);
+        ServerConnectionHandler connectionHandler = new ServerConnectionHandler(true);
         Controller controller = new ControllerInstance(connectionHandler);
-        Player player = new PlayerInstance("player1",null);
+        Player player = new PlayerInstance("player1");
         controller.addPlayer(player);
         List<Player> playerList = controller.getPlayerList();
         assertEquals(1, playerList.size());
         controller.removePlayer(player);
+        playerList = controller.getPlayerList();
         assertEquals(0, playerList.size());
     }
     @Test
     public void testColor() throws Exception {
-        ConnectionHandler connectionHandler = new ConnectionHandler(0);
+        ServerConnectionHandler connectionHandler = new ServerConnectionHandler(true);
         Controller controller = new ControllerInstance(connectionHandler);
-        Player player = new PlayerInstance("player1",new EventManager());
+        Player player = new PlayerInstance("player1");
         controller.addPlayer(player);
         controller.setPlayerColor(Color.RED, player);
-        Player player2 = new PlayerInstance("player2",new EventManager());
+        Player player2 = new PlayerInstance("player2");
         controller.addPlayer(player2);
         controller.setPlayerColor(Color.RED, player2);
         assertEquals(Color.RED, player.getColor());
@@ -68,9 +67,9 @@ public class TestController {
 
     @Test
     public void testSetSecretAchievement() throws Exception {
-        ConnectionHandler connectionHandler = new ConnectionHandler(0);
+        ServerConnectionHandler connectionHandler = new ServerConnectionHandler(true);
         Controller controller = new ControllerInstance(connectionHandler);
-        Player player = new PlayerInstance("player1",new EventManager());
+        Player player = new PlayerInstance("player1");
         controller.addPlayer(player);
         AchievementCard chosenCard = new AchievementCard(
                 new AchievementFrontFace("image.jpg", null, 0),
@@ -82,9 +81,9 @@ public class TestController {
     @Test
     public void testInitializeManuscript() throws Exception
     {
-        ConnectionHandler connectionHandler = new ConnectionHandler(0);
+        ServerConnectionHandler connectionHandler = new ServerConnectionHandler(true);
         Controller controller = new ControllerInstance(connectionHandler);
-        Player player = new PlayerInstance("player1",new EventManager());
+        Player player = new PlayerInstance("player1");
         controller.addPlayer(player);
         StartingFrontFace startingFrontFace = new StartingFrontFace("image.jpg", new HashMap<>(), new ArrayList<>());
         StartingCard startingCard = new StartingCard(
@@ -97,9 +96,9 @@ public class TestController {
     @Test
     public void testGiveInitialHand() throws Exception
     {
-        ConnectionHandler connectionHandler = new ConnectionHandler(0);
+        ServerConnectionHandler connectionHandler = new ServerConnectionHandler(true);
         Controller controller = new ControllerInstance(connectionHandler);
-        Player player = new PlayerInstance("player1",new EventManager());
+        Player player = new PlayerInstance("player1");
         controller.addPlayer(player);
         controller.giveInitialHand();
         assertEquals(3, player.getHand().size());
@@ -133,16 +132,16 @@ public class TestController {
     }
     @Test
     public void testNextTurn() throws Exception {
-        ConnectionHandler connectionHandler = new ConnectionHandler(0);
+        ServerConnectionHandler connectionHandler = new ServerConnectionHandler(true);
         Controller controller = new ControllerInstance(connectionHandler);
         controller.nextTurn();
         assertEquals(1, controller.getTurn());
     }
     @Test
     public void testPlayCard() throws Exception {
-        ConnectionHandler connectionHandler = new ConnectionHandler(0);
+        ServerConnectionHandler connectionHandler = new ServerConnectionHandler(true);
         Controller controller = new ControllerInstance(connectionHandler);
-        Player player = new PlayerInstance("player1",new EventManager());
+        Player player = new PlayerInstance("player1");
         StartingCard startingCard = new StartingCard(new StartingFrontFace("image.jpg", new HashMap<>(), new ArrayList<>()), new CornerCardFace("image.jpg", new HashMap<>()));
         controller.addPlayer(player);
         controller.setStartingCard(player,startingCard,Face.FRONT);
@@ -198,9 +197,9 @@ public class TestController {
     @Test
     public void testDrawCard() throws Exception {
         int sentinel = 0, i = 0;
-        ConnectionHandler connectionHandler = new ConnectionHandler(0);
+        ServerConnectionHandler connectionHandler = new ServerConnectionHandler(true);
         Controller controller = new ControllerInstance(connectionHandler);
-        Player player = new PlayerInstance("player1",new EventManager());
+        Player player = new PlayerInstance("player1");
         controller.addPlayer(player);
         Map <CardCorners, Symbol> cornerSymbols = new HashMap<>();
         List <Symbol> centerSymbols = new ArrayList<>();
@@ -322,15 +321,15 @@ public class TestController {
     }
     @Test
     public void testComputeLeaderboard() throws IOException {
-        ConnectionHandler connectionHandler = new ConnectionHandler(0);
+        ServerConnectionHandler connectionHandler = new ServerConnectionHandler(true);
         Controller controller = new ControllerInstance(connectionHandler);
-        Player player = new PlayerInstance("player1",new EventManager());
+        Player player = new PlayerInstance("player1");
         controller.addPlayer(player);
-        Player player2 = new PlayerInstance("player2",new EventManager());
+        Player player2 = new PlayerInstance("player2");
         controller.addPlayer(player2);
-        Player player3 = new PlayerInstance("player3",new EventManager());
+        Player player3 = new PlayerInstance("player3");
         controller.addPlayer(player3);
-        Player player4 = new PlayerInstance("player4",new EventManager());
+        Player player4 = new PlayerInstance("player4");
         controller.addPlayer(player4);
         Map<CardCorners, Symbol> cornerSymbols = new HashMap<>();
         List<Symbol> symbols = new ArrayList<>();
@@ -586,11 +585,11 @@ public class TestController {
 
     @Test
     public void testClearGame() throws IOException {
-        ConnectionHandler connectionHandler = new ConnectionHandler(0);
+        ServerConnectionHandler connectionHandler = new ServerConnectionHandler(true);
         Controller controller = new ControllerInstance(connectionHandler);
-        Player player = new PlayerInstance("player1",new EventManager());
+        Player player = new PlayerInstance("player1");
         controller.addPlayer(player);
-        Player player2 = new PlayerInstance("player2",new EventManager());
+        Player player2 = new PlayerInstance("player2");
         controller.addPlayer(player2);
         controller.nextTurn();
         controller.clear();
@@ -600,9 +599,9 @@ public class TestController {
 
     @Test
     public void testReady() throws IOException {
-        ConnectionHandler connectionHandler = new ConnectionHandler(0);
+        ServerConnectionHandler connectionHandler = new ServerConnectionHandler(true);
         Controller controller = new ControllerInstance(connectionHandler);
-        Player player = new PlayerInstance("player1",new EventManager());
+        Player player = new PlayerInstance("player1");
         controller.addPlayer(player);
         assertFalse(player.isReady());
         controller.setReady(player);
@@ -613,14 +612,29 @@ public class TestController {
 
     @Test
     public void testChat() throws IOException {
-        ConnectionHandler connectionHandler = new ConnectionHandler(0);
+        ServerConnectionHandler connectionHandler = new ServerConnectionHandler(true);
         Controller controller = new ControllerInstance(connectionHandler);
-        Player player = new PlayerInstance("player1",new EventManager());
+        Player player = new PlayerInstance("player1");
         controller.addPlayer(player);
         assertEquals(0, controller.getChatMessages().size());
         controller.addMessage("Hello", player);
         assertEquals(1, controller.getChatMessages().size());
         assertEquals("Hello", controller.getChatMessages().get(0).getMessage());
         assertEquals(player, controller.getChatMessages().get(0).getSender());
+    }
+
+    @Test
+    public void testSaveAndLoad() throws IOException {
+        ServerConnectionHandler connectionHandler = new ServerConnectionHandler(true);
+        Controller controller = new ControllerInstance(connectionHandler);
+        Player player = new PlayerInstance("player1");
+        controller.addPlayer(player);
+        Player player2 = new PlayerInstance("player2");
+        controller.addPlayer(player2);
+        controller.nextTurn();
+        controller.saveGame();
+        controller.clear();
+        controller.loadGame();
+        assertEquals(2, controller.getPlayerList().size());
     }
 }

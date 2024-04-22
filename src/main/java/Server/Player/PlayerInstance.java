@@ -3,12 +3,9 @@ package Server.Player;
 import Server.Card.AchievementCard;
 import Server.Card.Card;
 import Server.Card.StartingCard;
-import Server.EventManager.EventManager;
 import Server.Enums.Color;
-import Server.Enums.EventType;
 import Server.Enums.Face;
 import Server.Manuscript.Manuscript;
-import Server.Messages.ColorMessage;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -20,12 +17,9 @@ public class PlayerInstance implements Player {
     private final String name;
     private int points;
     private Manuscript manuscript;
-
-    private final EventManager eventManager;
     private boolean ready;
-    public PlayerInstance(String name, EventManager eventManager) {
+    public PlayerInstance(String name) {
         this.name = name;
-        this.eventManager = eventManager;
         this.handCards = new LinkedList<>();
         this.points = 0;
         this.ready = false;
@@ -76,7 +70,6 @@ public class PlayerInstance implements Player {
      */
     @Override
     public String getName() {
-        System.out.println("getName");
         return name;
     }
 
@@ -126,7 +119,6 @@ public class PlayerInstance implements Player {
     @Override
     public void setColor(Color color) {
         this.color = color;
-        eventManager.notify(EventType.SET_COLOR,new ColorMessage(this, color));
     }
 
     /**
