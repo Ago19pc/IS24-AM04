@@ -2,11 +2,13 @@ package Server.Player;
 import Server.Card.*;
 import Server.Enums.Color;
 import Server.Enums.Symbol;
-import Server.EventManager.EventManager;
+
+
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -24,7 +26,7 @@ public class TestPlayerInstance {
         );
         RegularBackFace goldBackFace = new RegularBackFace(
                 "goldCardBack1.jpg",
-                new ArrayList<>()
+                new ArrayList<>(List.of(Symbol.BUG))
         );
         GoldCard goldCard = new GoldCard(
                 goldFrontFace,
@@ -41,7 +43,7 @@ public class TestPlayerInstance {
         );
         RegularBackFace resourceBackFace = new RegularBackFace(
                 "resourceCardBack1.jpg",
-                new ArrayList<>()
+                new ArrayList<>(List.of(Symbol.BUG))
         );
         ResourceCard resourceCard = new ResourceCard(
                 resourceFrontFace,
@@ -65,7 +67,7 @@ public class TestPlayerInstance {
         );
         RegularBackFace goldBackFace = new RegularBackFace(
                 "goldCardBack1.jpg",
-                new ArrayList<>()
+                new ArrayList<>(List.of(Symbol.BUG))
         );
         GoldCard goldCard = new GoldCard(
                 goldFrontFace,
@@ -80,7 +82,7 @@ public class TestPlayerInstance {
         );
         RegularBackFace resourceBackFace = new RegularBackFace(
                 "resourceCardBack1.jpg",
-                new ArrayList<>()
+                new ArrayList<>(List.of(Symbol.BUG))
         );
         ResourceCard resourceCard = new ResourceCard(
                 resourceFrontFace,

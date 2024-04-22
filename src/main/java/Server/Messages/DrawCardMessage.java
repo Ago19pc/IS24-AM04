@@ -1,16 +1,16 @@
 package Server.Messages;
 
 import Server.Card.Card;
-import Server.Deck.Deck;
+import Server.Enums.Decks;
 import Server.Player.Player;
 
 public class DrawCardMessage implements GeneralMessage {
     private final Card card;
     private final Player player;
-    private final Deck from;
+    private final Decks from;
     private final Card newBoardCard;
 
-    public DrawCardMessage(Player player, Card card, Deck from, Card newBoardCard) {
+    public DrawCardMessage(Player player, Card card, Decks from, Card newBoardCard) {
         this.player = player;
         this.card = card;
         this.from = from;
@@ -28,7 +28,7 @@ public class DrawCardMessage implements GeneralMessage {
         return player;
     }
 
-    public Deck getFrom() {
+    public Decks getFrom() {
         return from;
     }
 

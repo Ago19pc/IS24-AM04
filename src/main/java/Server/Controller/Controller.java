@@ -160,5 +160,10 @@ public interface Controller {
      */
     public void saveGame() throws IOException;
 
+    /**
+     * loads a game from a json file
+     */
+    public void loadGame() throws IOException;
+
 }
 

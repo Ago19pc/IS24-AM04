@@ -24,12 +24,9 @@ public class ServerConnectionHandler extends Thread {
     /**
      * Create the server socket, needed to choose port
      *
-     * @param controller controller instance
      */
-    public ServerConnectionHandler(Controller controller) throws IOException {
+    public ServerConnectionHandler() throws IOException {
         this.clientNames = new HashMap<Long, String>();
-
-        this.controller = controller;
         askForPort();
 
         clients = new ArrayList<>();
@@ -39,6 +36,28 @@ public class ServerConnectionHandler extends Thread {
         }
         System.out.println("Server started on port: " + port);
 
+    }
+
+    public ServerConnectionHandler(boolean debugMode){
+        this.clientNames = new HashMap<Long, String>();
+        if(debugMode)
+            this.port = 1234;
+        else
+            askForPort();
+        clients = new ArrayList<>();
+        while (!startServer(port)) {
+            System.out.println("Port already in use, trying next port...");
+            port++;
+        }
+        System.out.println("Server started on port: " + port);
+    }
+
+    /**
+     * Set the controller instance
+     * @param controller the controller instance
+     */
+    public void setController(Controller controller) {
+        this.controller = controller;
     }
 
     public void run() {
