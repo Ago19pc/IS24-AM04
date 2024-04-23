@@ -8,10 +8,7 @@ import Server.Chat.Message;
 import Server.Connections.ServerConnectionHandler;
 import Server.Deck.AchievementDeck;
 import Server.Enums.*;
-import Server.Exception.AlreadySetException;
-import Server.Exception.TooFewElementsException;
-import Server.Exception.TooManyElementsException;
-import Server.Exception.TooManyPlayersException;
+import Server.Exception.*;
 import Server.GameModel.GameModel;
 import Server.GameModel.GameModelInstance;
 import Server.Manuscript.Manuscript;
@@ -179,8 +176,13 @@ public class ControllerInstance implements Controller{
     }
     public void giveSecretObjectiveCards() {
         getPlayerList().forEach(player -> {
-            Card card1 = gameModel.getAchievementDeck().popCard(DeckPosition.DECK);
-            Card card2 = gameModel.getAchievementDeck().popCard(DeckPosition.DECK);
+            try {
+                Card card1 = gameModel.getAchievementDeck().popCard(DeckPosition.DECK);
+                Card card2 = gameModel.getAchievementDeck().popCard(DeckPosition.DECK);
+            } catch (AlreadyFinishedException e) {
+                throw new RuntimeException(e);
+            }
+
         });
         //Notify
     }

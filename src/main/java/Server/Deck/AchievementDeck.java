@@ -6,6 +6,7 @@ import Server.Card.Card;
 import Server.Card.EmptyCardFace;
 import Server.Enums.DeckPosition;
 import Server.Enums.Symbol;
+import Server.Exception.AlreadyFinishedException;
 import Server.Exception.IncorrectDeckPositionException;
 
 import java.io.BufferedReader;
@@ -122,8 +123,10 @@ public class AchievementDeck implements Deckable{
 
     }
     @Override
-    public AchievementCard popCard(DeckPosition position) {
+    public AchievementCard popCard(DeckPosition position) throws AlreadyFinishedException {
         if(position == DECK){
+            if(cards.isEmpty())
+                throw new AlreadyFinishedException("Achievement Deck is empty");
             return (AchievementCard) cards.remove(0);
         } else {
             System.out.println(getBoardCard().get(position));

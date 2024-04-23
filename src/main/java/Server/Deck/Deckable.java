@@ -2,6 +2,7 @@ package Server.Deck;
 
 import Server.Card.Card;
 import Server.Enums.DeckPosition;
+import Server.Exception.AlreadyFinishedException;
 import Server.Exception.IncorrectDeckPositionException;
 
 import java.util.Map;
@@ -17,7 +18,7 @@ public interface Deckable {
      * @param position the position pop the card from
      * @return Card the card from the position
      */
-    public Card popCard(DeckPosition position) throws IncorrectDeckPositionException;
+    public Card popCard(DeckPosition position) throws IncorrectDeckPositionException, AlreadyFinishedException;
 
     /**
      * @return boolean true if the deck is empty

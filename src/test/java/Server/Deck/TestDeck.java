@@ -3,13 +3,14 @@ package Server.Deck;
 import Server.Card.*;
 import Server.Enums.DeckPosition;
 
+import Server.Exception.AlreadyFinishedException;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 public class TestDeck {
     @Test
-    public void TestAchievementDeck() {
+    public void TestAchievementDeck() throws AlreadyFinishedException {
         AchievementDeck achievementDeck = new AchievementDeck();
         assertEquals (14, achievementDeck.getNumberOfCards());
         for (int i = 0; i < 14; i++) {
