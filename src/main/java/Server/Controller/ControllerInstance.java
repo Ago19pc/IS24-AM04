@@ -128,12 +128,6 @@ import java.util.stream.Collectors;
 public class ControllerInstance implements Controller{
     private GameModel gameModel;
     private final ServerConnectionHandler connectionHandler;
-    /**
-     * Calculates achievement points forall players
-     * @return void
-     */
-    private void calculatePoints() {//todo: forall players and forall achievements call manuscript.calculatepoints and sum them up};
-    };
 
     public ControllerInstance(ServerConnectionHandler connectionHandler) {
         this.connectionHandler = connectionHandler;
@@ -159,11 +153,17 @@ public class ControllerInstance implements Controller{
         gameModel.shufflePlayerList();
         //Notify
     }
-    public void start()
-    {
+    public void start() throws TooFewElementsException, AlreadySetException {
+        for(Player player : gameModel.getPlayerList()) {
+            if(!player.isReady()){
+                throw new TooFewElementsException("Not all players are ready");
+            }
+        }
         shufflePlayerList();
-        //TODO : implementare il resto
-        //Notify
+        gameModel.createGoldResourceDecks();
+        gameModel.createStartingCards();
+        giveStartingCards();
+        //a questo punto start finisce. Si attende il set delle starting cards. Quando tutte saranno settate si procede con giveInitialHand
     }
     public void setPlayerColor(Color color, Player player) throws IllegalArgumentException{
         List<Color> colors = getPlayerList().stream().map(Player::getColor).collect(Collectors.toList());
@@ -212,6 +212,10 @@ public class ControllerInstance implements Controller{
         }
 
         //Notify
+
+        //Dopo aver dato la mano iniziale si prosegue con la seconda parte dell'inizializzazione: si scoprono gli obiettivi segreti e non
+        gameModel.createAchievementDeck();
+        giveSecretObjectiveCards();
     }
     public void nextTurn() {
         gameModel.nextTurn();
@@ -281,16 +285,6 @@ public class ControllerInstance implements Controller{
         }
         //Notify
     }
-    /*public Boolean isPlayable(Card card , Face face)
-    {
-        if(face.equals(Face.BACK)) return Boolean.TRUE;
-        if(card.getType() == Decks.GOLD && card.getFace(Face.FRONT).getScore() == 1 //&& gli angoli mi permetono di giocarla
-            )
-        {
-
-        }
-        return null;
-    }*/
 
     @Override
     public void endGame() throws AlreadySetException {
@@ -316,7 +310,10 @@ public class ControllerInstance implements Controller{
         gameModel = new GameModelInstance();
     }
 
-    public void setReady(Player player) {
+    public void setReady(Player player) throws MissingInfoException{
+        if(player.getColor() == null) {
+            throw new MissingInfoException("Color not set");
+        }
         player.setReady(true);
         //Notify
     }
@@ -330,7 +327,7 @@ public class ControllerInstance implements Controller{
         return player.isReady();
     }
 
-    public void addMessage(String message, Player sender) {
+    public void addMessage(String message, Player sender) throws IllegalArgumentException{
         gameModel.getChat().addMessage(message, sender);
         //Notify
     }

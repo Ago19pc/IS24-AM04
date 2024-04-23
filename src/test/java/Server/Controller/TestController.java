@@ -6,6 +6,7 @@ import Server.Deck.GoldDeck;
 import Server.Deck.ResourceDeck;
 import Server.Enums.*;
 import Server.Exception.AlreadySetException;
+import Server.Exception.MissingInfoException;
 import Server.Exception.TooManyPlayersException;
 import Server.Player.Player;
 import Server.Player.PlayerInstance;
@@ -297,12 +298,13 @@ public class TestController {
     }
 
     @Test
-    public void testReady() throws IOException, TooManyPlayersException {
+    public void testReady() throws IOException, TooManyPlayersException, MissingInfoException {
         ServerConnectionHandler connectionHandler = new ServerConnectionHandler(true);
         Controller controller = new ControllerInstance(connectionHandler);
         Player player = new PlayerInstance("player1");
         controller.addPlayer(player);
         assertFalse(player.isReady());
+        controller.setPlayerColor(Color.RED, player);
         controller.setReady(player);
         assertTrue(player.isReady());
         controller.setNotReady(player);

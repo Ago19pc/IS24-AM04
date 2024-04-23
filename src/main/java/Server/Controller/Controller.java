@@ -14,6 +14,7 @@ import java.io.IOException;
 import java.util.List;
 
 public interface Controller {
+    //PLAYER METHODS
     /**
      * adds a player to the list of players
      * @param player the player
@@ -34,22 +35,27 @@ public interface Controller {
      */
     public void shufflePlayerList();
     /**
-     * initialize the game
-     */
-    public void start(); //todo: implement this
-
-    /**
      * set the player color
      * @param color the color
      * @param player the player
      */
     public void setPlayerColor(Color color, Player player) throws IllegalArgumentException;
-
     /**
-     * gives 2 achievement cards to all players
+     * sets a player ready status to ready
+     * @param player the player
      */
-    public void giveSecretObjectiveCards();
-
+    public void setReady(Player player) throws MissingInfoException;
+    /**
+     * sets a player status to not ready
+     * @param player the player
+     */
+    public void setNotReady(Player player);
+    /**
+     * returns a player's ready status
+     * @param player the player
+     * @return boolean true if the player is ready
+     */
+    public boolean isReady(Player player);
     /**
      * sets a player's secret achievement card
      * @param player the player
@@ -57,20 +63,32 @@ public interface Controller {
      */
     public void setSecretObjectiveCard(Player player, AchievementCard card) throws AlreadySetException;
     /**
-     * give starting cards to all players
-     */
-    public void giveStartingCards();
-    /**
      * set starting card
      * @param player the player
      * @param card the card
      * @param face the face
      */
     public void setStartingCard(Player player, StartingCard card, Face face) throws AlreadySetException;
+
+    //GAME INITIALIZATION METHODS
+    /**
+     * initialize the game
+     */
+    public void start() throws TooFewElementsException, AlreadySetException;
+    /**
+     * gives 2 achievement cards to all players
+     */
+    public void giveSecretObjectiveCards();
+    /**
+     * give starting cards to all players
+     */
+    public void giveStartingCards();
     /**
      * gives all players their initial hand
      */
     public void giveInitialHand() throws AlreadySetException;
+
+    //GAME FLOW METHODS
     /**
      * goes to next turn
      */
@@ -85,6 +103,23 @@ public interface Controller {
      * @return boolean true if the player is online
      */
     public boolean isOnline(Player player);
+    /**
+     * sets the game to ending phase
+     *
+     */
+    public void endGame() throws AlreadySetException;
+    /**
+     * compute achievement points and leaderboard
+     * @return List<Player> the leaderboard
+     */
+    public List<Player> computeLeaderboard();
+
+    /**
+     * clears everything, preparing for a new game
+     */
+    public void clear();
+
+    //PLAYER ACTIONS
     /**
      * play a card from the hand to the manuscript
      * @param player the player
@@ -102,59 +137,21 @@ public interface Controller {
      * @param deck the deck
      */
     public void drawCard(Player player, DeckPosition deckposition, Decks deck) throws TooManyElementsException;
-    /**
-     * check if a card can be placed
-     * @param card the card
-     * @param face the cardface
-     * @return boolean true if tha card is playable
-     */
-    //public Boolean isPlayable(Card card, Face face);
-    /**
-     * sets the game to ending phase
-     *
-     */
-    public void endGame() throws AlreadySetException;
 
-    /**
-     * compute achievement points and leaderboard
-     * @return List<Player> the leaderboard
-     */
-    public List<Player> computeLeaderboard();
-
-    /**
-     * clears everything, preparing for a new game
-     */
-    public void clear();
-
-    /**
-     * sets a player ready status to ready
-     * @param player the player
-     */
-    public void setReady(Player player);
-    /**
-     * sets a player status to not ready
-     * @param player the player
-     */
-    public void setNotReady(Player player);
-    /**
-     * returns a player's ready status
-     * @param player the player
-     * @return boolean true if the player is ready
-     */
-    public boolean isReady(Player player);
-
+    //CHAT METHODS
     /**
      * adds a message to the chat
      * @param message the message string
      * @param player the player who sent the message
      */
-    public void addMessage(String message, Player player);
+    public void addMessage(String message, Player player) throws IllegalArgumentException;
 
     /**
      * @return List<Message> the chat messages
      */
     public List<Message> getChatMessages();
 
+    //SAVED GAMES METHODS
     /**
      * saves a game to a json file
      */

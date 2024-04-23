@@ -20,10 +20,10 @@ import java.util.*;
 
 
 public class GameModelInstance implements GameModel{
-    private final ResourceDeck resourceDeck;
-    private final GoldDeck goldDeck;
-    private final AchievementDeck achievementDeck;
-    private final List<StartingCard> startingCards;
+    private ResourceDeck resourceDeck;
+    private GoldDeck goldDeck;
+    private AchievementDeck achievementDeck;
+    private List<StartingCard> startingCards;
     private int turn;
     private boolean isEndGamePhase;
     private final Chat chat;
@@ -32,17 +32,10 @@ public class GameModelInstance implements GameModel{
 
 
     public GameModelInstance() {
-        System.out.println("GameModelInstance");
-        resourceDeck = new ResourceDeck();
-        goldDeck = new GoldDeck();
-        achievementDeck = new AchievementDeck();
         chat = new Chat();
         isEndGamePhase = false;
         turn = 0;
-        startingCards = new ArrayList<>();
-        generateStartingCards();
         playerList = new ArrayList<>();
-
     }
 
 
@@ -214,5 +207,31 @@ public class GameModelInstance implements GameModel{
     }
     public void shufflePlayerList() {
         Collections.shuffle(playerList);
+    }
+
+    @Override
+    public void createGoldResourceDecks() throws AlreadySetException {
+        if(goldDeck != null || resourceDeck != null){
+            throw new AlreadySetException("Gold and resource decks already created");
+        }
+        resourceDeck = new ResourceDeck();
+        goldDeck = new GoldDeck();
+    }
+
+    @Override
+    public void createStartingCards() throws AlreadySetException {
+        if(startingCards != null){
+            throw new AlreadySetException("Starting cards already created");
+        }
+        startingCards = new ArrayList<>();
+        generateStartingCards();
+    }
+
+    @Override
+    public void createAchievementDeck() throws AlreadySetException {
+        if(achievementDeck != null){
+            throw new AlreadySetException("Achievement deck already created");
+        }
+        achievementDeck = new AchievementDeck();
     }
 }
