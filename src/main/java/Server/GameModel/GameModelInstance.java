@@ -101,18 +101,21 @@ public class GameModelInstance implements GameModel{
 
     public List<Player> getPlayerList() {
         List<Player> playerListToReturn = new ArrayList<>();
-        for (PlayerInstance player : playerList) {
-            playerListToReturn.add((Player) player);
+        synchronized (playerList) {
+            for (PlayerInstance player : playerList) {
+                playerListToReturn.add((Player) player);
+            }
         }
+        playerList.notifyAll();
         return playerListToReturn;
     }
 
 
     public void addPlayer(Player player) {
-        PlayerInstance playerInstance = (PlayerInstance) player;
-        System.out.println(playerInstance.getName());
-        playerList.add(playerInstance);
-        System.out.println(playerList.size());
+        synchronized (playerList) {
+            playerList.add((PlayerInstance) player);
+        }
+        playerList.notifyAll();
     }
 
     /**
@@ -188,9 +191,15 @@ public class GameModelInstance implements GameModel{
     }
 
     public void removePlayer(Player player) {
-        playerList.remove(player);
+        synchronized (playerList) {
+            playerList.remove(player);
+        }
+        playerList.notifyAll();
     }
     public void shufflePlayerList() {
-        Collections.shuffle(playerList);
+        synchronized (playerList) {
+            Collections.shuffle(playerList);
+        }
+        playerList.notifyAll();
     }
 }

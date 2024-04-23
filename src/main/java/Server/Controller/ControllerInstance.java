@@ -144,7 +144,7 @@ public class ControllerInstance implements Controller{
         if(gameModel.getPlayerList().size()<4) {
             gameModel.addPlayer(player);
         }
-        //Notify
+
     }
 
     public void addPlayer(String name) {
@@ -164,7 +164,7 @@ public class ControllerInstance implements Controller{
         //Notify
     }
     public void start()
-    {
+    {      
         shufflePlayerList();
         //TODO : implementare il resto
         //Notify
