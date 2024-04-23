@@ -165,7 +165,7 @@ public class GoldDeck implements Deckable {
                 for (int i = 0; i < partsF.length; i++) {
 
                     if (i < 4) {
-                        System.out.println("corner: " + CardCorners.values()[i] + " symbol: " + Symbol.valueOf(partsF[i]));
+                        //System.out.println("corner: " + CardCorners.values()[i] + " symbol: " + Symbol.valueOf(partsF[i]));
                         cornerSymbolsF.put(CardCorners.values()[i], Symbol.valueOf(partsF[i]));
                     }
                     else if (i ==  partsF.length - 1) point = Integer.parseInt(partsF[i]);

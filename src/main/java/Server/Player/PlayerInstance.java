@@ -50,9 +50,6 @@ public class PlayerInstance implements Player {
      */
     @Override
     public void removeCardFromHand(int position) throws IndexOutOfBoundsException, TooFewElementsException{
-        if(handCards.size() != 3){
-            throw new TooFewElementsException("Hand is not full");
-        }
         if(position < 0 || position >= handCards.size()){
             throw new IndexOutOfBoundsException("Position out of bounds");
         }

@@ -128,7 +128,7 @@ import java.util.stream.Collectors;
 public class ControllerInstance implements Controller{
     private GameModel gameModel;
     private final ServerConnectionHandler connectionHandler;
-    private Player activePlayer;
+    private int activePlayerIndex = -1;
     private boolean lastRound = false;
 
     public ControllerInstance(ServerConnectionHandler connectionHandler) {
@@ -241,15 +241,13 @@ public class ControllerInstance implements Controller{
 
     }
     public void nextTurn() throws MissingInfoException, AlreadyFinishedException {
-        if(activePlayer == null){ //sets active player as the first player. If it's not the first turn this is not valid
+        if(activePlayerIndex == -1){ //sets active player as the first player. If it's not the first turn this is not valid
             if(gameModel.getTurn() != 0){
                 throw new MissingInfoException("Active player not set");
-            } else {
-                activePlayer = gameModel.getPlayerList().getFirst();
             }
         }
         //if it is end game and all players have played also an extra round, calculate leaderboard
-        if(gameModel.isEndGamePhase() && getPlayerList().indexOf(activePlayer) == getPlayerList().size() - 1 ){
+        if(gameModel.isEndGamePhase() && activePlayerIndex == getPlayerList().size() - 1 ){
             if(lastRound){
                 computeLeaderboard();
             } else {
@@ -257,7 +255,7 @@ public class ControllerInstance implements Controller{
             }
         } else {
             //sets end game if necessary
-            if (activePlayer.getPoints() >= 20) {
+            if (activePlayerIndex != -1 && getPlayerList().get(activePlayerIndex).getPoints() >= 20) {
                 try {
                     endGame();
                 } catch (AlreadySetException e) {
@@ -266,13 +264,12 @@ public class ControllerInstance implements Controller{
             }
             //sets new active player
             do {
-                int playerIndex = gameModel.getPlayerList().indexOf(activePlayer);
-                if (playerIndex == gameModel.getPlayerList().size() - 1) {
-                    activePlayer = gameModel.getPlayerList().getFirst();
+                if (activePlayerIndex == gameModel.getPlayerList().size() - 1) {
+                    activePlayerIndex = 0;
                 } else {
-                    activePlayer = gameModel.getPlayerList().get(playerIndex + 1);
+                    activePlayerIndex++;
                 }
-            } while (!isOnline(activePlayer));//if the player is not online skips to the next one
+            } while (!isOnline(getPlayerList().get(activePlayerIndex)));//if the player is not online skips to the next one
             gameModel.nextTurn();
         }
         //Notify
@@ -281,25 +278,22 @@ public class ControllerInstance implements Controller{
         return gameModel.getTurn();
     }
 
-    @Override
-    public Player getActivePlayer() {
-        return activePlayer;
-    }
-
     public boolean isOnline(Player player) {
         //Todo implementare
         return true;
     }
     public void playCard(Player player, int position, int xCoord, int yCoord, Face face) throws TooFewElementsException, InvalidMoveException {
         //if it's not the player's turn, throw exception
-        if(player != activePlayer){
+        if(getPlayerList().indexOf(player) != activePlayerIndex){
             throw new InvalidMoveException("Not player's turn");
         }
         CornerCardFace cardFace = player.getHand().get(position).getCornerFace(face);
-        if(!player.getManuscript().isPlaceable(xCoord, yCoord, cardFace)){
+        if(!player.getManuscript().isPlaceable(xCoord, yCoord, cardFace)) {
             throw new InvalidMoveException("Card not placeable. Check the position and the placement requirements");
         }
-        try {
+        if(player.getHand().size() < 2 || (player.getHand().size() == 2 && !gameModel.isEndGamePhase())){
+            throw new TooFewElementsException("Not enough cards in hand");
+        }
             player.removeCardFromHand(position);
             int cardPoints;
             try {
@@ -332,20 +326,11 @@ public class ControllerInstance implements Controller{
                 player.addPoints(cardPoints);
             }
             player.getManuscript().addCard(xCoord, yCoord, cardFace, getTurn());
-        } catch (TooFewElementsException e) { //if it's end game, you can play a card when you have 2 and not 3
-            if(gameModel.isEndGamePhase()){
-                if(player.getHand().size() < 2){
-                    throw new TooFewElementsException("Not enough cards in hand");
-                }
-            } else {
-                throw new TooFewElementsException("Not enough cards in hand");
-            }
-        }
 
         //Notify
     }
     public void drawCard(Player player, DeckPosition deckPosition, Decks deck) throws TooManyElementsException, InvalidMoveException, AlreadyFinishedException {
-        if(player != activePlayer){
+        if(getPlayerList().indexOf(player) != activePlayerIndex){
             throw new InvalidMoveException("Not player's turn");
         }
         switch (deck) {
@@ -376,7 +361,7 @@ public class ControllerInstance implements Controller{
     public void endGame() throws AlreadySetException {
         gameModel.setEndGamePhase();
         //if it's the last player to play, the extra round starts immediately
-        if(getPlayerList().indexOf(activePlayer) == getPlayerList().size() - 1){
+        if(activePlayerIndex == getPlayerList().size() - 1){
             lastRound = true;
         }
         //Notify

@@ -91,7 +91,14 @@ public class TestController {
         ServerConnectionHandler connectionHandler = new ServerConnectionHandler(true);
         Controller controller = new ControllerInstance(connectionHandler);
         Player player = new PlayerInstance("player1");
+        Player player2 = new PlayerInstance("player2");
         controller.addPlayer(player);
+        controller.addPlayer(player2);
+        controller.setPlayerColor(Color.RED, player);
+        controller.setPlayerColor(Color.BLUE, player2);
+        controller.setReady(player);
+        controller.setReady(player2);
+        controller.start();
         StartingFrontFace startingFrontFace = new StartingFrontFace("image.jpg", new HashMap<>(), new ArrayList<>());
         StartingCard startingCard = new StartingCard(
                 startingFrontFace,
@@ -133,10 +140,18 @@ public class TestController {
         ServerConnectionHandler connectionHandler = new ServerConnectionHandler(true);
         Controller controller = new ControllerInstance(connectionHandler);
         Player player = new PlayerInstance("player1");
+        Player player2 = new PlayerInstance("player2");
         StartingCard startingCard = new StartingCard(new StartingFrontFace("image.jpg", new HashMap<>(), new ArrayList<>()), new CornerCardFace("image.jpg", new HashMap<>()));
         controller.addPlayer(player);
+        controller.addPlayer(player2);
+        controller.setPlayerColor(Color.RED, player);
+        controller.setPlayerColor(Color.BLUE, player2);
+        controller.setReady(player);
+        controller.setReady(player2);
+        controller.start();
         controller.nextTurn();
         controller.setStartingCard(player,startingCard,Face.FRONT);
+        controller.setStartingCard(player2,startingCard,Face.FRONT);
         Map<CardCorners, Symbol> cornerSymbols = new HashMap<>();
         cornerSymbols.put(CardCorners.TOP_LEFT, Symbol.FUNGUS);
         cornerSymbols.put(CardCorners.TOP_RIGHT, Symbol.FUNGUS);
@@ -148,7 +163,14 @@ public class TestController {
                 new ResourceFrontFace("image1.jpg", cornerSymbols , 0, Symbol.FUNGUS),
                 new RegularBackFace("image2.jpg", centerSymbols)
         );
+        player.removeCardFromHand(0);
+        player.removeCardFromHand(0);
+        player.removeCardFromHand(0);
+        player2.removeCardFromHand(0);
+        player2.removeCardFromHand(0);
+        player2.removeCardFromHand(0);
         player.addCardToHand(resourceCard);
+        player2.addCardToHand(resourceCard);
         Map<CardCorners,Symbol> cornerSymbols2 = new HashMap<>();
         cornerSymbols2.put(CardCorners.TOP_LEFT, Symbol.BUG);
         cornerSymbols2.put(CardCorners.TOP_RIGHT, Symbol.BUG);
@@ -162,16 +184,19 @@ public class TestController {
         );
         player.addCardToHand(resourceCard2);
         player.addCardToHand(resourceCard2);
-        controller.playCard(player, 0,1,1,Face.BACK);
-        assertEquals(resourceCard.getCornerFace(Face.BACK).getCornerSymbols(), player.getManuscript().getCardByCoord(1,1).getCornerSymbols());
-        assertEquals(resourceCard.getFace(Face.BACK).getPlacementTurn(), player.getManuscript().getCardByCoord(1,1).getPlacementTurn());
-        assertEquals(resourceCard.getFace(Face.BACK).getCenterSymbols(), player.getManuscript().getCardByCoord(1,1).getCenterSymbols());
-        player.addCardToHand(resourceCard2);
-        controller.playCard(player, 0,-1,1,Face.FRONT);
-        assertEquals(resourceCard2.getCornerFace(Face.FRONT).getCornerSymbols(), player.getManuscript().getCardByCoord(-1,1).getCornerSymbols());
-        assertEquals(resourceCard2.getFace(Face.FRONT).getPlacementTurn(), player.getManuscript().getCardByCoord(-1,1).getPlacementTurn());
-        assertEquals(resourceCard2.getCornerFace(Face.FRONT).getScore(), player.getManuscript().getCardByCoord(-1,1).getScore());
-        assertEquals(1, player.getPoints());
+        player2.addCardToHand(resourceCard2);
+        player2.addCardToHand(resourceCard2);
+        Player player3 = controller.getPlayerList().get(0);
+        controller.playCard(player3, 0,1,1,Face.BACK);
+        assertEquals(resourceCard.getCornerFace(Face.BACK).getCornerSymbols(), player3.getManuscript().getCardByCoord(1,1).getCornerSymbols());
+        assertEquals(resourceCard.getFace(Face.BACK).getPlacementTurn(), player3.getManuscript().getCardByCoord(1,1).getPlacementTurn());
+        assertEquals(resourceCard.getFace(Face.BACK).getCenterSymbols(), player3.getManuscript().getCardByCoord(1,1).getCenterSymbols());
+        player3.addCardToHand(resourceCard2);
+        controller.playCard(player3, 0,-1,1,Face.FRONT);
+        assertEquals(resourceCard2.getCornerFace(Face.FRONT).getCornerSymbols(), player3.getManuscript().getCardByCoord(-1,1).getCornerSymbols());
+        assertEquals(resourceCard2.getFace(Face.FRONT).getPlacementTurn(), player3.getManuscript().getCardByCoord(-1,1).getPlacementTurn());
+        assertEquals(resourceCard2.getCornerFace(Face.FRONT).getScore(), player3.getManuscript().getCardByCoord(-1,1).getScore());
+        assertEquals(1, player3.getPoints());
         Map<CardCorners,Symbol> cornerSymbols3 = new HashMap<>();
         cornerSymbols3.put(CardCorners.TOP_LEFT, Symbol.BUG);
         cornerSymbols3.put(CardCorners.TOP_RIGHT, Symbol.QUILL);
@@ -183,11 +208,9 @@ public class TestController {
                 new GoldFrontFace("image5.jpg", cornerSymbols3, 2,new HashMap<>(), scoreRequirements, Symbol.BUG),
                 new RegularBackFace("image6.jpg", centerSymbols2)
         );
-        player.addCardToHand(goldCard);
-        controller.playCard(player, 2,-1,-1,Face.FRONT);
-        assertEquals(5, player.getPoints());
-        //System.out.println(resourceCard.getCornerFace(Face.BACK)==player.getManuscript().getCardByCoord(1,1));
-        //riga 169 da false perché non è stato fatto l'equals delle cardFace
+        player3.addCardToHand(goldCard);
+        controller.playCard(player3, 2,-1,-1,Face.FRONT);
+        assertEquals(5, player3.getPoints());
 
     }
     @Test
