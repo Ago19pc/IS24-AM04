@@ -92,11 +92,16 @@ public interface Controller {
     /**
      * goes to next turn
      */
-    public void nextTurn();
+    public void nextTurn() throws MissingInfoException;
     /**
      * @return int the current turn
      */
     public int getTurn();
+    /**
+     * Gets the current active player
+     * @return Player the active player
+     */
+    public Player getActivePlayer();
     /**
      * checks the online status of a player
      * @param player the player
@@ -136,7 +141,7 @@ public interface Controller {
      * @param deckposition where i want to draw the card from
      * @param deck the deck
      */
-    public void drawCard(Player player, DeckPosition deckposition, Decks deck) throws TooManyElementsException;
+    public void drawCard(Player player, DeckPosition deckposition, Decks deck) throws TooManyElementsException, InvalidMoveException;
 
     //CHAT METHODS
     /**
