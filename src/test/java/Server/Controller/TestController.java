@@ -6,6 +6,8 @@ import Server.Deck.GoldDeck;
 import Server.Deck.ResourceDeck;
 import Server.Enums.*;
 import Server.Exception.AlreadySetException;
+import Server.Exception.MissingInfoException;
+import Server.Exception.TooFewElementsException;
 import Server.Exception.TooManyPlayersException;
 import Server.Player.Player;
 import Server.Player.PlayerInstance;
@@ -107,7 +109,14 @@ public class TestController {
         ServerConnectionHandler connectionHandler = new ServerConnectionHandler(true);
         Controller controller = new ControllerInstance(connectionHandler);
         Player player = new PlayerInstance("player1");
+        Player player2 = new PlayerInstance("player2");
         controller.addPlayer(player);
+        controller.addPlayer(player2);
+        controller.setPlayerColor(Color.RED, player);
+        controller.setPlayerColor(Color.BLUE, player2);
+        controller.setReady(player);
+        controller.setReady(player2);
+        controller.start();
         controller.giveInitialHand();
         assertEquals(3, player.getHand().size());
 
@@ -117,6 +126,8 @@ public class TestController {
     public void testNextTurn() throws Exception {
         ServerConnectionHandler connectionHandler = new ServerConnectionHandler(true);
         Controller controller = new ControllerInstance(connectionHandler);
+        Player player = new PlayerInstance("player1");
+        controller.addPlayer(player);
         controller.nextTurn();
         assertEquals(1, controller.getTurn());
     }
@@ -127,8 +138,8 @@ public class TestController {
         Player player = new PlayerInstance("player1");
         StartingCard startingCard = new StartingCard(new StartingFrontFace("image.jpg", new HashMap<>(), new ArrayList<>()), new CornerCardFace("image.jpg", new HashMap<>()));
         controller.addPlayer(player);
+        controller.nextTurn();
         controller.setStartingCard(player,startingCard,Face.FRONT);
-
         Map<CardCorners, Symbol> cornerSymbols = new HashMap<>();
         cornerSymbols.put(CardCorners.TOP_LEFT, Symbol.FUNGUS);
         cornerSymbols.put(CardCorners.TOP_RIGHT, Symbol.FUNGUS);
@@ -183,12 +194,20 @@ public class TestController {
 
     }
     @Test
-    public void testDrawCard() throws Exception {
+    public void testDrawCard() throws Exception { //todo: solve this test. It is not working because it doesn't consider that the players get shuffled
         int sentinel = 0, i = 0;
         ServerConnectionHandler connectionHandler = new ServerConnectionHandler(true);
         Controller controller = new ControllerInstance(connectionHandler);
         Player player = new PlayerInstance("player1");
+        Player player2 = new PlayerInstance("player2");
         controller.addPlayer(player);
+        controller.addPlayer(player2);
+        controller.setPlayerColor(Color.RED, player);
+        controller.setPlayerColor(Color.BLUE, player2);
+        controller.setReady(player);
+        controller.setReady(player2);
+        controller.start();
+        controller.nextTurn();
         Map <CardCorners, Symbol> cornerSymbols = new HashMap<>();
         List <Symbol> centerSymbols = new ArrayList<>();
         centerSymbols.add(Symbol.NONE);
@@ -283,7 +302,7 @@ public class TestController {
     }
     //todo: redo testleaderboard
     @Test
-    public void testClearGame() throws IOException, TooManyPlayersException {
+    public void testClearGame() throws IOException, TooManyPlayersException, MissingInfoException {
         ServerConnectionHandler connectionHandler = new ServerConnectionHandler(true);
         Controller controller = new ControllerInstance(connectionHandler);
         Player player = new PlayerInstance("player1");
@@ -297,12 +316,13 @@ public class TestController {
     }
 
     @Test
-    public void testReady() throws IOException, TooManyPlayersException {
+    public void testReady() throws IOException, TooManyPlayersException, MissingInfoException {
         ServerConnectionHandler connectionHandler = new ServerConnectionHandler(true);
         Controller controller = new ControllerInstance(connectionHandler);
         Player player = new PlayerInstance("player1");
         controller.addPlayer(player);
         assertFalse(player.isReady());
+        controller.setPlayerColor(Color.RED, player);
         controller.setReady(player);
         assertTrue(player.isReady());
         controller.setNotReady(player);
@@ -323,13 +343,18 @@ public class TestController {
     }
 
     @Test
-    public void testSaveAndLoad() throws IOException, TooManyPlayersException, AlreadySetException {
+    public void testSaveAndLoad() throws IOException, TooManyPlayersException, AlreadySetException, MissingInfoException, TooFewElementsException {
         ServerConnectionHandler connectionHandler = new ServerConnectionHandler(true);
         Controller controller = new ControllerInstance(connectionHandler);
         Player player = new PlayerInstance("player1");
         controller.addPlayer(player);
         Player player2 = new PlayerInstance("player2");
         controller.addPlayer(player2);
+        controller.setPlayerColor(Color.RED, player);
+        controller.setPlayerColor(Color.BLUE, player2);
+        controller.setReady(player);
+        controller.setReady(player2);
+        controller.start();
         controller.nextTurn();
         controller.giveInitialHand();
         controller.saveGame();

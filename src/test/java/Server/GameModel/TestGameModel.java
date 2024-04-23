@@ -13,10 +13,11 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class TestGameModel {
     @Test
-    public void testNewGameModelInstance() {
+    public void testNewGameModelInstance() throws AlreadySetException {
         GameModelInstance gameModelInstance = new GameModelInstance();
         assertEquals(0, gameModelInstance.getTurn());
         assertFalse(gameModelInstance.isEndGamePhase());
+        gameModelInstance.createStartingCards();
         List<StartingCard> startingCards = gameModelInstance.getStartingCards();
         assertEquals(6, startingCards.size());
         for(Card card : startingCards) {

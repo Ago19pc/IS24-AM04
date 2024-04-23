@@ -3,6 +3,8 @@ package Server;
 import Server.Connections.ServerConnectionHandler;
 import Server.Controller.Controller;
 import Server.Controller.ControllerInstance;
+import Server.Exception.AlreadySetException;
+import Server.Exception.TooFewElementsException;
 
 
 public class Main {
@@ -22,7 +24,11 @@ public class Main {
         }
 
         System.out.println("Starting Controller");
-        controller.start();
+        try {
+            controller.start();
+        } catch (TooFewElementsException | AlreadySetException e) {
+            throw new RuntimeException(e);
+        }
 
 
     }

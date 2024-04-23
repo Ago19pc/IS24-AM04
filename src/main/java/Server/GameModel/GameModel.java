@@ -77,4 +77,19 @@ public interface GameModel {
      */
     public void shufflePlayerList();
 
+    /**
+     * Creates gold and resource decks
+     */
+    public void createGoldResourceDecks() throws AlreadySetException;
+
+    /**
+     * Creates starting cards
+     */
+    public void createStartingCards() throws AlreadySetException;
+
+    /**
+     * Creates achievement deck
+     */
+    public void createAchievementDeck() throws AlreadySetException;
+
 }
