@@ -168,7 +168,7 @@ public class ControllerInstance implements Controller{
         gameModel.createGoldResourceDecks();
         gameModel.createStartingCards();
         giveStartingCards();
-        //a questo punto start finisce. Si attende il set delle starting cards. Quando tutte saranno settate si procede con giveInitialHand
+
     }
     public void setPlayerColor(Color color, Player player) throws IllegalArgumentException{
         List<Color> colors = getPlayerList().stream().map(Player::getColor).collect(Collectors.toList());
@@ -192,8 +192,12 @@ public class ControllerInstance implements Controller{
         //Notify
     }
 
-    public void setSecretObjectiveCard(Player player, AchievementCard card) throws AlreadySetException {
+    public void setSecretObjectiveCard(Player player, AchievementCard card) throws AlreadySetException, AlreadyFinishedException, MissingInfoException {
         player.setSecretObjective(card);
+        boolean allSet = getPlayerList().stream().allMatch(p -> p.getSecretObjective() != null);
+        if(allSet){
+            nextTurn();
+        }
     }
     public void giveStartingCards() {
         List<StartingCard> startingCards = gameModel.getStartingCards();
@@ -204,6 +208,14 @@ public class ControllerInstance implements Controller{
     }
     public void setStartingCard(Player player, StartingCard card, Face face) throws AlreadySetException {
         player.initializeManuscript(card, face);
+        boolean allSet = getPlayerList().stream().allMatch(p -> p.getManuscript() != null);
+        if(allSet){
+            try {
+                giveInitialHand();
+            } catch (AlreadySetException | AlreadyFinishedException e) {
+                //do nothing as it's normal that it's already set
+            }
+        }
         //Notify
     }
     public void giveInitialHand() throws AlreadySetException, AlreadyFinishedException{
@@ -226,7 +238,7 @@ public class ControllerInstance implements Controller{
         //Dopo aver dato la mano iniziale si prosegue con la seconda parte dell'inizializzazione: si scoprono gli obiettivi segreti e non
         gameModel.createAchievementDeck();
         giveSecretObjectiveCards();
-        //a questo punto si attende. Quando tutti i giocatori avranno scelto il proprio obiettivo segreto è necessario che venga chiamato nextTurn in modo che la partita inizi
+
     }
     public void nextTurn() throws MissingInfoException, AlreadyFinishedException {
         if(activePlayer == null){ //sets active player as the first player. If it's not the first turn this is not valid
