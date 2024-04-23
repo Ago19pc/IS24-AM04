@@ -293,4 +293,49 @@ public class Manuscript {
     public Map<CardCorners, CornerCardFace> getCardsUnder(CornerCardFace cardFace) throws IllegalArgumentException{
         return this.graph.getCardsUnder(cardFace);
     }
+
+    /**
+     * Checks whether a card is placeable in a certain position
+     * @param x the x coordinate
+     * @param y the y coordinate
+     * @param cardFace the card face to place
+     * @return boolean true if the card is placeable, false otherwise
+     */
+    public boolean isPlaceable(int x, int y, CornerCardFace cardFace){
+        //The coordinates must be valid: both even or both odd. This solves the problem where a card is adjacient to another one on more than one corner
+        if((x % 2 == 0 && y % 2 != 0) || (x % 2 != 0 && y % 2 == 0)){
+            return false;
+        }
+        //A card cannot be placed over another card
+        if(getCardByCoord(x, y) != null){
+            return false;
+        }
+        //A card cannot be placed over a "NONE" symbol
+        Map<CardCorners, CornerCardFace> neighbors = new HashMap<>();
+        neighbors.put(CardCorners.TOP_LEFT, getCardByCoord(x-1, y+1));
+        neighbors.put(CardCorners.TOP_RIGHT, getCardByCoord(x+1, y+1));
+        neighbors.put(CardCorners.BOTTOM_LEFT, getCardByCoord(x-1, y-1));
+        neighbors.put(CardCorners.BOTTOM_RIGHT, getCardByCoord(x+1, y-1));
+        for(CardCorners corner : neighbors.keySet()){
+            if(neighbors.get(corner) != null){
+                if(neighbors.get(corner).getCornerSymbols().get(corner.getOppositeCorner()) == Symbol.NONE){
+                    return false;
+                }
+            }
+        }
+        //If the face has placement requirements, they need to be met
+        try{
+            Map<Symbol, Integer> placementRequirements = cardFace.getPlacementRequirements();
+            for(Symbol requiredSymbol : placementRequirements.keySet()){
+                int requiredCount = placementRequirements.get(requiredSymbol);
+                int actualCount = getSymbolCount(requiredSymbol);
+                if(actualCount < requiredCount){
+                    return false;
+                }
+            }
+        } catch (UnsupportedOperationException e){ //if the card does not have placement requirements
+            //do nothing
+        }
+        return true;
+    }
 }

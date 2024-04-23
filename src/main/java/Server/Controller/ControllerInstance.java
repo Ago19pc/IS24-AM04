@@ -8,10 +8,7 @@ import Server.Chat.Message;
 import Server.Connections.ServerConnectionHandler;
 import Server.Deck.AchievementDeck;
 import Server.Enums.*;
-import Server.Exception.AlreadySetException;
-import Server.Exception.TooFewElementsException;
-import Server.Exception.TooManyElementsException;
-import Server.Exception.TooManyPlayersException;
+import Server.Exception.*;
 import Server.GameModel.GameModel;
 import Server.GameModel.GameModelInstance;
 import Server.Manuscript.Manuscript;
@@ -227,8 +224,11 @@ public class ControllerInstance implements Controller{
         //Todo implementare
         return true;
     }
-    public void playCard(Player player, int position, int xCoord, int yCoord, Face face) throws TooFewElementsException {
+    public void playCard(Player player, int position, int xCoord, int yCoord, Face face) throws TooFewElementsException, InvalidMoveException {
         CornerCardFace cardFace = player.getHand().get(position).getCornerFace(face);
+        if(!player.getManuscript().isPlaceable(xCoord, yCoord, cardFace)){
+            throw new InvalidMoveException("Card not placeable. Check the position and the placement requirements");
+        }
         player.removeCardFromHand(position);
         int cardPoints;
         try{

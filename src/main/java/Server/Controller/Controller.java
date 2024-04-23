@@ -7,10 +7,7 @@ import Server.Enums.Color;
 import Server.Enums.DeckPosition;
 import Server.Enums.Decks;
 import Server.Enums.Face;
-import Server.Exception.AlreadySetException;
-import Server.Exception.TooFewElementsException;
-import Server.Exception.TooManyElementsException;
-import Server.Exception.TooManyPlayersException;
+import Server.Exception.*;
 import Server.Player.Player;
 
 import java.io.IOException;
@@ -96,7 +93,7 @@ public interface Controller {
      * @param yCoord the y coordinate
      * @param face the face choosen by the player
      */
-    public void playCard(Player player, int position, int xCoord, int yCoord, Face face) throws TooFewElementsException;
+    public void playCard(Player player, int position, int xCoord, int yCoord, Face face) throws TooFewElementsException, InvalidMoveException;
 
     /**
      * draw a card from one of the decks
