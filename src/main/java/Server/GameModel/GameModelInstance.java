@@ -116,6 +116,7 @@ public class GameModelInstance implements GameModel{
             playerList.add((PlayerInstance) player);
         }
         playerList.notifyAll();
+
     }
 
     /**
@@ -196,10 +197,9 @@ public class GameModelInstance implements GameModel{
         }
         playerList.notifyAll();
     }
+
+
     public void shufflePlayerList() {
-        synchronized (playerList) {
-            Collections.shuffle(playerList);
-        }
-        playerList.notifyAll();
+        Collections.shuffle(playerList);
     }
 }
