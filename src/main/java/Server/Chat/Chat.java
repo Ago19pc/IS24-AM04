@@ -15,18 +15,20 @@ public class Chat {
 
     /**
      * Add a message to the chat
-     * @param message Message object to add to the list
-     */
-    public void addMessage(Message message) {
-        messages.add(message);
-    }
-
-    /**
-     * Add a message to the chat
      * @param message the text of the message
      * @param sender the player who sent the message
      */
-    public void addMessage(String message, Player sender) {
+    public void addMessage(String message, Player sender) throws IllegalArgumentException{
+        boolean onlySpaces = true;
+        for (int i = 0; i < message.length(); i++) {
+            if (message.charAt(i) != ' ') {
+                onlySpaces = false;
+                break;
+            }
+        }
+        if(onlySpaces){
+            throw new IllegalArgumentException("Message cannot be empty");
+        }
         Message m = new Message(message, sender);
         messages.add(m);
     }

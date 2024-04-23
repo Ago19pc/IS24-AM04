@@ -1,6 +1,5 @@
 package Server.Card;
 
-import Server.Enums.Decks;
 import Server.Enums.Face;
 
 public class StartingCard implements Card {
@@ -31,7 +30,7 @@ public class StartingCard implements Card {
      * @param face to return
      * @return CornerCardFace the face of the card
      */
-    public CornerCardFace getCornerFace(Face face) {
+    public CornerCardFace getCornerFace(Face face) throws UnsupportedOperationException{
         return face == Face.FRONT ? frontFace : backFace;
     }
 

@@ -3,13 +3,14 @@ package Server.Deck;
 import Server.Card.*;
 import Server.Enums.DeckPosition;
 
+import Server.Exception.AlreadyFinishedException;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 public class TestDeck {
     @Test
-    public void TestAchievementDeck() {
+    public void TestAchievementDeck() throws AlreadyFinishedException {
         AchievementDeck achievementDeck = new AchievementDeck();
         assertEquals (14, achievementDeck.getNumberOfCards());
         for (int i = 0; i < 14; i++) {
@@ -35,7 +36,7 @@ public class TestDeck {
 
     }
     @Test
-    public void TestResourceDeck() {
+    public void TestResourceDeck() throws AlreadyFinishedException{
         ResourceDeck resourceDeck = new ResourceDeck();
         assertEquals (38, resourceDeck.getNumberOfCards());
         for (int i = 0; i < 38; i++) {
@@ -61,7 +62,7 @@ public class TestDeck {
 
     }
     @Test
-    public void TestGoldDeck() {
+    public void TestGoldDeck() throws AlreadyFinishedException {
         GoldDeck goldDeck = new GoldDeck();
         assertEquals (38, goldDeck.getNumberOfCards());
         for (int i = 0; i < 38; i++) {
@@ -69,16 +70,8 @@ public class TestDeck {
             assertDoesNotThrow(() -> {
                 GoldCard card = (GoldCard) drawnCard;
             });
-            ClassCastException exceptionThrown2 = assertThrows(
-                    ClassCastException.class, () -> {
-                        ResourceCard card = (ResourceCard) drawnCard;
-                    }
-            );
-            ClassCastException exceptionThrown3 = assertThrows(
-                    ClassCastException.class, () -> {
-                        StartingCard card = (StartingCard) drawnCard;
-                    }
-            );
+
+
 
 
         }

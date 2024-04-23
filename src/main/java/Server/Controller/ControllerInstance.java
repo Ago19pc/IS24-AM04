@@ -8,6 +8,7 @@ import Server.Chat.Message;
 import Server.Connections.ServerConnectionHandler;
 import Server.Deck.AchievementDeck;
 import Server.Enums.*;
+import Server.Exception.*;
 import Server.GameModel.GameModel;
 import Server.GameModel.GameModelInstance;
 import Server.Manuscript.Manuscript;
@@ -127,25 +128,23 @@ import java.util.stream.Collectors;
 public class ControllerInstance implements Controller{
     private GameModel gameModel;
     private final ServerConnectionHandler connectionHandler;
-    /**
-     * Calculates achievement points forall players
-     * @return void
-     */
-    private void calculatePoints() {//todo: forall players and forall achievements call manuscript.calculatepoints and sum them up};
-    };
+    private Player activePlayer;
+    private boolean lastRound = false;
 
     public ControllerInstance(ServerConnectionHandler connectionHandler) {
         this.connectionHandler = connectionHandler;
         this.gameModel = new GameModelInstance();
     }
-    public void addPlayer(Player player) {
+    public void addPlayer(Player player) throws TooManyPlayersException, IllegalArgumentException {
         if(gameModel.getPlayerList().size()<4) {
             gameModel.addPlayer(player);
+        } else {
+            throw new TooManyPlayersException("Too many players");
         }
         //Notify
     }
 
-    public void removePlayer(Player player) {
+    public void removePlayer(Player player) throws IllegalArgumentException{
         gameModel.removePlayer(player);
         //Notify
     }
@@ -156,29 +155,49 @@ public class ControllerInstance implements Controller{
         gameModel.shufflePlayerList();
         //Notify
     }
-    public void start()
-    {
+    public void start() throws TooFewElementsException, AlreadySetException {
+        if(gameModel.getPlayerList().size() < 2){
+            throw new TooFewElementsException("Not enough players");
+        }
+        for(Player player : gameModel.getPlayerList()) {
+            if(!player.isReady()){
+                throw new TooFewElementsException("Not all players are ready");
+            }
+        }
         shufflePlayerList();
-        //TODO : implementare il resto
-        //Notify
+        gameModel.createGoldResourceDecks();
+        gameModel.createStartingCards();
+        giveStartingCards();
+
     }
-    public void setPlayerColor(Color color, Player player) {
+    public void setPlayerColor(Color color, Player player) throws IllegalArgumentException{
         List<Color> colors = getPlayerList().stream().map(Player::getColor).collect(Collectors.toList());
         if(!colors.contains(color)){
             player.setColor(color);
+        } else {
+            throw new IllegalArgumentException("Color already taken");
         }
         //Notify
     }
     public void giveSecretObjectiveCards() {
         getPlayerList().forEach(player -> {
-            Card card1 = gameModel.getAchievementDeck().popCard(DeckPosition.DECK);
-            Card card2 = gameModel.getAchievementDeck().popCard(DeckPosition.DECK);
+            try {
+                Card card1 = gameModel.getAchievementDeck().popCard(DeckPosition.DECK);
+                Card card2 = gameModel.getAchievementDeck().popCard(DeckPosition.DECK);
+            } catch (AlreadyFinishedException e) {
+                throw new RuntimeException(e);
+            }
+
         });
         //Notify
     }
 
-    public void setSecretObjectiveCard(Player player, AchievementCard card) {
+    public void setSecretObjectiveCard(Player player, AchievementCard card) throws AlreadySetException, AlreadyFinishedException, MissingInfoException {
         player.setSecretObjective(card);
+        boolean allSet = getPlayerList().stream().allMatch(p -> p.getSecretObjective() != null);
+        if(allSet){
+            nextTurn();
+        }
     }
     public void giveStartingCards() {
         List<StartingCard> startingCards = gameModel.getStartingCards();
@@ -187,63 +206,152 @@ public class ControllerInstance implements Controller{
         });
         //Notify
     }
-    public void setStartingCard(Player player, StartingCard card, Face face) {
+    public void setStartingCard(Player player, StartingCard card, Face face) throws AlreadySetException {
         player.initializeManuscript(card, face);
+        boolean allSet = getPlayerList().stream().allMatch(p -> p.getManuscript() != null);
+        if(allSet){
+            try {
+                giveInitialHand();
+            } catch (AlreadySetException | AlreadyFinishedException e) {
+                //do nothing as it's normal that it's already set
+            }
+        }
         //Notify
     }
-    public void giveInitialHand() {
-        getPlayerList().forEach(player -> {
+    public void giveInitialHand() throws AlreadySetException, AlreadyFinishedException{
+        for(Player player : getPlayerList()){
             Card card1 = gameModel.getResourceDeck().popCard(DeckPosition.DECK);
             Card card2 = gameModel.getResourceDeck().popCard(DeckPosition.DECK);
             Card card3 = gameModel.getGoldDeck().popCard(DeckPosition.DECK);
-            player.addCardToHand(card1);
-            player.addCardToHand(card2);
-            player.addCardToHand(card3);
-        });
+            try{
+                player.addCardToHand(card1);
+                player.addCardToHand(card2);
+                player.addCardToHand(card3);
+            } catch (TooManyElementsException e) {
+                throw new AlreadySetException("Initial Hand already given");
+            }
+
+        }
+
         //Notify
+
+        //Dopo aver dato la mano iniziale si prosegue con la seconda parte dell'inizializzazione: si scoprono gli obiettivi segreti e non
+        gameModel.createAchievementDeck();
+        giveSecretObjectiveCards();
+
     }
-    public void nextTurn() {
-        gameModel.nextTurn();
+    public void nextTurn() throws MissingInfoException, AlreadyFinishedException {
+        if(activePlayer == null){ //sets active player as the first player. If it's not the first turn this is not valid
+            if(gameModel.getTurn() != 0){
+                throw new MissingInfoException("Active player not set");
+            } else {
+                activePlayer = gameModel.getPlayerList().getFirst();
+            }
+        }
+        //if it is end game and all players have played also an extra round, calculate leaderboard
+        if(gameModel.isEndGamePhase() && getPlayerList().indexOf(activePlayer) == getPlayerList().size() - 1 ){
+            if(lastRound){
+                computeLeaderboard();
+            } else {
+                lastRound = true;
+            }
+        } else {
+            //sets end game if necessary
+            if (activePlayer.getPoints() >= 20) {
+                try {
+                    endGame();
+                } catch (AlreadySetException e) {
+                    //do nothing as it's normal that it's already set
+                }
+            }
+            //sets new active player
+            do {
+                int playerIndex = gameModel.getPlayerList().indexOf(activePlayer);
+                if (playerIndex == gameModel.getPlayerList().size() - 1) {
+                    activePlayer = gameModel.getPlayerList().getFirst();
+                } else {
+                    activePlayer = gameModel.getPlayerList().get(playerIndex + 1);
+                }
+            } while (!isOnline(activePlayer));//if the player is not online skips to the next one
+            gameModel.nextTurn();
+        }
         //Notify
     }
     public int getTurn() {
         return gameModel.getTurn();
     }
+
+    @Override
+    public Player getActivePlayer() {
+        return activePlayer;
+    }
+
     public boolean isOnline(Player player) {
         //Todo implementare
         return true;
     }
-    public void playCard(Player player, Card card, int xCoord, int yCoord, Face face) {
-        CornerCardFace cardFace = card.getCornerFace(face);
-        player.removeCardFromHand(card);
-        int cardPoints = cardFace.getScore();
-        Map<Symbol, Integer> scoreRequirements = cardFace.getScoreRequirements();
-        if(scoreRequirements != null){
-            Symbol requiredSymbol = (Symbol) scoreRequirements.keySet().toArray()[0];
-            int requiredQuantity = scoreRequirements.get(requiredSymbol);
-            int actualQuantity;
-            if(requiredSymbol == Symbol.COVERED_CORNER){
-                actualQuantity = player.getManuscript().getCardsUnder(cardFace).size();
-            } else {
-                actualQuantity = player.getManuscript().getSymbolCount(requiredSymbol);
-                int quantityOnCard = cardFace.getCornerSymbols().entrySet().stream()
-                        .filter(entry -> entry.getValue() == requiredSymbol).collect(Collectors.toList()).size();
-                actualQuantity += quantityOnCard;
-            }
-            player.addPoints(actualQuantity / requiredQuantity * cardPoints);
-        } else {
-            player.addPoints(cardPoints);
+    public void playCard(Player player, int position, int xCoord, int yCoord, Face face) throws TooFewElementsException, InvalidMoveException {
+        //if it's not the player's turn, throw exception
+        if(player != activePlayer){
+            throw new InvalidMoveException("Not player's turn");
         }
-        player.getManuscript().addCard(xCoord, yCoord, cardFace, getTurn());
+        CornerCardFace cardFace = player.getHand().get(position).getCornerFace(face);
+        if(!player.getManuscript().isPlaceable(xCoord, yCoord, cardFace)){
+            throw new InvalidMoveException("Card not placeable. Check the position and the placement requirements");
+        }
+        try {
+            player.removeCardFromHand(position);
+            int cardPoints;
+            try {
+                cardPoints = cardFace.getScore();
+            } catch (UnsupportedOperationException e) {
+                if (e.getMessage() == "Regular cards do not have scores") ;
+                cardPoints = 0;
+            }
+            Map<Symbol, Integer> scoreRequirements;
+            try {
+                scoreRequirements = cardFace.getScoreRequirements();
+            } catch (UnsupportedOperationException e) {
+                if (e.getMessage() == "Regular cards do not have score requirements") ;
+                scoreRequirements = null;
+            }
+            if (scoreRequirements != null) {
+                Symbol requiredSymbol = (Symbol) scoreRequirements.keySet().toArray()[0];
+                int requiredQuantity = scoreRequirements.get(requiredSymbol);
+                int actualQuantity;
+                if (requiredSymbol == Symbol.COVERED_CORNER) {
+                    actualQuantity = player.getManuscript().getCardsUnder(cardFace).size();
+                } else {
+                    actualQuantity = player.getManuscript().getSymbolCount(requiredSymbol);
+                    int quantityOnCard = cardFace.getCornerSymbols().entrySet().stream()
+                            .filter(entry -> entry.getValue() == requiredSymbol).collect(Collectors.toList()).size();
+                    actualQuantity += quantityOnCard;
+                }
+                player.addPoints(actualQuantity / requiredQuantity * cardPoints);
+            } else {
+                player.addPoints(cardPoints);
+            }
+            player.getManuscript().addCard(xCoord, yCoord, cardFace, getTurn());
+        } catch (TooFewElementsException e) { //if it's end game, you can play a card when you have 2 and not 3
+            if(gameModel.isEndGamePhase()){
+                if(player.getHand().size() < 2){
+                    throw new TooFewElementsException("Not enough cards in hand");
+                }
+            } else {
+                throw new TooFewElementsException("Not enough cards in hand");
+            }
+        }
 
         //Notify
     }
-    public void drawCard(Player player, DeckPosition deckPosition, Decks deck) {
+    public void drawCard(Player player, DeckPosition deckPosition, Decks deck) throws TooManyElementsException, InvalidMoveException, AlreadyFinishedException {
+        if(player != activePlayer){
+            throw new InvalidMoveException("Not player's turn");
+        }
         switch (deck) {
             case RESOURCE -> {
                 Card card = gameModel.getResourceDeck().popCard(deckPosition);
                 player.addCardToHand(card);
-
             }
             case GOLD -> {
                 Card card = gameModel.getGoldDeck().popCard(deckPosition);
@@ -253,31 +361,35 @@ public class ControllerInstance implements Controller{
                 throw new IllegalArgumentException("Invalid deck");
             }
         }
+        //if both decks are empty, end game phase is set
+        if(gameModel.getResourceDeck().isEmpty() && gameModel.getGoldDeck().isEmpty()){
+            try {
+                endGame();
+            } catch (AlreadySetException e) {
+                //do nothing as it's normal that it's already set
+            }
+        }
         //Notify
     }
-    /*public Boolean isPlayable(Card card , Face face)
-    {
-        if(face.equals(Face.BACK)) return Boolean.TRUE;
-        if(card.getType() == Decks.GOLD && card.getFace(Face.FRONT).getScore() == 1 //&& gli angoli mi permetono di giocarla
-            )
-        {
-
-        }
-        return null;
-    }*/
 
     @Override
-    public void endGame() {
+    public void endGame() throws AlreadySetException {
         gameModel.setEndGamePhase();
+        //if it's the last player to play, the extra round starts immediately
+        if(getPlayerList().indexOf(activePlayer) == getPlayerList().size() - 1){
+            lastRound = true;
+        }
         //Notify
     }
 
-    public List<Player> computeLeaderboard() {
+    public List<Player> computeLeaderboard() throws AlreadyFinishedException {
+        AchievementDeck achievementDeck = gameModel.getAchievementDeck();
+        AchievementCard commonAchievement1 = achievementDeck.popCard(DeckPosition.FIRST_CARD);
+        AchievementCard commonAchievement2 = achievementDeck.popCard(DeckPosition.SECOND_CARD);
         for (Player player : getPlayerList()) {
             Manuscript manuscript = player.getManuscript();
-            AchievementDeck achievementDeck = gameModel.getAchievementDeck();
-            int points = manuscript.calculatePoints(achievementDeck.popCard(DeckPosition.FIRST_CARD));
-            points += manuscript.calculatePoints(achievementDeck.popCard(DeckPosition.SECOND_CARD));
+            int points = manuscript.calculatePoints(commonAchievement1);
+            points += manuscript.calculatePoints(commonAchievement2);
             points += manuscript.calculatePoints(player.getSecretObjective());
             player.addPoints(points);
         }
@@ -290,7 +402,10 @@ public class ControllerInstance implements Controller{
         gameModel = new GameModelInstance();
     }
 
-    public void setReady(Player player) {
+    public void setReady(Player player) throws MissingInfoException{
+        if(player.getColor() == null) {
+            throw new MissingInfoException("Color not set");
+        }
         player.setReady(true);
         //Notify
     }
@@ -304,7 +419,7 @@ public class ControllerInstance implements Controller{
         return player.isReady();
     }
 
-    public void addMessage(String message, Player sender) {
+    public void addMessage(String message, Player sender) throws IllegalArgumentException{
         gameModel.getChat().addMessage(message, sender);
         //Notify
     }

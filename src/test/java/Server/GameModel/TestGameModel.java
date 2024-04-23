@@ -1,6 +1,7 @@
 package Server.GameModel;
 
 import Server.Card.*;
+import Server.Exception.AlreadySetException;
 import Server.Player.Player;
 import Server.Player.PlayerInstance;
 import org.junit.jupiter.api.Test;
@@ -12,10 +13,11 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class TestGameModel {
     @Test
-    public void testNewGameModelInstance() {
+    public void testNewGameModelInstance() throws AlreadySetException {
         GameModelInstance gameModelInstance = new GameModelInstance();
         assertEquals(0, gameModelInstance.getTurn());
         assertFalse(gameModelInstance.isEndGamePhase());
+        gameModelInstance.createStartingCards();
         List<StartingCard> startingCards = gameModelInstance.getStartingCards();
         assertEquals(6, startingCards.size());
         for(Card card : startingCards) {
@@ -47,7 +49,7 @@ public class TestGameModel {
         assertEquals(2, gameModelInstance.getTurn());
     }
     @Test
-    public void testEndGamePhase() {
+    public void testEndGamePhase() throws AlreadySetException {
         GameModelInstance gameModelInstance = new GameModelInstance();
         assertFalse(gameModelInstance.isEndGamePhase());
         gameModelInstance.setEndGamePhase();
