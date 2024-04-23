@@ -206,7 +206,7 @@ public class ControllerInstance implements Controller{
         player.initializeManuscript(card, face);
         //Notify
     }
-    public void giveInitialHand() throws AlreadySetException{
+    public void giveInitialHand() throws AlreadySetException, AlreadyFinishedException{
         for(Player player : getPlayerList()){
             Card card1 = gameModel.getResourceDeck().popCard(DeckPosition.DECK);
             Card card2 = gameModel.getResourceDeck().popCard(DeckPosition.DECK);
@@ -228,7 +228,7 @@ public class ControllerInstance implements Controller{
         giveSecretObjectiveCards();
         //a questo punto si attende. Quando tutti i giocatori avranno scelto il proprio obiettivo segreto è necessario che venga chiamato nextTurn in modo che la partita inizi
     }
-    public void nextTurn() throws MissingInfoException {
+    public void nextTurn() throws MissingInfoException, AlreadyFinishedException {
         if(activePlayer == null){ //sets active player as the first player. If it's not the first turn this is not valid
             if(gameModel.getTurn() != 0){
                 throw new MissingInfoException("Active player not set");
@@ -332,7 +332,7 @@ public class ControllerInstance implements Controller{
 
         //Notify
     }
-    public void drawCard(Player player, DeckPosition deckPosition, Decks deck) throws TooManyElementsException, InvalidMoveException {
+    public void drawCard(Player player, DeckPosition deckPosition, Decks deck) throws TooManyElementsException, InvalidMoveException, AlreadyFinishedException {
         if(player != activePlayer){
             throw new InvalidMoveException("Not player's turn");
         }

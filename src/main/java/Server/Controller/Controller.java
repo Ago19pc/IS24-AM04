@@ -86,13 +86,13 @@ public interface Controller {
     /**
      * gives all players their initial hand
      */
-    public void giveInitialHand() throws AlreadySetException;
+    public void giveInitialHand() throws AlreadySetException, AlreadyFinishedException;
 
     //GAME FLOW METHODS
     /**
      * goes to next turn
      */
-    public void nextTurn() throws MissingInfoException;
+    public void nextTurn() throws MissingInfoException, AlreadyFinishedException;
     /**
      * @return int the current turn
      */
@@ -141,7 +141,7 @@ public interface Controller {
      * @param deckposition where i want to draw the card from
      * @param deck the deck
      */
-    public void drawCard(Player player, DeckPosition deckposition, Decks deck) throws TooManyElementsException, InvalidMoveException;
+    public void drawCard(Player player, DeckPosition deckposition, Decks deck) throws TooManyElementsException, InvalidMoveException, AlreadyFinishedException;
 
     //CHAT METHODS
     /**

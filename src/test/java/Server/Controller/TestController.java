@@ -5,10 +5,7 @@ import Server.Connections.ServerConnectionHandler;
 import Server.Deck.GoldDeck;
 import Server.Deck.ResourceDeck;
 import Server.Enums.*;
-import Server.Exception.AlreadySetException;
-import Server.Exception.MissingInfoException;
-import Server.Exception.TooFewElementsException;
-import Server.Exception.TooManyPlayersException;
+import Server.Exception.*;
 import Server.Player.Player;
 import Server.Player.PlayerInstance;
 import org.junit.jupiter.api.Test;
@@ -302,7 +299,7 @@ public class TestController {
     }
     //todo: redo testleaderboard
     @Test
-    public void testClearGame() throws IOException, TooManyPlayersException, MissingInfoException {
+    public void testClearGame() throws IOException, TooManyPlayersException, MissingInfoException, AlreadyFinishedException {
         ServerConnectionHandler connectionHandler = new ServerConnectionHandler(true);
         Controller controller = new ControllerInstance(connectionHandler);
         Player player = new PlayerInstance("player1");
@@ -343,7 +340,7 @@ public class TestController {
     }
 
     @Test
-    public void testSaveAndLoad() throws IOException, TooManyPlayersException, AlreadySetException, MissingInfoException, TooFewElementsException {
+    public void testSaveAndLoad() throws IOException, TooManyPlayersException, AlreadySetException, MissingInfoException, TooFewElementsException, AlreadyFinishedException {
         ServerConnectionHandler connectionHandler = new ServerConnectionHandler(true);
         Controller controller = new ControllerInstance(connectionHandler);
         Player player = new PlayerInstance("player1");

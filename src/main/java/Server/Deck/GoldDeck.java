@@ -4,6 +4,7 @@ import Server.Card.*;
 import Server.Enums.CardCorners;
 import Server.Enums.DeckPosition;
 import Server.Enums.Symbol;
+import Server.Exception.AlreadyFinishedException;
 import Server.Exception.IncorrectDeckPositionException;
 
 import java.io.BufferedReader;
@@ -50,7 +51,12 @@ public class GoldDeck implements Deckable {
             throw new IncorrectDeckPositionException("Cannot add card to the deck, only to FIST_CARD or SECOND_CARD.");
         else
             System.out.println(this.toString() + "moveCardToBoard");
-        Card cardToMove = popCard(DECK);
+        Card cardToMove;
+        try{
+            cardToMove = popCard(DECK);
+        } catch (AlreadyFinishedException e) {
+            cardToMove = null;
+        }
         addCard(cardToMove, where_to);
     }
 
@@ -69,19 +75,19 @@ public class GoldDeck implements Deckable {
      * @param position the position pop the card from
      * @return Card the popped card
      */
-    public GoldCard popCard(DeckPosition position){
-        try {
+    public GoldCard popCard(DeckPosition position) throws AlreadyFinishedException{
+
             if (position == DECK) {
-                return cards.remove(0);
+                if(cards.isEmpty())
+                    throw new AlreadyFinishedException("The GoldDeck is empty");
+                return (GoldCard) cards.remove(0);
             } else {
-                GoldCard drawnCard = boardCards.remove(position);
-                moveCardToBoard(position);
-                return drawnCard;
+                if(boardCards.get(position) == null){
+                    throw new AlreadyFinishedException("No card in the position");
+                }
+                return (GoldCard) getBoardCard().get(position);
             }
-        } catch (IncorrectDeckPositionException e) {
-            e.printStackTrace();
-            return null;
-        }
+
     }
 
     /**

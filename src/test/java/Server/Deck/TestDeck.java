@@ -36,7 +36,7 @@ public class TestDeck {
 
     }
     @Test
-    public void TestResourceDeck() {
+    public void TestResourceDeck() throws AlreadyFinishedException{
         ResourceDeck resourceDeck = new ResourceDeck();
         assertEquals (38, resourceDeck.getNumberOfCards());
         for (int i = 0; i < 38; i++) {
@@ -62,7 +62,7 @@ public class TestDeck {
 
     }
     @Test
-    public void TestGoldDeck() {
+    public void TestGoldDeck() throws AlreadyFinishedException {
         GoldDeck goldDeck = new GoldDeck();
         assertEquals (38, goldDeck.getNumberOfCards());
         for (int i = 0; i < 38; i++) {
