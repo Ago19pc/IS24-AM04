@@ -216,6 +216,7 @@ public class TestController {
     @Test
     public void testDrawCard() throws Exception { //todo: solve this test. It is not working because it doesn't consider that the players get shuffled
         int sentinel = 0, i = 0;
+
         ServerConnectionHandler connectionHandler = new ServerConnectionHandler(true);
         Controller controller = new ControllerInstance(connectionHandler);
         Player player = new PlayerInstance("player1");
