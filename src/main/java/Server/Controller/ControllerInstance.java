@@ -370,12 +370,14 @@ public class ControllerInstance implements Controller{
         //Notify
     }
 
-    public List<Player> computeLeaderboard() {
+    public List<Player> computeLeaderboard() throws AlreadyFinishedException {
+        AchievementDeck achievementDeck = gameModel.getAchievementDeck();
+        AchievementCard commonAchievement1 = achievementDeck.popCard(DeckPosition.FIRST_CARD);
+        AchievementCard commonAchievement2 = achievementDeck.popCard(DeckPosition.SECOND_CARD);
         for (Player player : getPlayerList()) {
             Manuscript manuscript = player.getManuscript();
-            AchievementDeck achievementDeck = gameModel.getAchievementDeck();
-            int points = manuscript.calculatePoints(achievementDeck.popCard(DeckPosition.FIRST_CARD));
-            points += manuscript.calculatePoints(achievementDeck.popCard(DeckPosition.SECOND_CARD));
+            int points = manuscript.calculatePoints(commonAchievement1);
+            points += manuscript.calculatePoints(commonAchievement2);
             points += manuscript.calculatePoints(player.getSecretObjective());
             player.addPoints(points);
         }

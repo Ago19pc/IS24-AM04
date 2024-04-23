@@ -117,7 +117,7 @@ public interface Controller {
      * compute achievement points and leaderboard
      * @return List<Player> the leaderboard
      */
-    public List<Player> computeLeaderboard();
+    public List<Player> computeLeaderboard() throws AlreadyFinishedException;
 
     /**
      * clears everything, preparing for a new game
