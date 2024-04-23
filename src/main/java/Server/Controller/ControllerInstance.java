@@ -156,6 +156,9 @@ public class ControllerInstance implements Controller{
         //Notify
     }
     public void start() throws TooFewElementsException, AlreadySetException {
+        if(gameModel.getPlayerList().size() < 2){
+            throw new TooFewElementsException("Not enough players");
+        }
         for(Player player : gameModel.getPlayerList()) {
             if(!player.isReady()){
                 throw new TooFewElementsException("Not all players are ready");
