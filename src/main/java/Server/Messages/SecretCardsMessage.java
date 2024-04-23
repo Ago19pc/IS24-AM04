@@ -6,12 +6,12 @@ import Server.Exception.PlayerNotFoundByNameException;
 
 import java.io.Serializable;
 
-public class SecretCardSelection implements Serializable, GeneralMessage {
+public class SecretCardsMessage implements Serializable, GeneralMessage {
 
     private final String name;
     private final AchievementCard secretCard;
 
-    public SecretCardSelection(String name, AchievementCard secretCard) {
+    public SecretCardsMessage(String name, AchievementCard secretCard) {
         this.name = name;
         this.secretCard = secretCard;
     }

@@ -36,9 +36,10 @@ public class ServerReceiver extends Thread {
         while (true) {
             try {
                 String resp = in.readLine();
-                System.out.println(resp);
+                //System.out.println(resp);
                 MessagePacket packet = new MessagePacket(resp);
                 packet.getPayload().serverExecute(serverConnectionHandler.getController());
+                System.out.println("RECEIVED MESSAGE AND EXECUTED");
 
 
 

@@ -5,7 +5,7 @@ import Server.Exception.ServerExecuteNotCallableException;
 
 import java.io.Serializable;
 
-public class UnavaiableColorsMessage implements Serializable, GeneralMessage {
+public class UnavailableColorsMessage implements Serializable, GeneralMessage {
 
     @Override
     public void serverExecute(Controller controller)throws ServerExecuteNotCallableException {

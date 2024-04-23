@@ -2,7 +2,8 @@ package ConnectionUtils;
 
 
 import Server.Enums.MessageType;
-import Server.Messages.GeneralMessage;
+import Server.Exception.IllegalMessageTypeException;
+import Server.Messages.*;
 
 import java.io.*;
 import java.util.Base64;
@@ -35,14 +36,47 @@ public class MessagePacket implements Serializable {
      * @throws IOException
      * @throws ClassNotFoundException
      */
-    public MessagePacket(String serialized) throws IOException, ClassNotFoundException {
+    public MessagePacket(String serialized) throws IOException, ClassNotFoundException, IllegalMessageTypeException {
         byte[] data = Base64.getDecoder().decode(serialized);
 
         ObjectInputStream oInputStream = new ObjectInputStream(new ByteArrayInputStream(data));
         MessagePacket restored = (MessagePacket) oInputStream.readObject();
         oInputStream.close();
-        this.payload = restored.getPayload();
         this.type = restored.getType();
+        switch (this.type) {
+
+            case BOARDINIT -> this.payload = (BoardInitMessage) restored.getPayload();
+            case CARDPLACEMENT -> this.payload = (CardPlacementMessage) restored.getPayload();
+            case CHAT -> this.payload = (ChatMessage) restored.getPayload();
+            case DRAWCARD -> this.payload = (DrawCardMessage) restored.getPayload();
+            case ENDGAMEPHASE -> this.payload = (EndGamePhaseMessage) restored.getPayload();
+            case INITIALHAND -> this.payload = (InitialHandMessage) restored.getPayload();
+            case LEADERBOARD -> this.payload = (LeaderboardMessage) restored.getPayload();
+            case MATCHALREADYFULL -> this.payload = (MatchAlreadyFullMessage) restored.getPayload();
+            case NEWPLAYER -> this.payload = (NewPlayerMessage) restored.getPayload();
+            case NEWPOINTS -> this.payload = (NewPointsMessage) restored.getPayload();
+            case NEWSYMBOLS -> this.payload = (NewSymbolsMessage) restored.getPayload();
+            case NEXTTURN -> this.payload = (NextTurnMessage) restored.getPayload();
+            case OTHERCARDPLACEMENT -> this.payload = (OtherCardPlacementMessage) restored.getPayload();
+            case OTHERDRAWCARD -> this.payload = (OtherDrawCardMessage) restored.getPayload();
+            case OTHERNEWPOINTS -> this.payload = (OtherNewPointsMessage) restored.getPayload();
+            case OTHERRECONNECTION -> this.payload = (OtherReconnectionMessage) restored.getPayload();
+            case OTHERSECRETCARD -> this.payload = (OtherSecretCardMessage) restored.getPayload();
+            case OTHERSTARTINGCARD -> this.payload = (OtherStartingCardMessage) restored.getPayload();
+            case PLAYERCOLOR -> this.payload = (PlayerColorMessage) restored.getPayload();
+            case PLAYERNAME -> this.payload = (PlayerNameMessage) restored.getPayload();
+            case PLAYERSORDER -> this.payload = (PlayersOrderMessage) restored.getPayload();
+            case QUITORPLAYAGAIN -> this.payload = (QuitOrPlayAgainMessage) restored.getPayload();
+            case READYSTATUS -> this.payload = (ReadyStatusMessage) restored.getPayload();
+            case RECONNECTION -> this.payload = (ReconnectionMessage) restored.getPayload();
+            case SECRETCARDS -> this.payload = (SecretCardsMessage) restored.getPayload();
+            case TIMEOUTMESSAGE -> this.payload = (TimeoutMessage) restored.getPayload();
+            case UNAVAIABLECOLORS -> this.payload = (UnavailableColorsMessage) restored.getPayload();
+            default -> throw new IllegalMessageTypeException(this.type.toString());
+
+        }
+        this.payload = restored.getPayload();
+
     }
 
     /**

@@ -3,6 +3,7 @@ package Client.Connection;
 import ConnectionUtils.MessagePacket;
 import ConnectionUtils.MessageUtils;
 import Server.Enums.MessageType;
+import Server.Messages.GeneralMessage;
 import Server.Messages.PlayerNameMessage;
 
 import java.io.IOException;
@@ -26,6 +27,33 @@ public class ClientConnectionHandler extends Thread {
             establishConnection(inputReader);
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    public ClientConnectionHandler(boolean debugMode) {
+        try {
+            clientSocket = new Socket("localhost", 1234);
+            sender = new ClientSender(this, clientSocket);
+            receiver = new ClientReceiver(this, clientSocket);
+                Thread.UncaughtExceptionHandler h = new Thread.UncaughtExceptionHandler() {
+                    @Override
+                    public void uncaughtException(Thread th, Throwable ex) {
+                        System.out.println("Uncaught exception: " + ex);
+                        try {
+                            clientSocket.close();
+
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                };
+                receiver.setUncaughtExceptionHandler(h);
+                sender.setUncaughtExceptionHandler(h);
+
+                sender.start();
+                receiver.start();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
     }
 
@@ -79,7 +107,15 @@ public class ClientConnectionHandler extends Thread {
      */
     public void run() {
 
+        try {
+            receiver.join();
+            sender.join();
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+
         // TEST CODE
+        /*
         PlayerNameMessage pnm = new PlayerNameMessage("NOME1");
         MessagePacket message = new MessagePacket(pnm, MessageType.PLAYERNAME);
         //sender.sendMessage(message.stringify());
@@ -88,14 +124,14 @@ public class ClientConnectionHandler extends Thread {
             test = new MessagePacket(message.stringify());
         } catch (IOException e) {
             throw new RuntimeException(e);
-        } catch (ClassNotFoundException e) {
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
         System.out.println(test.equals(message));
 
         System.out.println(message.getType());
         System.out.println(test.getType());
-
+        */
     }
 
 
@@ -114,6 +150,12 @@ public class ClientConnectionHandler extends Thread {
      */
     public void sendMessage() throws IOException {
         sender.sendMessage();
+    }
+
+    public void sendMessage(GeneralMessage message, MessageType type) throws IOException {
+        MessagePacket packet = new MessagePacket(message, type);
+        sender.sendMessage(packet.stringify());
+
     }
 
 

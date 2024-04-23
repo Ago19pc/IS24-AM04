@@ -152,11 +152,9 @@ public class ControllerInstance implements Controller{
         if(gameModel.getPlayerList().size()<4) {
             gameModel.addPlayer(player);
         }
-        //Notify
     }
     public void removePlayer(Player player) {
         gameModel.removePlayer(player);
-        //Notify
     }
     public List<Player> getPlayerList() {
         return gameModel.getPlayerList();

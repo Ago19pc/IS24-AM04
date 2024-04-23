@@ -1,18 +1,19 @@
 package Server.Messages;
 
-import Server.Card.Card;
+import Server.Card.CardFace;
 import Server.Controller.Controller;
 import Server.Exception.ServerExecuteNotCallableException;
 import Server.Player.Player;
 
 import java.io.Serializable;
 
-public class OthersSecretCardMessage implements Serializable, GeneralMessage {
-    private final Card card;
+public class OtherStartingCardMessage implements Serializable, GeneralMessage {
+
+    private final CardFace cardFace;
     private final Player player;
 
-    public OthersSecretCardMessage(Card card, Player player){
-        this.card = card;
+    public OtherStartingCardMessage(CardFace cardFace, Player player){
+        this.cardFace = cardFace;
         this.player = player;
     }
 
