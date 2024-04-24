@@ -214,9 +214,8 @@ public class TestController {
 
     }
     @Test
-    public void testDrawCard() throws Exception { //todo: solve this test. It is not working because it doesn't consider that the players get shuffled
+    public void testDrawCard() throws Exception {
         int sentinel = 0, i = 0;
-
         ServerConnectionHandler connectionHandler = new ServerConnectionHandler(true);
         Controller controller = new ControllerInstance(connectionHandler);
         Player player = new PlayerInstance("player1");
@@ -236,86 +235,86 @@ public class TestController {
                 new ResourceFrontFace("image.jpg", cornerSymbols, 0, Symbol.FUNGUS),
                 new RegularBackFace("image.jpg", centerSymbols)
         );
-        controller.drawCard(player, DeckPosition.DECK, Decks.RESOURCE);
-        controller.drawCard(player,DeckPosition.FIRST_CARD, Decks.GOLD);
-        controller.drawCard(player,DeckPosition.FIRST_CARD, Decks.GOLD);
-        assertEquals(3, player.getHand().size());
-
+        Player player3 = controller.getPlayerList().get(0);
+        controller.drawCard(player3, DeckPosition.DECK, Decks.RESOURCE);
+        controller.drawCard(player3,DeckPosition.FIRST_CARD, Decks.GOLD);
+        controller.drawCard(player3,DeckPosition.FIRST_CARD, Decks.GOLD);
+        assertEquals(3, player3.getHand().size());
         ResourceDeck resourceDeck2 = new ResourceDeck();
         GoldDeck goldDeck = new GoldDeck();
         GoldDeck goldDeck1 = new GoldDeck();
         List<ResourceCard> cards = new ArrayList<>();
-        for (i = 0 ;  i < 36 ; i++){
+        for (i = 0 ;  i < 38 ; i++){
             card = (ResourceCard) resourceDeck2.popCard(DeckPosition.DECK);
-            if(card.getFace(Face.FRONT).getCornerSymbols().equals(player.getHand().get(0).getFace(Face.FRONT).getCornerSymbols()) &&
-                    card.getFace(Face.BACK).getCenterSymbols().equals(player.getHand().get(0).getFace(Face.BACK).getCenterSymbols()) &&
-                    card.getCornerFace(Face.FRONT).getScore() == player.getHand().get(0).getCornerFace(Face.FRONT).getScore() &&
-                    card.getFace(Face.FRONT).getKingdom().equals(player.getHand().get(0).getFace(Face.BACK).getKingdom())){
+            if(card.getFace(Face.FRONT).getCornerSymbols().equals(player3.getHand().get(0).getFace(Face.FRONT).getCornerSymbols()) &&
+                    card.getFace(Face.BACK).getCenterSymbols().equals(player3.getHand().get(0).getFace(Face.BACK).getCenterSymbols()) &&
+                    card.getCornerFace(Face.FRONT).getScore() == player3.getHand().get(0).getCornerFace(Face.FRONT).getScore() &&
+                    card.getFace(Face.FRONT).getKingdom().equals(player3.getHand().get(0).getFace(Face.BACK).getKingdom())){
                 sentinel++;
             }
         }
         card = (ResourceCard) resourceDeck2.popCard(DeckPosition.FIRST_CARD);
-        if(sentinel == 0 && card.getFace(Face.FRONT).getCornerSymbols().equals(player.getHand().get(0).getFace(Face.FRONT).getCornerSymbols())
-        && card.getFace(Face.BACK).getCenterSymbols().equals(player.getHand().get(0).getFace(Face.BACK).getCenterSymbols()) &&
-                card.getCornerFace(Face.FRONT).getScore() == player.getHand().get(0).getCornerFace(Face.FRONT).getScore() &&
-                card.getFace(Face.FRONT).getKingdom().equals(player.getHand().get(0).getFace(Face.BACK).getKingdom())){
+        if(/*sentinel == 0 && */ card.getFace(Face.FRONT).getCornerSymbols().equals(player3.getHand().get(0).getFace(Face.FRONT).getCornerSymbols())
+        && card.getFace(Face.BACK).getCenterSymbols().equals(player3.getHand().get(0).getFace(Face.BACK).getCenterSymbols()) &&
+                card.getCornerFace(Face.FRONT).getScore() == player3.getHand().get(0).getCornerFace(Face.FRONT).getScore() &&
+                card.getFace(Face.FRONT).getKingdom().equals(player3.getHand().get(0).getFace(Face.BACK).getKingdom())){
             sentinel++;
         }
         card = (ResourceCard) resourceDeck2.popCard(DeckPosition.SECOND_CARD);
-        if(sentinel == 0 && card.getFace(Face.FRONT).getCornerSymbols().equals(player.getHand().get(0).getFace(Face.FRONT).getCornerSymbols()) &&
-                card.getFace(Face.BACK).getCenterSymbols().equals(player.getHand().get(0).getFace(Face.BACK).getCenterSymbols()) &&
-                card.getCornerFace(Face.FRONT).getScore() == player.getHand().get(0).getCornerFace(Face.FRONT).getScore() &&
-                card.getFace(Face.FRONT).getKingdom().equals(player.getHand().get(0).getFace(Face.BACK).getKingdom()))
+        if(/*sentinel == 0 &&*/ card.getFace(Face.FRONT).getCornerSymbols().equals(player3.getHand().get(0).getFace(Face.FRONT).getCornerSymbols()) &&
+                card.getFace(Face.BACK).getCenterSymbols().equals(player3.getHand().get(0).getFace(Face.BACK).getCenterSymbols()) &&
+                card.getCornerFace(Face.FRONT).getScore() == player3.getHand().get(0).getCornerFace(Face.FRONT).getScore() &&
+                card.getFace(Face.FRONT).getKingdom().equals(player3.getHand().get(0).getFace(Face.BACK).getKingdom()))
             {
             sentinel++;
             }
         assertEquals(1, sentinel);
-        for (i = 0 ;  i < 36 ; i++){
+        for (i = 0 ;  i < 38 ; i++){
             card = (GoldCard) goldDeck.popCard(DeckPosition.DECK);
-            if(card.getFace(Face.FRONT).getCornerSymbols().equals(player.getHand().get(1).getFace(Face.FRONT).getCornerSymbols()) &&
-                    card.getFace(Face.BACK).getCenterSymbols().equals(player.getHand().get(1).getFace(Face.BACK).getCenterSymbols()) &&
-                    card.getCornerFace(Face.FRONT).getScore() == player.getHand().get(1).getCornerFace(Face.FRONT).getScore() &&
-                    card.getFace(Face.FRONT).getKingdom().equals(player.getHand().get(1).getFace(Face.BACK).getKingdom())){
+            if(card.getFace(Face.FRONT).getCornerSymbols().equals(player3.getHand().get(1).getFace(Face.FRONT).getCornerSymbols()) &&
+                    card.getFace(Face.BACK).getCenterSymbols().equals(player3.getHand().get(1).getFace(Face.BACK).getCenterSymbols()) &&
+                    card.getCornerFace(Face.FRONT).getScore() == player3.getHand().get(1).getCornerFace(Face.FRONT).getScore() &&
+                    card.getFace(Face.FRONT).getKingdom().equals(player3.getHand().get(1).getFace(Face.BACK).getKingdom())){
                 sentinel++;
             }
         }
         card = (GoldCard) goldDeck.popCard(DeckPosition.FIRST_CARD);
-        if(sentinel == 1 && card.getFace(Face.FRONT).getCornerSymbols().equals(player.getHand().get(1).getFace(Face.FRONT).getCornerSymbols()) &&
-                card.getFace(Face.BACK).getCenterSymbols().equals(player.getHand().get(1).getFace(Face.BACK).getCenterSymbols()) &&
-                card.getCornerFace(Face.FRONT).getScore() == player.getHand().get(1).getCornerFace(Face.FRONT).getScore() &&
-                card.getFace(Face.FRONT).getKingdom().equals(player.getHand().get(1).getFace(Face.BACK).getKingdom())){
+        if(/*sentinel == 1 &&*/ card.getFace(Face.FRONT).getCornerSymbols().equals(player3.getHand().get(1).getFace(Face.FRONT).getCornerSymbols()) &&
+                card.getFace(Face.BACK).getCenterSymbols().equals(player3.getHand().get(1).getFace(Face.BACK).getCenterSymbols()) &&
+                card.getCornerFace(Face.FRONT).getScore() == player3.getHand().get(1).getCornerFace(Face.FRONT).getScore() &&
+                card.getFace(Face.FRONT).getKingdom().equals(player3.getHand().get(1).getFace(Face.BACK).getKingdom())){
             sentinel++;
         }
         card = (GoldCard) goldDeck.popCard(DeckPosition.SECOND_CARD);
-        if(sentinel == 1 && card.getFace(Face.FRONT).getCornerSymbols().equals(player.getHand().get(1).getFace(Face.FRONT).getCornerSymbols()) &&
-                card.getFace(Face.BACK).getCenterSymbols().equals(player.getHand().get(1).getFace(Face.BACK).getCenterSymbols()) &&
-                card.getCornerFace(Face.FRONT).getScore() == player.getHand().get(1).getCornerFace(Face.FRONT).getScore() &&
-                card.getFace(Face.FRONT).getKingdom().equals(player.getHand().get(1).getFace(Face.BACK).getKingdom()))
+        if(/*sentinel == 1 &&*/ card.getFace(Face.FRONT).getCornerSymbols().equals(player3.getHand().get(1).getFace(Face.FRONT).getCornerSymbols()) &&
+                card.getFace(Face.BACK).getCenterSymbols().equals(player3.getHand().get(1).getFace(Face.BACK).getCenterSymbols()) &&
+                card.getCornerFace(Face.FRONT).getScore() == player3.getHand().get(1).getCornerFace(Face.FRONT).getScore() &&
+                card.getFace(Face.FRONT).getKingdom().equals(player3.getHand().get(1).getFace(Face.BACK).getKingdom()))
         {
             sentinel++;
         }
         assertEquals(2, sentinel);
-        for (i = 0 ;  i < 36 ; i++){
+        for (i = 0 ;  i < 38 ; i++){
             card = (GoldCard) goldDeck1.popCard(DeckPosition.DECK);
-            if(card.getFace(Face.FRONT).getCornerSymbols().equals(player.getHand().get(2).getFace(Face.FRONT).getCornerSymbols()) &&
-                    card.getFace(Face.BACK).getCenterSymbols().equals(player.getHand().get(2).getFace(Face.BACK).getCenterSymbols()) &&
-                    card.getCornerFace(Face.FRONT).getScore() == player.getHand().get(2).getCornerFace(Face.FRONT).getScore() &&
-                    card.getFace(Face.FRONT).getKingdom().equals(player.getHand().get(2).getFace(Face.BACK).getKingdom())){
+            if(card.getFace(Face.FRONT).getCornerSymbols().equals(player3.getHand().get(2).getFace(Face.FRONT).getCornerSymbols()) &&
+                    card.getFace(Face.BACK).getCenterSymbols().equals(player3.getHand().get(2).getFace(Face.BACK).getCenterSymbols()) &&
+                    card.getCornerFace(Face.FRONT).getScore() == player3.getHand().get(2).getCornerFace(Face.FRONT).getScore() &&
+                    card.getFace(Face.FRONT).getKingdom().equals(player3.getHand().get(2).getFace(Face.BACK).getKingdom())){
                 sentinel++;
             }
         }
         card = (GoldCard) goldDeck1.popCard(DeckPosition.FIRST_CARD);
-        if(sentinel == 2 && card.getFace(Face.FRONT).getCornerSymbols().equals(player.getHand().get(2).getFace(Face.FRONT).getCornerSymbols()) &&
-                card.getFace(Face.BACK).getCenterSymbols().equals(player.getHand().get(2).getFace(Face.BACK).getCenterSymbols()) &&
-                card.getCornerFace(Face.FRONT).getScore() == player.getHand().get(2).getCornerFace(Face.FRONT).getScore() &&
-                card.getFace(Face.FRONT).getKingdom().equals(player.getHand().get(2).getFace(Face.BACK).getKingdom())) {
+        if(/*sentinel == 2 &&*/ card.getFace(Face.FRONT).getCornerSymbols().equals(player3.getHand().get(2).getFace(Face.FRONT).getCornerSymbols()) &&
+                card.getFace(Face.BACK).getCenterSymbols().equals(player3.getHand().get(2).getFace(Face.BACK).getCenterSymbols()) &&
+                card.getCornerFace(Face.FRONT).getScore() == player3.getHand().get(2).getCornerFace(Face.FRONT).getScore() &&
+                card.getFace(Face.FRONT).getKingdom().equals(player3.getHand().get(2).getFace(Face.BACK).getKingdom())) {
             sentinel++;
         }
         card = (GoldCard) goldDeck1.popCard(DeckPosition.SECOND_CARD);
-        if(sentinel == 2 && card.getFace(Face.FRONT).getCornerSymbols().equals(player.getHand().get(2).getFace(Face.FRONT).getCornerSymbols()) &&
-                card.getFace(Face.BACK).getCenterSymbols().equals(player.getHand().get(2).getFace(Face.BACK).getCenterSymbols()) &&
-                card.getCornerFace(Face.FRONT).getScore() == player.getHand().get(2).getCornerFace(Face.FRONT).getScore() &&
-                card.getFace(Face.FRONT).getKingdom().equals(player.getHand().get(2).getFace(Face.BACK).getKingdom()))
+        if(/*sentinel == 2 &&*/ card.getFace(Face.FRONT).getCornerSymbols().equals(player3.getHand().get(2).getFace(Face.FRONT).getCornerSymbols()) &&
+                card.getFace(Face.BACK).getCenterSymbols().equals(player3.getHand().get(2).getFace(Face.BACK).getCenterSymbols()) &&
+                card.getCornerFace(Face.FRONT).getScore() == player3.getHand().get(2).getCornerFace(Face.FRONT).getScore() &&
+                card.getFace(Face.FRONT).getKingdom().equals(player3.getHand().get(2).getFace(Face.BACK).getKingdom()))
         {
             sentinel++;
         }
