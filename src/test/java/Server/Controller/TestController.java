@@ -228,13 +228,7 @@ public class TestController {
         controller.setReady(player2);
         controller.start();
         controller.nextTurn();
-        Map <CardCorners, Symbol> cornerSymbols = new HashMap<>();
-        List <Symbol> centerSymbols = new ArrayList<>();
-        centerSymbols.add(Symbol.NONE);
-        Card card = new ResourceCard(
-                new ResourceFrontFace("image.jpg", cornerSymbols, 0, Symbol.FUNGUS),
-                new RegularBackFace("image.jpg", centerSymbols)
-        );
+        Card card ;
         Player player3 = controller.getPlayerList().get(0);
         controller.drawCard(player3, DeckPosition.DECK, Decks.RESOURCE);
         controller.drawCard(player3,DeckPosition.FIRST_CARD, Decks.GOLD);
