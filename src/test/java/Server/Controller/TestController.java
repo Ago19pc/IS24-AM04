@@ -243,9 +243,8 @@ public class TestController {
         ResourceDeck resourceDeck2 = new ResourceDeck();
         GoldDeck goldDeck = new GoldDeck();
         GoldDeck goldDeck1 = new GoldDeck();
-        List<ResourceCard> cards = new ArrayList<>();
         for (i = 0 ;  i < 38 ; i++){
-            card = (ResourceCard) resourceDeck2.popCard(DeckPosition.DECK);
+            card = resourceDeck2.popCard(DeckPosition.DECK);
             if(card.getFace(Face.FRONT).getCornerSymbols().equals(player3.getHand().get(0).getFace(Face.FRONT).getCornerSymbols()) &&
                     card.getFace(Face.BACK).getCenterSymbols().equals(player3.getHand().get(0).getFace(Face.BACK).getCenterSymbols()) &&
                     card.getCornerFace(Face.FRONT).getScore() == player3.getHand().get(0).getCornerFace(Face.FRONT).getScore() &&
@@ -253,14 +252,14 @@ public class TestController {
                 sentinel++;
             }
         }
-        card = (ResourceCard) resourceDeck2.popCard(DeckPosition.FIRST_CARD);
+        card = resourceDeck2.popCard(DeckPosition.FIRST_CARD);
         if(/*sentinel == 0 && */ card.getFace(Face.FRONT).getCornerSymbols().equals(player3.getHand().get(0).getFace(Face.FRONT).getCornerSymbols())
         && card.getFace(Face.BACK).getCenterSymbols().equals(player3.getHand().get(0).getFace(Face.BACK).getCenterSymbols()) &&
                 card.getCornerFace(Face.FRONT).getScore() == player3.getHand().get(0).getCornerFace(Face.FRONT).getScore() &&
                 card.getFace(Face.FRONT).getKingdom().equals(player3.getHand().get(0).getFace(Face.BACK).getKingdom())){
             sentinel++;
         }
-        card = (ResourceCard) resourceDeck2.popCard(DeckPosition.SECOND_CARD);
+        card = resourceDeck2.popCard(DeckPosition.SECOND_CARD);
         if(/*sentinel == 0 &&*/ card.getFace(Face.FRONT).getCornerSymbols().equals(player3.getHand().get(0).getFace(Face.FRONT).getCornerSymbols()) &&
                 card.getFace(Face.BACK).getCenterSymbols().equals(player3.getHand().get(0).getFace(Face.BACK).getCenterSymbols()) &&
                 card.getCornerFace(Face.FRONT).getScore() == player3.getHand().get(0).getCornerFace(Face.FRONT).getScore() &&
@@ -270,7 +269,7 @@ public class TestController {
             }
         assertEquals(1, sentinel);
         for (i = 0 ;  i < 38 ; i++){
-            card = (GoldCard) goldDeck.popCard(DeckPosition.DECK);
+            card = goldDeck.popCard(DeckPosition.DECK);
             if(card.getFace(Face.FRONT).getCornerSymbols().equals(player3.getHand().get(1).getFace(Face.FRONT).getCornerSymbols()) &&
                     card.getFace(Face.BACK).getCenterSymbols().equals(player3.getHand().get(1).getFace(Face.BACK).getCenterSymbols()) &&
                     card.getCornerFace(Face.FRONT).getScore() == player3.getHand().get(1).getCornerFace(Face.FRONT).getScore() &&
@@ -278,14 +277,14 @@ public class TestController {
                 sentinel++;
             }
         }
-        card = (GoldCard) goldDeck.popCard(DeckPosition.FIRST_CARD);
+        card = goldDeck.popCard(DeckPosition.FIRST_CARD);
         if(/*sentinel == 1 &&*/ card.getFace(Face.FRONT).getCornerSymbols().equals(player3.getHand().get(1).getFace(Face.FRONT).getCornerSymbols()) &&
                 card.getFace(Face.BACK).getCenterSymbols().equals(player3.getHand().get(1).getFace(Face.BACK).getCenterSymbols()) &&
                 card.getCornerFace(Face.FRONT).getScore() == player3.getHand().get(1).getCornerFace(Face.FRONT).getScore() &&
                 card.getFace(Face.FRONT).getKingdom().equals(player3.getHand().get(1).getFace(Face.BACK).getKingdom())){
             sentinel++;
         }
-        card = (GoldCard) goldDeck.popCard(DeckPosition.SECOND_CARD);
+        card = goldDeck.popCard(DeckPosition.SECOND_CARD);
         if(/*sentinel == 1 &&*/ card.getFace(Face.FRONT).getCornerSymbols().equals(player3.getHand().get(1).getFace(Face.FRONT).getCornerSymbols()) &&
                 card.getFace(Face.BACK).getCenterSymbols().equals(player3.getHand().get(1).getFace(Face.BACK).getCenterSymbols()) &&
                 card.getCornerFace(Face.FRONT).getScore() == player3.getHand().get(1).getCornerFace(Face.FRONT).getScore() &&
@@ -295,7 +294,7 @@ public class TestController {
         }
         assertEquals(2, sentinel);
         for (i = 0 ;  i < 38 ; i++){
-            card = (GoldCard) goldDeck1.popCard(DeckPosition.DECK);
+            card = goldDeck1.popCard(DeckPosition.DECK);
             if(card.getFace(Face.FRONT).getCornerSymbols().equals(player3.getHand().get(2).getFace(Face.FRONT).getCornerSymbols()) &&
                     card.getFace(Face.BACK).getCenterSymbols().equals(player3.getHand().get(2).getFace(Face.BACK).getCenterSymbols()) &&
                     card.getCornerFace(Face.FRONT).getScore() == player3.getHand().get(2).getCornerFace(Face.FRONT).getScore() &&
@@ -303,14 +302,14 @@ public class TestController {
                 sentinel++;
             }
         }
-        card = (GoldCard) goldDeck1.popCard(DeckPosition.FIRST_CARD);
+        card = goldDeck1.popCard(DeckPosition.FIRST_CARD);
         if(/*sentinel == 2 &&*/ card.getFace(Face.FRONT).getCornerSymbols().equals(player3.getHand().get(2).getFace(Face.FRONT).getCornerSymbols()) &&
                 card.getFace(Face.BACK).getCenterSymbols().equals(player3.getHand().get(2).getFace(Face.BACK).getCenterSymbols()) &&
                 card.getCornerFace(Face.FRONT).getScore() == player3.getHand().get(2).getCornerFace(Face.FRONT).getScore() &&
                 card.getFace(Face.FRONT).getKingdom().equals(player3.getHand().get(2).getFace(Face.BACK).getKingdom())) {
             sentinel++;
         }
-        card = (GoldCard) goldDeck1.popCard(DeckPosition.SECOND_CARD);
+        card = goldDeck1.popCard(DeckPosition.SECOND_CARD);
         if(/*sentinel == 2 &&*/ card.getFace(Face.FRONT).getCornerSymbols().equals(player3.getHand().get(2).getFace(Face.FRONT).getCornerSymbols()) &&
                 card.getFace(Face.BACK).getCenterSymbols().equals(player3.getHand().get(2).getFace(Face.BACK).getCenterSymbols()) &&
                 card.getCornerFace(Face.FRONT).getScore() == player3.getHand().get(2).getCornerFace(Face.FRONT).getScore() &&
