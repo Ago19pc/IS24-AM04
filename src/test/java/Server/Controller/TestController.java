@@ -215,7 +215,7 @@ public class TestController {
     }
     @Test
     public void testDrawCard() throws Exception {
-        int sentinel = 0, i = 0;
+        int sentinel = 0,i;
         ServerConnectionHandler connectionHandler = new ServerConnectionHandler(true);
         Controller controller = new ControllerInstance(connectionHandler);
         Player player = new PlayerInstance("player1");
