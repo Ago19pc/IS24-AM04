@@ -18,6 +18,7 @@ import com.google.gson.Gson;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -371,14 +372,25 @@ public class ControllerInstance implements Controller{
         AchievementDeck achievementDeck = gameModel.getAchievementDeck();
         AchievementCard commonAchievement1 = achievementDeck.popCard(DeckPosition.FIRST_CARD);
         AchievementCard commonAchievement2 = achievementDeck.popCard(DeckPosition.SECOND_CARD);
-        for (Player player : getPlayerList()) {
+        Map<Player,Integer> playerAchievementsPoints = new HashMap<>();
+        List<Player> playerlist = getPlayerList();
+        for (Player player : playerlist) {
             Manuscript manuscript = player.getManuscript();
             int points = manuscript.calculatePoints(commonAchievement1);
             points += manuscript.calculatePoints(commonAchievement2);
             points += manuscript.calculatePoints(player.getSecretObjective());
             player.addPoints(points);
+            playerAchievementsPoints.put(player, points);
         }
-        List<Player> leaderboard = getPlayerList().stream().sorted((p1, p2) -> p2.getPoints() - p1.getPoints()).collect(Collectors.toList());
+        gameModel.setPlayerList(playerlist);
+        List<Player> leaderboard = getPlayerList().stream()
+                .sorted((p1, p2) -> {
+                    if(p1.getPoints() == p2.getPoints()){
+                        return playerAchievementsPoints.get(p2) - playerAchievementsPoints.get(p1);
+                    }
+                    return p2.getPoints() - p1.getPoints();
+                })
+                .collect(Collectors.toList());
         //Notify
         return leaderboard;
     }

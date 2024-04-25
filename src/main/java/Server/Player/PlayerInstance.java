@@ -40,7 +40,6 @@ public class PlayerInstance implements Player {
             throw new TooManyElementsException("Player hand is full");
         }
         handCards.add((ResourceCard) card);
-        System.out.println("addCardToHand");
     }
 
     /**
@@ -61,7 +60,6 @@ public class PlayerInstance implements Player {
      */
     @Override
     public List<Card> getHand() {
-        System.out.println("getHand");
         List<Card> handToReturn = new LinkedList<>();
         for(ResourceCard card : handCards){
             handToReturn.add((Card) card);
@@ -74,7 +72,6 @@ public class PlayerInstance implements Player {
      */
     @Override
     public Manuscript getManuscript() {
-        System.out.println("getManuscript");
         return manuscript;
     }
 
@@ -91,7 +88,6 @@ public class PlayerInstance implements Player {
      */
     @Override
     public Color getColor() {
-        System.out.println("getColor");
         return color;
     }
 
@@ -100,7 +96,6 @@ public class PlayerInstance implements Player {
      */
     @Override
     public AchievementCard getSecretObjective() {
-        System.out.println("getSecretObjective");
         return secretObjective;
     }
 
@@ -109,7 +104,6 @@ public class PlayerInstance implements Player {
      */
     @Override
     public int getPoints() {
-        System.out.println("getPoints");
         return points;
     }
 
@@ -124,7 +118,6 @@ public class PlayerInstance implements Player {
             throw new AlreadySetException("Secret objective already set");
         }
         this.secretObjective = achievementCard;
-        System.out.println("setSecretObjective");
     }
 
     /**
@@ -145,7 +138,6 @@ public class PlayerInstance implements Player {
     @Override
     public void addPoints(int num) {
         this.points += num;
-        System.out.println("addPoints");
     }
 
     /**
@@ -160,7 +152,6 @@ public class PlayerInstance implements Player {
             throw new AlreadySetException("Manuscript already initialized");
         }
         this.manuscript = new Manuscript(startingCard, face);
-        System.out.println("initializeManuscript");
     }
 
     public void setReady(boolean ready) {

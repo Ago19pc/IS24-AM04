@@ -34,7 +34,6 @@ public class Manuscript {
      * @param cardFace the card face that will be added
      */
     private void updateSymbolCount(CornerCardFace cardFace) throws IllegalArgumentException{
-        System.out.println(" updateSymbolCount");
         Map<CardCorners, CornerCardFace> cardsUnder = graph.getCardsUnder(cardFace);
         try {
             for(CardCorners corner : cardsUnder.keySet()) {

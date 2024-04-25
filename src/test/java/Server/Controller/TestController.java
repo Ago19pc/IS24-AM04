@@ -376,4 +376,192 @@ public class TestController {
         assertEquals(2, controller.getPlayerList().size());
         assertEquals(3, controller.getPlayerList().get(0).getHand().size());
     }
+    @Test
+    public void testLeaderboard() throws TooManyPlayersException, MissingInfoException, TooFewElementsException, AlreadySetException, AlreadyFinishedException, TooManyElementsException, InvalidMoveException {
+        Controller controller = new ControllerInstance(new ServerConnectionHandler(true));
+        Player player = new PlayerInstance("player1");
+        Player player2 = new PlayerInstance("player2");
+        Player player3 = new PlayerInstance("player3");
+        controller.addPlayer(player);
+        controller.addPlayer(player2);
+        controller.addPlayer(player3);
+        controller.setPlayerColor(Color.RED, player);
+        controller.setPlayerColor(Color.BLUE, player2);
+        controller.setPlayerColor(Color.GREEN, player3);
+        controller.setReady(player);
+        controller.setReady(player2);
+        controller.setReady(player3);
+        controller.start();
+        player = controller.getPlayerList().get(0);
+        player2 = controller.getPlayerList().get(1);
+        player3 = controller.getPlayerList().get(2);
+        Map <CardCorners, Symbol> cornerSymbolsStarting = new HashMap<>();
+        cornerSymbolsStarting.put(CardCorners.TOP_LEFT, Symbol.FUNGUS);
+        cornerSymbolsStarting.put(CardCorners.TOP_RIGHT, Symbol.PLANT);
+        cornerSymbolsStarting.put(CardCorners.BOTTOM_LEFT, Symbol.EMPTY);
+        cornerSymbolsStarting.put(CardCorners.BOTTOM_RIGHT, Symbol.EMPTY);
+        StartingFrontFace startingFrontFace = new StartingFrontFace("image.jpg", cornerSymbolsStarting, new ArrayList<>(List.of(Symbol.BUG)));
+        StartingCard startingCard = new StartingCard(
+                startingFrontFace,
+                new CornerCardFace("image.jpg", new HashMap<>())
+        );
+        controller.setStartingCard(player, startingCard, Face.FRONT);
+        controller.setStartingCard(player2, startingCard, Face.FRONT);
+        controller.setStartingCard(player3, startingCard, Face.FRONT);
+        player.removeCardFromHand(0);
+        player.removeCardFromHand(0);
+        player.removeCardFromHand(0);
+        player2.removeCardFromHand(0);
+        player2.removeCardFromHand(0);
+        player2.removeCardFromHand(0);
+        player3.removeCardFromHand(0);
+        player3.removeCardFromHand(0);
+        player3.removeCardFromHand(0);
+        ResourceFrontFace resourceFrontFace = new ResourceFrontFace("image.jpg", cornerSymbolsStarting, 0, Symbol.BUG);
+        ResourceCard resourceCard = new ResourceCard(
+                resourceFrontFace,
+                new RegularBackFace("image.jpg", new ArrayList<>(List.of(Symbol.BUG)))
+        );
+        Map <CardCorners, Symbol> cornerSymbolsr2 = new HashMap<>();
+        cornerSymbolsr2.put(CardCorners.TOP_LEFT, Symbol.EMPTY);
+        cornerSymbolsr2.put(CardCorners.TOP_RIGHT, Symbol.PLANT);
+        cornerSymbolsr2.put(CardCorners.BOTTOM_LEFT, Symbol.BUG);
+        cornerSymbolsr2.put(CardCorners.BOTTOM_RIGHT, Symbol.EMPTY);
+        ResourceFrontFace resourceFrontFace2 = new ResourceFrontFace("image.jpg", cornerSymbolsr2, 0, Symbol.BUG);
+        ResourceCard resourceCard2 = new ResourceCard(
+                resourceFrontFace2,
+                new RegularBackFace("image.jpg", new ArrayList<>(List.of(Symbol.BUG)))
+        );
+        Map<CardCorners,Symbol> cornerSymbolsGold = new HashMap<>();
+        cornerSymbolsGold.put(CardCorners.TOP_LEFT, Symbol.EMPTY);
+        cornerSymbolsGold.put(CardCorners.TOP_RIGHT, Symbol.EMPTY);
+        cornerSymbolsGold.put(CardCorners.BOTTOM_LEFT, Symbol.EMPTY);
+        cornerSymbolsGold.put(CardCorners.BOTTOM_RIGHT, Symbol.EMPTY);
+        Map<Symbol,Integer> scoreRequirements = new HashMap<>();
+        scoreRequirements.put(Symbol.PLANT, 3);
+        GoldFrontFace goldFrontFace = new GoldFrontFace("image.jpg", cornerSymbolsGold, 3, new HashMap<>(), scoreRequirements, Symbol.BUG);
+        GoldCard goldCard = new GoldCard(
+                goldFrontFace,
+                new RegularBackFace("image.jpg", new ArrayList<>(List.of(Symbol.BUG)))
+        );
+        Map<Symbol,Integer> achievementRequirements = new HashMap<>();
+        achievementRequirements.put(Symbol.PATTERN2B, 2);
+        AchievementFrontFace achievementFrontFace = new AchievementFrontFace("image.jpg", achievementRequirements, 2);
+        AchievementCard achievementCard = new AchievementCard(
+                achievementFrontFace,
+                new EmptyCardFace("image.jpg")
+        );
+        Map<CardCorners,Symbol> cornerSymbols3 = new HashMap<>();
+        cornerSymbols3.put(CardCorners.TOP_LEFT, Symbol.EMPTY);
+        cornerSymbols3.put(CardCorners.TOP_RIGHT, Symbol.ANIMAL);
+        cornerSymbols3.put(CardCorners.BOTTOM_LEFT, Symbol.ANIMAL);
+        cornerSymbols3.put(CardCorners.BOTTOM_RIGHT, Symbol.EMPTY);
+        ResourceCard resourceCard3 = new ResourceCard(
+                new ResourceFrontFace("image.jpg", cornerSymbols3 , 0, Symbol.ANIMAL),
+                new RegularBackFace("image.jpg", new ArrayList<>(List.of(Symbol.ANIMAL)))
+        );
+        Map<CardCorners,Symbol> cornerSymbols4 = new HashMap<>();
+        cornerSymbols4.put(CardCorners.TOP_LEFT, Symbol.QUILL);
+        cornerSymbols4.put(CardCorners.TOP_RIGHT, Symbol.EMPTY);
+        cornerSymbols4.put(CardCorners.BOTTOM_LEFT, Symbol.EMPTY);
+        cornerSymbols4.put(CardCorners.BOTTOM_RIGHT, Symbol.EMPTY);
+        ResourceFrontFace resourceFrontFace4 = new ResourceFrontFace("image.jpg", cornerSymbols4, 0, Symbol.ANIMAL);
+        ResourceCard resourceCard4 = new ResourceCard(
+                resourceFrontFace4,
+                new RegularBackFace("image.jpg", new ArrayList<>(List.of(Symbol.ANIMAL)))
+        );
+        Map<CardCorners,Symbol> cornerSymbols5 = new HashMap<>();
+        cornerSymbols5.put(CardCorners.TOP_LEFT, Symbol.EMPTY);
+        cornerSymbols5.put(CardCorners.TOP_RIGHT, Symbol.EMPTY);
+        cornerSymbols5.put(CardCorners.BOTTOM_LEFT, Symbol.EMPTY);
+        cornerSymbols5.put(CardCorners.BOTTOM_RIGHT, Symbol.EMPTY);
+        Map<Symbol,Integer> scoreRequirements2 = new HashMap<>();
+        scoreRequirements2.put(Symbol.ANIMAL, 1);
+        GoldFrontFace goldFrontFace2 = new GoldFrontFace("image.jpg", cornerSymbols5, 2, new HashMap<>(), scoreRequirements2, Symbol.ANIMAL);
+        GoldCard goldCard2 = new GoldCard(
+                goldFrontFace2,
+                new RegularBackFace("image.jpg", new ArrayList<>(List.of(Symbol.ANIMAL)))
+        );
+        Map<Symbol,Integer> achievementRequirements2 = new HashMap<>();
+        achievementRequirements2.put(Symbol.QUILL, 1);
+        AchievementFrontFace achievementFrontFace2 = new AchievementFrontFace("image.jpg", achievementRequirements2, 1);
+        AchievementCard achievementCard2 = new AchievementCard(
+                achievementFrontFace2,
+                new EmptyCardFace("image.jpg")
+        );
+        Map<CardCorners,Symbol> cornerSymbols6 = new HashMap<>();
+        cornerSymbols6.put(CardCorners.TOP_LEFT, Symbol.FUNGUS);
+        cornerSymbols6.put(CardCorners.TOP_RIGHT, Symbol.FUNGUS);
+        cornerSymbols6.put(CardCorners.BOTTOM_LEFT, Symbol.FUNGUS);
+        cornerSymbols6.put(CardCorners.BOTTOM_RIGHT, Symbol.FUNGUS);
+        ResourceFrontFace resourceFrontFace6 = new ResourceFrontFace("image.jpg", cornerSymbols6, 0, Symbol.FUNGUS);
+        ResourceCard resourceCard6 = new ResourceCard(
+                resourceFrontFace6,
+                new RegularBackFace("image.jpg", new ArrayList<>(List.of(Symbol.FUNGUS)))
+        );
+        Map<CardCorners,Symbol> cornerSymbols7 = new HashMap<>();
+        cornerSymbols7.put(CardCorners.TOP_LEFT, Symbol.FUNGUS);
+        cornerSymbols7.put(CardCorners.TOP_RIGHT, Symbol.FUNGUS);
+        cornerSymbols7.put(CardCorners.BOTTOM_LEFT, Symbol.FUNGUS);
+        cornerSymbols7.put(CardCorners.BOTTOM_RIGHT, Symbol.FUNGUS);
+        ResourceFrontFace resourceFrontFace7 = new ResourceFrontFace("image.jpg", cornerSymbols7, 0, Symbol.FUNGUS);
+        ResourceCard resourceCard7 = new ResourceCard(
+                resourceFrontFace7,
+                new RegularBackFace("image.jpg", new ArrayList<>(List.of(Symbol.FUNGUS)))
+        );
+        Map<Symbol,Integer> achievementRequirements3 = new HashMap<>();
+        achievementRequirements3.put(Symbol.FUNGUS, 3);
+        AchievementFrontFace achievementFrontFace3 = new AchievementFrontFace("image.jpg", achievementRequirements3, 3);
+        AchievementCard achievementCard3 = new AchievementCard(
+                achievementFrontFace3,
+                new EmptyCardFace("image.jpg")
+        );
+        player.addCardToHand(resourceCard);
+        player.addCardToHand(resourceCard2);
+        player.addCardToHand(goldCard);
+        player2.addCardToHand(resourceCard3);
+        player2.addCardToHand(resourceCard4);
+        player2.addCardToHand(goldCard2);
+        player3.addCardToHand(resourceCard6);
+        player3.addCardToHand(resourceCard7);
+        player3.addCardToHand(goldCard2);
+        controller.setSecretObjectiveCard(player, achievementCard);
+        controller.setSecretObjectiveCard(player2, achievementCard2);
+        controller.setSecretObjectiveCard(player3, achievementCard3);
+        //qui fa next turn
+        controller.playCard(player, 0,1,-1,Face.FRONT);
+        controller.drawCard(player, DeckPosition.DECK, Decks.RESOURCE);
+        controller.nextTurn();
+        controller.playCard(player2, 0,-1,1,Face.FRONT);
+        controller.drawCard(player2, DeckPosition.DECK, Decks.RESOURCE);
+        controller.nextTurn();
+        controller.playCard(player3, 0,-1,-1,Face.FRONT);
+        controller.drawCard(player3, DeckPosition.DECK, Decks.RESOURCE);
+        controller.nextTurn();
+        controller.playCard(player, 0,2,-2,Face.FRONT);
+        controller.drawCard(player, DeckPosition.DECK, Decks.RESOURCE);
+        controller.nextTurn();
+        controller.playCard(player2, 0,-1,-1,Face.FRONT);
+        controller.drawCard(player2, DeckPosition.DECK, Decks.RESOURCE);
+        controller.nextTurn();
+        controller.playCard(player3, 0,1,-1,Face.FRONT);
+        controller.drawCard(player3, DeckPosition.DECK, Decks.RESOURCE);
+        controller.nextTurn();
+        controller.playCard(player, 0,3,-3,Face.FRONT);
+        controller.drawCard(player, DeckPosition.DECK, Decks.RESOURCE);
+        controller.nextTurn();
+        controller.playCard(player2, 0,1,-1,Face.FRONT);
+        controller.nextTurn();
+        List<Player> leaderboard = controller.computeLeaderboard();
+        assertEquals(5, controller.getPlayerList().get(0).getPoints());
+        assertEquals(6, controller.getPlayerList().get(1).getPoints());
+        assertEquals(6, controller.getPlayerList().get(2).getPoints());
+        assertEquals(controller.getPlayerList().get(2).getName(), leaderboard.get(0).getName());
+        assertEquals(controller.getPlayerList().get(1).getName(), leaderboard.get(1).getName());
+        assertEquals(controller.getPlayerList().get(0).getName(), leaderboard.get(2).getName());
+
+
+
+
+    }
 }

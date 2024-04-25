@@ -117,10 +117,8 @@ public class Graph {
         positions.keySet().forEach(corner -> {
             if(positions.get(corner) != null) {
                 addEdge(card, corner, positions.get(corner));
-                System.out.println(this.neighbors.get(positions.get(corner)));
             }
         });
-        System.out.println(this.neighbors.get(card));
     }
 
 

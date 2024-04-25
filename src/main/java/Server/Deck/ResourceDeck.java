@@ -25,7 +25,6 @@ public class ResourceDeck implements Deckable {
         boardCards.put(SECOND_CARD, null);
         createCards();
         shuffle();
-        System.out.println("ResourceDeck");
         try {
             moveCardToBoard(FIRST_CARD);
             moveCardToBoard(SECOND_CARD);
@@ -40,7 +39,6 @@ public class ResourceDeck implements Deckable {
     void shuffle() {
         // shuffle the deck
         Collections.shuffle(cards);
-        System.out.println(this.toString() + "shuffle");
     }
 
     /**
@@ -49,8 +47,8 @@ public class ResourceDeck implements Deckable {
     public void moveCardToBoard(DeckPosition where_to) throws IncorrectDeckPositionException {
         if (where_to == DECK)
             throw new IncorrectDeckPositionException("Cannot add card to the deck, only to FIST_CARD or SECOND_CARD.");
-        else
-            System.out.println(this.toString() + "moveCardToBoard");
+
+
         Card cardToMove;
         try{
             cardToMove = popCard(DECK);

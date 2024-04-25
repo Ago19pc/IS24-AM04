@@ -103,7 +103,12 @@ public class GameModelInstance implements GameModel{
         }
         return playerListToReturn;
     }
-
+    public void setPlayerList(List<Player> playerList) {
+        this.playerList.clear();
+        for (Player player : playerList) {
+            this.playerList.add((PlayerInstance) player);
+        }
+    }
 
     public void addPlayer(Player player) throws IllegalArgumentException{
         for (PlayerInstance playerInstance : playerList) {
@@ -112,9 +117,7 @@ public class GameModelInstance implements GameModel{
             }
         }
         PlayerInstance playerInstance = (PlayerInstance) player;
-        System.out.println(playerInstance.getName());
         playerList.add(playerInstance);
-        System.out.println(playerList.size());
     }
 
     /**
