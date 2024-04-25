@@ -1,12 +1,13 @@
 package Server.Card;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 
 import Server.Enums.CardCorners;
 import Server.Enums.Symbol;
 
-public interface CardFace {
+public interface CardFace extends Serializable {
     /**
      * @return String the URI of the image
      */

@@ -72,6 +72,7 @@ public class MessagePacket implements Serializable {
             case SECRETCARDS -> this.payload = (SecretCardsMessage) restored.getPayload();
             case TIMEOUTMESSAGE -> this.payload = (TimeoutMessage) restored.getPayload();
             case UNAVAIABLECOLORS -> this.payload = (UnavailableColorsMessage) restored.getPayload();
+            case STARTINGCARDS -> this.payload = (StartingCardsMessage) restored.getPayload();
             default -> throw new IllegalMessageTypeException(this.type.toString());
 
         }

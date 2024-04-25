@@ -5,6 +5,7 @@ import Server.Card.Card;
 import Server.Card.StartingCard;
 import Server.Chat.Message;
 import Server.Connections.ServerConnectionHandler;
+import Server.Deck.Deckable;
 import Server.Enums.Color;
 import Server.Enums.DeckPosition;
 import Server.Enums.Decks;
@@ -172,6 +173,7 @@ public interface Controller {
     public Player getPlayerByName(String name) throws PlayerNotFoundByNameException;
 
     public ServerConnectionHandler getConnectionHandler();
+
 
 }
 

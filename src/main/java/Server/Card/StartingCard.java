@@ -3,7 +3,9 @@ package Server.Card;
 import Server.Enums.Decks;
 import Server.Enums.Face;
 
-public class StartingCard implements Card {
+import java.io.Serializable;
+
+public class StartingCard implements Card, Serializable {
     private final StartingFrontFace frontFace;
     private final CornerCardFace backFace;
 

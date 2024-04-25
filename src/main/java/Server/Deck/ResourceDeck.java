@@ -27,7 +27,6 @@ public class ResourceDeck implements Deckable {
         boardCards.put(SECOND_CARD, null);
         createCards();
         shuffle();
-        System.out.println("ResourceDeck");
         try {
             moveCardToBoard(FIRST_CARD);
             moveCardToBoard(SECOND_CARD);
@@ -131,7 +130,6 @@ public class ResourceDeck implements Deckable {
             String lineF;
             int cardNumber = 0;
             while ((lineF = readerFRONT.readLine()) != null) {
-                System.out.println("generate card " + cardNumber);
                 String[] partsF = lineF.split(" ");
 
                 String partsB = readerBACK.readLine();
@@ -140,8 +138,6 @@ public class ResourceDeck implements Deckable {
                 Map<CardCorners, Symbol> cornerSymbolsF = new HashMap<>();
                 int point = 0;
                 for(int i = 0; i < 4; i++){
-                    System.out.print(CardCorners.values()[i]);
-                    System.out.println(Symbol.valueOf(partsF[i]));
                     cornerSymbolsF.put(CardCorners.values()[i], Symbol.valueOf(partsF[i]));
                 }
 

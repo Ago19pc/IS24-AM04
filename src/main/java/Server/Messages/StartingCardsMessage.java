@@ -23,7 +23,7 @@ public class StartingCardsMessage implements Serializable, GeneralMessage {
     public void serverExecute(Controller controller) {
         try{
             controller.setStartingCard(controller.getPlayerByName(this.name), this.startingCard, this.face );
-
+            System.out.println(controller.getPlayerByName(this.name).getName());
         }catch(PlayerNotFoundByNameException e){
             e.printStackTrace();
         }

@@ -71,9 +71,6 @@ public class GameModelInstance implements GameModel{
             List<Symbol> centerSymbols = new ArrayList<>();
             for (int i = 0; i < partsF.length; i++) {
                 if (i < 4) {
-                    System.out.print(CardCorners.values()[i]);
-                    System.out.print(" ");
-                    System.out.println(Symbol.valueOf(partsF[i]));
                     cornerSymbolsF.put(CardCorners.values()[i], Symbol.valueOf(partsF[i]));
                 }
                 else centerSymbols.add(Symbol.valueOf(partsF[i]));
@@ -101,21 +98,17 @@ public class GameModelInstance implements GameModel{
 
     public List<Player> getPlayerList() {
         List<Player> playerListToReturn = new ArrayList<>();
-        synchronized (playerList) {
-            for (PlayerInstance player : playerList) {
-                playerListToReturn.add((Player) player);
-            }
+        for (PlayerInstance player : playerList) {
+            playerListToReturn.add((Player) player);
         }
-        playerList.notifyAll();
+
         return playerListToReturn;
     }
 
 
     public void addPlayer(Player player) {
-        synchronized (playerList) {
-            playerList.add((PlayerInstance) player);
-        }
-        playerList.notifyAll();
+        playerList.add((PlayerInstance) player);
+
 
     }
 
@@ -192,10 +185,7 @@ public class GameModelInstance implements GameModel{
     }
 
     public void removePlayer(Player player) {
-        synchronized (playerList) {
-            playerList.remove(player);
-        }
-        playerList.notifyAll();
+        playerList.remove(player);
     }
 
 

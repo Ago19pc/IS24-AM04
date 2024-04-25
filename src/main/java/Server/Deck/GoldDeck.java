@@ -24,7 +24,6 @@ public class GoldDeck implements Deckable {
         boardCards.put(SECOND_CARD, null);
         createCards();
         shuffle();
-        System.out.println("GoldDeck");
         try {
             moveCardToBoard(FIRST_CARD);
             moveCardToBoard(SECOND_CARD);
@@ -130,13 +129,13 @@ public class GoldDeck implements Deckable {
             String lineF;
             int cardNumber = 0;
             while ((lineF = readerFRONT.readLine()) != null) {
-                System.out.println("generating card " + cardNumber);
+
 
                 String[] partsF = lineF.split(" ");
-                //System.out.println(lineF);
+
 
                 String partsB = readerBACK.readLine();
-                //System.out.println(partsB);
+
 
 
 
@@ -159,7 +158,6 @@ public class GoldDeck implements Deckable {
                 for (int i = 0; i < partsF.length; i++) {
 
                     if (i < 4) {
-                        System.out.println("corner: " + CardCorners.values()[i] + " symbol: " + Symbol.valueOf(partsF[i]));
                         cornerSymbolsF.put(CardCorners.values()[i], Symbol.valueOf(partsF[i]));
                     }
                     else if (i ==  partsF.length - 1) point = Integer.parseInt(partsF[i]);

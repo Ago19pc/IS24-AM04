@@ -27,7 +27,6 @@ public class AchievementDeck implements Deckable{
         boardCards.put(SECOND_CARD, null);
         createCards();
         shuffle();
-        System.out.println("AchievementDeck");
         try {
             moveCardToBoard(FIRST_CARD);
             moveCardToBoard(SECOND_CARD);

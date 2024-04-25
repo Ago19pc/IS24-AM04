@@ -64,9 +64,8 @@ public class ServerConnectionHandler extends Thread {
         Thread.UncaughtExceptionHandler h = new Thread.UncaughtExceptionHandler() {
             @Override
             public void uncaughtException(Thread th, Throwable ex) {
-                System.out.println("Uncaught exception: " + ex);
+                System.out.println("ServerConnnectionHandler gestore eccezioni thread figli: " + ex);
                 th.interrupt();
-                System.out.println("SMT");
             }
         };
         try {

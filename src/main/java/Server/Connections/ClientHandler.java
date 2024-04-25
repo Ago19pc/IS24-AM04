@@ -37,37 +37,29 @@ public class ClientHandler extends Thread {
 
     public void run() {
         System.out.println("Client connected: " + this.socket.getInetAddress());
+
+        receiver.setUncaughtExceptionHandler(h);
+        receiver.start();
+
         try {
-
-            receiver.setUncaughtExceptionHandler(h);
-            receiver.start();
-
             receiver.join();
             sender.join();
-            
-        } catch (Exception e) {
-            System.out.println("LOL");
-            try {
-                throw e;
-            } catch (InterruptedException ex) {
-                throw new RuntimeException(ex);
-            }
-
-
+        } catch (InterruptedException e) {
+            System.out.println("ClientHandler caught an exception");
+            throw new RuntimeException(e);
         }
 
 
-
-
-
     }
 
+
+
     public void sendMessages(){
-        sender.sendMessage();
+        this.sender.sendMessage();
     }
 
     public ServerConnectionHandler getServerConnectionHandler() {
-        return connectionHandler;
+        return this.connectionHandler;
     }
 
 
