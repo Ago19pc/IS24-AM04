@@ -98,11 +98,6 @@ public interface Controller {
      */
     public int getTurn();
     /**
-     * Gets the current active player
-     * @return Player the active player
-     */
-    public Player getActivePlayer();
-    /**
      * checks the online status of a player
      * @param player the player
      * @return boolean true if the player is online

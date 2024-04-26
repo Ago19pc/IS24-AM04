@@ -1,6 +1,9 @@
 package Server.Deck;
 
-import Server.Card.*;
+import Server.Card.Card;
+import Server.Card.GoldCard;
+import Server.Card.GoldFrontFace;
+import Server.Card.RegularBackFace;
 import Server.Enums.CardCorners;
 import Server.Enums.DeckPosition;
 import Server.Enums.Symbol;
@@ -13,7 +16,6 @@ import java.io.FileReader;
 import java.util.*;
 
 import static Server.Enums.DeckPosition.*;
-import static Server.Enums.DeckPosition.DECK;
 
 public class GoldDeck implements Deckable {
     protected List<GoldCard> cards;
@@ -25,7 +27,6 @@ public class GoldDeck implements Deckable {
         boardCards.put(SECOND_CARD, null);
         createCards();
         shuffle();
-        System.out.println("GoldDeck");
         try {
             moveCardToBoard(FIRST_CARD);
             moveCardToBoard(SECOND_CARD);
@@ -40,7 +41,6 @@ public class GoldDeck implements Deckable {
     void shuffle() {
         // shuffle the deck
         Collections.shuffle(cards);
-        System.out.println(this.toString() + "shuffle");
     }
 
     /**
@@ -49,8 +49,8 @@ public class GoldDeck implements Deckable {
     public void moveCardToBoard(DeckPosition where_to) throws IncorrectDeckPositionException {
         if (where_to == DECK)
             throw new IncorrectDeckPositionException("Cannot add card to the deck, only to FIST_CARD or SECOND_CARD.");
-        else
-            System.out.println(this.toString() + "moveCardToBoard");
+
+
         Card cardToMove;
         try{
             cardToMove = popCard(DECK);
@@ -136,7 +136,6 @@ public class GoldDeck implements Deckable {
             String lineF;
             int cardNumber = 0;
             while ((lineF = readerFRONT.readLine()) != null) {
-                System.out.println("generating card " + cardNumber);
 
                 String[] partsF = lineF.split(" ");
                 //System.out.println(lineF);
@@ -145,30 +144,26 @@ public class GoldDeck implements Deckable {
                 //System.out.println(partsB);
 
 
-
                 Map<CardCorners, Symbol> cornerSymbolsF = new HashMap<>();
 
                 Map<Symbol, Integer> scoreRequirementsF = new HashMap<>();
-                for (Symbol s: Symbol.values()) {
+                for (Symbol s : Symbol.values()) {
                     scoreRequirementsF.put(s, 0);
                 }
 
                 Map<Symbol, Integer> placementRequirementsF = new HashMap<>();
-                for (Symbol s: Symbol.values()) {
+                for (Symbol s : Symbol.values()) {
                     placementRequirementsF.put(s, 0);
                 }
-
-
 
 
                 int point = 0;
                 for (int i = 0; i < partsF.length; i++) {
 
                     if (i < 4) {
-                        System.out.println("corner: " + CardCorners.values()[i] + " symbol: " + Symbol.valueOf(partsF[i]));
+                        //System.out.println("corner: " + CardCorners.values()[i] + " symbol: " + Symbol.valueOf(partsF[i])+" ");
                         cornerSymbolsF.put(CardCorners.values()[i], Symbol.valueOf(partsF[i]));
-                    }
-                    else if (i ==  partsF.length - 1) point = Integer.parseInt(partsF[i]);
+                    } else if (i == partsF.length - 1) point = Integer.parseInt(partsF[i]);
                     else {
                         // SCORE REQUIREMENT DOPO LA ,
                         if (Objects.equals(partsF[i], ",")) {
@@ -180,6 +175,7 @@ public class GoldDeck implements Deckable {
                             int quantity = Integer.parseInt(partsF[i]);
                             i++;
                             placementRequirementsF.put(Symbol.valueOf(partsF[i]), quantity);
+
                         }
                     }
 
@@ -202,6 +198,10 @@ public class GoldDeck implements Deckable {
                         kingdom = Symbol.NONE;
                         break;
                 }
+                /*for (int j = 0; j < 4; j++) {
+                    System.out.println("corner: " + CardCorners.values()[j] + " symbol: " + cornerSymbolsF.get(CardCorners.values()[j]) + " Kingdom: "+kingdom );
+                }*/
+
                 GoldFrontFace frontFace = new GoldFrontFace("GOLDFRONT", cornerSymbolsF, point, placementRequirementsF, scoreRequirementsF, kingdom);
 
                 // DA QUI E DA VEDERE
@@ -220,22 +220,8 @@ public class GoldDeck implements Deckable {
 
             e.printStackTrace();
         }
-        /*This is to print to check if the cards are generated correctly
-         for(Card card : this.cards) {
-             System.out.println("Front Corner Symbols:");
-             card.getFace(FRONT).getCornerSymbols().forEach((key, value) -> System.out.println(value));
-             System.out.print("Front Points:");
-             System.out.println(card.getFace(FRONT).getScore());
-             System.out.println("Front Placement Requirements:");
-             card.getFace(FRONT).getPlacementRequirements().forEach((key, value) -> {if (value> 0) System.out.println(key + " " + value);});
-             System.out.println("Front Score Requirements:");
-             card.getFace(FRONT).getScoreRequirements().forEach((key, value) -> {if (value> 0) System.out.println(key + " " + value);});
 
-             System.out.println("Back Center Symbols:");
-             card.getFace(BACK).getCenterSymbols().forEach(System.out::println);
-             System.out.println();
-            }
-        //*/
+
 
 
     }

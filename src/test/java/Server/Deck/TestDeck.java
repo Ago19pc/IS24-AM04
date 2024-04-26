@@ -2,7 +2,7 @@ package Server.Deck;
 
 import Server.Card.*;
 import Server.Enums.DeckPosition;
-
+import Server.Enums.Face;
 import Server.Exception.AlreadyFinishedException;
 import org.junit.jupiter.api.Test;
 
@@ -67,6 +67,12 @@ public class TestDeck {
         assertEquals (38, goldDeck.getNumberOfCards());
         for (int i = 0; i < 38; i++) {
             Card drawnCard = goldDeck.popCard(DeckPosition.DECK);
+            System.out.println(drawnCard.getCornerFace(Face.FRONT).getCornerSymbols());
+            System.out.println(drawnCard.getCornerFace(Face.FRONT).getKingdom());
+            System.out.println(drawnCard.getCornerFace(Face.FRONT).getPlacementRequirements());
+            System.out.println(drawnCard.getCornerFace(Face.FRONT).getScoreRequirements());
+            System.out.println(drawnCard.getCornerFace(Face.FRONT).getScore());
+            System.out.println(" ");
             assertDoesNotThrow(() -> {
                 GoldCard card = (GoldCard) drawnCard;
             });
