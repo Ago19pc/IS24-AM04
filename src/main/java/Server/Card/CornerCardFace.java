@@ -5,6 +5,7 @@ import Server.Enums.Symbol;
 
 import java.io.Serializable;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class CornerCardFace extends EmptyCardFace implements Serializable {
@@ -32,51 +33,66 @@ public class CornerCardFace extends EmptyCardFace implements Serializable {
      * Returns the corner symbols
      * @return Map<Integer, Symbol> the corner symbols
      */
-    public Map<CardCorners, Symbol> getCornerSymbols() {
+    public Map<CardCorners, Symbol> getCornerSymbols() throws UnsupportedOperationException {
         return cornerSymbols;
     }
 
     /**
      * @param placementTurn the placement turn
      */
-    public void setPlacementTurn(int placementTurn) {
+    public void setPlacementTurn(int placementTurn) throws UnsupportedOperationException {
         this.placementTurn = placementTurn;
     }
     /**
      * Returns the placement turn of card to know what card is on top
      * @return int the placement turn
      */
-    public int getPlacementTurn() {
+    public int getPlacementTurn() throws UnsupportedOperationException {
         return placementTurn;
     }
 
     @Override
-    public int getXCoord() {
+    public int getXCoord() throws UnsupportedOperationException{
         return xCoord;
     }
 
     @Override
-    public int getYCoord() {
+    public int getYCoord() throws UnsupportedOperationException {
         return yCoord;
     }
 
     @Override
-    public void setXCoord(int xCoord) {
+    public void setXCoord(int xCoord) throws UnsupportedOperationException{
         this.xCoord = xCoord;
     }
 
     @Override
-    public void setYCoord(int yCoord) {
+    public void setYCoord(int yCoord) throws UnsupportedOperationException{
         this.yCoord = yCoord;
     }
 
     @Override
-    public Map<Symbol, Integer> getScoreRequirements(){
-        return null;
+    public Map<Symbol, Integer> getScoreRequirements() throws UnsupportedOperationException{
+        throw new UnsupportedOperationException("Corner card Faces do not have score requirements");
     }
 
     @Override
-    public int getScore(){
-        return 0;
+    public int getScore() throws UnsupportedOperationException {
+        throw new UnsupportedOperationException("Corner card Faces do not have scores");
+    }
+
+    @Override
+    public List<Symbol> getCenterSymbols() throws UnsupportedOperationException{
+        throw new UnsupportedOperationException("Corner card Faces do not have center symbols");
+    }
+
+    @Override
+    public Map<Symbol, Integer> getPlacementRequirements() throws UnsupportedOperationException{
+        throw new UnsupportedOperationException("Corner card Faces do not have placement requirements");
+    }
+
+    @Override
+    public Symbol getKingdom() throws UnsupportedOperationException{
+        throw new UnsupportedOperationException("Corner card Faces do not have kingdom symbols");
     }
 }

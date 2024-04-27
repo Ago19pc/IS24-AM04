@@ -1,12 +1,10 @@
 package Server.Deck;
 
-import Server.Card.Card;
-import Server.Card.RegularBackFace;
-import Server.Card.ResourceCard;
-import Server.Card.ResourceFrontFace;
+import Server.Card.*;
 import Server.Enums.CardCorners;
 import Server.Enums.DeckPosition;
 import Server.Enums.Symbol;
+import Server.Exception.AlreadyFinishedException;
 import Server.Exception.IncorrectDeckPositionException;
 
 import java.io.BufferedReader;
@@ -41,7 +39,6 @@ public class ResourceDeck implements Deckable {
     void shuffle() {
         // shuffle the deck
         Collections.shuffle(cards);
-        System.out.println(this.toString() + "shuffle");
     }
 
     /**
@@ -50,9 +47,14 @@ public class ResourceDeck implements Deckable {
     public void moveCardToBoard(DeckPosition where_to) throws IncorrectDeckPositionException {
         if (where_to == DECK)
             throw new IncorrectDeckPositionException("Cannot add card to the deck, only to FIST_CARD or SECOND_CARD.");
-        else
-            System.out.println(this.toString() + "moveCardToBoard");
-        Card cardToMove = popCard(DECK);
+
+
+        Card cardToMove;
+        try{
+            cardToMove = popCard(DECK);
+        } catch (AlreadyFinishedException e) {
+            cardToMove = null;
+        }
         addCard(cardToMove, where_to);
     }
 
@@ -71,19 +73,17 @@ public class ResourceDeck implements Deckable {
      * @param position the position pop the card from
      * @return Card the popped card
      */
-    public ResourceCard popCard(DeckPosition position){
-        try {
+    public ResourceCard popCard(DeckPosition position) throws  AlreadyFinishedException{
+
             if (position == DECK) {
-                return cards.remove(0);
+                return (ResourceCard) cards.remove(0);
             } else {
-                ResourceCard drawnCard = boardCards.remove(position);
-                moveCardToBoard(position);
-                return drawnCard;
+                if(boardCards.get(position) == null){
+                    throw new AlreadyFinishedException("There is no card in the position " + position);
+                }
+                return (ResourceCard) getBoardCard().get(position);
             }
-        } catch (IncorrectDeckPositionException e) {
-            e.printStackTrace();
-            return null;
-        }
+
     }
 
     /**
@@ -130,6 +130,7 @@ public class ResourceDeck implements Deckable {
             String lineF;
             int cardNumber = 0;
             while ((lineF = readerFRONT.readLine()) != null) {
+                //System.out.println("generate card " + cardNumber);
                 String[] partsF = lineF.split(" ");
 
                 String partsB = readerBACK.readLine();
@@ -138,6 +139,8 @@ public class ResourceDeck implements Deckable {
                 Map<CardCorners, Symbol> cornerSymbolsF = new HashMap<>();
                 int point = 0;
                 for(int i = 0; i < 4; i++){
+                    //System.out.print(CardCorners.values()[i]);
+                    //System.out.println(Symbol.valueOf(partsF[i]));
                     cornerSymbolsF.put(CardCorners.values()[i], Symbol.valueOf(partsF[i]));
                 }
 
@@ -183,6 +186,7 @@ public class ResourceDeck implements Deckable {
                 cardNumber++;
             }
         } catch (Exception e) {
+            System.out.println("An error occurred while generating starting cards");
             e.printStackTrace();
         }
 

@@ -9,18 +9,21 @@ import Server.Deck.GoldDeck;
 import Server.Deck.ResourceDeck;
 import Server.Enums.CardCorners;
 import Server.Enums.Symbol;
+import Server.Exception.AlreadySetException;
 import Server.Player.Player;
 import Server.Player.PlayerInstance;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
 import java.util.*;
 
 
 public class GameModelInstance implements GameModel{
-    private final ResourceDeck resourceDeck;
-    private final GoldDeck goldDeck;
-    private final AchievementDeck achievementDeck;
-    private final List<StartingCard> startingCards;
+    private ResourceDeck resourceDeck;
+    private GoldDeck goldDeck;
+    private AchievementDeck achievementDeck;
+    private List<StartingCard> startingCards;
     private int turn;
     private boolean isEndGamePhase;
     private final Chat chat;
@@ -29,17 +32,10 @@ public class GameModelInstance implements GameModel{
 
 
     public GameModelInstance() {
-        System.out.println("GameModelInstance");
-        resourceDeck = new ResourceDeck();
-        goldDeck = new GoldDeck();
-        achievementDeck = new AchievementDeck();
         chat = new Chat();
         isEndGamePhase = false;
         turn = 0;
-        startingCards = new ArrayList<>();
-        generateStartingCards();
         playerList = new ArrayList<>();
-
     }
 
 
@@ -71,6 +67,9 @@ public class GameModelInstance implements GameModel{
             List<Symbol> centerSymbols = new ArrayList<>();
             for (int i = 0; i < partsF.length; i++) {
                 if (i < 4) {
+                    //System.out.print(CardCorners.values()[i]);
+                    //System.out.print(" ");
+                    //System.out.println(Symbol.valueOf(partsF[i]));
                     cornerSymbolsF.put(CardCorners.values()[i], Symbol.valueOf(partsF[i]));
                 }
                 else centerSymbols.add(Symbol.valueOf(partsF[i]));
@@ -90,7 +89,8 @@ public class GameModelInstance implements GameModel{
             startingCards.add(card);
         }
     } catch (Exception e) {
-        e.printStackTrace();
+            System.out.println("An error occurred while generating starting cards");
+            e.printStackTrace();
     }       
        Collections.shuffle(startingCards);
     
@@ -101,15 +101,23 @@ public class GameModelInstance implements GameModel{
         for (PlayerInstance player : playerList) {
             playerListToReturn.add((Player) player);
         }
-
         return playerListToReturn;
     }
+    public void setPlayerList(List<Player> playerList) {
+        this.playerList.clear();
+        for (Player player : playerList) {
+            this.playerList.add((PlayerInstance) player);
+        }
+    }
 
-
-    public void addPlayer(Player player) {
-        playerList.add((PlayerInstance) player);
-
-
+    public void addPlayer(Player player) throws IllegalArgumentException{
+        for (PlayerInstance playerInstance : playerList) {
+            if (playerInstance.getName().equals(player.getName())) {
+                throw new IllegalArgumentException("Player with same name already exists");
+            }
+        }
+        PlayerInstance playerInstance = (PlayerInstance) player;
+        playerList.add(playerInstance);
     }
 
     /**
@@ -172,7 +180,10 @@ public class GameModelInstance implements GameModel{
      * Set the game to the end game phase
      */
     @Override
-    public void setEndGamePhase() {
+    public void setEndGamePhase() throws AlreadySetException {
+        if(isEndGamePhase){
+            throw new AlreadySetException("The game is already in the end game phase");
+        }
         this.isEndGamePhase = true;
     }
 
@@ -184,12 +195,46 @@ public class GameModelInstance implements GameModel{
         return this.chat;
     }
 
-    public void removePlayer(Player player) {
-        playerList.remove(player);
+    public void removePlayer(Player player) throws IllegalArgumentException{
+        boolean removed = false;
+        for (PlayerInstance playerInstance : playerList) {
+            if (playerInstance.getName().equals(player.getName())) {
+                playerList.remove(playerInstance);
+                removed = true;
+                break;
+            }
+        }
+        if (!removed) {
+            throw new IllegalArgumentException("Player not found");
+        }
     }
-
-
     public void shufflePlayerList() {
         Collections.shuffle(playerList);
+    }
+
+    @Override
+    public void createGoldResourceDecks() throws AlreadySetException {
+        if(goldDeck != null || resourceDeck != null){
+            throw new AlreadySetException("Gold and resource decks already created");
+        }
+        resourceDeck = new ResourceDeck();
+        goldDeck = new GoldDeck();
+    }
+
+    @Override
+    public void createStartingCards() throws AlreadySetException {
+        if(startingCards != null){
+            throw new AlreadySetException("Starting cards already created");
+        }
+        startingCards = new ArrayList<>();
+        generateStartingCards();
+    }
+
+    @Override
+    public void createAchievementDeck() throws AlreadySetException {
+        if(achievementDeck != null){
+            throw new AlreadySetException("Achievement deck already created");
+        }
+        achievementDeck = new AchievementDeck();
     }
 }

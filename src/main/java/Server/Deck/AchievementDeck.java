@@ -6,6 +6,7 @@ import Server.Card.Card;
 import Server.Card.EmptyCardFace;
 import Server.Enums.DeckPosition;
 import Server.Enums.Symbol;
+import Server.Exception.AlreadyFinishedException;
 import Server.Exception.IncorrectDeckPositionException;
 
 import java.io.BufferedReader;
@@ -41,7 +42,6 @@ public class AchievementDeck implements Deckable{
     void shuffle() {
         // shuffle the deck
         Collections.shuffle(cards);
-        System.out.println(this.toString() + "shuffle");
     }
 
     /**
@@ -50,9 +50,14 @@ public class AchievementDeck implements Deckable{
     public void moveCardToBoard(DeckPosition where_to) throws IncorrectDeckPositionException {
         if (where_to == DECK)
             throw new IncorrectDeckPositionException("Cannot add card to the deck, only to FIST_CARD or SECOND_CARD.");
-        else
-            System.out.println(this.toString() + "moveCardToBoard");
-        Card cardToMove = popCard(DECK);
+
+        Card cardToMove;
+        try{
+            cardToMove = popCard(DECK);
+        } catch (AlreadyFinishedException e) {
+            cardToMove = null;
+        }
+
         addCard(cardToMove, where_to);
     }
 
@@ -113,6 +118,7 @@ public class AchievementDeck implements Deckable{
                 this.cards.add(card);
             }
         } catch (Exception e) {
+            System.out.println("An error occurred while generating cards");
             e.printStackTrace();
         }
             
@@ -120,11 +126,15 @@ public class AchievementDeck implements Deckable{
 
     }
     @Override
-    public AchievementCard popCard(DeckPosition position) {
+    public AchievementCard popCard(DeckPosition position) throws AlreadyFinishedException {
         if(position == DECK){
+            if(cards.isEmpty())
+                throw new AlreadyFinishedException("Achievement Deck is empty");
             return (AchievementCard) cards.remove(0);
         } else {
-            System.out.println(getBoardCard().get(position));
+            if (boardCards.get(position) == null) {
+                throw new AlreadyFinishedException("No card in the specified position");
+            }
             return (AchievementCard) getBoardCard().get(position);
         }
     }

@@ -11,7 +11,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class TestManuscript {
     @Test
@@ -42,15 +42,9 @@ public class TestManuscript {
         StartingFrontFace startingFrontFace = new StartingFrontFace("startingfront.jpeg", new HashMap<>(), new ArrayList<>());
         CornerCardFace startingBackFace = new CornerCardFace("startingback.jpeg", new HashMap<>());
         ResourceFrontFace resourceFrontFace = new ResourceFrontFace("resourcefront.jpeg", new HashMap<>(), 0, Symbol.ANIMAL);
-        RegularBackFace resourceBackFace = new RegularBackFace("regularback.jpeg", new ArrayList<>(List.of(Symbol.ANIMAL)));
-        GoldFrontFace goldFrontFace = new GoldFrontFace("goldfront.jpeg", new HashMap<>(), 0, new HashMap<>(), new HashMap<>(), Symbol.BUG);
         RegularBackFace goldBackFace = new RegularBackFace("regularback2.jpeg", new ArrayList<>(List.of(Symbol.BUG)));
         ResourceFrontFace resourceFrontFace2 = new ResourceFrontFace("resourcefront2.jpeg", new HashMap<>(), 0, Symbol.FUNGUS);
-        RegularBackFace resourceBackFace2 = new RegularBackFace("regularback3.jpeg", new ArrayList<>(List.of(Symbol.FUNGUS)));
         StartingCard startingCard = new StartingCard(startingFrontFace, startingBackFace);
-        /*ResourceCard resourceCard = new ResourceCard(resourceFrontFace, resourceBackFace);
-        GoldCard goldCard = new GoldCard(goldFrontFace, goldBackFace);
-        ResourceCard resourceCard2 = new ResourceCard(resourceFrontFace2, resourceBackFace2);*/
         Manuscript manuscript = new Manuscript(startingCard, Face.FRONT);
         manuscript.addCard(1,1, resourceFrontFace,1);
         manuscript.addCard(0,2, goldBackFace,1);
@@ -281,5 +275,56 @@ public class TestManuscript {
         assertEquals(0, manuscript.calculatePoints(achievementCard14));
         assertEquals(0, manuscript.calculatePoints(achievementCard15));
         assertEquals(0, manuscript.calculatePoints(achievementCard16));
+    }
+
+    @Test
+    public void testPlayability(){
+        Map<CardCorners, Symbol> startingCornerSymbols = new HashMap<>();
+        startingCornerSymbols.put(CardCorners.TOP_LEFT, Symbol.BOTTLE);
+        startingCornerSymbols.put(CardCorners.TOP_RIGHT, Symbol.PLANT);
+        startingCornerSymbols.put(CardCorners.BOTTOM_LEFT, Symbol.EMPTY);
+        startingCornerSymbols.put(CardCorners.BOTTOM_RIGHT, Symbol.FUNGUS);
+        StartingFrontFace startingFrontFace = new StartingFrontFace("startingfront.jpeg", startingCornerSymbols, new ArrayList<>());
+        CornerCardFace startingBackFace = new CornerCardFace("startingback.jpeg", new HashMap<>());
+        StartingCard startingCard = new StartingCard(startingFrontFace, startingBackFace);
+        Manuscript manuscript = new Manuscript(startingCard, Face.FRONT);
+        Map<CardCorners, Symbol> cornerSymbols = new HashMap<>();
+        cornerSymbols.put(CardCorners.TOP_LEFT, Symbol.BUG);
+        cornerSymbols.put(CardCorners.TOP_RIGHT, Symbol.NONE);
+        cornerSymbols.put(CardCorners.BOTTOM_LEFT, Symbol.NONE);
+        cornerSymbols.put(CardCorners.BOTTOM_RIGHT, Symbol.NONE);
+        ResourceFrontFace frontface = new ResourceFrontFace("frontface.jpeg", cornerSymbols, 0, Symbol.BUG);
+        manuscript.addCard(1, 1, frontface, 1);
+        Map<CardCorners, Symbol> cornerSymbols2 = new HashMap<>();
+        cornerSymbols2.put(CardCorners.TOP_LEFT, Symbol.BUG);
+        cornerSymbols2.put(CardCorners.TOP_RIGHT, Symbol.ANIMAL);
+        cornerSymbols2.put(CardCorners.BOTTOM_LEFT, Symbol.NONE);
+        cornerSymbols2.put(CardCorners.BOTTOM_RIGHT, Symbol.FUNGUS);
+        GoldFrontFace frontface2 = new GoldFrontFace("frontface2.jpeg", cornerSymbols2, 0, new HashMap<>(), new HashMap<>(), Symbol.BUG);
+        //you cannot have more than one corner on the same card
+        assertFalse(manuscript.isPlaceable(-1, 0, frontface2));
+        assertFalse(manuscript.isPlaceable(0, 1, frontface2));
+        //you cannot place a card on another one
+        assertFalse(manuscript.isPlaceable(0, 0, frontface2));
+        //a card cannot be placed on NONE
+        assertFalse(manuscript.isPlaceable(2, 2, frontface2));
+        //you can, however, place a card that has a NONE corner on another one
+        Map<CardCorners, Symbol> cornerSymbols3 = new HashMap<>();
+        cornerSymbols3.put(CardCorners.TOP_LEFT, Symbol.NONE);
+        cornerSymbols3.put(CardCorners.TOP_RIGHT, Symbol.NONE);
+        cornerSymbols3.put(CardCorners.BOTTOM_LEFT, Symbol.NONE);
+        cornerSymbols3.put(CardCorners.BOTTOM_RIGHT, Symbol.NONE);
+        ResourceFrontFace frontface3 = new ResourceFrontFace("frontface3.jpeg", cornerSymbols3, 0, Symbol.BUG);
+        assertTrue(manuscript.isPlaceable(-1, -1, frontface3));
+        //you need to meet the placement requirements
+        Map<CardCorners, Symbol> cornerSymbols4 = new HashMap<>();
+        cornerSymbols4.put(CardCorners.TOP_LEFT, Symbol.BUG);
+        cornerSymbols4.put(CardCorners.TOP_RIGHT, Symbol.NONE);
+        cornerSymbols4.put(CardCorners.BOTTOM_LEFT, Symbol.NONE);
+        cornerSymbols4.put(CardCorners.BOTTOM_RIGHT, Symbol.NONE);
+        Map<Symbol, Integer> placementRequirements = new HashMap<>();
+        placementRequirements.put(Symbol.FUNGUS, 3);
+        GoldFrontFace frontface4 = new GoldFrontFace("frontface4.jpeg", cornerSymbols4, 0, placementRequirements, new HashMap<>(), Symbol.BUG);
+        assertFalse(manuscript.isPlaceable(-1, -1, frontface4));
     }
 }

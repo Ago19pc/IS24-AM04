@@ -1,6 +1,5 @@
 package Server.Card;
 
-import Server.Enums.Decks;
 import Server.Enums.Face;
 
 import java.io.Serializable;
@@ -33,7 +32,7 @@ public class StartingCard implements Card, Serializable {
      * @param face to return
      * @return CornerCardFace the face of the card
      */
-    public CornerCardFace getCornerFace(Face face) {
+    public CornerCardFace getCornerFace(Face face) throws UnsupportedOperationException{
         return face == Face.FRONT ? frontFace : backFace;
     }
 

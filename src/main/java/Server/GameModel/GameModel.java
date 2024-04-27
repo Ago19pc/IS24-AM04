@@ -5,6 +5,7 @@ import Server.Chat.Chat;
 import Server.Deck.AchievementDeck;
 import Server.Deck.GoldDeck;
 import Server.Deck.ResourceDeck;
+import Server.Exception.AlreadySetException;
 import Server.Player.Player;
 
 import java.util.List;
@@ -49,7 +50,7 @@ public interface GameModel {
      * Set the game to the end game phase
      *
      */
-    public void setEndGamePhase();
+    public void setEndGamePhase() throws AlreadySetException;
 
     /**
      * @return Chat the chat
@@ -59,21 +60,41 @@ public interface GameModel {
      * adds a player to the list of players
      * @param player the player
      */
-    public void addPlayer(Player player);
-    /**
+    public void addPlayer(Player player) throws IllegalArgumentException;
+   /**
      * removes a player from the list of players
      * @param player the player
      */
-    public void removePlayer(Player player);
+    public void removePlayer(Player player) throws IllegalArgumentException;
 
     /**
      * @return List<Player> the list of players
      */
     public List<Player> getPlayerList();
     /**
+     * sets the player list
+     * @param playerList the player list
+     */
+    public void setPlayerList(List<Player> playerList);
+    /**
      * shuffles the player list
      * @return void
      */
     public void shufflePlayerList();
+
+    /**
+     * Creates gold and resource decks
+     */
+    public void createGoldResourceDecks() throws AlreadySetException;
+
+    /**
+     * Creates starting cards
+     */
+    public void createStartingCards() throws AlreadySetException;
+
+    /**
+     * Creates achievement deck
+     */
+    public void createAchievementDeck() throws AlreadySetException;
 
 }

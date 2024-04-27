@@ -1,6 +1,5 @@
 package Server.Card;
 
-import Server.Enums.Decks;
 import Server.Enums.Face;
 
 import java.io.Serializable;
@@ -16,11 +15,6 @@ public interface Card extends Serializable {
      */
     public CardFace getFace(Face face);
 
-    public CornerCardFace getCornerFace(Face face);
-
-    /**
-     * return the Decks' card
-     * @return Decks the type of the card
-     */
+    public CornerCardFace getCornerFace(Face face) throws UnsupportedOperationException;
 
 }

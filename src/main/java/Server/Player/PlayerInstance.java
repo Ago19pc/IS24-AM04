@@ -2,9 +2,13 @@ package Server.Player;
 
 import Server.Card.AchievementCard;
 import Server.Card.Card;
+import Server.Card.ResourceCard;
 import Server.Card.StartingCard;
 import Server.Enums.Color;
 import Server.Enums.Face;
+import Server.Exception.AlreadySetException;
+import Server.Exception.TooFewElementsException;
+import Server.Exception.TooManyElementsException;
 import Server.Manuscript.Manuscript;
 
 import java.util.LinkedList;
@@ -12,7 +16,7 @@ import java.util.List;
 
 public class PlayerInstance implements Player {
     private AchievementCard secretObjective;
-    private final List<Card> handCards;
+    private final List<ResourceCard> handCards;
     private Color color;
     private final String name;
     private int points;
@@ -31,20 +35,24 @@ public class PlayerInstance implements Player {
      * @param card the card to add
      */
     @Override
-    public void addCardToHand(Card card) {
-        handCards.add(card);
-        System.out.println("addCardToHand");
+    public void addCardToHand(Card card) throws TooManyElementsException{
+        if(handCards.size() > 2){
+            throw new TooManyElementsException("Player hand is full");
+        }
+        handCards.add((ResourceCard) card);
     }
 
     /**
      * Remove a card from the player's hand
      *
-     * @param card the card to remove
+     * @param position the position of the card to remove
      */
     @Override
-    public void removeCardFromHand(Card card) {
-        handCards.remove(card);
-        System.out.println("removeCardFromHand");
+    public void removeCardFromHand(int position) throws IndexOutOfBoundsException, TooFewElementsException{
+        if(position < 0 || position >= handCards.size()){
+            throw new IndexOutOfBoundsException("Position out of bounds");
+        }
+        handCards.remove(position);
     }
 
     /**
@@ -52,8 +60,11 @@ public class PlayerInstance implements Player {
      */
     @Override
     public List<Card> getHand() {
-        System.out.println("getHand");
-        return handCards;
+        List<Card> handToReturn = new LinkedList<>();
+        for(ResourceCard card : handCards){
+            handToReturn.add((Card) card);
+        }
+        return handToReturn;
     }
 
     /**
@@ -61,7 +72,6 @@ public class PlayerInstance implements Player {
      */
     @Override
     public Manuscript getManuscript() {
-        System.out.println("getManuscript");
         return manuscript;
     }
 
@@ -78,7 +88,6 @@ public class PlayerInstance implements Player {
      */
     @Override
     public Color getColor() {
-        System.out.println("getColor");
         return color;
     }
 
@@ -87,7 +96,6 @@ public class PlayerInstance implements Player {
      */
     @Override
     public AchievementCard getSecretObjective() {
-        System.out.println("getSecretObjective");
         return secretObjective;
     }
 
@@ -96,7 +104,6 @@ public class PlayerInstance implements Player {
      */
     @Override
     public int getPoints() {
-        System.out.println("getPoints");
         return points;
     }
 
@@ -106,9 +113,11 @@ public class PlayerInstance implements Player {
      * @param achievementCard the secret objective card
      */
     @Override
-    public void setSecretObjective(AchievementCard achievementCard) {
+    public void setSecretObjective(AchievementCard achievementCard) throws AlreadySetException{
+        if(this.secretObjective != null){
+            throw new AlreadySetException("Secret objective already set");
+        }
         this.secretObjective = achievementCard;
-        System.out.println("setSecretObjective");
     }
 
     /**
@@ -129,7 +138,6 @@ public class PlayerInstance implements Player {
     @Override
     public void addPoints(int num) {
         this.points += num;
-        System.out.println("addPoints");
     }
 
     /**
@@ -139,9 +147,11 @@ public class PlayerInstance implements Player {
      * @param face         the face of the starting card
      */
     @Override
-    public void initializeManuscript(StartingCard startingCard, Face face) {
+    public void initializeManuscript(StartingCard startingCard, Face face) throws AlreadySetException{
+        if(this.manuscript != null){
+            throw new AlreadySetException("Manuscript already initialized");
+        }
         this.manuscript = new Manuscript(startingCard, face);
-        System.out.println("initializeManuscript");
     }
 
     public void setReady(boolean ready) {

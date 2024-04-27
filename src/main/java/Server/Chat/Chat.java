@@ -8,9 +8,7 @@ import java.util.List;
 public class Chat {
     private final List<Message> messages;
 
-
     public Chat(){
-
         this.messages = new LinkedList<>();
         System.out.println(this.toString() + "Chat created");
     }
@@ -26,7 +24,7 @@ public class Chat {
     /**
      * Add a message to the chat
      * @param message the text of the message
-     * @param player the player who sent the message
+     * @param sender the player who sent the message
      */
     public void addMessage(String message, Player player) {
         Message m = new Message(message, player.getName());
@@ -38,7 +36,6 @@ public class Chat {
         messages.add(m);
     }
 
-
     /**
      * @return List<Message> the messages
      */
@@ -46,4 +43,3 @@ public class Chat {
         return messages;
     }
 }
-
