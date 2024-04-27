@@ -1,7 +1,10 @@
 package Server.Connections;
 
 import Client.Connection.ClientConnectionHandler;
+import ConnectionUtils.MessagePacket;
 import ConnectionUtils.MessageUtils;
+import Server.Chat.Message;
+import Server.Exception.ServerExecuteNotCallableException;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -28,23 +31,35 @@ public class ServerReceiver extends Thread {
 
     /**
      * Run method for the thread
-     * This method reads the messages from the server and calls the demuxe them to apply the correct event
+     * This method reads the messages and executes them
      */
     @Override
     public void run() {
         while (true) {
+            MessagePacket packet;
+
             try {
                 String resp = in.readLine();
-                System.out.println(resp);
-                // Capisci il tipo di messaggio dal prefisso (serve a scegliere il tipo di evento)
-                messageUtils.server_demux(resp, clientHandler.threadId());
+                packet = new MessagePacket(resp);
 
+                try {
+                    synchronized (serverConnectionHandler.getController()) {
+                        packet.getPayload().serverExecute(serverConnectionHandler.getController());
+                        System.out.println("RECEIVED MESSAGE AND EXECUTED");
+                        serverConnectionHandler.getController().notifyAll();
+                    }
+                }
+                catch (Exception e) {
+                    System.out.println("ServerReciver: Error with synconized block");
+                }
 
 
             } catch (Exception e) {
-                System.out.println("MIIIINCHIA");
+                System.out.println("Error reading from socket");
+                e.printStackTrace();
                 throw new RuntimeException("Error reading from socket", e);
             }
+
 
         }
     }

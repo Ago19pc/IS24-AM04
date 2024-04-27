@@ -1,8 +1,11 @@
 package Server.Controller;
 
 import Server.Card.AchievementCard;
+import Server.Card.Card;
 import Server.Card.StartingCard;
 import Server.Chat.Message;
+import Server.Connections.ServerConnectionHandler;
+import Server.Deck.Deckable;
 import Server.Enums.Color;
 import Server.Enums.DeckPosition;
 import Server.Enums.Decks;
@@ -19,7 +22,9 @@ public interface Controller {
      * adds a player to the list of players
      * @param player the player
      */
-    public void addPlayer(Player player) throws TooManyPlayersException, IllegalArgumentException;
+    public void addPlayer(Player player) throws TooManyPlayersException, IllegalArgumentException, TooManyPlayersException;
+
+    public void addPlayer(String name);
 
     /**
      * removes a player from the list of players
@@ -34,6 +39,8 @@ public interface Controller {
      * shuffle the player list
      */
     public void shufflePlayerList();
+
+
     /**
      * set the player color
      * @param color the color
@@ -61,7 +68,7 @@ public interface Controller {
      * @param player the player
      * @param card the card
      */
-    public void setSecretObjectiveCard(Player player, AchievementCard card) throws AlreadySetException, AlreadyFinishedException, MissingInfoException;
+    public void setSecretObjectiveCard(Player player, AchievementCard card) throws AlreadySetException, AlreadyFinishedException, MissingInfoException, AlreadySetException, AlreadyFinishedException, MissingInfoException;
     /**
      * set starting card
      * @param player the player
@@ -74,7 +81,7 @@ public interface Controller {
     /**
      * initialize the game
      */
-    public void start() throws TooFewElementsException, AlreadySetException;
+    public void start() throws TooFewElementsException, AlreadySetException, TooFewElementsException;
     /**
      * gives 2 achievement cards to all players
      */
@@ -161,6 +168,11 @@ public interface Controller {
      * loads a game from a json file
      */
     public void loadGame() throws IOException;
+
+    public Player getPlayerByName(String name) throws PlayerNotFoundByNameException;
+
+    public ServerConnectionHandler getConnectionHandler();
+
 
 }
 

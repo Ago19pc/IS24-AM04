@@ -3,11 +3,12 @@ package Server.Card;
 import Server.Enums.CardCorners;
 import Server.Enums.Symbol;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class CornerCardFace extends EmptyCardFace {
+public class CornerCardFace extends EmptyCardFace implements Serializable {
     private final Map<CardCorners, Symbol> cornerSymbols;
     private int placementTurn;
     private int xCoord;

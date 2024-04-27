@@ -1,7 +1,12 @@
 package Server.Messages;
 
+import Server.Controller.Controller;
+import Server.Exception.ServerExecuteNotCallableException;
 import Server.Player.Player;
-public class NextTurnMessage implements GeneralMessage {
+
+import java.io.Serializable;
+
+public class NextTurnMessage implements Serializable, GeneralMessage {
     private final Player player;
 
     private final int turn;
@@ -11,19 +16,15 @@ public class NextTurnMessage implements GeneralMessage {
         this.turn = turn;
     }
 
-    public Player getPlayer(){
-        return player;
+
+    @Override
+    public void serverExecute(Controller controller)throws ServerExecuteNotCallableException {
+        throw new ServerExecuteNotCallableException();
+
     }
 
-    public int getTurn(){
-        return turn;
-    }
-    public void printData(){
-        System.out.println("Player " + player.getName() + " is next in turn " + turn);
-    }
+    @Override
+    public void clientExecute() {
 
-    public boolean equals(GeneralMessage other){
-        System.out.println("NextTurnMessage equals still to be implemented.");
-        return this.player.equals(((NextTurnMessage) other).getPlayer()) && this.turn == ((NextTurnMessage) other).getTurn();
     }
 }

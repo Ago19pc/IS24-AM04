@@ -1,16 +1,22 @@
 package Server.Messages;
 
-public class EndGamePhaseMessage implements GeneralMessage {
+import Server.Controller.Controller;
+import Server.Exception.ServerExecuteNotCallableException;
 
-        @Override
-        public void printData() {
-            System.out.println("End Game Phase");
-        }
+import java.io.Serializable;
 
-        public boolean equals(GeneralMessage other){
-            System.out.println("EndGamePhaseMessage equals still to be implemented.");
-            return true;
-        }
+public class EndGamePhaseMessage implements Serializable, GeneralMessage {
 
 
+    @Override
+    public void serverExecute(Controller controller)throws ServerExecuteNotCallableException {
+        throw new ServerExecuteNotCallableException();
+
+    }
+
+    @Override
+    public void clientExecute() {
+        // avvisa il client che è il suo ulitmo turno //
+
+    }
 }

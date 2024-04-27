@@ -1,19 +1,20 @@
 package Server.Messages;
 
+import Server.Card.Card;
 import Server.Controller.Controller;
 import Server.Exception.ServerExecuteNotCallableException;
 import Server.Player.Player;
 
 import java.io.Serializable;
-import java.util.Map;
 
-public class LeaderboardMessage implements Serializable, GeneralMessage {
+public class OtherSecretCardMessage implements Serializable, GeneralMessage {
+    private final Card card;
+    private final Player player;
 
-        private final Map<Player, Integer> points;
-
-        public LeaderboardMessage(Map<Player, Integer> points){
-            this.points = points;
-        }
+    public OtherSecretCardMessage(Card card, Player player){
+        this.card = card;
+        this.player = player;
+    }
 
 
     @Override
@@ -21,7 +22,6 @@ public class LeaderboardMessage implements Serializable, GeneralMessage {
         throw new ServerExecuteNotCallableException();
 
     }
-
 
     @Override
     public void clientExecute() {

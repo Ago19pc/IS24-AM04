@@ -1,24 +1,32 @@
 package Server.Messages;
 
 import Server.Chat.Message;
+import Server.Controller.Controller;
+import Server.Exception.PlayerNotFoundByNameException;
 
-public class ChatMessage implements GeneralMessage {
+import java.io.Serializable;
+
+public class ChatMessage implements Serializable, GeneralMessage {
     private final Message message;
 
     public ChatMessage(Message message){
         this.message = message;
     }
 
-    public void printData(){
-        System.out.println("Chat Message: " + message.getMessage());
+
+
+    @Override
+    public void serverExecute(Controller controller) {
+        try {
+            controller.addMessage(message.getMessage(), controller.getPlayerByName(message.getName()));
+        } catch (PlayerNotFoundByNameException e) {
+            e.printStackTrace();
+        }
+
     }
 
-    public Message getMessage(){
-        return message;
-    }
-    public boolean equals(GeneralMessage other){
-        System.out.println("ChatMessage equals still to be implemented.");
-        return this.message.equals(((ChatMessage) other).getMessage());
-    }
+    @Override
+    public void clientExecute() {
 
+    }
 }

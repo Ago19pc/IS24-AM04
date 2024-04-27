@@ -1,9 +1,15 @@
 package Server.Messages;
 
-public interface GeneralMessage {
-    public abstract void printData();
+import Server.Controller.Controller;
+import Server.Exception.ServerExecuteNotCallableException;
 
-    public boolean equals(GeneralMessage other);
+import java.io.Serializable;
+
+public interface GeneralMessage extends Serializable {
+
+    public void serverExecute(Controller controller) throws ServerExecuteNotCallableException;
+    public void clientExecute();
+
 
 
 }

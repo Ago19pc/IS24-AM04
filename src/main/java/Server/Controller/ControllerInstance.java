@@ -13,6 +13,7 @@ import Server.GameModel.GameModel;
 import Server.GameModel.GameModelInstance;
 import Server.Manuscript.Manuscript;
 import Server.Player.Player;
+import Server.Player.PlayerInstance;
 import com.google.gson.Gson;
 
 import java.io.FileReader;
@@ -145,7 +146,12 @@ public class ControllerInstance implements Controller{
         //Notify
     }
 
-    public void removePlayer(Player player) throws IllegalArgumentException{
+    @Override
+    public void addPlayer(String name) {
+        System.out.println("This is to be done again! NOT WORKING");
+    }
+
+    public void removePlayer(Player player) {
         gameModel.removePlayer(player);
         //Notify
     }
@@ -338,6 +344,7 @@ public class ControllerInstance implements Controller{
             case RESOURCE -> {
                 Card card = gameModel.getResourceDeck().popCard(deckPosition);
                 player.addCardToHand(card);
+
             }
             case GOLD -> {
                 Card card = gameModel.getGoldDeck().popCard(deckPosition);
@@ -357,6 +364,16 @@ public class ControllerInstance implements Controller{
         }
         //Notify
     }
+    /*public Boolean isPlayable(Card card , Face face)
+    {
+        if(face.equals(Face.BACK)) return Boolean.TRUE;
+        if(card.getType() == Decks.GOLD && card.getFace(Face.FRONT).getScore() == 1 //&& gli angoli mi permetono di giocarla
+            )
+        {
+
+        }
+        return null;
+    }*/
 
     @Override
     public void endGame() throws AlreadySetException {
@@ -439,6 +456,19 @@ public class ControllerInstance implements Controller{
         FileReader fileReader = new FileReader("saves/game.json");
         gameModel = gson.fromJson(fileReader, GameModelInstance.class);
         fileReader.close();
+    }
+
+    @Override
+    public Player getPlayerByName(String name) throws PlayerNotFoundByNameException {
+        for (Player p : this.gameModel.getPlayerList()){
+            if (p.getName().equals(name)) return p;
+        }
+        throw new PlayerNotFoundByNameException(name);
+    }
+
+    @Override
+    public ServerConnectionHandler getConnectionHandler() {
+        return this.connectionHandler;
     }
 }
 
