@@ -10,6 +10,7 @@ import Server.Enums.Color;
 import Server.Enums.DeckPosition;
 import Server.Enums.Decks;
 import Server.Enums.Face;
+import Server.Exception.*;
 import Server.Player.Player;
 
 import java.io.IOException;
@@ -21,7 +22,7 @@ public interface Controller {
      * adds a player to the list of players
      * @param player the player
      */
-    public void addPlayer(Player player) throws TooManyPlayersException, IllegalArgumentException;
+    public void addPlayer(Player player) throws TooManyPlayersException, IllegalArgumentException, TooManyPlayersException;
 
     public void addPlayer(String name);
 
@@ -67,7 +68,7 @@ public interface Controller {
      * @param player the player
      * @param card the card
      */
-    public void setSecretObjectiveCard(Player player, AchievementCard card) throws AlreadySetException, AlreadyFinishedException, MissingInfoException;
+    public void setSecretObjectiveCard(Player player, AchievementCard card) throws AlreadySetException, AlreadyFinishedException, MissingInfoException, AlreadySetException, AlreadyFinishedException, MissingInfoException;
     /**
      * set starting card
      * @param player the player
@@ -80,7 +81,7 @@ public interface Controller {
     /**
      * initialize the game
      */
-    public void start() throws TooFewElementsException, AlreadySetException;
+    public void start() throws TooFewElementsException, AlreadySetException, TooFewElementsException;
     /**
      * gives 2 achievement cards to all players
      */

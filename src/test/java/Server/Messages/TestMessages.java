@@ -8,7 +8,9 @@ import Server.Connections.ServerConnectionHandler;
 import Server.Controller.Controller;
 import Server.Controller.ControllerInstance;
 import Server.Enums.*;
+import Server.Exception.AlreadySetException;
 import Server.Exception.PlayerNotFoundByNameException;
+import Server.Exception.TooFewElementsException;
 import Server.Player.Player;
 import org.junit.jupiter.api.Test;
 
@@ -22,7 +24,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class TestMessages {
     @Test
-    public void TestPlayerNameMessage() throws IOException, InterruptedException, PlayerNotFoundByNameException {
+    public void TestPlayerNameMessage() throws IOException, InterruptedException, PlayerNotFoundByNameException, TooFewElementsException, AlreadySetException {
         // CREA UN SERVER
         ServerConnectionHandler connectionHandler;
         Controller controller;

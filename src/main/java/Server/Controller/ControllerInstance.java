@@ -146,6 +146,11 @@ public class ControllerInstance implements Controller{
         //Notify
     }
 
+    @Override
+    public void addPlayer(String name) {
+        System.out.println("This is to be done again! NOT WORKING");
+    }
+
     public void removePlayer(Player player) {
         gameModel.removePlayer(player);
         //Notify
