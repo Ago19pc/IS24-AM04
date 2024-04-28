@@ -4,7 +4,10 @@ import Server.Card.Card;
 import Server.Controller.Controller;
 import Server.Enums.DeckPosition;
 import Server.Enums.Decks;
+import Server.Exception.AlreadyFinishedException;
+import Server.Exception.InvalidMoveException;
 import Server.Exception.PlayerNotFoundByNameException;
+import Server.Exception.TooManyElementsException;
 import Server.Player.Player;
 
 public class DrawCardMessage implements GeneralMessage {
@@ -23,7 +26,8 @@ public class DrawCardMessage implements GeneralMessage {
     public void serverExecute(Controller controller) {
         try {
             controller.drawCard(controller.getPlayerByName(name), this.deckPosition, this.from);
-        }catch (PlayerNotFoundByNameException e){
+        }catch (PlayerNotFoundByNameException | TooManyElementsException | InvalidMoveException |
+                AlreadyFinishedException e){
             e.printStackTrace();
         }
     }

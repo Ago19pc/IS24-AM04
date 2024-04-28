@@ -148,7 +148,12 @@ public class ControllerInstance implements Controller{
 
     @Override
     public void addPlayer(String name) {
-        System.out.println("This is to be done again! NOT WORKING");
+        Player p = new PlayerInstance(name);
+        try {
+            addPlayer(p);
+        } catch (TooManyPlayersException | IllegalArgumentException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public void removePlayer(Player player) {
