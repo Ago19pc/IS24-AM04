@@ -38,11 +38,12 @@ public class TestMessages {
         }
 
         System.out.println("Starting Controller");
-        controller.start();
+
 
         // CREA UN CLIENT
         ClientConnectionHandler cch = new ClientConnectionHandler(true);
         ClientConnectionHandler cch2 = new ClientConnectionHandler(true);
+
 
         // GENERA UN MESSAGGIO
         PlayerNameMessage playerNameMessage = new PlayerNameMessage("TestPlayer1");
@@ -93,6 +94,8 @@ public class TestMessages {
         Thread.sleep(100);
         assertTrue(controller.getPlayerList().get(0).isReady());
         assertTrue(controller.getPlayerList().get(1).isReady());
+
+        controller.start();
 
         // NOW TESTING STARTING CARD MESSAGE
         Map<CardCorners, Symbol> startingCardMap = Map.of(

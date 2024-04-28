@@ -1,6 +1,7 @@
 package Server.Messages;
 
 import Server.Controller.Controller;
+import Server.Exception.MissingInfoException;
 import Server.Exception.PlayerNotFoundByNameException;
 
 import java.io.Serializable;
@@ -17,7 +18,7 @@ public class ReadyStatusMessage implements Serializable, GeneralMessage {
     public void serverExecute(Controller controller) {
         try{
             controller.setReady(controller.getPlayerByName(this.name));
-        } catch(PlayerNotFoundByNameException e){
+        } catch(PlayerNotFoundByNameException | MissingInfoException e){
             e.printStackTrace();
         }
 

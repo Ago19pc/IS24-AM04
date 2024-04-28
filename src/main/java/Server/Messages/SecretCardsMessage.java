@@ -2,6 +2,9 @@ package Server.Messages;
 
 import Server.Card.AchievementCard;
 import Server.Controller.Controller;
+import Server.Exception.AlreadyFinishedException;
+import Server.Exception.AlreadySetException;
+import Server.Exception.MissingInfoException;
 import Server.Exception.PlayerNotFoundByNameException;
 
 import java.io.Serializable;
@@ -20,7 +23,7 @@ public class SecretCardsMessage implements Serializable, GeneralMessage {
     public void serverExecute(Controller controller) {
         try {
             controller.setSecretObjectiveCard(controller.getPlayerByName(this.name), this.secretCard);
-        } catch (PlayerNotFoundByNameException e) {
+        } catch (PlayerNotFoundByNameException | AlreadySetException | AlreadyFinishedException | MissingInfoException e) {
             e.printStackTrace();
         }
     }

@@ -68,7 +68,7 @@ public interface Controller {
      * @param player the player
      * @param card the card
      */
-    public void setSecretObjectiveCard(Player player, AchievementCard card) throws AlreadySetException, AlreadyFinishedException, MissingInfoException, AlreadySetException, AlreadyFinishedException, MissingInfoException;
+    public void setSecretObjectiveCard(Player player, AchievementCard card) throws AlreadySetException, AlreadyFinishedException, MissingInfoException;
     /**
      * set starting card
      * @param player the player
