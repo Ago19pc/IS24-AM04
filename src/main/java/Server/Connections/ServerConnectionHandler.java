@@ -187,8 +187,9 @@ public class ServerConnectionHandler extends Thread {
         }
     }
     public void sendMessage(GeneralMessage message, MessageType type, String name) {
+
         for (ClientHandler c : clients) {
-            if (clientNames.get(c.threadId()).equals(name)) {
+            if (clientNames.get(c.threadId()) == name) {
                 c.sendMessages(type, message);
             }
         }

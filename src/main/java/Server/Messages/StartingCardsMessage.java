@@ -1,7 +1,6 @@
 package Server.Messages;
 
 import Client.Controller.ClientController;
-import Server.Card.StartingCard;
 import Server.Controller.Controller;
 import Server.Enums.Face;
 import Server.Exception.AlreadySetException;
@@ -40,5 +39,6 @@ public class StartingCardsMessage implements Serializable, GeneralMessage {
         }
 
 
-    }
+
 }
+

@@ -16,7 +16,7 @@ public class PlayersOrderMessage implements Serializable, GeneralMessage {
     @Override
     public void clientExecute(ClientController controller) {
 
-        controller.
+
 
     }
 }

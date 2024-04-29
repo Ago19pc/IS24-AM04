@@ -71,7 +71,7 @@ public class TestMessages {
         assertEquals(2, controller.getPlayerList().size());
 
         assertTrue(controller.getPlayerList().stream().anyMatch(p -> p.getName().equals("TestPlayer1")));
-        assertTrue(controller.getPlayerList().stream().anyMatch(p -> p.getName().equals("TestPlayer1")));
+        assertTrue(controller.getPlayerList().stream().anyMatch(p -> p.getName().equals("TestPlayer2")));
 
         // NOW TESTING COLOR MESSAGE
         PlayerColorMessage playerColorMessage = new PlayerColorMessage("TestPlayer1", Color.RED);

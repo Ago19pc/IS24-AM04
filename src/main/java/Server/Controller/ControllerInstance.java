@@ -13,7 +13,9 @@ import Server.GameModel.GameModel;
 import Server.GameModel.GameModelInstance;
 import Server.Manuscript.Manuscript;
 import Server.Messages.NewPlayerMessage;
+import Server.Messages.PlayerColorMessage;
 import Server.Messages.PlayerNameMessage;
+import Server.Messages.UnavailableColorsMessage;
 import Server.Player.Player;
 import Server.Player.PlayerInstance;
 import com.google.gson.Gson;
@@ -136,6 +138,7 @@ public class ControllerInstance implements Controller{
     private boolean lastRound = false;
 
 
+
     public ControllerInstance(ServerConnectionHandler connectionHandler) {
         this.connectionHandler = connectionHandler;
         this.gameModel = new GameModelInstance();
@@ -147,6 +150,8 @@ public class ControllerInstance implements Controller{
         if(gameModel.getPlayerList().size()<4) {
             gameModel.addPlayer(player);
             //Notify
+            PlayerNameMessage playerNameMessage = new PlayerNameMessage(true);
+            connectionHandler.sendMessage(playerNameMessage, MessageType.PLAYERNAME, player.getName());
             NewPlayerMessage playerMessage = new NewPlayerMessage(gameModel.getPlayerList());
             connectionHandler.sendAllMessage(playerMessage, MessageType.NEWPLAYER);
         } else {
@@ -162,6 +167,7 @@ public class ControllerInstance implements Controller{
         Player p = new PlayerInstance(name);
         try {
             addPlayer(p);
+            connectionHandler.addClientName(Threadid, name);
         } catch (TooManyPlayersException | IllegalArgumentException e) {
             PlayerNameMessage playerNameMessage = new PlayerNameMessage(false);
             connectionHandler.sendMessage(playerNameMessage, MessageType.PLAYERNAME, Threadid);
@@ -199,10 +205,18 @@ public class ControllerInstance implements Controller{
         List<Color> colors = getPlayerList().stream().map(Player::getColor).collect(Collectors.toList());
         if(!colors.contains(color)){
             player.setColor(color);
+
+            //Notify
+            PlayerColorMessage playerColorMessage = new PlayerColorMessage(true);
+            connectionHandler.sendMessage(playerColorMessage, MessageType.PLAYERCOLOR, player.getName());
+            UnavailableColorsMessage unavailableColorsMessage = new UnavailableColorsMessage(colors);
+            connectionHandler.sendAllMessage(unavailableColorsMessage, MessageType.UNAVAIABLECOLORS);
+
         } else {
-            throw new IllegalArgumentException("Color already taken");
+            PlayerColorMessage playerColorMessage = new PlayerColorMessage(false);
+            connectionHandler.sendMessage(playerColorMessage, MessageType.PLAYERCOLOR, player.getName());
         }
-        //Notify
+
     }
     public void giveSecretObjectiveCards() {
         getPlayerList().forEach(player -> {
