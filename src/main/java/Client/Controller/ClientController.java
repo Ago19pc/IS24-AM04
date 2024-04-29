@@ -26,6 +26,8 @@ public class ClientController {
     private  String myName;
     private String proposedName;
     private Color myColor;
+    private Color proposedColor;
+    private List<Color> unavaiableColors;
     private boolean myReady = false;
     private  AchievementDeck achievementDeck;
     private  GoldDeck goldDeck;
@@ -138,7 +140,7 @@ public class ClientController {
         clientConnectionHandler = new ClientConnectionHandler(true, this);
 
         }
-    public void setColor(String color) {
+    public void askSetColor(String color) {
         if (myName == null) {
             System.out.println("You must set your name first");
             return;
@@ -146,11 +148,18 @@ public class ClientController {
         Color castedColor;
         try {
             castedColor = Color.valueOf(color.toUpperCase());
+            if (unavaiableColors.contains(castedColor)){
+                System.out.println("Color not avaiable, choose one from the following: ");
+                for(Color c : Color.values())
+                    if (!unavaiableColors.contains(c))
+                        System.out.println(c);
+                return;
+            }
         } catch (IllegalArgumentException e) {
             System.out.println("Invalid color, must be RED, YELLOW, BLUE or GREEN");
             return;
         }
-        myColor = castedColor;
+        proposedColor = castedColor;
         PlayerColorMessage playerColorMessage = new PlayerColorMessage(myName, castedColor);
         try {
             clientConnectionHandler.sendMessage(playerColorMessage, Server.Enums.MessageType.PLAYERCOLOR);
@@ -159,6 +168,9 @@ public class ClientController {
         }
     }
 
+    public void setColor(){
+        myColor = proposedColor;
+    }
     public void addChatMessage(Message message){
         chat.addMessage(message);
     }
@@ -192,5 +204,14 @@ public class ClientController {
     public List<Player> getPlayers() {
         return players;
     }
+
+    public Color getMyColor(){
+        return myColor;
+    }
+
+    public void setUnavaiableColors(List<Color> unavaiableColors){
+        this.unavaiableColors = unavaiableColors;
+    }
+
 
 }

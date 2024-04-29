@@ -108,11 +108,15 @@ public class ClientSender extends Thread {
                 controller.setReady();
                 break;
             case "setColor":
+                if(controller.getMyColor() != null){
+
+                    System.out.println("You already chose a color");
+                }
                 if (args.length != 2) {
                     System.out.println("Correct usage: setColor <color RED|YELLOW|BLUE|GREEN>");
                     return;
                 }
-                controller.setColor(args[1]);
+                controller.askSetColor(args[1]);
                 break;
             case "play":
 

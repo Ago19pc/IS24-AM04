@@ -9,6 +9,7 @@ import java.io.Serializable;
 public class PlayerNameMessage implements GeneralMessage, Serializable {
     private String name;
     private boolean confirmation;
+
     public PlayerNameMessage(String name) {
         this.name = name;
     }
