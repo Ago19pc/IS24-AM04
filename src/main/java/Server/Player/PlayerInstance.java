@@ -11,10 +11,11 @@ import Server.Exception.TooFewElementsException;
 import Server.Exception.TooManyElementsException;
 import Server.Manuscript.Manuscript;
 
+import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
 
-public class PlayerInstance implements Player {
+public class PlayerInstance implements Player, Serializable {
     private AchievementCard secretObjective;
     private final List<ResourceCard> handCards;
     private Color color;

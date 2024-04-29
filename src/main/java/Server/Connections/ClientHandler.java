@@ -6,8 +6,7 @@ import Server.Controller.Controller;
 import Server.Enums.MessageType;
 import Server.Messages.GeneralMessage;
 
-import java.io.*;
-import java.net.ConnectException;
+import java.io.IOException;
 import java.net.Socket;
 
 public class ClientHandler extends Thread {
@@ -76,6 +75,8 @@ public class ClientHandler extends Thread {
         return this.connectionHandler;
     }
 
-
+    public ServerReceiver getReceiver() {
+        return this.receiver;
+    }
 
 }

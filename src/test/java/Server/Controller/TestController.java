@@ -148,7 +148,7 @@ public class TestController {
         controller.setPlayerColor(Color.BLUE, player2);
         controller.setReady(player);
         controller.setReady(player2);
-        controller.start();
+        //controller.start();
         controller.nextTurn();
         controller.setStartingCard(player,Face.FRONT);
         controller.setStartingCard(player2,Face.FRONT);

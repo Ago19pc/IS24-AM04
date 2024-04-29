@@ -3,7 +3,6 @@ package Client.Controller;
 import Client.Connection.ClientConnectionHandler;
 import ConnectionUtils.MessagePacket;
 import Server.Card.Card;
-import Server.Card.CardFace;
 import Server.Card.CornerCardFace;
 import Server.Chat.Chat;
 import Server.Chat.Message;
@@ -25,6 +24,7 @@ import java.util.List;
 public class ClientController {
     private  List<Player> players;
     private  String myName;
+    private String proposedName;
     private Color myColor;
     private boolean myReady = false;
     private  AchievementDeck achievementDeck;
@@ -60,16 +60,18 @@ public class ClientController {
         return activePlayerName;
     }
 
-    public void setName(String name) {
-        myName = name;
-        PlayerNameMessage playerNameMessage = new PlayerNameMessage(myName);
+    public void askSetName(String name) {
+        proposedName = name;
+        PlayerNameMessage playerNameMessage = new PlayerNameMessage(proposedName);
         try {
             clientConnectionHandler.sendMessage(playerNameMessage, Server.Enums.MessageType.PLAYERNAME);
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
-
+    public void setName(){
+        myName = proposedName;
+    }
     public void boardInit(AchievementDeck achievementDeck, GoldDeck goldDeck, ResourceDeck resourceDeck){
         this.goldDeck = goldDeck;
         this.achievementDeck = achievementDeck;
@@ -183,8 +185,12 @@ public class ClientController {
         }
     }
 
-    public void setPlayerList (List<Player> p){
+    public void setPlayerList (List<Player> p) {
+        System.out.println("Setting player list" + p.get(0));
         this.players = p;
+    }
+    public List<Player> getPlayers() {
+        return players;
     }
 
 }

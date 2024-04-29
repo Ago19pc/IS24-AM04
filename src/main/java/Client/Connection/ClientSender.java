@@ -1,7 +1,6 @@
 package Client.Connection;
 
 import Client.Controller.ClientController;
-import Server.Enums.Color;
 import Server.Enums.Face;
 
 import java.io.IOException;
@@ -94,11 +93,16 @@ public class ClientSender extends Thread {
                 }
                 break;
             case "setName":
+                if(controller.getMyName() != null )
+                {
+                    System.out.println("You already have a name");
+                    return;
+                }
                 if (args.length != 2) {
                     System.out.println("Correct usage: setName <name>");
                     return;
                 }
-                controller.setName(args[1]);
+                controller.askSetName(args[1]);
                 break;
             case "setReady":
                 controller.setReady();

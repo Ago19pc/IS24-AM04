@@ -1,12 +1,13 @@
 package Server.Connections;
 
 
-
 import Server.Controller.Controller;
+import Server.Enums.MessageType;
+import Server.Messages.GeneralMessage;
 
-
-import java.net.*;
-import java.io.*;
+import java.io.IOException;
+import java.net.ServerSocket;
+import java.net.Socket;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -171,6 +172,26 @@ public class ServerConnectionHandler extends Thread {
 
     public List<ClientHandler> getClients() {
         return clients;
+    }
+
+    public void sendAllMessage(GeneralMessage message, MessageType type) {
+        for (ClientHandler c : clients) {
+            c.sendMessages(type, message);
+        }
+    }
+    public void sendMessage(GeneralMessage message, MessageType type, Long threadId) {
+        for (ClientHandler c : clients) {
+            if (c.threadId() == threadId) {
+                c.sendMessages(type, message);
+            }
+        }
+    }
+    public void sendMessage(GeneralMessage message, MessageType type, String name) {
+        for (ClientHandler c : clients) {
+            if (clientNames.get(c.threadId()).equals(name)) {
+                c.sendMessages(type, message);
+            }
+        }
     }
 }
 

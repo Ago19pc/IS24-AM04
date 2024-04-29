@@ -1,11 +1,10 @@
 package Server.Messages;
 
 import Client.Controller.ClientController;
+import Server.Connections.ClientHandler;
 import Server.Controller.Controller;
-import Server.Player.Player;
 
 import java.io.Serializable;
-import java.util.List;
 
 public class PlayerNameMessage implements GeneralMessage, Serializable {
     private String name;
@@ -17,7 +16,11 @@ public class PlayerNameMessage implements GeneralMessage, Serializable {
 
     @Override
     public void serverExecute(Controller controller) {
-        controller.addPlayer(this.name);
+        for (ClientHandler c: controller.getConnectionHandler().getClients()) {
+            if (c.getReceiver().threadId() == Thread.currentThread().threadId()) {
+                controller.addPlayer(this.name, c.threadId());
+            }
+        }
     }
 
     @Override

@@ -2,23 +2,18 @@ package Server.Messages;
 
 import Client.Connection.ClientConnectionHandler;
 import Client.Controller.ClientController;
-import Server.Card.CornerCardFace;
-import Server.Card.StartingCard;
-import Server.Card.StartingFrontFace;
 import Server.Connections.ServerConnectionHandler;
 import Server.Controller.Controller;
 import Server.Controller.ControllerInstance;
-import Server.Enums.*;
+import Server.Enums.Color;
+import Server.Enums.Face;
+import Server.Enums.MessageType;
 import Server.Exception.AlreadySetException;
 import Server.Exception.PlayerNotFoundByNameException;
 import Server.Exception.TooFewElementsException;
-import Server.Player.Player;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -46,21 +41,27 @@ public class TestMessages {
         ClientController clientController2 = new ClientController();
         clientController1.mainDebug();
         clientController2.mainDebug();
+        ClientController clientController3 = new ClientController();
+        clientController3.mainDebug();
        //*  clientController1.debugConnect();
       //*   clientController2.debugConnect();
         ClientConnectionHandler cch =  clientController1.getClientConnectionHandler();
         ClientConnectionHandler cch2 =  clientController2.getClientConnectionHandler();
+        ClientConnectionHandler cch3 =  clientController3.getClientConnectionHandler();
 
 
         // GENERA UN MESSAGGIO
         PlayerNameMessage playerNameMessage = new PlayerNameMessage("TestPlayer1");
-        PlayerNameMessage playerNameMessage2 = new PlayerNameMessage("TestPlayer2");
+        PlayerNameMessage playerNameMessage2 = new PlayerNameMessage("TestPlayer1");
+        PlayerNameMessage playerNameMessage3 = new PlayerNameMessage("TestPlayer2");
+
 
         // SERIALIZZA IL MESSAGGIO
         // INVIA IL MESSAGGIO
         try {
             cch.sendMessage(playerNameMessage, MessageType.PLAYERNAME);
             cch2.sendMessage(playerNameMessage2, MessageType.PLAYERNAME);
+            cch3.sendMessage(playerNameMessage3, MessageType.PLAYERNAME);
         } catch (IOException e) {
             e.printStackTrace();
             throw new IOException();
@@ -99,6 +100,7 @@ public class TestMessages {
             throw new IOException();
         }
         Thread.sleep(100);
+        assertEquals(2 , clientController1.getPlayers().size());
         assertTrue(controller.getPlayerList().get(0).isReady());
         assertTrue(controller.getPlayerList().get(1).isReady());
 

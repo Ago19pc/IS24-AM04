@@ -12,6 +12,8 @@ import Server.Exception.*;
 import Server.GameModel.GameModel;
 import Server.GameModel.GameModelInstance;
 import Server.Manuscript.Manuscript;
+import Server.Messages.NewPlayerMessage;
+import Server.Messages.PlayerNameMessage;
 import Server.Player.Player;
 import Server.Player.PlayerInstance;
 import com.google.gson.Gson;
@@ -138,28 +140,38 @@ public class ControllerInstance implements Controller{
         this.connectionHandler = connectionHandler;
         this.gameModel = new GameModelInstance();
     }
-    public void addPlayer(Player player) throws TooManyPlayersException, IllegalArgumentException {
+    public void addPlayer(Player player) throws TooManyPlayersException, IllegalArgumentException{
+        for (Player p : gameModel.getPlayerList()){
+            if (p.getName().equals(player.getName())) throw new IllegalArgumentException("Player with same name already exists");
+        }
         if(gameModel.getPlayerList().size()<4) {
             gameModel.addPlayer(player);
+            //Notify
+            NewPlayerMessage playerMessage = new NewPlayerMessage(gameModel.getPlayerList());
+            connectionHandler.sendAllMessage(playerMessage, MessageType.NEWPLAYER);
         } else {
             throw new TooManyPlayersException("Too many players");
         }
-        //Notify
+
+
     }
 
     @Override
-    public void addPlayer(String name) {
+    public void addPlayer(String name, Long Threadid) {
+
         Player p = new PlayerInstance(name);
         try {
             addPlayer(p);
         } catch (TooManyPlayersException | IllegalArgumentException e) {
-            throw new RuntimeException(e);
+            PlayerNameMessage playerNameMessage = new PlayerNameMessage(false);
+            connectionHandler.sendMessage(playerNameMessage, MessageType.PLAYERNAME, Threadid);
         }
     }
 
     public void removePlayer(Player player) {
         gameModel.removePlayer(player);
         //Notify
+
     }
     public List<Player> getPlayerList() {
         return gameModel.getPlayerList();
