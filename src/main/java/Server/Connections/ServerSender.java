@@ -1,5 +1,6 @@
 package Server.Connections;
 
+import ConnectionUtils.MessagePacket;
 import Server.Controller.Controller;
 
 import java.io.IOException;
@@ -27,10 +28,11 @@ public class ServerSender extends Thread {
         out.println(message);
     }
 
-    public void sendMessage() {
-        String message = in.nextLine();
-        out.println(message);
+    public void sendMessage(MessagePacket mp) throws IOException {
+        out.println(mp.stringify());
     }
+
+
     @Override
     public void run() {
         while (true) {

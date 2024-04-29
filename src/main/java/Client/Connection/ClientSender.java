@@ -1,10 +1,13 @@
 package Client.Connection;
 
 import Client.Controller.ClientController;
+import Server.Enums.Color;
+import Server.Enums.Face;
 
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.util.Arrays;
 import java.util.Objects;
 import java.util.Scanner;
 
@@ -76,6 +79,8 @@ public class ClientSender extends Thread {
                 System.out.println("setName <name>");
                 System.out.println("setColor <color RED|YELLOW|BLUE|GREEN>");
                 System.out.println("setReady");
+                System.out.println("chat <message>");
+                System.out.println("play <hard_pos> <x> <y> <face FRONT | BACK>");
                 break;
             case "join":
                 if (args.length != 3) {
@@ -104,6 +109,30 @@ public class ClientSender extends Thread {
                     return;
                 }
                 controller.setColor(args[1]);
+                break;
+            case "play":
+
+                if(controller.getActivePlayerName() != controller.getMyName()){System.out.println("Wait for your turn"); return;}
+                if (args.length != 5) {
+                    System.out.println("Correct usage: play <hard_pos> <x> <y> <face FRONT | BACK>");
+                    return;
+                }
+                Face face;
+                try {
+                    face = Face.valueOf(args[4].toUpperCase());
+                } catch (IllegalArgumentException e) {
+                    System.out.println("Invalid color, must be RED, YELLOW, BLUE or GREEN");
+                    return;
+                }
+                controller.askForCardPlacement(Integer.parseInt(args[1]), face, Integer.parseInt(args[2]), Integer.parseInt(args[3]));
+            case "chat":
+                if(args.length == 1){
+                    System.out.println("Correct usage: chat <message>");
+                            return;
+                }
+
+                String regeneratedMessage = Arrays.stream(args).skip(1).reduce("", (s, e) -> s + e + " ");
+                controller.sendChatMessage(regeneratedMessage);
                 break;
             default:
                 System.out.println("Invalid command");

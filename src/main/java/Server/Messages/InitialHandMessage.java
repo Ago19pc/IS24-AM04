@@ -1,5 +1,6 @@
 package Server.Messages;
 
+import Client.Controller.ClientController;
 import Server.Card.Card;
 import Server.Controller.Controller;
 import Server.Exception.ServerExecuteNotCallableException;
@@ -11,10 +12,10 @@ import java.util.Map;
 
 public class InitialHandMessage implements Serializable, GeneralMessage {
 
-    private final Map<Player, List<Card>> cards;
+    private final Card card1, card2, card3;
 
-    public InitialHandMessage(Map<Player, List<Card>> cards){
-        this.cards = cards;
+    public InitialHandMessage(Card card1, Card card2, Card card3){
+        this.card1= card1; this.card2 = card2; this.card3 = card3;
     }
 
 
@@ -25,7 +26,7 @@ public class InitialHandMessage implements Serializable, GeneralMessage {
     }
 
     @Override
-    public void clientExecute() {
-
+    public void clientExecute(ClientController controller) {
+        controller.setInitialHand(card1, card2, card3);
     }
 }

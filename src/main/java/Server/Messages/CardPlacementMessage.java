@@ -1,5 +1,6 @@
 package Server.Messages;
 
+import Client.Controller.ClientController;
 import Server.Card.Card;
 import Server.Card.CardFace;
 import Server.Controller.Controller;
@@ -13,11 +14,17 @@ import java.io.Serializable;
 
 public class CardPlacementMessage implements Serializable, GeneralMessage {
 
-    private final String name;
-    private final int hand_pos;
-    private final int xCoord;
-    private final int yCoord;
-    private final Face face;
+    private String name;
+    private int hand_pos;
+    private int xCoord;
+    private int yCoord;
+    private Face face;
+
+    private boolean isPlayable;
+
+    public CardPlacementMessage(boolean isPlayable){
+        this.isPlayable = isPlayable;
+    }
 
     public CardPlacementMessage(String name, int hand_pos, int xCoord, int yCoord, Face face) {
         this.name = name;
@@ -34,7 +41,15 @@ public class CardPlacementMessage implements Serializable, GeneralMessage {
         }
 
     }
-    public void clientExecute(){
+    public void clientExecute(ClientController controller){
+        if (isPlayable){
+            controller.cardPlacement();
+        } else {
+            // CLI
+            System.out.println("Mossa non valida, ripetere");
+            // GUI
+        }
+
         // dare il nuovo punteggio del player e il nuovo symbols count oltre alla conferma di mossa valida//
 
     }

@@ -133,6 +133,7 @@ public class ControllerInstance implements Controller{
     private int activePlayerIndex = -1;
     private boolean lastRound = false;
 
+
     public ControllerInstance(ServerConnectionHandler connectionHandler) {
         this.connectionHandler = connectionHandler;
         this.gameModel = new GameModelInstance();

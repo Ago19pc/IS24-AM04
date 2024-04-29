@@ -1,5 +1,6 @@
 package Server.Messages;
 
+import Client.Controller.ClientController;
 import Server.Controller.Controller;
 import Server.Exception.ServerExecuteNotCallableException;
 
@@ -15,8 +16,9 @@ public class EndGamePhaseMessage implements Serializable, GeneralMessage {
     }
 
     @Override
-    public void clientExecute() {
-        // avvisa il client che è il suo ulitmo turno //
+    public void clientExecute(ClientController controller) {
+
+        System.out.println("Last turn");
 
     }
 }

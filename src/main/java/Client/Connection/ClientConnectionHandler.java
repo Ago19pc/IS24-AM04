@@ -36,7 +36,7 @@ public class ClientConnectionHandler extends Thread {
             clientSocket = new Socket("localhost", 1234);
             sender = new ClientSender(this, controller);
             sender.debugSetSocket(clientSocket);
-            receiver = new ClientReceiver(this, clientSocket);
+            receiver = new ClientReceiver(this, clientSocket, controller);
                 Thread.UncaughtExceptionHandler h = new Thread.UncaughtExceptionHandler() {
                     @Override
                     public void uncaughtException(Thread th, Throwable ex) {
@@ -63,7 +63,7 @@ public class ClientConnectionHandler extends Thread {
 
     public void setSocket(Socket clientSocket) throws IOException {
         this.clientSocket = clientSocket;
-        this.receiver = new ClientReceiver(this, clientSocket);
+        this.receiver = new ClientReceiver(this, clientSocket, this.controller);
         try {
             Thread.UncaughtExceptionHandler h = new Thread.UncaughtExceptionHandler() {
                 @Override

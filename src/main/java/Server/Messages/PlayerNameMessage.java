@@ -1,5 +1,6 @@
 package Server.Messages;
 
+import Client.Controller.ClientController;
 import Server.Controller.Controller;
 import Server.Player.Player;
 
@@ -19,7 +20,7 @@ public class PlayerNameMessage implements GeneralMessage, Serializable {
     }
 
     @Override
-    public void clientExecute() {
+    public void clientExecute(ClientController controller) {
 
     }
 }

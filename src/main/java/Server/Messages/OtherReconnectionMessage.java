@@ -1,5 +1,6 @@
 package Server.Messages;
 
+import Client.Controller.ClientController;
 import Server.Controller.Controller;
 import Server.Exception.ServerExecuteNotCallableException;
 
@@ -13,7 +14,7 @@ public class OtherReconnectionMessage implements Serializable, GeneralMessage {
     }
 
     @Override
-    public void clientExecute() {
+    public void clientExecute(ClientController controller) {
 
     }
 }

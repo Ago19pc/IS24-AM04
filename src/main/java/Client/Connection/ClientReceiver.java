@@ -1,6 +1,10 @@
 package Client.Connection;
 
+import Client.Controller.ClientController;
+import ConnectionUtils.MessagePacket;
 import ConnectionUtils.MessageUtils;
+import Server.Exception.ClientExecuteNotCallableException;
+import Server.Exception.IllegalMessageTypeException;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -13,10 +17,13 @@ public class ClientReceiver extends Thread {
     private BufferedReader in;
     private ClientConnectionHandler clientConnectionHandler;
 
+    private ClientController controller;
 
-    public ClientReceiver(ClientConnectionHandler clientConnectionHandler, Socket clientSocket) throws IOException {
+
+    public ClientReceiver(ClientConnectionHandler clientConnectionHandler, Socket clientSocket, ClientController controller) throws IOException {
         this.clientConnectionHandler = clientConnectionHandler;
         this.clientSocket = clientSocket;
+        this.controller = controller;
         in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
     }
 
@@ -28,17 +35,28 @@ public class ClientReceiver extends Thread {
     @Override
     public void run() {
         while (true) {
+            MessagePacket packet;
+
             try {
                 String resp = in.readLine();
-                
-                System.out.println(resp);
-                // Capisci il tipo di messaggio dal prefisso (serve a scegliere il tipo di evento)
-                //MessageUtils messageUtils = new MessageUtils();
-                //messageUtils.client_demux(resp);
+                try {
+                    packet = new MessagePacket(resp);
+                    try {
+                        packet.getPayload().clientExecute(this.controller);
+                    } catch (ClientExecuteNotCallableException e) {
+                        System.out.println("Called client execution when should not be done");
+                    }
+                    System.out.println("Message received and executed");
+                } catch (ClassNotFoundException | IllegalMessageTypeException e) {
+                    System.out.println("Errore pacchetto");
+                    throw new RuntimeException(e);
+                }
 
 
 
-            } catch (Exception e) {
+
+
+            } catch (IOException e) {
                 System.out.println("Server Disconnected");
                 throw new RuntimeException("Error reading from socket", e);
             }

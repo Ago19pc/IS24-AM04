@@ -1,5 +1,6 @@
 package Server.Messages;
 
+import Client.Controller.ClientController;
 import Server.Controller.Controller;
 import Server.Enums.QuitOrPlayAgain;
 
@@ -23,7 +24,7 @@ public class QuitOrPlayAgainMessage implements Serializable, GeneralMessage {
     }
 
     @Override
-    public void clientExecute() {
+    public void clientExecute(ClientController controller) {
 
     }
 }

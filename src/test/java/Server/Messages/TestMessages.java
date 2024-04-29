@@ -44,8 +44,12 @@ public class TestMessages {
         // CREA UN CLIENT
         ClientController clientController1 = new ClientController();
         ClientController clientController2 = new ClientController();
-        ClientConnectionHandler cch = new ClientConnectionHandler(true, clientController1);
-        ClientConnectionHandler cch2 = new ClientConnectionHandler(true, clientController2);
+        clientController1.mainDebug();
+        clientController2.mainDebug();
+       //*  clientController1.debugConnect();
+      //*   clientController2.debugConnect();
+        ClientConnectionHandler cch =  clientController1.getClientConnectionHandler();
+        ClientConnectionHandler cch2 =  clientController2.getClientConnectionHandler();
 
 
         // GENERA UN MESSAGGIO
@@ -101,12 +105,6 @@ public class TestMessages {
 
 
         // NOW TESTING STARTING CARD MESSAGE
-        Map<CardCorners, Symbol> startingCardMap = Map.of(
-                CardCorners.TOP_LEFT, Symbol.BUG,
-                CardCorners.TOP_RIGHT, Symbol.ANIMAL,
-                CardCorners.BOTTOM_LEFT, Symbol.FUNGUS,
-                CardCorners.BOTTOM_RIGHT, Symbol.PLANT
-        );
 
         StartingCardsMessage startingCardMessage = new StartingCardsMessage("TestPlayer1", Face.FRONT);
         StartingCardsMessage startingCardMessage2 = new StartingCardsMessage("TestPlayer2", Face.BACK);

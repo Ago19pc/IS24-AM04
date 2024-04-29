@@ -1,7 +1,10 @@
 package Server.Connections;
 
 
+import ConnectionUtils.MessagePacket;
 import Server.Controller.Controller;
+import Server.Enums.MessageType;
+import Server.Messages.GeneralMessage;
 
 import java.io.*;
 import java.net.ConnectException;
@@ -58,9 +61,16 @@ public class ClientHandler extends Thread {
 
 
 
-    public void sendMessages(){
-        this.sender.sendMessage();
+    public void sendMessages(MessageType type, GeneralMessage message)  {
+        MessagePacket mp = new MessagePacket(message, type);
+        try {
+            this.sender.sendMessage(mp.stringify());
+        } catch (IOException e) {
+            System.out.println("Unable to stringify chat message");
+            throw new RuntimeException(e);
+        }
     }
+
 
     public ServerConnectionHandler getServerConnectionHandler() {
         return this.connectionHandler;

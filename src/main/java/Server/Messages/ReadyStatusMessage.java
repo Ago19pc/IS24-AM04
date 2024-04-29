@@ -1,5 +1,6 @@
 package Server.Messages;
 
+import Client.Controller.ClientController;
 import Server.Controller.Controller;
 import Server.Exception.MissingInfoException;
 import Server.Exception.PlayerNotFoundByNameException;
@@ -25,7 +26,7 @@ public class ReadyStatusMessage implements Serializable, GeneralMessage {
     }
 
     @Override
-    public void clientExecute() {
+    public void clientExecute(ClientController controller) {
 
     }
 }

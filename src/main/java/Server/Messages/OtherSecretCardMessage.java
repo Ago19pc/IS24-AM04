@@ -1,5 +1,6 @@
 package Server.Messages;
 
+import Client.Controller.ClientController;
 import Server.Card.Card;
 import Server.Controller.Controller;
 import Server.Exception.ServerExecuteNotCallableException;
@@ -24,7 +25,7 @@ public class OtherSecretCardMessage implements Serializable, GeneralMessage {
     }
 
     @Override
-    public void clientExecute() {
+    public void clientExecute(ClientController controller) {
 
     }
 }

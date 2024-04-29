@@ -169,4 +169,8 @@ public class ServerConnectionHandler extends Thread {
 
     public Controller getController() {return this.controller;}
 
+    public List<ClientHandler> getClients() {
+        return clients;
+    }
 }
+

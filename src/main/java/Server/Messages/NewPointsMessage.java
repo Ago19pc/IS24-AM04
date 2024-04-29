@@ -1,11 +1,21 @@
 package Server.Messages;
 
+import Client.Controller.ClientController;
 import Server.Controller.Controller;
 import Server.Exception.ServerExecuteNotCallableException;
+import Server.Player.Player;
 
 import java.io.Serializable;
+import java.util.List;
 
 public class NewPointsMessage implements Serializable, GeneralMessage {
+
+    private final List<Player> p;
+
+    public NewPointsMessage(List<Player> p) {
+        this.p = p;
+    }
+
     @Override
     public void serverExecute(Controller controller)throws ServerExecuteNotCallableException {
         throw new ServerExecuteNotCallableException();
@@ -13,7 +23,9 @@ public class NewPointsMessage implements Serializable, GeneralMessage {
     }
 
     @Override
-    public void clientExecute() {
+    public void clientExecute(ClientController controller) {
+
+        controller.setPlayerList(p);
 
     }
 }

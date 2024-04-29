@@ -1,5 +1,6 @@
 package Server.Messages;
 
+import Client.Controller.ClientController;
 import Server.Card.StartingCard;
 import Server.Controller.Controller;
 import Server.Enums.Face;
@@ -31,7 +32,7 @@ public class StartingCardsMessage implements Serializable, GeneralMessage {
     }
 
     @Override
-    public void clientExecute() {
+    public void clientExecute(ClientController controller) {
 
     }
 }
