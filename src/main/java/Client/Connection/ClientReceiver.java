@@ -39,7 +39,7 @@ public class ClientReceiver extends Thread {
 
 
             } catch (Exception e) {
-                System.out.println("MIIIINCHIA");
+                System.out.println("Server Disconnected");
                 throw new RuntimeException("Error reading from socket", e);
             }
 

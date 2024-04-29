@@ -75,7 +75,7 @@ public interface Controller {
      * @param card the card
      * @param face the face
      */
-    public void setStartingCard(Player player, StartingCard card, Face face) throws AlreadySetException;
+    public void setStartingCard(Player player, Face face) throws AlreadySetException;
 
     //GAME INITIALIZATION METHODS
     /**

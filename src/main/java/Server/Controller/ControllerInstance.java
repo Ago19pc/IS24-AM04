@@ -214,12 +214,18 @@ public class ControllerInstance implements Controller{
     public void giveStartingCards() {
         List<StartingCard> startingCards = gameModel.getStartingCards();
         getPlayerList().forEach(player -> {
-            Card card = startingCards.remove(0);
+            //Card card = startingCards.remove(0);
+            // NOTIFY
         });
         //Notify
     }
-    public void setStartingCard(Player player, StartingCard card, Face face) throws AlreadySetException {
-        player.initializeManuscript(card, face);
+    public void setStartingCard(Player player, Face face) throws AlreadySetException {
+        List<StartingCard> startingCards = gameModel.getStartingCards();
+        for (int i = 0; i < getPlayerList().size(); i++){
+            if (getPlayerList().get(i).equals(player)){
+                player.initializeManuscript(startingCards.get(i), face);
+            }
+        }
         boolean allSet = getPlayerList().stream().allMatch(p -> p.getManuscript() != null);
         if(allSet){
             try {
@@ -426,6 +432,13 @@ public class ControllerInstance implements Controller{
             throw new MissingInfoException("Color not set");
         }
         player.setReady(true);
+        if (getPlayerList().stream().allMatch(Player::isReady)){
+            try {
+                start();
+            } catch (TooFewElementsException | AlreadySetException e) {
+                //do nothing as it's normal that it's already set
+            }
+        }
         //Notify
     }
 
@@ -480,7 +493,7 @@ public class ControllerInstance implements Controller{
     public void printData() {
         System.out.println("----------");
         System.out.println("Players:");
-        this.gameModel.getPlayerList().stream().forEach(p -> System.out.print(p.getName() + ", "));
+        this.gameModel.getPlayerList().stream().forEach(p -> System.out.print(p.getName() + " " + p.getColor() + ", "));
         System.out.println("\n");
     }
 }

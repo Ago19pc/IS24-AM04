@@ -1,6 +1,7 @@
 package Server.Messages;
 
 import Client.Connection.ClientConnectionHandler;
+import Client.Controller.ClientController;
 import Server.Card.CornerCardFace;
 import Server.Card.StartingCard;
 import Server.Card.StartingFrontFace;
@@ -41,8 +42,10 @@ public class TestMessages {
 
 
         // CREA UN CLIENT
-        ClientConnectionHandler cch = new ClientConnectionHandler(true);
-        ClientConnectionHandler cch2 = new ClientConnectionHandler(true);
+        ClientController clientController1 = new ClientController();
+        ClientController clientController2 = new ClientController();
+        ClientConnectionHandler cch = new ClientConnectionHandler(true, clientController1);
+        ClientConnectionHandler cch2 = new ClientConnectionHandler(true, clientController2);
 
 
         // GENERA UN MESSAGGIO
@@ -95,7 +98,7 @@ public class TestMessages {
         assertTrue(controller.getPlayerList().get(0).isReady());
         assertTrue(controller.getPlayerList().get(1).isReady());
 
-        controller.start();
+
 
         // NOW TESTING STARTING CARD MESSAGE
         Map<CardCorners, Symbol> startingCardMap = Map.of(
@@ -104,12 +107,9 @@ public class TestMessages {
                 CardCorners.BOTTOM_LEFT, Symbol.FUNGUS,
                 CardCorners.BOTTOM_RIGHT, Symbol.PLANT
         );
-        List<Symbol> startingFrontSymbols = List.of(Symbol.BUG, Symbol.ANIMAL);
-        StartingFrontFace startingFrontFace = new StartingFrontFace("image", startingCardMap, startingFrontSymbols);
-        CornerCardFace cornerCardFace = new CornerCardFace("image", startingCardMap);
-        StartingCard card1 = new StartingCard(startingFrontFace, cornerCardFace);
-        StartingCardsMessage startingCardMessage = new StartingCardsMessage("TestPlayer1", card1, Face.FRONT);
-        StartingCardsMessage startingCardMessage2 = new StartingCardsMessage("TestPlayer2", card1, Face.BACK);
+
+        StartingCardsMessage startingCardMessage = new StartingCardsMessage("TestPlayer1", Face.FRONT);
+        StartingCardsMessage startingCardMessage2 = new StartingCardsMessage("TestPlayer2", Face.BACK);
 
         try {
             cch.sendMessage(startingCardMessage, MessageType.STARTINGCARDS);
@@ -124,6 +124,7 @@ public class TestMessages {
         // COMUNQUE PER FARE QUESTO TEST, CONTROLLA I SINGOLI VALORI DELLE CARTE, AL POSTO CHE SIANO LO STESSO OGGETTO
         //assertEquals(startingFrontFace, controller.getPlayerByName("TestPlayer1").getManuscript().getCardByCoord(0,0));
         //assertEquals(cornerCardFace, controller.getPlayerByName("TestPlayer2").getManuscript().getCardByCoord(0,0));
+
 
 
     }

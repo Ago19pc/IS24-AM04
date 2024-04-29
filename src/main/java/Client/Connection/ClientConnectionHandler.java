@@ -29,11 +29,13 @@ public class ClientConnectionHandler extends Thread {
         sender.start();
     }
 
-    /*
-    public ClientConnectionHandler(boolean debugMode) {
+
+    public ClientConnectionHandler(boolean debugMode, ClientController controller) {
         try {
+            this.controller = controller;
             clientSocket = new Socket("localhost", 1234);
             sender = new ClientSender(this, controller);
+            sender.debugSetSocket(clientSocket);
             receiver = new ClientReceiver(this, clientSocket);
                 Thread.UncaughtExceptionHandler h = new Thread.UncaughtExceptionHandler() {
                     @Override
@@ -57,7 +59,7 @@ public class ClientConnectionHandler extends Thread {
         }
     }
 
-    */
+
 
     public void setSocket(Socket clientSocket) throws IOException {
         this.clientSocket = clientSocket;

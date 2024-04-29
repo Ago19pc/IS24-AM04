@@ -26,6 +26,11 @@ public class ClientSender extends Thread {
         out = new PrintWriter(clientSocket.getOutputStream(), true);
         clientConnectionHandler.setSocket(this.clientSocket);
     }
+
+    public void debugSetSocket(Socket clientSocket) throws IOException {
+        this.clientSocket = clientSocket;
+        out = new PrintWriter(clientSocket.getOutputStream(), true);
+    }
     /**
      * Sends a message to the server.
      * @param message String, the message to send.
@@ -69,9 +74,14 @@ public class ClientSender extends Thread {
                 System.out.println("help");
                 System.out.println("join <ip> <port>");
                 System.out.println("setName <name>");
+                System.out.println("setColor <color RED|YELLOW|BLUE|GREEN>");
                 System.out.println("setReady");
                 break;
             case "join":
+                if (args.length != 3) {
+                    System.out.println("Correct usage: join <ip> <port>");
+                    return;
+                }
                 try {
                     setSocket(args[1], Integer.parseInt(args[2]));
                 } catch (IOException e) {
@@ -79,10 +89,21 @@ public class ClientSender extends Thread {
                 }
                 break;
             case "setName":
+                if (args.length != 2) {
+                    System.out.println("Correct usage: setName <name>");
+                    return;
+                }
                 controller.setName(args[1]);
                 break;
             case "setReady":
                 controller.setReady();
+                break;
+            case "setColor":
+                if (args.length != 2) {
+                    System.out.println("Correct usage: setColor <color RED|YELLOW|BLUE|GREEN>");
+                    return;
+                }
+                controller.setColor(args[1]);
                 break;
             default:
                 System.out.println("Invalid command");
