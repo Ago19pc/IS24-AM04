@@ -3,6 +3,7 @@ package Server.Messages;
 import Client.Controller.ClientController;
 import Server.Controller.Controller;
 import Server.Enums.QuitOrPlayAgain;
+import Server.Exception.ClientExecuteNotCallableException;
 
 import java.io.Serializable;
 
@@ -24,7 +25,9 @@ public class QuitOrPlayAgainMessage implements Serializable, GeneralMessage {
     }
 
     @Override
-    public void clientExecute(ClientController controller) {
+    public void clientExecute(ClientController controller) throws ClientExecuteNotCallableException {
+
+        throw new ClientExecuteNotCallableException();
 
     }
 }
