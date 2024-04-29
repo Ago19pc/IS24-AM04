@@ -72,7 +72,7 @@ public class ServerConnectionHandler extends Thread {
             while (true) {
                 Socket client = this.socket.accept();
                 System.out.println("Received connection");
-                ClientHandler t = new ClientHandler(this, client);
+                ClientHandler t = new ClientHandler(this, client, controller);
                 t.setUncaughtExceptionHandler(h);
                 t.start();
                 clients.add(t);

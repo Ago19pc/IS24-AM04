@@ -475,6 +475,14 @@ public class ControllerInstance implements Controller{
     public ServerConnectionHandler getConnectionHandler() {
         return this.connectionHandler;
     }
+
+    @Override
+    public void printData() {
+        System.out.println("----------");
+        System.out.println("Players:");
+        this.gameModel.getPlayerList().stream().forEach(p -> System.out.print(p.getName() + ", "));
+        System.out.println("\n");
+    }
 }
 
 

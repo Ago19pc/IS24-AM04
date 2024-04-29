@@ -173,6 +173,7 @@ public interface Controller {
 
     public ServerConnectionHandler getConnectionHandler();
 
+    public void printData();
 
 }
 

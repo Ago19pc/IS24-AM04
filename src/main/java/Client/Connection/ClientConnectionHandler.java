@@ -1,5 +1,6 @@
 package Client.Connection;
 
+import Client.Controller.ClientController;
 import ConnectionUtils.MessagePacket;
 import ConnectionUtils.MessageUtils;
 import Server.Enums.MessageType;
@@ -15,25 +16,24 @@ public class ClientConnectionHandler extends Thread {
     private MessageUtils messageUtils = new MessageUtils();
     public ClientSender sender;
     public ClientReceiver receiver;
+    private ClientController controller;
 
-    private Scanner inputReader = new Scanner(System.in);
 
     /**
      * Constructor
      * Establishes a connection with the server
      */
-    public ClientConnectionHandler()  {
-        try {
-            establishConnection(inputReader);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+    public ClientConnectionHandler(ClientController controller)  {
+        this.controller = controller;
+        this.sender = new ClientSender(this, controller);
+        sender.start();
     }
 
+    /*
     public ClientConnectionHandler(boolean debugMode) {
         try {
             clientSocket = new Socket("localhost", 1234);
-            sender = new ClientSender(this, clientSocket);
+            sender = new ClientSender(this, controller);
             receiver = new ClientReceiver(this, clientSocket);
                 Thread.UncaughtExceptionHandler h = new Thread.UncaughtExceptionHandler() {
                     @Override
@@ -57,47 +57,32 @@ public class ClientConnectionHandler extends Thread {
         }
     }
 
-    /**
-     * Establishes a connection with the server
-     * @param inputReader the scanner to read input from
-     */
-    private void establishConnection(Scanner inputReader) {
+    */
+
+    public void setSocket(Socket clientSocket) throws IOException {
+        this.clientSocket = clientSocket;
+        this.receiver = new ClientReceiver(this, clientSocket);
         try {
-            System.out.println("Inserisci l'indirizzo IP del server");
-            String ip = inputReader.nextLine();
-            System.out.println("Inserisci la porta del server");
-            int port = inputReader.nextInt();
-            clientSocket = new Socket(ip, port);
-            System.out.println("Connection established");
-            sender = new ClientSender(this, clientSocket);
-            receiver = new ClientReceiver(this, clientSocket);
-            try {
-                Thread.UncaughtExceptionHandler h = new Thread.UncaughtExceptionHandler() {
-                    @Override
-                    public void uncaughtException(Thread th, Throwable ex) {
-                        System.out.println("Uncaught exception: " + ex);
-                        try {
-                            clientSocket.close();
+            Thread.UncaughtExceptionHandler h = new Thread.UncaughtExceptionHandler() {
+                @Override
+                public void uncaughtException(Thread th, Throwable ex) {
+                    System.out.println("Uncaught exception: " + ex);
+                    try {
+                        clientSocket.close();
 
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
+                    } catch (IOException e) {
+                        e.printStackTrace();
                     }
-                };
-                receiver.setUncaughtExceptionHandler(h);
-                sender.setUncaughtExceptionHandler(h);
-
-                sender.start();
-                receiver.start();
-
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        } catch (IOException e) {
-            establishConnection(inputReader);
+                }
+            };
+            receiver.setUncaughtExceptionHandler(h);
+            receiver.start();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-    }
 
+
+    }
 
 
 
@@ -108,30 +93,13 @@ public class ClientConnectionHandler extends Thread {
     public void run() {
 
         try {
-            receiver.join();
             sender.join();
+            receiver.join();
+
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
 
-        // TEST CODE
-        /*
-        PlayerNameMessage pnm = new PlayerNameMessage("NOME1");
-        MessagePacket message = new MessagePacket(pnm, MessageType.PLAYERNAME);
-        //sender.sendMessage(message.stringify());
-        MessagePacket test = null;
-        try {
-            test = new MessagePacket(message.stringify());
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-        System.out.println(test.equals(message));
-
-        System.out.println(message.getType());
-        System.out.println(test.getType());
-        */
     }
 
 

@@ -1,6 +1,8 @@
 package Server.Connections;
 
 
+import Server.Controller.Controller;
+
 import java.io.*;
 import java.net.ConnectException;
 import java.net.Socket;
@@ -11,10 +13,12 @@ public class ClientHandler extends Thread {
     private final ServerSender sender ;
     private final ServerReceiver receiver ;
     private final Thread.UncaughtExceptionHandler h;
+    private Controller controller;
 
 
     ClientHandler me = this;
-    public ClientHandler(ServerConnectionHandler connectionHandler, Socket client) throws IOException, RuntimeException {
+    public ClientHandler(ServerConnectionHandler connectionHandler, Socket client, Controller controller) throws IOException, RuntimeException {
+        this.controller = controller;
         this.socket = client;
         this.connectionHandler = connectionHandler;
         h = new Thread.UncaughtExceptionHandler() {
@@ -25,7 +29,7 @@ public class ClientHandler extends Thread {
             }
         };
         try {
-            sender = new ServerSender(this, this.socket);
+            sender = new ServerSender(this, this.socket, this.controller);
             receiver = new ServerReceiver(this, this.socket);
             sender.setUncaughtExceptionHandler(h);
             sender.start();
