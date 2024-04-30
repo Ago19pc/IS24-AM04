@@ -38,6 +38,9 @@ public class ControllerInstance implements Controller{
     private Map<Player, StartingCard> givenStartingCards = new HashMap<>();
     private Map<Player, List<AchievementCard>> givenSecretObjectiveCards = new HashMap<>();
 
+    private static int ackInitBoard = 0;
+    private static int ackInitHand = 0;
+
     public ControllerInstance(ServerConnectionHandler connectionHandler) {
         this.connectionHandler = connectionHandler;
         this.gameModel = new GameModelInstance();
@@ -92,10 +95,30 @@ public class ControllerInstance implements Controller{
         }
         shufflePlayerList();
         gameModel.createGoldResourceDecks();
-        gameModel.createStartingCards();
-        giveStartingCards();
 
     }
+
+    public void ackInitBoard() {
+        if (ackInitBoard == gameModel.getPlayerList().size()) {
+            try {
+                gameModel.createStartingCards();
+                giveStartingCards();
+            } catch (AlreadySetException e) {
+                System.out.println("ERROR IN INITIALBOARD ACK");
+            }
+        } else {
+            ackInitBoard++;
+        }
+    }
+
+    public void ackInitHand() {
+        if (ackInitHand == gameModel.getPlayerList().size()) {
+                giveSecretObjectiveCards();
+        } else {
+            ackInitHand++;
+        }
+    }
+
     public void setPlayerColor(Color color, Player player) throws IllegalArgumentException{
         List<Color> colors = getPlayerList().stream().map(Player::getColor).toList();
         if(!colors.contains(color)){

@@ -174,5 +174,9 @@ public interface Controller {
 
     public void printData();
 
+    public void ackInitHand();
+
+    public void ackInitBoard();
+
 }
 
