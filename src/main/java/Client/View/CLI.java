@@ -13,6 +13,7 @@ public class CLI extends Thread{
     public CLI(ClientController controller){
         System.out.println("Avvio gioco...");
         this.controller = controller;
+
     }
 
     /**
