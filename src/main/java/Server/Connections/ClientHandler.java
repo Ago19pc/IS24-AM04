@@ -1,8 +1,12 @@
 package Server.Connections;
 
 
-import java.io.*;
-import java.net.ConnectException;
+import ConnectionUtils.MessagePacket;
+import Server.Controller.Controller;
+import Server.Enums.MessageType;
+import Server.Messages.GeneralMessage;
+
+import java.io.IOException;
 import java.net.Socket;
 
 public class ClientHandler extends Thread {
@@ -11,10 +15,12 @@ public class ClientHandler extends Thread {
     private final ServerSender sender ;
     private final ServerReceiver receiver ;
     private final Thread.UncaughtExceptionHandler h;
+    private Controller controller;
 
 
     ClientHandler me = this;
-    public ClientHandler(ServerConnectionHandler connectionHandler, Socket client) throws IOException, RuntimeException {
+    public ClientHandler(ServerConnectionHandler connectionHandler, Socket client, Controller controller) throws IOException, RuntimeException {
+        this.controller = controller;
         this.socket = client;
         this.connectionHandler = connectionHandler;
         h = new Thread.UncaughtExceptionHandler() {
@@ -25,7 +31,7 @@ public class ClientHandler extends Thread {
             }
         };
         try {
-            sender = new ServerSender(this, this.socket);
+            sender = new ServerSender(this, this.socket, this.controller);
             receiver = new ServerReceiver(this, this.socket);
             sender.setUncaughtExceptionHandler(h);
             sender.start();
@@ -54,14 +60,23 @@ public class ClientHandler extends Thread {
 
 
 
-    public void sendMessages(){
-        this.sender.sendMessage();
+    public void sendMessages(MessageType type, GeneralMessage message)  {
+        MessagePacket mp = new MessagePacket(message, type);
+        try {
+            this.sender.sendMessage(mp.stringify());
+        } catch (IOException e) {
+            System.out.println("Unable to stringify chat message");
+            throw new RuntimeException(e);
+        }
     }
+
 
     public ServerConnectionHandler getServerConnectionHandler() {
         return this.connectionHandler;
     }
 
-
+    public ServerReceiver getReceiver() {
+        return this.receiver;
+    }
 
 }

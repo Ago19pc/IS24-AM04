@@ -31,6 +31,7 @@ public class Chat {
         messages.add(m);
     }
 
+
     public void addMessage(String message, String name) {
         Message m = new Message(message, name);
         messages.add(m);

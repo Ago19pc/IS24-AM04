@@ -10,9 +10,10 @@ import Server.Exception.TooFewElementsException;
 import Server.Exception.TooManyElementsException;
 import Server.Manuscript.Manuscript;
 
+import java.io.Serializable;
 import java.util.List;
 
-public interface Player {
+public interface Player extends Serializable {
     /**
      * Add a card to the player's hand
      * @param card the card to add

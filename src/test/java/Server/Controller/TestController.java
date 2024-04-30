@@ -101,7 +101,7 @@ public class TestController {
                 startingFrontFace,
                 new CornerCardFace("image.jpg", new HashMap<>())
         );
-        controller.setStartingCard(player, startingCard, Face.FRONT);
+        controller.setStartingCard(player, Face.FRONT);
         assertEquals(startingFrontFace,player.getManuscript().getCardByCoord(0,0));
     }*/
     @Test
@@ -145,10 +145,10 @@ public class TestController {
         controller.setPlayerColor(Color.BLUE, player2);
         controller.setReady(player);
         controller.setReady(player2);
-        controller.start();
+        //controller.start();
         controller.nextTurn();
-        controller.setStartingCard(player,startingCard,Face.FRONT);
-        controller.setStartingCard(player2,startingCard,Face.FRONT);
+        controller.setStartingCard(player,Face.FRONT);
+        controller.setStartingCard(player2,Face.FRONT);
         Map<CardCorners, Symbol> cornerSymbols = new HashMap<>();
         cornerSymbols.put(CardCorners.TOP_LEFT, Symbol.FUNGUS);
         cornerSymbols.put(CardCorners.TOP_RIGHT, Symbol.FUNGUS);
@@ -401,9 +401,9 @@ public class TestController {
                 startingFrontFace,
                 new CornerCardFace("image.jpg", new HashMap<>())
         );
-        controller.setStartingCard(player, startingCard, Face.FRONT);
-        controller.setStartingCard(player2, startingCard, Face.FRONT);
-        controller.setStartingCard(player3, startingCard, Face.FRONT);
+        controller.setStartingCard(player, Face.FRONT);
+        controller.setStartingCard(player2, Face.FRONT);
+        controller.setStartingCard(player3, Face.FRONT);
         player.removeCardFromHand(0);
         player.removeCardFromHand(0);
         player.removeCardFromHand(0);

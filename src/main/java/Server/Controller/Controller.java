@@ -1,11 +1,9 @@
 package Server.Controller;
 
 import Server.Card.AchievementCard;
-import Server.Card.Card;
-import Server.Card.StartingCard;
 import Server.Chat.Message;
+import Server.Connections.ClientHandler;
 import Server.Connections.ServerConnectionHandler;
-import Server.Deck.Deckable;
 import Server.Enums.Color;
 import Server.Enums.DeckPosition;
 import Server.Enums.Decks;
@@ -24,7 +22,9 @@ public interface Controller {
      */
     public void addPlayer(Player player) throws TooManyPlayersException, IllegalArgumentException, TooManyPlayersException;
 
-    public void addPlayer(String name);
+    public void addPlayer(String name, ClientHandler c);
+
+
 
     /**
      * removes a player from the list of players
@@ -172,6 +172,7 @@ public interface Controller {
 
     public ServerConnectionHandler getConnectionHandler();
 
+    public void printData();
 
 }
 

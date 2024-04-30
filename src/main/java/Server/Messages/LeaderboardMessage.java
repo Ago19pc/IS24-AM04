@@ -1,18 +1,20 @@
 package Server.Messages;
 
+import Client.Controller.ClientController;
 import Server.Controller.Controller;
 import Server.Exception.ServerExecuteNotCallableException;
 import Server.Player.Player;
 
 import java.io.Serializable;
+import java.util.List;
 import java.util.Map;
 
 public class LeaderboardMessage implements Serializable, GeneralMessage {
 
-        private final Map<Player, Integer> points;
+        private final List<Player> p;
 
-        public LeaderboardMessage(Map<Player, Integer> points){
-            this.points = points;
+        public LeaderboardMessage(List<Player> list ){
+            this.p = list ;
         }
 
 
@@ -24,7 +26,9 @@ public class LeaderboardMessage implements Serializable, GeneralMessage {
 
 
     @Override
-    public void clientExecute() {
+    public void clientExecute(ClientController controller) {
+
+            controller.setPlayerList(p);
 
     }
 }

@@ -1,12 +1,14 @@
 package Server.Connections;
 
 
-
+import Client.Controller.ClientController;
 import Server.Controller.Controller;
+import Server.Enums.MessageType;
+import Server.Messages.GeneralMessage;
 
-
-import java.net.*;
-import java.io.*;
+import java.io.IOException;
+import java.net.ServerSocket;
+import java.net.Socket;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -14,6 +16,8 @@ public class ServerConnectionHandler extends Thread {
     private ServerSocket socket;
     private List<ClientHandler> clients;
     private Map<Long, String> clientNames;
+
+    private Map<String, ClientHandler> nameToHandler = new HashMap<>();
 
     private int port;
 
@@ -72,7 +76,7 @@ public class ServerConnectionHandler extends Thread {
             while (true) {
                 Socket client = this.socket.accept();
                 System.out.println("Received connection");
-                ClientHandler t = new ClientHandler(this, client);
+                ClientHandler t = new ClientHandler(this, client, controller);
                 t.setUncaughtExceptionHandler(h);
                 t.start();
                 clients.add(t);
@@ -153,8 +157,9 @@ public class ServerConnectionHandler extends Thread {
             this.replaceID(oldID, threadID);
 
         }
-
     }
+
+
 
     public void removeClientName(Long threadID) {
         this.clientNames.remove(threadID);
@@ -169,4 +174,47 @@ public class ServerConnectionHandler extends Thread {
 
     public Controller getController() {return this.controller;}
 
+    public List<ClientHandler> getClients() {
+        return clients;
+    }
+
+    public void sendAllMessage(GeneralMessage message, MessageType type) {
+        for (ClientHandler c : clients) {
+            c.sendMessages(type, message);
+        }
+    }
+    public void sendMessage(GeneralMessage message, MessageType type, Long threadId) {
+        for (ClientHandler c : clients) {
+            if (c.threadId() == threadId) {
+                c.sendMessages(type, message);
+            }
+        }
+    }
+    public void sendMessage(GeneralMessage message, MessageType type, String name) {
+        for (ClientHandler c : clients) {
+            if (clientNames.get(c.threadId()) == name) {
+                System.out.println("NAME MATCH FOUND");
+                c.sendMessages(type, message);
+            }
+        }
+    }
+
+    /*public void mapNameToHandler(String name, ClientController handler) {
+        if (nameToHandler.keySet().contains(name)) {
+            // RIMPIAZZA NOME
+            this.nameToHandler.replace(name, handler);
+        } else {
+            // AGGIUNGI NOME
+            this.nameToHandler.put(name, handler);
+
+        }
+    }*/
+    public void removeNameToHandler(String name) {
+        this.nameToHandler.remove(name);
+    }
+
+    public ClientHandler getClientHandlerByName(String name) {
+        return nameToHandler.get(name);
+    }
 }
+

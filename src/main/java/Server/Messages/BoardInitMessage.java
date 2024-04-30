@@ -1,5 +1,6 @@
 package Server.Messages;
 
+import Client.Controller.ClientController;
 import Server.Controller.Controller;
 import Server.Deck.AchievementDeck;
 import Server.Deck.GoldDeck;
@@ -15,6 +16,7 @@ public class BoardInitMessage implements Serializable, GeneralMessage {
 
     private final AchievementDeck achievementDeck;
 
+
     public BoardInitMessage(ResourceDeck resourceDeck, GoldDeck goldDeck, AchievementDeck achievementDeck) {
         this.resourceDeck = resourceDeck;
         this.goldDeck = goldDeck;
@@ -24,7 +26,10 @@ public class BoardInitMessage implements Serializable, GeneralMessage {
     public void serverExecute(Controller controller)throws ServerExecuteNotCallableException {
         throw new ServerExecuteNotCallableException();
     }
-    public void clientExecute(){
+    public void clientExecute(ClientController controller){
+
+        controller.boardInit(achievementDeck, goldDeck, resourceDeck);
+
 
     }
 

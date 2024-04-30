@@ -24,12 +24,13 @@ public class Main {
         }
 
         System.out.println("Starting Controller");
+        /*
         try {
             controller.start();
         } catch (TooFewElementsException | AlreadySetException e) {
             throw new RuntimeException(e);
         }
-
+        */
 
     }
 

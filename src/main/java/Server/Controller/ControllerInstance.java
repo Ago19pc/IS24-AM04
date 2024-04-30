@@ -5,6 +5,7 @@ import Server.Card.Card;
 import Server.Card.CornerCardFace;
 import Server.Card.StartingCard;
 import Server.Chat.Message;
+import Server.Connections.ClientHandler;
 import Server.Connections.ServerConnectionHandler;
 import Server.Deck.AchievementDeck;
 import Server.Enums.*;
@@ -12,6 +13,10 @@ import Server.Exception.*;
 import Server.GameModel.GameModel;
 import Server.GameModel.GameModelInstance;
 import Server.Manuscript.Manuscript;
+import Server.Messages.NewPlayerMessage;
+import Server.Messages.PlayerColorMessage;
+import Server.Messages.PlayerNameMessage;
+import Server.Messages.UnavailableColorsMessage;
 import Server.Player.Player;
 import Server.Player.PlayerInstance;
 import com.google.gson.Gson;
@@ -40,6 +45,11 @@ public class ControllerInstance implements Controller{
     public void addPlayer(Player player) throws TooManyPlayersException, IllegalArgumentException {
         if(gameModel.getPlayerList().size()<4) {
             gameModel.addPlayer(player);
+            //Notify
+            PlayerNameMessage playerNameMessage = new PlayerNameMessage(true);
+            connectionHandler.sendMessage(playerNameMessage, MessageType.PLAYERNAME, player.getName());
+            NewPlayerMessage playerMessage = new NewPlayerMessage(gameModel.getPlayerList());
+            connectionHandler.sendAllMessage(playerMessage, MessageType.NEWPLAYER);
         } else {
             throw new TooManyPlayersException("Too many players");
         }
@@ -47,12 +57,28 @@ public class ControllerInstance implements Controller{
     }
 
     @Override
-    public void addPlayer(String name) {
-        Player p = new PlayerInstance(name);
+    public void addPlayer(String name, ClientHandler c) {
+
+        Player player = new PlayerInstance(name);
         try {
-            addPlayer(p);
+            for (Player p : gameModel.getPlayerList()){
+                if (p.getName().equals(player.getName())) throw new IllegalArgumentException("Player with same name already exists");
+            }
+            if(gameModel.getPlayerList().size()<4) {
+                gameModel.addPlayer(player);
+                //Notify
+                //connectionHandler.addClientName(Threadid, name);
+                PlayerNameMessage playerNameMessage = new PlayerNameMessage(true);
+                c.sendMessages(MessageType.PLAYERNAME, playerNameMessage);
+                NewPlayerMessage playerMessage = new NewPlayerMessage(gameModel.getPlayerList());
+                connectionHandler.sendAllMessage(playerMessage, MessageType.NEWPLAYER);
+            } else {
+                throw new TooManyPlayersException("Too many players");
+            }
+
         } catch (TooManyPlayersException | IllegalArgumentException e) {
-            throw new RuntimeException(e);
+            PlayerNameMessage playerNameMessage = new PlayerNameMessage(false);
+            c.sendMessages(MessageType.PLAYERNAME, playerNameMessage);
         }
     }
 
@@ -86,10 +112,18 @@ public class ControllerInstance implements Controller{
         List<Color> colors = getPlayerList().stream().map(Player::getColor).collect(Collectors.toList());
         if(!colors.contains(color)){
             player.setColor(color);
+
+            //Notify
+            PlayerColorMessage playerColorMessage = new PlayerColorMessage(true);
+            connectionHandler.sendMessage(playerColorMessage, MessageType.PLAYERCOLOR, player.getName());
+            UnavailableColorsMessage unavailableColorsMessage = new UnavailableColorsMessage(colors);
+            connectionHandler.sendAllMessage(unavailableColorsMessage, MessageType.UNAVAIABLECOLORS);
+
         } else {
-            throw new IllegalArgumentException("Color already taken");
+            PlayerColorMessage playerColorMessage = new PlayerColorMessage(false);
+            connectionHandler.sendMessage(playerColorMessage, MessageType.PLAYERCOLOR, player.getName());
         }
-        //Notify
+
     }
     public void giveSecretObjectiveCards() {
         getPlayerList().forEach(player -> {
@@ -337,6 +371,13 @@ public class ControllerInstance implements Controller{
             throw new MissingInfoException("Color not set");
         }
         player.setReady(true);
+        if (getPlayerList().stream().allMatch(Player::isReady) && getPlayerList().size() > 1){
+            try {
+                start();
+            } catch (TooFewElementsException | AlreadySetException e) {
+                //do nothing as it's normal that it's already set
+            }
+        }
         //Notify
     }
 
@@ -385,6 +426,14 @@ public class ControllerInstance implements Controller{
     @Override
     public ServerConnectionHandler getConnectionHandler() {
         return this.connectionHandler;
+    }
+
+    @Override
+    public void printData() {
+        System.out.println("----------");
+        System.out.println("Players:");
+        this.gameModel.getPlayerList().stream().forEach(p -> System.out.print(p.getName() + " " + p.getColor() + " " + p.isReady() +  ", "));
+        System.out.println("\n");
     }
 }
 
