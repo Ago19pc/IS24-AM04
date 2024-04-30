@@ -122,8 +122,8 @@ public class ClientConnectionHandler extends Thread {
         sender.sendMessage();
     }
 
-    public void sendMessage(GeneralMessage message, MessageType type) throws IOException {
-        MessagePacket packet = new MessagePacket(message, type);
+    public void sendMessage(GeneralMessage message) throws IOException {
+        MessagePacket packet = new MessagePacket(message);
         sender.sendMessage(packet.stringify());
 
     }

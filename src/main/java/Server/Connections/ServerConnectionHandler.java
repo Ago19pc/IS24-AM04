@@ -16,6 +16,7 @@ public class ServerConnectionHandler extends Thread {
     private ServerSocket socket;
     private Map<ClientHandler, String> clients;
     private int port;
+
     private Controller controller;
 
 
@@ -119,17 +120,17 @@ public class ServerConnectionHandler extends Thread {
 
     public Controller getController() {return this.controller;}
 
-    public void sendAllMessage(GeneralMessage message, MessageType type) {
+    public void sendAllMessage(GeneralMessage message) {
         for (ClientHandler c : clients.keySet()) {
-            c.sendMessages(type, message);
+            c.sendMessages(message);
         }
     }
-    public void sendMessage(GeneralMessage message, MessageType type, String name) {
+    public void sendMessage(GeneralMessage message, String name) {
         ClientHandler target = clients.entrySet().stream()
                 .filter(entry -> entry.getValue().equals(name))
                 .toList().getFirst().getKey();
         System.out.println("NAME MATCH FOUND");
-        target.sendMessages(type, message);
+        target.sendMessages(message);
     }
 
     public void setName(ClientHandler clientHandler, String name) {

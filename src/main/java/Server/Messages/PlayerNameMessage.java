@@ -25,12 +25,12 @@ public class PlayerNameMessage implements GeneralMessage, Serializable {
                     controller.addPlayer(this.name);
                     controller.getConnectionHandler().setName(c, this.name);
                     PlayerNameMessage playerNameMessage = new PlayerNameMessage(true);
-                    c.sendMessages(MessageType.PLAYERNAME, playerNameMessage);
+                    c.sendMessages(playerNameMessage);
                     NewPlayerMessage playerMessage = new NewPlayerMessage(controller.getPlayerList());
-                    controller.getConnectionHandler().sendAllMessage(playerMessage, MessageType.NEWPLAYER);
+                    controller.getConnectionHandler().sendAllMessage(playerMessage);
                 } catch (Exception e) {
                     PlayerNameMessage playerNameMessage = new PlayerNameMessage(false);
-                    c.sendMessages(MessageType.PLAYERNAME, playerNameMessage);
+                    c.sendMessages(playerNameMessage);
                 }
             }
         }
