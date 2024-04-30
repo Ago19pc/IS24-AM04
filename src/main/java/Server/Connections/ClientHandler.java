@@ -33,8 +33,6 @@ public class ClientHandler extends Thread {
         try {
             sender = new ServerSender(this, this.socket, this.controller);
             receiver = new ServerReceiver(this, this.socket);
-            sender.setUncaughtExceptionHandler(h);
-            sender.start();
         } catch (Exception e) {
             System.out.println("LOL2");
             throw e;
@@ -42,14 +40,17 @@ public class ClientHandler extends Thread {
     }
 
     public void run() {
-        System.out.println("Client connected: " + this.socket.getInetAddress());
-
+        System.out.println("Nuovo Client connesso: " + this.socket.getInetAddress());
+        System.out.println("Ora i client connessi sono: ");
+        for (ClientHandler c : connectionHandler.getThreads()) {
+            System.out.print(" " + c.socket.getInetAddress() +" -");
+        }
+        System.out.println();
         receiver.setUncaughtExceptionHandler(h);
         receiver.start();
 
         try {
             receiver.join();
-            sender.join();
         } catch (InterruptedException e) {
             System.out.println("ClientHandler caught an exception");
             throw new RuntimeException(e);
@@ -77,6 +78,14 @@ public class ClientHandler extends Thread {
 
     public ServerReceiver getReceiver() {
         return this.receiver;
+    }
+
+    /**
+     * get this client's address
+     * @return the client's address
+     */
+    public String getSocketAddress() {
+        return this.socket.getInetAddress().toString();
     }
 
 }
