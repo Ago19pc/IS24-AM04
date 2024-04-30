@@ -152,9 +152,9 @@ public class ControllerInstance implements Controller{
             gameModel.addPlayer(player);
             //Notify
             PlayerNameMessage playerNameMessage = new PlayerNameMessage(true);
-            connectionHandler.sendMessage(playerNameMessage, MessageType.PLAYERNAME, player.getName());
+            connectionHandler.sendMessage(playerNameMessage, player.getName());
             NewPlayerMessage playerMessage = new NewPlayerMessage(gameModel.getPlayerList());
-            connectionHandler.sendAllMessage(playerMessage, MessageType.NEWPLAYER);
+            connectionHandler.sendAllMessage(playerMessage);
         } else {
             throw new TooManyPlayersException("Too many players");
         }
@@ -175,16 +175,16 @@ public class ControllerInstance implements Controller{
                 //Notify
                 //connectionHandler.addClientName(Threadid, name);
                 PlayerNameMessage playerNameMessage = new PlayerNameMessage(true);
-                c.sendMessages(MessageType.PLAYERNAME, playerNameMessage);
+                c.sendMessages(playerNameMessage);
                 NewPlayerMessage playerMessage = new NewPlayerMessage(gameModel.getPlayerList());
-                connectionHandler.sendAllMessage(playerMessage, MessageType.NEWPLAYER);
+                connectionHandler.sendAllMessage(playerMessage);
             } else {
                 throw new TooManyPlayersException("Too many players");
             }
 
         } catch (TooManyPlayersException | IllegalArgumentException e) {
             PlayerNameMessage playerNameMessage = new PlayerNameMessage(false);
-            c.sendMessages(MessageType.PLAYERNAME, playerNameMessage);
+            c.sendMessages(playerNameMessage);
         }
     }
 
@@ -222,13 +222,13 @@ public class ControllerInstance implements Controller{
 
             //Notify
             PlayerColorMessage playerColorMessage = new PlayerColorMessage(true);
-            connectionHandler.sendMessage(playerColorMessage, MessageType.PLAYERCOLOR, player.getName());
+            connectionHandler.sendMessage(playerColorMessage, player.getName());
             UnavailableColorsMessage unavailableColorsMessage = new UnavailableColorsMessage(colors);
-            connectionHandler.sendAllMessage(unavailableColorsMessage, MessageType.UNAVAIABLECOLORS);
+            connectionHandler.sendAllMessage(unavailableColorsMessage);
 
         } else {
             PlayerColorMessage playerColorMessage = new PlayerColorMessage(false);
-            connectionHandler.sendMessage(playerColorMessage, MessageType.PLAYERCOLOR, player.getName());
+            connectionHandler.sendMessage(playerColorMessage, player.getName());
         }
 
     }

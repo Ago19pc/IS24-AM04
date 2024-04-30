@@ -178,23 +178,23 @@ public class ServerConnectionHandler extends Thread {
         return clients;
     }
 
-    public void sendAllMessage(GeneralMessage message, MessageType type) {
+    public void sendAllMessage(GeneralMessage message) {
         for (ClientHandler c : clients) {
-            c.sendMessages(type, message);
+            c.sendMessages(message);
         }
     }
-    public void sendMessage(GeneralMessage message, MessageType type, Long threadId) {
+    public void sendMessage(GeneralMessage message, Long threadId) {
         for (ClientHandler c : clients) {
             if (c.threadId() == threadId) {
-                c.sendMessages(type, message);
+                c.sendMessages(message);
             }
         }
     }
-    public void sendMessage(GeneralMessage message, MessageType type, String name) {
+    public void sendMessage(GeneralMessage message, String name) {
         for (ClientHandler c : clients) {
             if (clientNames.get(c.threadId()) == name) {
                 System.out.println("NAME MATCH FOUND");
-                c.sendMessages(type, message);
+                c.sendMessages(message);
             }
         }
     }

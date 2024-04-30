@@ -67,7 +67,7 @@ public class ClientController {
         this.proposedName = name;
         PlayerNameMessage playerNameMessage = new PlayerNameMessage(proposedName);
         try {
-            clientConnectionHandler.sendMessage(playerNameMessage, Server.Enums.MessageType.PLAYERNAME);
+            clientConnectionHandler.sendMessage(playerNameMessage);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -101,7 +101,7 @@ public class ClientController {
         move = new PossibleCardPlacementSave(x, y, cardFace);
         CardPlacementMessage cardPlacementMessage = new CardPlacementMessage(myName, hand_pos, x, y, face);
         try {
-            clientConnectionHandler.sendMessage(cardPlacementMessage, MessageType.CARDPLACEMENT);
+            clientConnectionHandler.sendMessage(cardPlacementMessage);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -125,7 +125,7 @@ public class ClientController {
         this.myReady = true;
         ReadyStatusMessage readyStatusMessage = new ReadyStatusMessage(true, myName);
         try {
-            clientConnectionHandler.sendMessage(readyStatusMessage, Server.Enums.MessageType.READYSTATUS);
+            clientConnectionHandler.sendMessage(readyStatusMessage);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -163,7 +163,7 @@ public class ClientController {
         proposedColor = castedColor;
         PlayerColorMessage playerColorMessage = new PlayerColorMessage(myName, castedColor);
         try {
-            clientConnectionHandler.sendMessage(playerColorMessage, Server.Enums.MessageType.PLAYERCOLOR);
+            clientConnectionHandler.sendMessage(playerColorMessage);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -180,7 +180,7 @@ public class ClientController {
         if (myName == null) {System.out.println("You need to set your name first"); return;}
         Message m = new Message(message, myName);
         ChatMessage chatMessage = new ChatMessage(m);
-        MessagePacket mp = new MessagePacket(chatMessage, MessageType.CHAT);
+        MessagePacket mp = new MessagePacket(chatMessage);
         try {
             clientConnectionHandler.sender.sendMessage(mp.stringify());
         } catch (IOException e) {

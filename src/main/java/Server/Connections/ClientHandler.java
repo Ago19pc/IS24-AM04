@@ -60,8 +60,8 @@ public class ClientHandler extends Thread {
 
 
 
-    public void sendMessages(MessageType type, GeneralMessage message)  {
-        MessagePacket mp = new MessagePacket(message, type);
+    public void sendMessages(GeneralMessage message)  {
+        MessagePacket mp = new MessagePacket(message);
         try {
             this.sender.sendMessage(mp.stringify());
         } catch (IOException e) {

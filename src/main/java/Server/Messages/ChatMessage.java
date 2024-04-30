@@ -22,7 +22,7 @@ public class ChatMessage implements Serializable, GeneralMessage {
         try {
             controller.addMessage(message.getMessage(), controller.getPlayerByName(message.getName()));
             controller.getConnectionHandler().getClients().stream()
-                    .forEach(c -> c.sendMessages(MessageType.CHAT, this));
+                    .forEach(c -> c.sendMessages(this));
         } catch (PlayerNotFoundByNameException e) {
             e.printStackTrace();
         }
