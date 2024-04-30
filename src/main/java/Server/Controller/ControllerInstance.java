@@ -57,28 +57,16 @@ public class ControllerInstance implements Controller{
     }
 
     @Override
-    public void addPlayer(String name, ClientHandler c) {
+    public void addPlayer(String name) throws TooManyPlayersException {
 
         Player player = new PlayerInstance(name);
-        try {
-            for (Player p : gameModel.getPlayerList()){
-                if (p.getName().equals(player.getName())) throw new IllegalArgumentException("Player with same name already exists");
-            }
-            if(gameModel.getPlayerList().size()<4) {
-                gameModel.addPlayer(player);
-                //Notify
-                //connectionHandler.addClientName(Threadid, name);
-                PlayerNameMessage playerNameMessage = new PlayerNameMessage(true);
-                c.sendMessages(MessageType.PLAYERNAME, playerNameMessage);
-                NewPlayerMessage playerMessage = new NewPlayerMessage(gameModel.getPlayerList());
-                connectionHandler.sendAllMessage(playerMessage, MessageType.NEWPLAYER);
-            } else {
-                throw new TooManyPlayersException("Too many players");
-            }
-
-        } catch (TooManyPlayersException | IllegalArgumentException e) {
-            PlayerNameMessage playerNameMessage = new PlayerNameMessage(false);
-            c.sendMessages(MessageType.PLAYERNAME, playerNameMessage);
+        for (Player p : gameModel.getPlayerList()){
+            if (p.getName().equals(player.getName())) throw new IllegalArgumentException("Player with same name already exists");
+        }
+        if(gameModel.getPlayerList().size()<4) {
+            gameModel.addPlayer(player);
+        } else {
+            throw new TooManyPlayersException("Too many players");
         }
     }
 

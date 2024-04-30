@@ -15,12 +15,12 @@ import java.util.List;
 public class SecretCardsMessage implements Serializable, GeneralMessage {
 
     private String name;
-    private AchievementCard secretCard;
+    private int secretCardChosen;
     private List<AchievementCard> secretCards;
 
-    public SecretCardsMessage(String name, AchievementCard secretCard) {
+    public SecretCardsMessage(String name, int secretCardChosen) {
         this.name = name;
-        this.secretCard = secretCard;
+        this.secretCardChosen = secretCardChosen;
     }
 
     public SecretCardsMessage(List<AchievementCard> secretCards){
@@ -30,7 +30,7 @@ public class SecretCardsMessage implements Serializable, GeneralMessage {
     public void serverExecute(Controller controller) {
         //la setSecretObjectiveCard va modificata
         try {
-            controller.setSecretObjectiveCard(controller.getPlayerByName(this.name), this.secretCard);
+            controller.setSecretObjectiveCard(controller.getPlayerByName(this.name), this.secretCardChosen);
         } catch (PlayerNotFoundByNameException | AlreadySetException | AlreadyFinishedException | MissingInfoException e) {
             e.printStackTrace();
         }

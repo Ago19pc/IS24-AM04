@@ -20,11 +20,11 @@ public class ServerReceiver extends Thread {
     private ServerConnectionHandler serverConnectionHandler;
 
 
-    public ServerReceiver(ClientHandler clientHanlder, Socket clientSocket) throws IOException {
+    public ServerReceiver(ClientHandler clientHandler, Socket clientSocket) throws IOException {
         this.clientSocket = clientSocket;
-        this.clientHandler = clientHanlder;
+        this.clientHandler = clientHandler;
         this.in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-        this.serverConnectionHandler = clientHanlder.getServerConnectionHandler();
+        this.serverConnectionHandler = clientHandler.getServerConnectionHandler();
         this.messageUtils = new MessageUtils(serverConnectionHandler);
     }
 

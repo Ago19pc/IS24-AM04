@@ -22,7 +22,7 @@ public interface Controller {
      */
     public void addPlayer(Player player) throws TooManyPlayersException, IllegalArgumentException, TooManyPlayersException;
 
-    public void addPlayer(String name, ClientHandler c);
+    public void addPlayer(String name) throws TooManyPlayersException;
 
 
 
