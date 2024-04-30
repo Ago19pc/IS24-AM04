@@ -4,6 +4,7 @@ import Client.Connection.ClientConnectionHandler;
 import ConnectionUtils.MessagePacket;
 import ConnectionUtils.MessageUtils;
 import Server.Chat.Message;
+import Server.Exception.IllegalMessageTypeException;
 import Server.Exception.ServerExecuteNotCallableException;
 
 import java.io.BufferedReader;
@@ -54,13 +55,25 @@ public class ServerReceiver extends Thread {
                 }
 
 
+            } catch (NullPointerException e) {
+                try {
+                    clientSocket.close();
+                    serverConnectionHandler.killClient(clientHandler);
+                    System.out.println("Client disconnesso ");
+                    System.out.println("Ora i client connessi sono: ");
+                    for (ClientHandler c : serverConnectionHandler.getThreads()) {
+                        System.out.print(" " + c.getSocketAddress() + " -");
+                    }
+                    System.out.println();
+                    break;
+                } catch (Exception e2) {
+                    e2.printStackTrace();
+                    throw new RuntimeException(e2);
+                }
             } catch (Exception e) {
-                System.out.println("Error reading from socket");
                 e.printStackTrace();
-                throw new RuntimeException("Error reading from socket", e);
+                throw new RuntimeException(e);
             }
-
-
         }
     }
 }

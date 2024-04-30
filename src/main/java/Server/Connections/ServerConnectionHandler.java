@@ -29,11 +29,10 @@ public class ServerConnectionHandler extends Thread {
         this.clients = new HashMap<>();
         askForPort();
         while (!startServer(port)) {
-            System.out.println("Port already in use, trying next port...");
+            System.out.println("Porta già in uso, provo la successiva...");
             port++;
         }
-        System.out.println("Server started on port: " + port);
-
+        System.out.println("Server avviato sulla porta: " + port);
     }
 
     public ServerConnectionHandler(boolean debugMode){
@@ -43,10 +42,10 @@ public class ServerConnectionHandler extends Thread {
         else
             askForPort();
         while (!startServer(port)) {
-            System.out.println("Port already in use, trying next port...");
+            System.out.println("Porta già in uso, provo la successiva...");
             port++;
         }
-        System.out.println("Server started on port: " + port);
+        System.out.println("Server avviato sulla porta: " + port);
     }
 
     /**
@@ -68,7 +67,7 @@ public class ServerConnectionHandler extends Thread {
         try {
             while (true) {
                 Socket client = this.socket.accept();
-                System.out.println("Received connection");
+                System.out.println("Nuova connessione accettata");
                 ClientHandler t = new ClientHandler(this, client, controller);
                 clients.put(t, null);
                 t.setUncaughtExceptionHandler(h);
@@ -92,7 +91,6 @@ public class ServerConnectionHandler extends Thread {
         try {
             this.socket = new ServerSocket(port);
         } catch (IOException e) {
-            e.printStackTrace();
             return false;
         }
         return true;
@@ -100,12 +98,12 @@ public class ServerConnectionHandler extends Thread {
 
     private void askForPort() {
         Scanner inputReader = new Scanner(System.in);
-        System.out.println("Hello my man, what port would you like to start your server on?");
+        System.out.println("Ciao, su quale porta vuoi avviare il server?");
         this.port = inputReader.nextInt();
     }
 
     public void killClient(ClientHandler target ) {
-        target.interrupt();
+        //target.interrupt();
         clients.remove(target);
         //String/Player offlineplayer = target.getPlayer()
         //controller.setOffline(offlineplayer);
