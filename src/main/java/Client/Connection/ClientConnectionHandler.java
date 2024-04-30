@@ -27,6 +27,7 @@ public class ClientConnectionHandler extends Thread {
         this.controller = controller;
         this.sender = new ClientSender(this, controller);
         sender.start();
+
     }
 
 
