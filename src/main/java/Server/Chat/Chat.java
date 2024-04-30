@@ -10,7 +10,6 @@ public class Chat {
 
     public Chat(){
         this.messages = new LinkedList<>();
-        System.out.println(this.toString() + "Chat created");
     }
 
     /**

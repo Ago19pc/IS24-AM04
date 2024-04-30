@@ -19,11 +19,10 @@ public class Main {
             connectionHandler.setController(controller);
             connectionHandler.start();
         } catch (Exception e) {
-            e.printStackTrace();
-            System.out.println("Something went wrong, try again");
+            System.out.println("Ops. Qualcosa è andato storto.");
         }
 
-        System.out.println("Starting Controller");
+        System.out.println("Avvio controller");
         /*
         try {
             controller.start();

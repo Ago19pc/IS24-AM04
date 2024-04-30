@@ -2,6 +2,7 @@ package Client;
 
 import Client.Connection.ClientConnectionHandler;
 import Client.Controller.ClientController;
+import Client.View.CLI;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -13,6 +14,7 @@ import java.util.Scanner;
 public class HelloApplication extends Application {
 
     private static ClientController controller;
+    private static CLI cli;
 
     @Override
     public void start(Stage stage) throws IOException {
@@ -25,8 +27,9 @@ public class HelloApplication extends Application {
 
     public static void main(String[] args) {
         controller = new ClientController();
+        cli = new CLI(controller);
         controller.main();
-
+        cli.start();
 
 
         launch();

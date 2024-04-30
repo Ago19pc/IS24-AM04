@@ -10,9 +10,8 @@ import java.util.Arrays;
 import java.util.Objects;
 import java.util.Scanner;
 
-public class ClientSender extends Thread {
-    private Socket clientSocket;
-    private Scanner in = new Scanner(System.in);
+public class ClientSender{
+
     private PrintWriter out;
     private ClientConnectionHandler clientConnectionHandler;
     private ClientController controller;
@@ -20,18 +19,6 @@ public class ClientSender extends Thread {
     public ClientSender(ClientConnectionHandler clientConnectionHandler, ClientController controller) {
         this.clientConnectionHandler = clientConnectionHandler;
         this.controller = controller;
-        System.out.println("Type help for a list of commands");
-    }
-
-    private void setSocket(String ip, int port) throws IOException {
-        this.clientSocket = new Socket(ip, port);
-        out = new PrintWriter(clientSocket.getOutputStream(), true);
-        clientConnectionHandler.setSocket(this.clientSocket);
-    }
-
-    public void debugSetSocket(Socket clientSocket) throws IOException {
-        this.clientSocket = clientSocket;
-        out = new PrintWriter(clientSocket.getOutputStream(), true);
     }
     /**
      * Sends a message to the server.
@@ -41,31 +28,7 @@ public class ClientSender extends Thread {
         out.println(message);
     }
 
-    /**
-     * Sends a message to the server, which is read from the console.
-     */
-    public void sendMessage() {
-        String message = in.nextLine();
-        out.println(message);
-    }
-
-    /**
-     * Body of the thread. What it should do
-     */
-    @Override
-    public void run() {
-        while (true) {
-            try {
-                //sendMessage();
-                String[] args = in.nextLine().split(" ");
-                cli_implementation(args);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
-    private void cli_implementation(String[] args) {
+    /*private void cli_implementation(String[] args) {
         if (!Objects.equals(args[0], "join") && !Objects.equals(args[0], "help") && clientSocket == null) {
             System.out.println("You need to join a server first");
             return;
@@ -145,5 +108,5 @@ public class ClientSender extends Thread {
             default:
                 System.out.println("Invalid command");
         }
-    }
+    }*/
 }

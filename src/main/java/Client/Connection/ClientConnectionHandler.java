@@ -26,8 +26,6 @@ public class ClientConnectionHandler extends Thread {
     public ClientConnectionHandler(ClientController controller)  {
         this.controller = controller;
         this.sender = new ClientSender(this, controller);
-        sender.start();
-
     }
 
 
@@ -36,25 +34,6 @@ public class ClientConnectionHandler extends Thread {
             this.controller = controller;
             clientSocket = new Socket("localhost", 1234);
             sender = new ClientSender(this, controller);
-            sender.debugSetSocket(clientSocket);
-            receiver = new ClientReceiver(this, clientSocket, controller);
-                Thread.UncaughtExceptionHandler h = new Thread.UncaughtExceptionHandler() {
-                    @Override
-                    public void uncaughtException(Thread th, Throwable ex) {
-                        System.out.println("Uncaught exception: " + ex);
-                        try {
-                            clientSocket.close();
-
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                };
-                receiver.setUncaughtExceptionHandler(h);
-                sender.setUncaughtExceptionHandler(h);
-
-                sender.start();
-                receiver.start();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -64,8 +43,8 @@ public class ClientConnectionHandler extends Thread {
 
     public void setSocket(Socket clientSocket) throws IOException {
         this.clientSocket = clientSocket;
-        this.receiver = new ClientReceiver(this, clientSocket, this.controller);
         try {
+            this.receiver = new ClientReceiver(this, clientSocket, controller);
             Thread.UncaughtExceptionHandler h = new Thread.UncaughtExceptionHandler() {
                 @Override
                 public void uncaughtException(Thread th, Throwable ex) {
@@ -78,8 +57,6 @@ public class ClientConnectionHandler extends Thread {
                     }
                 }
             };
-            receiver.setUncaughtExceptionHandler(h);
-            receiver.start();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -94,9 +71,14 @@ public class ClientConnectionHandler extends Thread {
      * The main body, what the thread does
      */
     public void run() {
-
+        while(receiver == null){
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        }
         try {
-            sender.join();
             receiver.join();
 
         } catch (InterruptedException e) {
@@ -115,14 +97,6 @@ public class ClientConnectionHandler extends Thread {
         sender.sendMessage(msg);
     }
 
-    /**
-     * Asks to input the string to send
-     * @throws IOException
-     */
-    public void sendMessage() throws IOException {
-        sender.sendMessage();
-    }
-
     public void sendMessage(GeneralMessage message) throws IOException {
         MessagePacket packet = new MessagePacket(message);
         sender.sendMessage(packet.stringify());
@@ -135,7 +109,6 @@ public class ClientConnectionHandler extends Thread {
      * @throws IOException
      */
     public void stopConnection() throws IOException {
-        sender.interrupt();
         receiver.interrupt();
         clientSocket.close();
     }
