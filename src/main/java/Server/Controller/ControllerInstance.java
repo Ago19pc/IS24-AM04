@@ -5,6 +5,7 @@ import Server.Card.Card;
 import Server.Card.CornerCardFace;
 import Server.Card.StartingCard;
 import Server.Chat.Message;
+import Server.Connections.ClientHandler;
 import Server.Connections.ServerConnectionHandler;
 import Server.Deck.AchievementDeck;
 import Server.Enums.*;
@@ -162,15 +163,28 @@ public class ControllerInstance implements Controller{
     }
 
     @Override
-    public void addPlayer(String name, Long Threadid) {
+    public void addPlayer(String name, ClientHandler c) {
 
-        Player p = new PlayerInstance(name);
+        Player player = new PlayerInstance(name);
         try {
-            addPlayer(p);
-            connectionHandler.addClientName(Threadid, name);
+            for (Player p : gameModel.getPlayerList()){
+                if (p.getName().equals(player.getName())) throw new IllegalArgumentException("Player with same name already exists");
+            }
+            if(gameModel.getPlayerList().size()<4) {
+                gameModel.addPlayer(player);
+                //Notify
+                //connectionHandler.addClientName(Threadid, name);
+                PlayerNameMessage playerNameMessage = new PlayerNameMessage(true);
+                c.sendMessages(MessageType.PLAYERNAME, playerNameMessage);
+                NewPlayerMessage playerMessage = new NewPlayerMessage(gameModel.getPlayerList());
+                connectionHandler.sendAllMessage(playerMessage, MessageType.NEWPLAYER);
+            } else {
+                throw new TooManyPlayersException("Too many players");
+            }
+
         } catch (TooManyPlayersException | IllegalArgumentException e) {
             PlayerNameMessage playerNameMessage = new PlayerNameMessage(false);
-            connectionHandler.sendMessage(playerNameMessage, MessageType.PLAYERNAME, Threadid);
+            c.sendMessages(MessageType.PLAYERNAME, playerNameMessage);
         }
     }
 
@@ -520,7 +534,7 @@ public class ControllerInstance implements Controller{
     public void printData() {
         System.out.println("----------");
         System.out.println("Players:");
-        this.gameModel.getPlayerList().stream().forEach(p -> System.out.print(p.getName() + " " + p.getColor() + ", "));
+        this.gameModel.getPlayerList().stream().forEach(p -> System.out.print(p.getName() + " " + p.getColor() + " " + p.isReady() +  ", "));
         System.out.println("\n");
     }
 }

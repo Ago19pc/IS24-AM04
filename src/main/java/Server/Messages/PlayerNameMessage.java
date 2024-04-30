@@ -19,7 +19,7 @@ public class PlayerNameMessage implements GeneralMessage, Serializable {
     public void serverExecute(Controller controller) {
         for (ClientHandler c: controller.getConnectionHandler().getClients()) {
             if (c.getReceiver().threadId() == Thread.currentThread().threadId()) {
-                controller.addPlayer(this.name, c.threadId());
+                controller.addPlayer(this.name, c);
             }
         }
     }
@@ -27,10 +27,13 @@ public class PlayerNameMessage implements GeneralMessage, Serializable {
     @Override
     public void clientExecute(ClientController controller) {
 
-       if(confirmation)
+       if(confirmation) {
+           controller.setName();
            System.out.println("Accepted name");
-       else
+       }
+       else {
            System.out.println("Invalid name, please choose another one");
+       }
 
     }
 }

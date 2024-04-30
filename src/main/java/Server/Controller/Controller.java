@@ -2,6 +2,7 @@ package Server.Controller;
 
 import Server.Card.AchievementCard;
 import Server.Chat.Message;
+import Server.Connections.ClientHandler;
 import Server.Connections.ServerConnectionHandler;
 import Server.Enums.Color;
 import Server.Enums.DeckPosition;
@@ -21,7 +22,7 @@ public interface Controller {
      */
     public void addPlayer(Player player) throws TooManyPlayersException, IllegalArgumentException, TooManyPlayersException;
 
-    public void addPlayer(String name, Long ThreadId);
+    public void addPlayer(String name, ClientHandler c);
 
 
 

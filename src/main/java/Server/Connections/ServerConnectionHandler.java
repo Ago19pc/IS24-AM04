@@ -1,6 +1,7 @@
 package Server.Connections;
 
 
+import Client.Controller.ClientController;
 import Server.Controller.Controller;
 import Server.Enums.MessageType;
 import Server.Messages.GeneralMessage;
@@ -15,6 +16,8 @@ public class ServerConnectionHandler extends Thread {
     private ServerSocket socket;
     private List<ClientHandler> clients;
     private Map<Long, String> clientNames;
+
+    private Map<String, ClientHandler> nameToHandler = new HashMap<>();
 
     private int port;
 
@@ -154,8 +157,9 @@ public class ServerConnectionHandler extends Thread {
             this.replaceID(oldID, threadID);
 
         }
-
     }
+
+
 
     public void removeClientName(Long threadID) {
         this.clientNames.remove(threadID);
@@ -187,12 +191,30 @@ public class ServerConnectionHandler extends Thread {
         }
     }
     public void sendMessage(GeneralMessage message, MessageType type, String name) {
-
         for (ClientHandler c : clients) {
             if (clientNames.get(c.threadId()) == name) {
+                System.out.println("NAME MATCH FOUND");
                 c.sendMessages(type, message);
             }
         }
+    }
+
+    /*public void mapNameToHandler(String name, ClientController handler) {
+        if (nameToHandler.keySet().contains(name)) {
+            // RIMPIAZZA NOME
+            this.nameToHandler.replace(name, handler);
+        } else {
+            // AGGIUNGI NOME
+            this.nameToHandler.put(name, handler);
+
+        }
+    }*/
+    public void removeNameToHandler(String name) {
+        this.nameToHandler.remove(name);
+    }
+
+    public ClientHandler getClientHandlerByName(String name) {
+        return nameToHandler.get(name);
     }
 }
 

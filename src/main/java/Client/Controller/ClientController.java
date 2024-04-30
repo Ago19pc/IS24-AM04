@@ -19,6 +19,7 @@ import Server.Player.Player;
 
 import java.io.IOException;
 import java.net.Socket;
+import java.util.ArrayList;
 import java.util.List;
 
 public class ClientController {
@@ -27,7 +28,7 @@ public class ClientController {
     private String proposedName;
     private Color myColor;
     private Color proposedColor;
-    private List<Color> unavaiableColors;
+    private List<Color> unavaiableColors = new ArrayList<>();
     private boolean myReady = false;
     private  AchievementDeck achievementDeck;
     private  GoldDeck goldDeck;
@@ -63,7 +64,7 @@ public class ClientController {
     }
 
     public void askSetName(String name) {
-        proposedName = name;
+        this.proposedName = name;
         PlayerNameMessage playerNameMessage = new PlayerNameMessage(proposedName);
         try {
             clientConnectionHandler.sendMessage(playerNameMessage, Server.Enums.MessageType.PLAYERNAME);
@@ -72,7 +73,7 @@ public class ClientController {
         }
     }
     public void setName(){
-        myName = proposedName;
+        this.myName = this.proposedName;
     }
     public void boardInit(AchievementDeck achievementDeck, GoldDeck goldDeck, ResourceDeck resourceDeck){
         this.goldDeck = goldDeck;
@@ -141,7 +142,7 @@ public class ClientController {
 
         }
     public void askSetColor(String color) {
-        if (myName == null) {
+        if (this.myName == null) {
             System.out.println("You must set your name first");
             return;
         }
