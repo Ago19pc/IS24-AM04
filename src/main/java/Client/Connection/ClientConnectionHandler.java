@@ -8,6 +8,8 @@ import Server.Messages.GeneralMessage;
 import Server.Messages.PlayerNameMessage;
 
 import java.io.IOException;
+import java.io.OutputStream;
+import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.Scanner;
 
@@ -28,6 +30,17 @@ public class ClientConnectionHandler extends Thread {
         this.sender = new ClientSender(this, controller);
     }
 
+    /**
+     * Gets socket output buffer
+     * @return the socket output buffer
+     */
+    public OutputStream getSocketOutputBuffer() {
+        try {
+            return clientSocket.getOutputStream();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
     public ClientConnectionHandler(boolean debugMode, ClientController controller) {
         try {
@@ -44,6 +57,7 @@ public class ClientConnectionHandler extends Thread {
     public void setSocket(Socket clientSocket) throws IOException {
         this.clientSocket = clientSocket;
         try {
+            this.sender.setOutputBuffer(new PrintWriter(clientSocket.getOutputStream(), true));
             this.receiver = new ClientReceiver(this, clientSocket, controller);
             Thread.UncaughtExceptionHandler h = new Thread.UncaughtExceptionHandler() {
                 @Override
@@ -57,6 +71,8 @@ public class ClientConnectionHandler extends Thread {
                     }
                 }
             };
+            receiver.setUncaughtExceptionHandler(h);
+            receiver.start();
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -33,6 +33,7 @@ public class ClientHandler extends Thread {
         try {
             sender = new ServerSender(this, this.socket, this.controller);
             receiver = new ServerReceiver(this, this.socket);
+            receiver.setUncaughtExceptionHandler(h);
         } catch (Exception e) {
             System.out.println("LOL2");
             throw e;
@@ -46,7 +47,6 @@ public class ClientHandler extends Thread {
             System.out.print(" " + c.socket.getInetAddress() +" -");
         }
         System.out.println();
-        receiver.setUncaughtExceptionHandler(h);
         receiver.start();
 
         try {

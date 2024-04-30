@@ -46,7 +46,7 @@ public class ServerReceiver extends Thread {
                 try {
                     synchronized (serverConnectionHandler.getController()) {
                         packet.getPayload().serverExecute(serverConnectionHandler.getController());
-                        System.out.println("RECEIVED MESSAGE AND EXECUTED");
+                        System.out.println("Azione eseguita con successo!");
                         serverConnectionHandler.getController().notifyAll();
                     }
                 }

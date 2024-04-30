@@ -1,6 +1,7 @@
 package Client.Controller;
 
 import Client.Connection.ClientConnectionHandler;
+import Client.View.CLI;
 import ConnectionUtils.MessagePacket;
 import Server.Card.Card;
 import Server.Card.CornerCardFace;
@@ -35,17 +36,17 @@ public class ClientController {
     private  ResourceDeck resourceDeck;
     private  Chat chat = new Chat();
     private  ClientConnectionHandler clientConnectionHandler;
-
+    private CLI cli ;
     private PossibleCardPlacementSave move;
 
     private String activePlayerName;
 
     private int turn = 0;
 
-    public void main() {
+    public void main(CLI cli) {
         clientConnectionHandler = new ClientConnectionHandler(this);
         clientConnectionHandler.start();
-
+        this.cli = cli;
     }
 
     public void setTurn(int turn) {
@@ -72,8 +73,13 @@ public class ClientController {
             e.printStackTrace();
         }
     }
-    public void setName(){
-        this.myName = this.proposedName;
+    public void setName(Boolean confirmation){
+        if(confirmation){
+            this.myName = this.proposedName;
+            cli.nameChanged(myName);
+        } else {
+            cli.nameChangeFailed();
+        }
     }
     public void boardInit(AchievementDeck achievementDeck, GoldDeck goldDeck, ResourceDeck resourceDeck){
         this.goldDeck = goldDeck;
@@ -199,8 +205,8 @@ public class ClientController {
     }
 
     public void setPlayerList (List<Player> p) {
-        System.out.println("Setting player list" + p.get(0));
         this.players = p;
+        cli.playerListChanged(p);
     }
     public List<Player> getPlayers() {
         return players;

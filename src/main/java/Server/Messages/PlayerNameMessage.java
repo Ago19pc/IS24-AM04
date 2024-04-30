@@ -28,6 +28,7 @@ public class PlayerNameMessage implements GeneralMessage, Serializable {
                     c.sendMessages(playerNameMessage);
                     NewPlayerMessage playerMessage = new NewPlayerMessage(controller.getPlayerList());
                     controller.getConnectionHandler().sendAllMessage(playerMessage);
+                    System.out.println(c.getSocketAddress() + " ha scelto il nome " + this.name);
                 } catch (Exception e) {
                     PlayerNameMessage playerNameMessage = new PlayerNameMessage(false);
                     c.sendMessages(playerNameMessage);
@@ -38,14 +39,6 @@ public class PlayerNameMessage implements GeneralMessage, Serializable {
 
     @Override
     public void clientExecute(ClientController controller) {
-
-       if(confirmation) {
-           controller.setName();
-           System.out.println("Accepted name");
-       }
-       else {
-           System.out.println("Invalid name, please choose another one");
-       }
-
+        controller.setName(confirmation);
     }
 }

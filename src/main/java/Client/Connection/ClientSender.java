@@ -21,6 +21,14 @@ public class ClientSender{
         this.controller = controller;
     }
     /**
+     * Sets this sender's output buffer
+     * @param out the output buffer
+     */
+    public void setOutputBuffer(PrintWriter out) {
+        this.out = out;
+    }
+
+    /**
      * Sends a message to the server.
      * @param message String, the message to send.
      */

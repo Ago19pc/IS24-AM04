@@ -1,9 +1,11 @@
 package Client.View;
 
 import Client.Controller.ClientController;
+import Server.Player.Player;
 
 import java.io.IOException;
 import java.net.Socket;
+import java.util.List;
 import java.util.Scanner;
 
 public class CLI extends Thread{
@@ -37,6 +39,7 @@ public class CLI extends Thread{
                 System.out.println("Lista dei comandi:");
                 System.out.println("help: mostra la lista dei comandi");
                 System.out.println("join <ip> <porta>: si connette al server con l'indirizzo ip e la porta specificati");
+                System.out.println("setName <nome>: imposta il nome del giocatore");
                 break;
             case "join":
                 if (args.length != 3) {
@@ -50,8 +53,39 @@ public class CLI extends Thread{
                     System.out.println("Impossibile connettersi al server");
                 }
                 break;
+            case "setName":
+                if(args.length != 2){
+                    System.out.println("Utilizzo corretto: setName <nome>");
+                    return;
+                }
+                controller.askSetName(args[1]);
+                break;
             default:
                 System.out.println("Comando non valido. Digita \"help\" per la lista dei comandi");
         }
+    }
+
+    /**
+     * Prints the new name
+     * @param name new name
+     */
+    public void nameChanged(String name){
+        System.out.println("Il tuo nome è stato cambiato in: " + name);
+    }
+    public void nameChangeFailed(){
+        System.out.println("Impossibile cambiare il nome. Assicurati di aver inserito un nome disponibile");
+        System.out.print(">");
+    }
+
+    /**
+     * Prints the new player list
+     * @param players list of players
+     */
+    public void playerListChanged(List<Player> players) {
+        System.out.println("I giocatori ora sono: ");
+        for (Player player : players) {
+            System.out.println(player.getName());
+        }
+        System.out.print(">");
     }
 }

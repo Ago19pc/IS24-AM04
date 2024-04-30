@@ -28,7 +28,7 @@ public class HelloApplication extends Application {
     public static void main(String[] args) {
         controller = new ClientController();
         cli = new CLI(controller);
-        controller.main();
+        controller.main(cli);
         cli.start();
 
 
