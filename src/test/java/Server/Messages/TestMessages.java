@@ -7,7 +7,6 @@ import Server.Controller.Controller;
 import Server.Controller.ControllerInstance;
 import Server.Enums.Color;
 import Server.Enums.Face;
-import Server.Enums.MessageType;
 import Server.Exception.AlreadySetException;
 import Server.Exception.PlayerNotFoundByNameException;
 import Server.Exception.TooFewElementsException;

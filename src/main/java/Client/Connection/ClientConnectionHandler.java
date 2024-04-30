@@ -3,13 +3,10 @@ package Client.Connection;
 import Client.Controller.ClientController;
 import ConnectionUtils.MessagePacket;
 import ConnectionUtils.MessageUtils;
-import Server.Enums.MessageType;
 import Server.Messages.GeneralMessage;
-import Server.Messages.PlayerNameMessage;
 
 import java.io.IOException;
 import java.net.Socket;
-import java.util.Scanner;
 
 public class ClientConnectionHandler extends Thread {
     private Socket clientSocket;
@@ -28,7 +25,9 @@ public class ClientConnectionHandler extends Thread {
         this.sender = new ClientSender(this, controller);
     }
 
-
+    /**
+     * Constructor for the tests, sets the host to localhost and port to 1234
+     */
     public ClientConnectionHandler(boolean debugMode, ClientController controller) {
         try {
             this.controller = controller;
@@ -40,7 +39,11 @@ public class ClientConnectionHandler extends Thread {
     }
 
 
-
+    /**
+     * Sets the socket for the receiver
+     * @param clientSocket the socket
+     * @throws IOException
+     */
     public void setSocket(Socket clientSocket) throws IOException {
         this.clientSocket = clientSocket;
         try {
@@ -57,6 +60,8 @@ public class ClientConnectionHandler extends Thread {
                     }
                 }
             };
+            receiver.setUncaughtExceptionHandler(h);
+            receiver.start();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -97,6 +102,11 @@ public class ClientConnectionHandler extends Thread {
         sender.sendMessage(msg);
     }
 
+    /**
+     * Sends a message to the server
+     * @param message the message to send
+     * @throws IOException
+     */
     public void sendMessage(GeneralMessage message) throws IOException {
         MessagePacket packet = new MessagePacket(message);
         sender.sendMessage(packet.stringify());

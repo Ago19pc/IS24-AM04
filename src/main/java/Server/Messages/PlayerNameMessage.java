@@ -3,7 +3,6 @@ package Server.Messages;
 import Client.Controller.ClientController;
 import Server.Connections.ClientHandler;
 import Server.Controller.Controller;
-import Server.Enums.MessageType;
 
 import java.io.Serializable;
 

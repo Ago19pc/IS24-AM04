@@ -1,7 +1,6 @@
 package ConnectionUtils;
 
 
-import Server.Enums.MessageType;
 import Server.Exception.IllegalMessageTypeException;
 import Server.Messages.*;
 

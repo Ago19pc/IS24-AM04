@@ -168,14 +168,33 @@ public interface Controller {
      */
     public void loadGame() throws IOException;
 
+    /**
+     * @param name
+     * @return the Player instance associated with the name
+     * @throws PlayerNotFoundByNameException
+     */
     public Player getPlayerByName(String name) throws PlayerNotFoundByNameException;
 
+    /**
+     * @return the ServerConnectionHandler
+     */
     public ServerConnectionHandler getConnectionHandler();
 
+    /**
+     * Prints some data
+     */
     public void printData();
 
+    /**
+     * Acknowledge the initialization of the hand, its uses a static variable to count up to the player count,
+     * when this condition is met, the Achievement Cards are given to the players
+     */
     public void ackInitHand();
 
+    /**
+     * Acknowledge the initialization of the board, its uses a static variable to count up to the player count,
+     * when this condition is met, the Starting Cards are given to the players
+     */
     public void ackInitBoard();
 
 }

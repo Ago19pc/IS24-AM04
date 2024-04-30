@@ -13,6 +13,12 @@ public class DrawCardMessage implements GeneralMessage {
     private final Decks from;
     private final DeckPosition deckPosition;
 
+    /**
+     * Constructor for the DrawCardMessage, used to draw a card from deckPosition
+     * @param name
+     * @param deckPosition
+     * @param from
+     */
     public DrawCardMessage(String name, DeckPosition deckPosition, Decks from) {
         this.name = name;
         this.from = from;

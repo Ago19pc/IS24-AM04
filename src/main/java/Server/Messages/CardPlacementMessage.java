@@ -26,6 +26,14 @@ public class CardPlacementMessage implements Serializable, GeneralMessage {
         this.isPlayable = isPlayable;
     }
 
+    /**
+     * Constructor for the CardPlacementMessage, which is used to place a card on the board
+     * @param name
+     * @param hand_pos
+     * @param xCoord
+     * @param yCoord
+     * @param face
+     */
     public CardPlacementMessage(String name, int hand_pos, int xCoord, int yCoord, Face face) {
         this.name = name;
         this.face = face;
@@ -33,6 +41,11 @@ public class CardPlacementMessage implements Serializable, GeneralMessage {
         this.xCoord = xCoord;
         this.yCoord = yCoord;
     }
+
+    /**
+     *
+     * @param controller
+     */
     public void serverExecute(Controller controller)  {
         try {
             controller.playCard(controller.getPlayerByName(name), this.hand_pos, this.xCoord, this.yCoord, this.face);

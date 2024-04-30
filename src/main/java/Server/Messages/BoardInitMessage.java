@@ -20,7 +20,13 @@ public class BoardInitMessage implements Serializable, GeneralMessage {
     private AchievementDeck achievementDeck;
     private List<Player> players;
 
-
+    /**
+     * Constructor for the BoardInitMessage, which is used to initialize the board
+     * @param resourceDeck
+     * @param goldDeck
+     * @param achievementDeck
+     * @param players
+     */
     public BoardInitMessage(ResourceDeck resourceDeck, GoldDeck goldDeck, AchievementDeck achievementDeck, List<Player> players) {
         this.resourceDeck = resourceDeck;
         this.goldDeck = goldDeck;
@@ -28,11 +34,24 @@ public class BoardInitMessage implements Serializable, GeneralMessage {
         this.players = players;
     }
 
+    /**
+     * Constructor for the acknowledgement of the BoardInitMessage
+     */
+
     public BoardInitMessage() {}
 
+    /**
+     * Executes the server side of the message
+     * @param controller, which is ServerController
+     */
     public void serverExecute(Controller controller) {
         controller.ackInitBoard();
     }
+
+    /**
+     * Executes the client side of the message,
+     * @param controller, which is ClientController
+     */
     public void clientExecute(ClientController controller){
 
         controller.boardInit(achievementDeck, goldDeck, resourceDeck);

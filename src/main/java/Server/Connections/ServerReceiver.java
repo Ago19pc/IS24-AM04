@@ -29,7 +29,6 @@ public class ServerReceiver extends Thread {
         this.messageUtils = new MessageUtils(serverConnectionHandler);
     }
 
-
     /**
      * Run method for the thread
      * This method reads the messages and executes them

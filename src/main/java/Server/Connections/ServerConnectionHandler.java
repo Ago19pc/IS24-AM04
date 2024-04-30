@@ -1,16 +1,13 @@
 package Server.Connections;
 
 
-import Client.Controller.ClientController;
 import Server.Controller.Controller;
-import Server.Enums.MessageType;
 import Server.Messages.GeneralMessage;
 
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class ServerConnectionHandler extends Thread {
     private ServerSocket socket;
@@ -22,7 +19,7 @@ public class ServerConnectionHandler extends Thread {
 
 
     /**
-     * Create the server socket, needed to choose port
+     * Create the server socket
      *
      */
     public ServerConnectionHandler() throws IOException {
@@ -35,6 +32,10 @@ public class ServerConnectionHandler extends Thread {
         System.out.println("Server avviato sulla porta: " + port);
     }
 
+    /**
+     * Create the server socket
+     * @param debugMode if true the server will start on port 1234
+     */
     public ServerConnectionHandler(boolean debugMode){
         this.clients = new HashMap<>();
         if(debugMode)
@@ -56,6 +57,9 @@ public class ServerConnectionHandler extends Thread {
         this.controller = controller;
     }
 
+    /**
+     * Accept new connections and create a new ClientHandler thread for each one
+     */
     public void run() {
         Thread.UncaughtExceptionHandler h = new Thread.UncaughtExceptionHandler() {
             @Override
@@ -96,12 +100,19 @@ public class ServerConnectionHandler extends Thread {
         return true;
     }
 
+    /**
+     * Ask for the port to start the server
+     */
     private void askForPort() {
         Scanner inputReader = new Scanner(System.in);
         System.out.println("Ciao, su quale porta vuoi avviare il server?");
         this.port = inputReader.nextInt();
     }
 
+    /**
+     * Kill a ClientHandler thread
+     * @param target the client thread to kill
+     */
     public void killClient(ClientHandler target ) {
         //target.interrupt();
         clients.remove(target);
@@ -109,6 +120,10 @@ public class ServerConnectionHandler extends Thread {
         //controller.setOffline(offlineplayer);
     }
 
+    /**
+     * Kill a ClientHandler thread
+     * @param name the name of the client thread to kill
+     */
     public void killClient(String name) {
         ClientHandler target = clients.entrySet().stream()
                 .filter(entry -> entry.getValue().equals(name))
@@ -116,13 +131,27 @@ public class ServerConnectionHandler extends Thread {
         killClient(target);
     }
 
+    /**
+     * Get the controller instance
+     * @return the ControllerInstance of the server
+     */
     public Controller getController() {return this.controller;}
 
+    /**
+     * Send a message to all the clients
+     * @param message the message to send
+     */
     public void sendAllMessage(GeneralMessage message) {
         for (ClientHandler c : clients.keySet()) {
             c.sendMessages(message);
         }
     }
+
+    /**
+     * Send a message to a specific client
+     * @param message the message to send
+     * @param name the name of the client to send the message to
+     */
     public void sendMessage(GeneralMessage message, String name) {
         ClientHandler target = clients.entrySet().stream()
                 .filter(entry -> entry.getValue().equals(name))
@@ -131,6 +160,11 @@ public class ServerConnectionHandler extends Thread {
         target.sendMessages(message);
     }
 
+    /**
+     * Sets a name for the ClientHandler to be easier to find later
+     * @param clientHandler the ClientHandler to associate the name with
+     * @param name the name to associate with the ClientHandler
+     */
     public void setName(ClientHandler clientHandler, String name) {
         clients.put(clientHandler, name);
     }

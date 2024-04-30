@@ -3,7 +3,6 @@ package Server.Connections;
 
 import ConnectionUtils.MessagePacket;
 import Server.Controller.Controller;
-import Server.Enums.MessageType;
 import Server.Messages.GeneralMessage;
 
 import java.io.IOException;
@@ -19,6 +18,15 @@ public class ClientHandler extends Thread {
 
 
     ClientHandler me = this;
+
+    /**
+     * Constructor
+     * @param connectionHandler the ServerConnectionHandler that created this ClientHandler
+     * @param client the client's socket
+     * @param controller the controller of the server
+     * @throws IOException if the sender or receiver can't be created
+     * @throws RuntimeException if the sender or receiver can't be created
+     */
     public ClientHandler(ServerConnectionHandler connectionHandler, Socket client, Controller controller) throws IOException, RuntimeException {
         this.controller = controller;
         this.socket = client;
@@ -39,6 +47,10 @@ public class ClientHandler extends Thread {
         }
     }
 
+
+    /**
+     * Creates the receiver to listen to the client messages
+     */
     public void run() {
         System.out.println("Nuovo Client connesso: " + this.socket.getInetAddress());
         System.out.println("Ora i client connessi sono: ");
@@ -60,7 +72,10 @@ public class ClientHandler extends Thread {
     }
 
 
-
+    /**
+     * Sends a message to the client
+     * @param message the message to send
+     */
     public void sendMessages(GeneralMessage message)  {
         MessagePacket mp = new MessagePacket(message);
         try {
@@ -72,10 +87,16 @@ public class ClientHandler extends Thread {
     }
 
 
+    /**
+     * Returns the assosiated ServerConnectionHandler
+     */
     public ServerConnectionHandler getServerConnectionHandler() {
         return this.connectionHandler;
     }
 
+    /**
+     * Returns the receiver of this client
+     */
     public ServerReceiver getReceiver() {
         return this.receiver;
     }
