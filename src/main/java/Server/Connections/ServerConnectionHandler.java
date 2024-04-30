@@ -14,11 +14,7 @@ import java.util.stream.Collectors;
 
 public class ServerConnectionHandler extends Thread {
     private ServerSocket socket;
-    private List<ClientHandler> clients;
-    private Map<Long, String> clientNames;
-
-    private Map<String, ClientHandler> nameToHandler = new HashMap<>();
-
+    private Map<ClientHandler, String> clients;
     private int port;
 
     private Controller controller;
@@ -30,10 +26,8 @@ public class ServerConnectionHandler extends Thread {
      *
      */
     public ServerConnectionHandler() throws IOException {
-        this.clientNames = new HashMap<Long, String>();
+        this.clients = new HashMap<>();
         askForPort();
-
-        clients = new ArrayList<>();
         while (!startServer(port)) {
             System.out.println("Port already in use, trying next port...");
             port++;
@@ -43,12 +37,11 @@ public class ServerConnectionHandler extends Thread {
     }
 
     public ServerConnectionHandler(boolean debugMode){
-        this.clientNames = new HashMap<Long, String>();
+        this.clients = new HashMap<>();
         if(debugMode)
             this.port = 1234;
         else
             askForPort();
-        clients = new ArrayList<>();
         while (!startServer(port)) {
             System.out.println("Port already in use, trying next port...");
             port++;
@@ -77,9 +70,9 @@ public class ServerConnectionHandler extends Thread {
                 Socket client = this.socket.accept();
                 System.out.println("Received connection");
                 ClientHandler t = new ClientHandler(this, client, controller);
+                clients.put(t, null);
                 t.setUncaughtExceptionHandler(h);
                 t.start();
-                clients.add(t);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -91,8 +84,8 @@ public class ServerConnectionHandler extends Thread {
      * Get the client threads list
      * @return this.threads the list of all client thread
      */
-    List<ClientHandler> getThreads() {
-        return this.clients;
+    public List<ClientHandler> getThreads() {
+        return this.clients.keySet().stream().toList();
     }
 
     private boolean startServer(int port) {
@@ -113,108 +106,35 @@ public class ServerConnectionHandler extends Thread {
 
     public void killClient(ClientHandler target ) {
         target.interrupt();
-        this.clients = this.clients.stream()
-                .filter(e -> e.threadId() != (target.threadId()))
-                .collect(Collectors.toList());
+        clients.remove(target);
         //String/Player offlineplayer = target.getPlayer()
         //controller.setOffline(offlineplayer);
     }
 
     public void killClient(String name) {
-        for (Long id : clientNames.keySet()) {
-            if (clientNames.get(id).equals(name)) {
-                for (ClientHandler c: clients) {
-                    if (c.threadId() == id) {
-                        c.interrupt();
-                        this.clients = this.clients.stream()
-                                .filter(e -> e.threadId() != (c.threadId()))
-                                .collect(Collectors.toList());
-                    }
-                }
-
-
-            }
-            return;
-        }
-    }
-    /**
-     * Adds client name to the map of names and thread.
-     * It also handles when a client reconnects with the same name, but the thread id is different.
-     * @param threadID the id of the thread
-     * @param name the name of the client
-     */
-    public void addClientName(Long threadID, String name) {
-        if (clientNames.containsValue(name)){
-            this.clientNames.put(threadID, name);
-        } else {
-            // get old id
-            Long oldID = this.clientNames.entrySet().stream()
-                    .filter(e -> e.getValue().equals(name))
-                    .map(Map.Entry::getKey)
-                    .findFirst()
-                    .orElse(null);
-            // replace old id with new id
-            this.replaceID(oldID, threadID);
-
-        }
-    }
-
-
-
-    public void removeClientName(Long threadID) {
-        this.clientNames.remove(threadID);
-    }
-
-    private void replaceID(Long oldID, Long newID) {
-        String name = this.clientNames.get(oldID);
-        this.clientNames.remove(oldID);
-        this.clientNames.put(newID, name);
-        //controller.reconnectPlayer(name);
+        ClientHandler target = clients.entrySet().stream()
+                .filter(entry -> entry.getValue().equals(name))
+                .toList().getFirst().getKey();
+        killClient(target);
     }
 
     public Controller getController() {return this.controller;}
 
-    public List<ClientHandler> getClients() {
-        return clients;
-    }
-
-    public void sendAllMessage(GeneralMessage message) {
-        for (ClientHandler c : clients) {
-            c.sendMessages(message);
+    public void sendAllMessage(GeneralMessage message, MessageType type) {
+        for (ClientHandler c : clients.keySet()) {
+            c.sendMessages(type, message);
         }
     }
-    public void sendMessage(GeneralMessage message, Long threadId) {
-        for (ClientHandler c : clients) {
-            if (c.threadId() == threadId) {
-                c.sendMessages(message);
-            }
-        }
-    }
-    public void sendMessage(GeneralMessage message, String name) {
-        for (ClientHandler c : clients) {
-            if (clientNames.get(c.threadId()) == name) {
-                System.out.println("NAME MATCH FOUND");
-                c.sendMessages(message);
-            }
-        }
+    public void sendMessage(GeneralMessage message, MessageType type, String name) {
+        ClientHandler target = clients.entrySet().stream()
+                .filter(entry -> entry.getValue().equals(name))
+                .toList().getFirst().getKey();
+        System.out.println("NAME MATCH FOUND");
+        target.sendMessages(type, message);
     }
 
-    /*public void mapNameToHandler(String name, ClientController handler) {
-        if (nameToHandler.keySet().contains(name)) {
-            // RIMPIAZZA NOME
-            this.nameToHandler.replace(name, handler);
-        } else {
-            // AGGIUNGI NOME
-            this.nameToHandler.put(name, handler);
-
-        }
-    }*/
-    public void removeNameToHandler(String name) {
-        this.nameToHandler.remove(name);
-    }
-
-    public ClientHandler getClientHandlerByName(String name) {
-        return nameToHandler.get(name);
+    public void setName(ClientHandler clientHandler, String name) {
+        clients.put(clientHandler, name);
     }
 }
 

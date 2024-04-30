@@ -47,9 +47,9 @@ public class ControllerInstance implements Controller{
             gameModel.addPlayer(player);
             //Notify
             PlayerNameMessage playerNameMessage = new PlayerNameMessage(true);
-            connectionHandler.sendMessage(playerNameMessage, player.getName());
+            connectionHandler.sendMessage(playerNameMessage, MessageType.PLAYERNAME, player.getName());
             NewPlayerMessage playerMessage = new NewPlayerMessage(gameModel.getPlayerList());
-            connectionHandler.sendAllMessage(playerMessage);
+            connectionHandler.sendAllMessage(playerMessage, MessageType.NEWPLAYER);
         } else {
             throw new TooManyPlayersException("Too many players");
         }
@@ -57,28 +57,16 @@ public class ControllerInstance implements Controller{
     }
 
     @Override
-    public void addPlayer(String name, ClientHandler c) {
+    public void addPlayer(String name) throws TooManyPlayersException {
 
         Player player = new PlayerInstance(name);
-        try {
-            for (Player p : gameModel.getPlayerList()){
-                if (p.getName().equals(player.getName())) throw new IllegalArgumentException("Player with same name already exists");
-            }
-            if(gameModel.getPlayerList().size()<4) {
-                gameModel.addPlayer(player);
-                //Notify
-                //connectionHandler.addClientName(Threadid, name);
-                PlayerNameMessage playerNameMessage = new PlayerNameMessage(true);
-                c.sendMessages(playerNameMessage);
-                NewPlayerMessage playerMessage = new NewPlayerMessage(gameModel.getPlayerList());
-                connectionHandler.sendAllMessage(playerMessage);
-            } else {
-                throw new TooManyPlayersException("Too many players");
-            }
-
-        } catch (TooManyPlayersException | IllegalArgumentException e) {
-            PlayerNameMessage playerNameMessage = new PlayerNameMessage(false);
-            c.sendMessages(playerNameMessage);
+        for (Player p : gameModel.getPlayerList()){
+            if (p.getName().equals(player.getName())) throw new IllegalArgumentException("Player with same name already exists");
+        }
+        if(gameModel.getPlayerList().size()<4) {
+            gameModel.addPlayer(player);
+        } else {
+            throw new TooManyPlayersException("Too many players");
         }
     }
 

@@ -3,6 +3,7 @@ package Server.Messages;
 import Client.Controller.ClientController;
 import Server.Connections.ClientHandler;
 import Server.Controller.Controller;
+import Server.Enums.MessageType;
 
 import java.io.Serializable;
 
@@ -17,9 +18,20 @@ public class PlayerNameMessage implements GeneralMessage, Serializable {
 
     @Override
     public void serverExecute(Controller controller) {
-        for (ClientHandler c: controller.getConnectionHandler().getClients()) {
+
+        for (ClientHandler c: controller.getConnectionHandler().getThreads()) {
             if (c.getReceiver().threadId() == Thread.currentThread().threadId()) {
-                controller.addPlayer(this.name, c);
+                try {
+                    controller.addPlayer(this.name);
+                    controller.getConnectionHandler().setName(c, this.name);
+                    PlayerNameMessage playerNameMessage = new PlayerNameMessage(true);
+                    c.sendMessages(MessageType.PLAYERNAME, playerNameMessage);
+                    NewPlayerMessage playerMessage = new NewPlayerMessage(controller.getPlayerList());
+                    controller.getConnectionHandler().sendAllMessage(playerMessage, MessageType.NEWPLAYER);
+                } catch (Exception e) {
+                    PlayerNameMessage playerNameMessage = new PlayerNameMessage(false);
+                    c.sendMessages(MessageType.PLAYERNAME, playerNameMessage);
+                }
             }
         }
     }
