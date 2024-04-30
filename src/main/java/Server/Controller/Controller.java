@@ -66,16 +66,15 @@ public interface Controller {
     /**
      * sets a player's secret achievement card
      * @param player the player
-     * @param card the card
+     * @param cardNumber the card number between the 2 given (0 or 1)
      */
-    public void setSecretObjectiveCard(Player player, AchievementCard card) throws AlreadySetException, AlreadyFinishedException, MissingInfoException;
+    public void setSecretObjectiveCard(Player player, int cardNumber) throws AlreadySetException, AlreadyFinishedException, MissingInfoException;
     /**
      * set starting card
      * @param player the player
-     * @param card the card
      * @param face the face
      */
-    public void setStartingCard(Player player, StartingCard card, Face face) throws AlreadySetException;
+    public void setStartingCard(Player player, Face face) throws AlreadySetException;
 
     //GAME INITIALIZATION METHODS
     /**
