@@ -27,8 +27,12 @@ public class PlayerColorMessage implements Serializable, GeneralMessage {
     public void serverExecute(Controller controller) {
        try{
            controller.setPlayerColor(this.color, controller.getPlayerByName(this.name));
-       }catch (PlayerNotFoundByNameException e){
-           e.printStackTrace();
+
+           PlayerColorMessage playerColorMessage = new PlayerColorMessage(true);
+           controller.getConnectionHandler().sendMessage(playerColorMessage, this.name);
+       }catch (PlayerNotFoundByNameException | IllegalArgumentException e){
+           PlayerColorMessage playerColorMessage = new PlayerColorMessage(false);
+           controller.getConnectionHandler().sendMessage(playerColorMessage, this.name);
        }
 
     }

@@ -97,19 +97,12 @@ public class ControllerInstance implements Controller{
 
     }
     public void setPlayerColor(Color color, Player player) throws IllegalArgumentException{
-        List<Color> colors = getPlayerList().stream().map(Player::getColor).collect(Collectors.toList());
+        List<Color> colors = getPlayerList().stream().map(Player::getColor).toList();
         if(!colors.contains(color)){
             player.setColor(color);
-
-            //Notify
-            PlayerColorMessage playerColorMessage = new PlayerColorMessage(true);
-            connectionHandler.sendMessage(playerColorMessage, player.getName());
-            UnavailableColorsMessage unavailableColorsMessage = new UnavailableColorsMessage(colors);
-            connectionHandler.sendAllMessage(unavailableColorsMessage);
-
         } else {
-            PlayerColorMessage playerColorMessage = new PlayerColorMessage(false);
-            connectionHandler.sendMessage(playerColorMessage, player.getName());
+            throw new IllegalArgumentException("Color not available");
+
         }
 
     }
