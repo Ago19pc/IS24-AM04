@@ -6,6 +6,7 @@ import Server.Player.Player;
 
 import java.io.IOException;
 import java.net.Socket;
+import java.util.Objects;
 import java.util.Scanner;
 
 public class CLI extends Thread{
@@ -16,14 +17,22 @@ public class CLI extends Thread{
         System.out.println("Avvio gioco...");
         this.controller = controller;
     }
+    public void printPromptLine(){
+        System.out.println();
+        System.out.print("> ");
+    }
+    public void printOnNewLine(String message){
+        System.out.println();
+        System.out.print(message);
+    }
 
     /**
      * Runs CLI thread: reads input from the console and calls the decoding method
      */
     public void run(){
-        System.out.println("> Digita \"help\" per la lista dei comandi");
+        printOnNewLine("> Digita \"help\" per la lista dei comandi");
+        printPromptLine();
         while(true){
-            System.out.print("> ");
             String[] args = in.nextLine().split(" ");
             decode(args);
         }
@@ -35,43 +44,45 @@ public class CLI extends Thread{
     public void decode(String[] args){
         switch(args[0]){
             case "help":
-                System.out.println("-------------------");
-                System.out.println(" Lista dei comandi");
-                System.out.println("-------------------");
-                System.out.println();
-                System.out.println("> help: mostra la lista dei comandi");
-                System.out.println();
-                System.out.println("> join <ip> <porta>: si connette al server con l'indirizzo ip e la porta specificati");
-                System.out.println();
-                System.out.println("> setName <nome>: imposta il nome del giocatore e entra in partita");
-                System.out.println();
-                System.out.println("> setColor <colore>: imposta il colore del giocatore");
-                System.out.println("  I colori disponibili sono: RED, YELLOW, BLUE, GREEN");
-                System.out.println();
-                System.out.println("> ready: mettiti pronto per iniziare la partita");
+                printOnNewLine("-------------------");
+                printOnNewLine(" Lista dei comandi");
+                printOnNewLine("-------------------");
+                printOnNewLine("");
+                printOnNewLine("  help: mostra la lista dei comandi");
+                printOnNewLine("");
+                printOnNewLine("  join <ip> <porta>: si connette al server con l'indirizzo ip e la porta specificati");
+                printOnNewLine("");
+                printOnNewLine("  setName <nome>: imposta il nome del giocatore e entra in partita");
+                printOnNewLine("");
+                printOnNewLine("  setColor <colore>: imposta il colore del giocatore");
+                printOnNewLine("  I colori disponibili sono: RED, YELLOW, BLUE, GREEN");
+                printOnNewLine("");
+                printOnNewLine("  ready: mettiti pronto per iniziare la partita");
+                printPromptLine();
                 break;
             case "join":
                 if (args.length != 3) {
-                    System.out.println("> Utilizzo corretto: join <ip> <porta>");
+                    printOnNewLine("Utilizzo corretto: join <ip> <porta>");
                     return;
                 }
                 try {
                     controller.getClientConnectionHandler().setSocket(new Socket(args[1], Integer.parseInt(args[2])));
-                    System.out.println("> Connessione avvenuta con successo al server " + args[1] + ":" + args[2]);
+                    printOnNewLine("Connessione avvenuta con successo al server " + args[1] + ":" + args[2]);
                 } catch (IOException e) {
-                    System.out.println("> Impossibile connettersi al server");
+                    printOnNewLine("Impossibile connettersi al server");
                 }
+                printPromptLine();
                 break;
             case "setName":
                 if(args.length != 2){
-                    System.out.println("> Utilizzo corretto: setName <nome>");
+                    printOnNewLine("Utilizzo corretto: setName <nome>");
                     return;
                 }
                 controller.askSetName(args[1]);
                 break;
             case "setColor":
                 if(args.length != 2){
-                    System.out.println("> Utilizzo corretto: setColor <colore>");
+                    printOnNewLine("Utilizzo corretto: setColor <colore>");
                     return;
                 }
                 controller.askSetColor(args[1]);
@@ -80,7 +91,7 @@ public class CLI extends Thread{
                 controller.setReady();
                 break;
             default:
-                System.out.println("> Comando non valido. Digita \"help\" per la lista dei comandi");
+                printOnNewLine("Comando non valido. Digita \"help\" per la lista dei comandi");
         }
     }
 
@@ -89,21 +100,23 @@ public class CLI extends Thread{
      * @param name new name
      */
     public void nameChanged(String name){
-        System.out.println("Sei entrato in partita. Il tuo nome è: " + name);
+        printOnNewLine("Sei entrato in partita. Il tuo nome è: " + name);
+        printPromptLine();
     }
     public void nameChangeFailed(){
-        System.out.println("Impossibile impostare il nome. Assicurati di non avere già un nome e di aver inserito un nome disponibile");
+        printOnNewLine("Impossibile impostare il nome. Assicurati di non avere già un nome e di aver inserito un nome disponibile");
+        printPromptLine();
     }
 
     /**
      * Prints the new player list
      */
     public void playerListChanged() {
-        System.out.print("> E' entrato un nuovo giocatore! I giocatori ora sono: ");
+        printOnNewLine("E' entrato un nuovo giocatore! I giocatori ora sono: ");
         for (Player player : controller.getPlayers()) {
             System.out.print(player.getName() + " ");
         }
-        System.out.println();
+        printPromptLine();
     }
 
     /**
@@ -111,7 +124,8 @@ public class CLI extends Thread{
      * Called by the controller when the user tries to set a color without setting a name
      */
     public void needName(){
-        System.out.println("> Devi impostare il tuo nome prima di poter impostare il colore");
+        printOnNewLine("Devi impostare il tuo nome prima di poter impostare il colore");
+        printPromptLine();
     }
 
     /**
@@ -119,7 +133,8 @@ public class CLI extends Thread{
      * Called by the controller when the user tries to set ready without having set a name or a color
      */
     public void needNameOrColor() {
-        System.out.println("> Devi impostare il tuo nome e il tuo colore prima di poter iniziare la partita");
+        printOnNewLine("Devi impostare il tuo nome e il tuo colore prima di poter iniziare la partita");
+        printPromptLine();
     }
 
     /**
@@ -127,10 +142,11 @@ public class CLI extends Thread{
      * Called by the controller when the user tries to set an unavailable color
      */
     public void unavailableColor() {
-        System.out.println("> Il colore richiesto non è disponibile. I colori disponibili sono: ");
+        printOnNewLine("Il colore richiesto non è disponibile. I colori disponibili sono: ");
         for (Color color : controller.getAvailableColors()) {
             System.out.println(color + " ");
         }
+        printPromptLine();
     }
 
     /**
@@ -138,31 +154,35 @@ public class CLI extends Thread{
      * Called by the controller when the user tries to set an invalid color
      */
     public void invalidColor() {
-        System.out.println("> Il colore richiesto non è valido. I colori validi sono: RED, YELLOW, BLUE, GREEN");
+        printOnNewLine("Il colore richiesto non è valido. I colori validi sono: RED, YELLOW, BLUE, GREEN");
+        printPromptLine();
     }
 
     /**
      * Shows the players and their colors
      */
     public void displayPlayerColors(){
-        System.out.println("> I giocatori hanno i seguenti colori: ");
+        printOnNewLine("I giocatori hanno i seguenti colori: \n");
         for (Player player : controller.getPlayers()) {
             System.out.println("    " + player.getName() + ": " + player.getColor());
         }
+        printPromptLine();
     }
 
     /**
      * Tells the user that the player color has been changed successfully
      */
     public void colorChanged() {
-        System.out.println("> Il tuo colore è stato cambiato con successo. Ora sei " + controller.getMyColor());
+        printOnNewLine("Il tuo colore è stato cambiato con successo. Ora sei " + controller.getMyColor());
+        printPromptLine();
     }
 
     /**
      * Tells the user that the player color has not been changed
      */
     public void colorChangeFailed() {
-        System.out.println("> Impossibile cambiare il colore. Assicurati di aver inserito un colore disponibile");
+        printOnNewLine("Impossibile cambiare il colore. Assicurati di aver inserito un colore disponibile");
+        printPromptLine();
     }
 
     /**
@@ -171,26 +191,28 @@ public class CLI extends Thread{
      * @param ready ready status
      */
     public void updateReady(String name, boolean ready) {
-        if(name == controller.getMyName()){
+        if(Objects.equals(name, controller.getMyName())){
             if (ready) {
-                System.out.println("> Ora sei pronto");
+                printOnNewLine("Ora sei pronto");
             } else {
-                System.out.println("> Non sei più pronto");
+                printOnNewLine("Non sei più pronto");
             }
         } else {
             if (ready) {
-                System.out.println("> " + name + " è pronto");
+                printOnNewLine(name + " è pronto");
             } else {
-                System.out.println("> " + name + " non è più pronto");
+                printOnNewLine(name + " non è più pronto");
             }
         }
+        printPromptLine();
     }
 
     /**
      * Tells the user that an action cannot be performed because the client is not connected to any server
      */
     public void needConnection() {
-        System.out.println("> Devi connetterti a un server prima di poter eseguire questa azione");
-        System.out.println("> Per connetterti a un server utilizza: join <ip> <porta>");
+        printOnNewLine("Devi connetterti a un server prima di poter eseguire questa azione");
+        printOnNewLine("Per connetterti a un server utilizza: join <ip> <porta>");
+        printPromptLine();
     }
 }

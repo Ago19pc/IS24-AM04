@@ -120,6 +120,7 @@ public class ServerConnectionHandler extends Thread {
 
     public void sendAllMessage(GeneralMessage message) {
         for (ClientHandler c : clients.keySet()) {
+            System.out.println("Sending message to " + c.getSocketAddress());
             c.sendMessages(message);
         }
     }
