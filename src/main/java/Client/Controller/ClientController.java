@@ -67,6 +67,10 @@ public class ClientController {
     public void askSetName(String name) {
         this.proposedName = name;
         PlayerNameMessage playerNameMessage = new PlayerNameMessage(proposedName, true);
+        if (clientConnectionHandler.sender.getOutputBuffer() == null){
+            cli.needConnection();
+            return;
+        }
         try {
             clientConnectionHandler.sendMessage(playerNameMessage);
         } catch (Exception e) {
@@ -208,7 +212,7 @@ public class ClientController {
 
     public void setPlayerList (List<Player> p) {
         this.players = p;
-        cli.playerListChanged(p);
+        cli.playerListChanged();
     }
     public List<Player> getPlayers() {
         return players;

@@ -29,6 +29,14 @@ public class ClientSender{
     }
 
     /**
+     * Gets this sender's output buffer
+     * @return the output buffer
+     */
+    public PrintWriter getOutputBuffer() {
+        return out;
+    }
+
+    /**
      * Sends a message to the server.
      * @param message String, the message to send.
      */
