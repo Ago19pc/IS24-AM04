@@ -4,6 +4,7 @@ import Client.Controller.ClientController;
 
 import java.io.IOException;
 import java.net.Socket;
+import java.rmi.NotBoundException;
 import java.util.Scanner;
 
 public class CLI extends Thread{
@@ -43,9 +44,9 @@ public class CLI extends Thread{
                     return;
                 }
                 try {
-                    controller.getClientConnectionHandler().setSocket(new Socket(args[1], Integer.parseInt(args[2])));
+                    controller.getClientConnectionHandler().setSocket(args[1], Integer.parseInt(args[2]));
                     System.out.println("Connessione avvenuta con successo al server " + args[1] + " : " + args[2]);
-                } catch (IOException e) {
+                } catch (IOException | NotBoundException e) {
                     System.out.println("Impossibile connettersi al server");
                 }
                 break;

@@ -1,8 +1,8 @@
 package Server.Messages;
 
-import Client.Connection.ClientConnectionHandler;
+import Client.Connection.ClientConnectionHandlerSOCKET;
 import Client.Controller.ClientController;
-import Server.Connections.ServerConnectionHandler;
+import Server.Connections.ServerConnectionHandlerSOCKET;
 import Server.Controller.Controller;
 import Server.Controller.ControllerInstance;
 import Server.Enums.Color;
@@ -21,10 +21,10 @@ public class TestMessages {
     @Test
     public void TestPlayerNameMessage() throws IOException, InterruptedException, PlayerNotFoundByNameException, TooFewElementsException, AlreadySetException {
         // CREA UN SERVER
-        ServerConnectionHandler connectionHandler;
+        ServerConnectionHandlerSOCKET connectionHandler;
         Controller controller;
         try {
-            connectionHandler = new ServerConnectionHandler(true);
+            connectionHandler = new ServerConnectionHandlerSOCKET(true);
             controller = new ControllerInstance(connectionHandler);
             connectionHandler.setController(controller);
             connectionHandler.start();
@@ -44,9 +44,9 @@ public class TestMessages {
         clientController3.mainDebug();
        //*  clientController1.debugConnect();
       //*   clientController2.debugConnect();
-        ClientConnectionHandler cch =  clientController1.getClientConnectionHandler();
-        ClientConnectionHandler cch2 =  clientController2.getClientConnectionHandler();
-        ClientConnectionHandler cch3 =  clientController3.getClientConnectionHandler();
+        ClientConnectionHandlerSOCKET cch =  clientController1.getClientConnectionHandler();
+        ClientConnectionHandlerSOCKET cch2 =  clientController2.getClientConnectionHandler();
+        ClientConnectionHandlerSOCKET cch3 =  clientController3.getClientConnectionHandler();
 
 
         // GENERA UN MESSAGGIO

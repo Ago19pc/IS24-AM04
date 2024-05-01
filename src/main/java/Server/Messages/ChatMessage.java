@@ -24,8 +24,7 @@ public class ChatMessage implements Serializable, GeneralMessage {
     public void serverExecute(Controller controller) {
         try {
             controller.addMessage(message.getMessage(), controller.getPlayerByName(message.getName()));
-            controller.getConnectionHandler().getThreads().stream()
-                    .forEach(c -> c.sendMessages(this));
+            controller.getConnectionHandler().sendAllMessage(this);
         } catch (PlayerNotFoundByNameException e) {
             e.printStackTrace();
         }

@@ -57,11 +57,7 @@ public class BoardInitMessage implements Serializable, GeneralMessage {
         controller.boardInit(achievementDeck, goldDeck, resourceDeck);
         controller.setPlayerList(players);
         BoardInitMessage ack = new BoardInitMessage();
-        try {
-            controller.getClientConnectionHandler().sendMessage(ack);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        controller.getClientConnectionHandler().sendMessage(ack);
 
 
     }

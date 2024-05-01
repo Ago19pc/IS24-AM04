@@ -1,22 +1,16 @@
 package Client.Connection;
 
 import Client.Controller.ClientController;
-import Server.Enums.Face;
 
-import java.io.IOException;
 import java.io.PrintWriter;
-import java.net.Socket;
-import java.util.Arrays;
-import java.util.Objects;
-import java.util.Scanner;
 
 public class ClientSender{
 
     private PrintWriter out;
-    private ClientConnectionHandler clientConnectionHandler;
+    private ClientConnectionHandlerSOCKET clientConnectionHandler;
     private ClientController controller;
 
-    public ClientSender(ClientConnectionHandler clientConnectionHandler, ClientController controller) {
+    public ClientSender(ClientConnectionHandlerSOCKET clientConnectionHandler, ClientController controller) {
         this.clientConnectionHandler = clientConnectionHandler;
         this.controller = controller;
     }

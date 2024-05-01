@@ -34,10 +34,6 @@ public class InitialHandMessage implements Serializable, GeneralMessage {
     public void clientExecute(ClientController controller) {
         controller.setInitialHand(card1, card2, card3);
         InitialHandMessage ack = new InitialHandMessage();
-        try {
-            controller.getClientConnectionHandler().sendMessage(ack);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        controller.getClientConnectionHandler().sendMessage(ack);
     }
 }

@@ -1,9 +1,10 @@
 package Server.Controller;
 
-import Server.Card.AchievementCard;
 import Server.Chat.Message;
-import Server.Connections.ClientHandler;
+import Server.Connections.GeneralServerConnectionHandler;
 import Server.Connections.ServerConnectionHandler;
+import Server.Connections.ServerConnectionHandlerRMI;
+import Server.Connections.ServerConnectionHandlerSOCKET;
 import Server.Enums.Color;
 import Server.Enums.DeckPosition;
 import Server.Enums.Decks;
@@ -15,15 +16,8 @@ import java.io.IOException;
 import java.util.List;
 
 public interface Controller {
-    //PLAYER METHODS
-    /**
-     * adds a player to the list of players
-     * @param player the player
-     */
-    public void addPlayer(Player player) throws TooManyPlayersException, IllegalArgumentException, TooManyPlayersException;
 
     public void addPlayer(String name) throws TooManyPlayersException;
-
 
 
     /**
@@ -178,7 +172,9 @@ public interface Controller {
     /**
      * @return the ServerConnectionHandler
      */
-    public ServerConnectionHandler getConnectionHandler();
+
+    public GeneralServerConnectionHandler getConnectionHandler();
+
 
     /**
      * Prints some data

@@ -1,11 +1,7 @@
 package Server.Connections;
 
-import Client.Connection.ClientConnectionHandler;
 import ConnectionUtils.MessagePacket;
 import ConnectionUtils.MessageUtils;
-import Server.Chat.Message;
-import Server.Exception.IllegalMessageTypeException;
-import Server.Exception.ServerExecuteNotCallableException;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -18,7 +14,7 @@ public class ServerReceiver extends Thread {
     private ClientHandler clientHandler;
     private MessageUtils messageUtils;
 
-    private ServerConnectionHandler serverConnectionHandler;
+    private ServerConnectionHandlerSOCKET serverConnectionHandler;
 
 
     public ServerReceiver(ClientHandler clientHandler, Socket clientSocket) throws IOException {
@@ -41,19 +37,7 @@ public class ServerReceiver extends Thread {
             try {
                 String resp = in.readLine();
                 packet = new MessagePacket(resp);
-
-                try {
-                    synchronized (serverConnectionHandler.getController()) {
-                        packet.getPayload().serverExecute(serverConnectionHandler.getController());
-                        System.out.println("RECEIVED MESSAGE AND EXECUTED");
-                        serverConnectionHandler.getController().notifyAll();
-                    }
-                }
-                catch (Exception e) {
-                    System.out.println("ServerReciver: Error with synconized block");
-                }
-
-
+                serverConnectionHandler.executeMessage(packet.getPayload());
             } catch (NullPointerException e) {
                 try {
                     clientSocket.close();

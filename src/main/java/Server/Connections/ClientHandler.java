@@ -10,7 +10,7 @@ import java.net.Socket;
 
 public class ClientHandler extends Thread {
     private final Socket socket;
-    private final ServerConnectionHandler connectionHandler;
+    private final ServerConnectionHandlerSOCKET connectionHandler;
     private final ServerSender sender ;
     private final ServerReceiver receiver ;
     private final Thread.UncaughtExceptionHandler h;
@@ -27,7 +27,7 @@ public class ClientHandler extends Thread {
      * @throws IOException if the sender or receiver can't be created
      * @throws RuntimeException if the sender or receiver can't be created
      */
-    public ClientHandler(ServerConnectionHandler connectionHandler, Socket client, Controller controller) throws IOException, RuntimeException {
+    public ClientHandler(ServerConnectionHandlerSOCKET connectionHandler, Socket client, Controller controller) throws IOException, RuntimeException {
         this.controller = controller;
         this.socket = client;
         this.connectionHandler = connectionHandler;
@@ -76,7 +76,7 @@ public class ClientHandler extends Thread {
      * Sends a message to the client
      * @param message the message to send
      */
-    public void sendMessages(GeneralMessage message)  {
+    public void sendMessage(GeneralMessage message)  {
         MessagePacket mp = new MessagePacket(message);
         try {
             this.sender.sendMessage(mp.stringify());
@@ -90,7 +90,7 @@ public class ClientHandler extends Thread {
     /**
      * Returns the assosiated ServerConnectionHandler
      */
-    public ServerConnectionHandler getServerConnectionHandler() {
+    public ServerConnectionHandlerSOCKET getServerConnectionHandler() {
         return this.connectionHandler;
     }
 
@@ -106,7 +106,13 @@ public class ClientHandler extends Thread {
      * @return the client's address
      */
     public String getSocketAddress() {
-        return this.socket.getInetAddress().toString();
+        return this.socket.getInetAddress().getHostAddress();
     }
+
+    public int getSocketPort() {
+        return this.socket.getPort();
+    }
+
+
 
 }

@@ -5,8 +5,10 @@ import Server.Card.Card;
 import Server.Card.CornerCardFace;
 import Server.Card.StartingCard;
 import Server.Chat.Message;
-import Server.Connections.ClientHandler;
+import Server.Connections.GeneralServerConnectionHandler;
 import Server.Connections.ServerConnectionHandler;
+import Server.Connections.ServerConnectionHandlerRMI;
+import Server.Connections.ServerConnectionHandlerSOCKET;
 import Server.Deck.AchievementDeck;
 import Server.Enums.*;
 import Server.Exception.*;
@@ -14,9 +16,7 @@ import Server.GameModel.GameModel;
 import Server.GameModel.GameModelInstance;
 import Server.Manuscript.Manuscript;
 import Server.Messages.NewPlayerMessage;
-import Server.Messages.PlayerColorMessage;
 import Server.Messages.PlayerNameMessage;
-import Server.Messages.UnavailableColorsMessage;
 import Server.Player.Player;
 import Server.Player.PlayerInstance;
 import com.google.gson.Gson;
@@ -32,7 +32,7 @@ import java.util.stream.Collectors;
 
 public class ControllerInstance implements Controller{
     private GameModel gameModel;
-    private final ServerConnectionHandler connectionHandler;
+    private final GeneralServerConnectionHandler connectionHandler;
     private int activePlayerIndex = -1;
     private boolean lastRound = false;
     private Map<Player, StartingCard> givenStartingCards = new HashMap<>();
@@ -41,22 +41,9 @@ public class ControllerInstance implements Controller{
     private static int ackInitBoard = 0;
     private static int ackInitHand = 0;
 
-    public ControllerInstance(ServerConnectionHandler connectionHandler) {
+    public ControllerInstance(GeneralServerConnectionHandler connectionHandler) {
         this.connectionHandler = connectionHandler;
         this.gameModel = new GameModelInstance();
-    }
-    public void addPlayer(Player player) throws TooManyPlayersException, IllegalArgumentException {
-        if(gameModel.getPlayerList().size()<4) {
-            gameModel.addPlayer(player);
-            //Notify
-            PlayerNameMessage playerNameMessage = new PlayerNameMessage(true);
-            connectionHandler.sendMessage(playerNameMessage, player.getName());
-            NewPlayerMessage playerMessage = new NewPlayerMessage(gameModel.getPlayerList());
-            connectionHandler.sendAllMessage(playerMessage);
-        } else {
-            throw new TooManyPlayersException("Too many players");
-        }
-        //Notify
     }
 
     @Override
@@ -427,10 +414,23 @@ public class ControllerInstance implements Controller{
         throw new PlayerNotFoundByNameException(name);
     }
 
+    /*
     @Override
-    public ServerConnectionHandler getConnectionHandler() {
+    public ServerConnectionHandler getConnectionHandler(String name) {
+        try {
+            return this.connectionHandler.getServerConnectionHandler(name);
+        } catch (PlayerNotInAnyServerConnectionHandlerException e) {
+            System.out.println("Player not found in any connection handler");
+            throw new RuntimeException(e);
+        }
+    }
+
+     */
+
+    public GeneralServerConnectionHandler getConnectionHandler() {
         return this.connectionHandler;
     }
+
 
     @Override
     public void printData() {

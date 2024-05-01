@@ -1,6 +1,7 @@
 package Client.Controller;
 
-import Client.Connection.ClientConnectionHandler;
+import Client.Connection.ClientConnectionHandlerSOCKET;
+import Client.Connection.GeneralClientConnectionHandler;
 import ConnectionUtils.MessagePacket;
 import Server.Card.Card;
 import Server.Card.CornerCardFace;
@@ -18,8 +19,10 @@ import Server.Player.Player;
 
 import java.io.IOException;
 import java.net.Socket;
+import java.rmi.NotBoundException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
 public class ClientController {
     private  List<Player> players;
@@ -33,7 +36,7 @@ public class ClientController {
     private  GoldDeck goldDeck;
     private  ResourceDeck resourceDeck;
     private  Chat chat = new Chat();
-    private  ClientConnectionHandler clientConnectionHandler;
+    private GeneralClientConnectionHandler clientConnectionHandler;
 
     private PossibleCardPlacementSave move;
 
@@ -42,7 +45,16 @@ public class ClientController {
     private int turn = 0;
 
     public void main() {
-        clientConnectionHandler = new ClientConnectionHandler(this);
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Do you wish to connect with RMI? (Y/N)");
+        String choice = scanner.nextLine();
+        choice = choice.toUpperCase();
+        if (choice.equals("Y")) {
+            clientConnectionHandler = new GeneralClientConnectionHandler(this, true);
+        } else {
+            clientConnectionHandler = new GeneralClientConnectionHandler(this, false);
+        }
+
         clientConnectionHandler.start();
 
     }
@@ -115,7 +127,7 @@ public class ClientController {
     /**
      * @return the ClientConnectionHandler
      */
-    public ClientConnectionHandler getClientConnectionHandler() {
+    public GeneralClientConnectionHandler getClientConnectionHandler() {
         return clientConnectionHandler;
     }
 
@@ -190,14 +202,18 @@ public class ClientController {
      * @throws IOException
      */
     public void debugConnect() throws IOException {
-        clientConnectionHandler.setSocket(new Socket("localhost", 1234));
+        try {
+            clientConnectionHandler.setSocket("localhost", 1234);
+        } catch (NotBoundException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     /**
      * Creates the ClientConnectionHandler with debug mode
      */
     public void mainDebug(){
-        clientConnectionHandler = new ClientConnectionHandler(true, this);
+        clientConnectionHandler = new GeneralClientConnectionHandler(this, false,true);
     }
 
     /**
@@ -255,12 +271,8 @@ public class ClientController {
         if (myName == null) {System.out.println("You need to set your name first"); return;}
         Message m = new Message(message, myName);
         ChatMessage chatMessage = new ChatMessage(m);
-        MessagePacket mp = new MessagePacket(chatMessage);
-        try {
-            clientConnectionHandler.sender.sendMessage(mp.stringify());
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        clientConnectionHandler.sendMessage(chatMessage);
+
     }
 
     /**

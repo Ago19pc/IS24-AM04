@@ -15,12 +15,12 @@ public class ClientReceiver extends Thread {
     private Socket clientSocket;
     private MessageUtils messageUtils = new MessageUtils();
     private BufferedReader in;
-    private ClientConnectionHandler clientConnectionHandler;
+    private ClientConnectionHandlerSOCKET clientConnectionHandler;
 
     private ClientController controller;
 
 
-    public ClientReceiver(ClientConnectionHandler clientConnectionHandler, Socket clientSocket, ClientController controller) throws IOException {
+    public ClientReceiver(ClientConnectionHandlerSOCKET clientConnectionHandler, Socket clientSocket, ClientController controller) throws IOException {
         this.clientConnectionHandler = clientConnectionHandler;
         this.clientSocket = clientSocket;
         this.controller = controller;
