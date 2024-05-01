@@ -13,10 +13,7 @@ import Server.Exception.*;
 import Server.GameModel.GameModel;
 import Server.GameModel.GameModelInstance;
 import Server.Manuscript.Manuscript;
-import Server.Messages.NewPlayerMessage;
-import Server.Messages.PlayerColorMessage;
-import Server.Messages.PlayerNameMessage;
-import Server.Messages.UnavailableColorsMessage;
+import Server.Messages.*;
 import Server.Player.Player;
 import Server.Player.PlayerInstance;
 import com.google.gson.Gson;
@@ -45,15 +42,13 @@ public class ControllerInstance implements Controller{
     public void addPlayer(Player player) throws TooManyPlayersException, IllegalArgumentException {
         if(gameModel.getPlayerList().size()<4) {
             gameModel.addPlayer(player);
-            //Notify
-            PlayerNameMessage playerNameMessage = new PlayerNameMessage(true);
+            PlayerNameMessage playerNameMessage = new PlayerNameMessage(player.getName(), true);
             connectionHandler.sendMessage(playerNameMessage, player.getName());
             NewPlayerMessage playerMessage = new NewPlayerMessage(gameModel.getPlayerList());
             connectionHandler.sendAllMessage(playerMessage);
         } else {
             throw new TooManyPlayersException("Too many players");
         }
-        //Notify
     }
 
     @Override
@@ -63,11 +58,7 @@ public class ControllerInstance implements Controller{
         for (Player p : gameModel.getPlayerList()){
             if (p.getName().equals(player.getName())) throw new IllegalArgumentException("Player with same name already exists");
         }
-        if(gameModel.getPlayerList().size()<4) {
-            gameModel.addPlayer(player);
-        } else {
-            throw new TooManyPlayersException("Too many players");
-        }
+        addPlayer(player);
     }
 
     public void removePlayer(Player player) {
@@ -100,9 +91,12 @@ public class ControllerInstance implements Controller{
         List<Color> colors = getPlayerList().stream().map(Player::getColor).toList();
         if(!colors.contains(color)){
             player.setColor(color);
+            PlayerColorMessage playerMessage = new PlayerColorMessage(true, player.getName(), color, true);
+            PlayerColorMessage allPlayersMessage = new PlayerColorMessage(true, player.getName(), color, false);
+            connectionHandler.sendMessage(playerMessage, player.getName());
+            connectionHandler.sendAllMessage(allPlayersMessage);
         } else {
             throw new IllegalArgumentException("Color not available");
-
         }
 
     }
@@ -352,6 +346,8 @@ public class ControllerInstance implements Controller{
             throw new MissingInfoException("Color not set");
         }
         player.setReady(true);
+        ReadyStatusMessage readyStatusMessage = new ReadyStatusMessage(true, player.getName());
+        connectionHandler.sendAllMessage(readyStatusMessage);
         if (getPlayerList().stream().allMatch(Player::isReady) && getPlayerList().size() > 1){
             try {
                 start();

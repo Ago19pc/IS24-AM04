@@ -125,7 +125,7 @@ public class ServerConnectionHandler extends Thread {
     }
     public void sendMessage(GeneralMessage message, String name) {
         ClientHandler target = clients.entrySet().stream()
-                .filter(entry -> entry.getValue().equals(name))
+                .filter(entry -> entry .getValue()!= null && entry.getValue().equals(name))
                 .toList().getFirst().getKey();
         System.out.println("NAME MATCH FOUND");
         target.sendMessages(message);

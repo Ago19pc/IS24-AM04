@@ -11,10 +11,10 @@ public class PlayerNameMessage implements GeneralMessage, Serializable {
     private String name;
     private boolean confirmation;
 
-    public PlayerNameMessage(String name) {
+    public PlayerNameMessage(String name, Boolean confirmation) {
         this.name = name;
+        this.confirmation = confirmation;
     }
-    public PlayerNameMessage(Boolean confirmation){this.confirmation = confirmation;}
 
     @Override
     public void serverExecute(Controller controller) {
@@ -22,15 +22,13 @@ public class PlayerNameMessage implements GeneralMessage, Serializable {
         for (ClientHandler c: controller.getConnectionHandler().getThreads()) {
             if (c.getReceiver().threadId() == Thread.currentThread().threadId()) {
                 try {
-                    controller.addPlayer(this.name);
                     controller.getConnectionHandler().setName(c, this.name);
-                    PlayerNameMessage playerNameMessage = new PlayerNameMessage(true);
-                    c.sendMessages(playerNameMessage);
-                    NewPlayerMessage playerMessage = new NewPlayerMessage(controller.getPlayerList());
-                    controller.getConnectionHandler().sendAllMessage(playerMessage);
+                    controller.addPlayer(this.name);
                     System.out.println(c.getSocketAddress() + " ha scelto il nome " + this.name);
                 } catch (Exception e) {
-                    PlayerNameMessage playerNameMessage = new PlayerNameMessage(false);
+                    System.out.println(e.getMessage());
+                    e.printStackTrace();
+                    PlayerNameMessage playerNameMessage = new PlayerNameMessage(name,false);
                     c.sendMessages(playerNameMessage);
                 }
             }

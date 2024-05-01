@@ -27,6 +27,6 @@ public class ReadyStatusMessage implements Serializable, GeneralMessage {
 
     @Override
     public void clientExecute(ClientController controller) {
-
+        controller.updatePlayerReady(this.ready, this.name);
     }
 }

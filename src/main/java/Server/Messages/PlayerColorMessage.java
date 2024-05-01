@@ -13,38 +13,32 @@ public class PlayerColorMessage implements Serializable, GeneralMessage {
     private String name;
     private Color color;
     private boolean confirmation;
+    private boolean own;
 
 
-    public PlayerColorMessage(Boolean confirmation){this.confirmation = confirmation;}
-
-    public PlayerColorMessage(String name, Color color)
-    {
+    public PlayerColorMessage(Boolean confirmation, String name, Color color, boolean own){
+        this.confirmation = confirmation;
         this.name = name;
         this.color = color;
+        this.own = own;
     }
 
     @Override
     public void serverExecute(Controller controller) {
        try{
            controller.setPlayerColor(this.color, controller.getPlayerByName(this.name));
-
-           PlayerColorMessage playerColorMessage = new PlayerColorMessage(true);
-           controller.getConnectionHandler().sendMessage(playerColorMessage, this.name);
        }catch (PlayerNotFoundByNameException | IllegalArgumentException e){
-           PlayerColorMessage playerColorMessage = new PlayerColorMessage(false);
+           PlayerColorMessage playerColorMessage = new PlayerColorMessage(false, this.name, this.color, this.own);
            controller.getConnectionHandler().sendMessage(playerColorMessage, this.name);
        }
-
     }
 
     @Override
     public void clientExecute(ClientController controller) {
-
-        if(confirmation){
-            controller.setColor();
-            System.out.println("Accepted color");}
-        else
-            System.out.println("Color not avaiable");
-
+        if(!this.own){
+            controller.updatePlayerColors(this.color, this.name);
+        } else {
+            controller.setColor(confirmation, this.color);
+        }
     }
 }
