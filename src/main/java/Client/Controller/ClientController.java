@@ -186,10 +186,14 @@ public class ClientController {
     }
     public void addChatMessage(Message message){
         chat.addMessage(message);
+        cli.chat(message);
     }
 
     public void sendChatMessage (String message){
-        if (myName == null) {System.out.println("You need to set your name first"); return;}
+        if (myName == null) {
+            cli.needName();
+            return;
+        }
         Message m = new Message(message, myName);
         ChatMessage chatMessage = new ChatMessage(m);
         MessagePacket mp = new MessagePacket(chatMessage);

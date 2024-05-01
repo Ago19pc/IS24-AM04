@@ -369,7 +369,8 @@ public class ControllerInstance implements Controller{
 
     public void addMessage(String message, Player sender) throws IllegalArgumentException{
         gameModel.getChat().addMessage(message, sender);
-        //Notify
+        ChatMessage chatMessage = new ChatMessage(new Message(message, sender.getName()));
+        connectionHandler.sendAllMessage(chatMessage);
     }
 
     public List<Message> getChatMessages() {

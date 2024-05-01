@@ -1,6 +1,7 @@
 package Client.View;
 
 import Client.Controller.ClientController;
+import Server.Chat.Message;
 import Server.Enums.Color;
 import Server.Player.Player;
 
@@ -58,6 +59,8 @@ public class CLI extends Thread{
                 printOnNewLine("  I colori disponibili sono: RED, YELLOW, BLUE, GREEN");
                 printOnNewLine("");
                 printOnNewLine("  ready: mettiti pronto per iniziare la partita");
+                printOnNewLine("");
+                printOnNewLine("  chat <messaggio>: invia un messaggio nella chat");
                 printPromptLine();
                 break;
             case "join":
@@ -90,8 +93,16 @@ public class CLI extends Thread{
             case "ready":
                 controller.setReady();
                 break;
+            case "chat":
+                String message = "";
+                for(int i = 1; i < args.length; i++){
+                    message += args[i] + " ";
+                }
+                controller.sendChatMessage(message);
+                break;
             default:
                 printOnNewLine("Comando non valido. Digita \"help\" per la lista dei comandi");
+                printPromptLine();
         }
     }
 
@@ -213,6 +224,15 @@ public class CLI extends Thread{
     public void needConnection() {
         printOnNewLine("Devi connetterti a un server prima di poter eseguire questa azione");
         printOnNewLine("Per connetterti a un server utilizza: join <ip> <porta>");
+        printPromptLine();
+    }
+
+    /**
+     * Displays a chat message
+     * @param message chat message
+     */
+    public void chat(Message message){
+        printOnNewLine(message.getName() + ": " + message.getMessage());
         printPromptLine();
     }
 }
