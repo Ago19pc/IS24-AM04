@@ -28,11 +28,13 @@ public class ClientConnectionHandlerRMI implements ClientConnectionHandler {
 
     public ClientConnectionHandlerRMI(String server_rmi_host) throws RemoteException {
         serverRegistry = LocateRegistry.getRegistry(server_rmi_host, 1099);
+        System.out.println("GETTED REGISTRY");
         try {
             server = (ServerConnectionHandler) serverRegistry.lookup("ServerConnectionHandler");
         } catch (Exception e) {
             e.printStackTrace();
         }
+        System.out.println("GETTED SERVER");
 
         try {
             stub = (ClientConnectionHandler) UnicastRemoteObject.exportObject((ClientConnectionHandler) this, 1100);
