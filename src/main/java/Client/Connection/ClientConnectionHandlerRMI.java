@@ -56,6 +56,7 @@ public class ClientConnectionHandlerRMI implements ClientConnectionHandler {
      * @param message the message to send
      * @throws IOException
      */
+
     @Override
     public void sendMessage(GeneralMessage message) throws IOException {
         server.executeMessage(message);
