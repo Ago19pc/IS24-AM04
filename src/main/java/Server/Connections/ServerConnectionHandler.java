@@ -1,138 +1,43 @@
 package Server.Connections;
 
-
-import Client.Controller.ClientController;
 import Server.Controller.Controller;
-import Server.Enums.MessageType;
 import Server.Messages.GeneralMessage;
+import java.rmi.Remote;
+import java.rmi.RemoteException;
 
-import java.io.IOException;
-import java.net.ServerSocket;
-import java.net.Socket;
-import java.util.*;
-import java.util.stream.Collectors;
-
-public class ServerConnectionHandler extends Thread {
-    private ServerSocket socket;
-    private Map<ClientHandler, String> clients;
-    private int port;
-
-    private Controller controller;
-
-
+public interface ServerConnectionHandler extends Remote {
 
     /**
-     * Create the server socket, needed to choose port
-     *
+     * Send a message to all the clients
+     * @param message the message to send
      */
-    public ServerConnectionHandler() throws IOException {
-        this.clients = new HashMap<>();
-        askForPort();
-        while (!startServer(port)) {
-            System.out.println("Porta già in uso, provo la successiva...");
-            port++;
-        }
-        System.out.println("Server avviato sulla porta: " + port);
-    }
-
-    public ServerConnectionHandler(boolean debugMode){
-        this.clients = new HashMap<>();
-        if(debugMode)
-            this.port = 1234;
-        else
-            askForPort();
-        while (!startServer(port)) {
-            System.out.println("Porta già in uso, provo la successiva...");
-            port++;
-        }
-        System.out.println("Server avviato sulla porta: " + port);
-    }
+    public void sendAllMessage(GeneralMessage message) throws RemoteException;
 
     /**
-     * Set the controller instance
-     * @param controller the controller instance
+     * Send a message to a specific client
+     * @param name the name of the client to send the message to
+     * @param message the message to send
      */
-    public void setController(Controller controller) {
-        this.controller = controller;
-    }
-
-    public void run() {
-        Thread.UncaughtExceptionHandler h = new Thread.UncaughtExceptionHandler() {
-            @Override
-            public void uncaughtException(Thread th, Throwable ex) {
-                System.out.println("ServerConnnectionHandler gestore eccezioni thread figli: " + ex);
-                th.interrupt();
-            }
-        };
-        try {
-            while (true) {
-                Socket client = this.socket.accept();
-                System.out.println("Nuova connessione accettata");
-                ClientHandler t = new ClientHandler(this, client, controller);
-                clients.put(t, null);
-                t.setUncaughtExceptionHandler(h);
-                t.start();
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            System.out.println("EDDIO SOLO SA PERCHE");
-        }
-    }
+    public void sendMessage(GeneralMessage message, String name) throws RemoteException;
 
     /**
-     * Get the client threads list
-     * @return this.threads the list of all client thread
+     * Execute a message
+     * @param message the message to execute
      */
-    public List<ClientHandler> getThreads() {
-        return this.clients.keySet().stream().toList();
-    }
+    public void executeMessage(GeneralMessage message) throws RemoteException;
 
-    private boolean startServer(int port) {
-        try {
-            this.socket = new ServerSocket(port);
-        } catch (IOException e) {
-            return false;
-        }
-        return true;
-    }
+    /**
+     * Kill a client
+     * @param name the name of the client to kill
+     */
+    public void killClient(String name) throws RemoteException;
 
-    private void askForPort() {
-        Scanner inputReader = new Scanner(System.in);
-        System.out.println("Ciao, su quale porta vuoi avviare il server?");
-        this.port = inputReader.nextInt();
-    }
+    public void setName(String host, int port, String name) throws RemoteException;
 
-    public void killClient(ClientHandler target ) {
-        //target.interrupt();
-        clients.remove(target);
-        //String/Player offlineplayer = target.getPlayer()
-        //controller.setOffline(offlineplayer);
-    }
+    public boolean isClientNameAvailable(String name) throws RemoteException;
 
-    public void killClient(String name) {
-        ClientHandler target = clients.entrySet().stream()
-                .filter(entry -> entry.getValue().equals(name))
-                .toList().getFirst().getKey();
-        killClient(target);
-    }
+    public boolean isClientAddressAvailable(String host, int port) throws RemoteException;
 
-    public Controller getController() {return this.controller;}
+    public void setController(Controller controller) throws RemoteException;
 
-    public void sendAllMessage(GeneralMessage message) {
-        for (ClientHandler c : clients.keySet()) {
-            c.sendMessages(message);
-        }
-    }
-    public void sendMessage(GeneralMessage message, String name) {
-        ClientHandler target = clients.entrySet().stream()
-                .filter(entry -> entry.getValue().equals(name))
-                .toList().getFirst().getKey();
-        System.out.println("NAME MATCH FOUND");
-        target.sendMessages(message);
-    }
-
-    public void setName(ClientHandler clientHandler, String name) {
-        clients.put(clientHandler, name);
-    }
 }
-

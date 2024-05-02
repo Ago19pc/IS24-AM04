@@ -3,7 +3,6 @@ package Server.Connections;
 
 import ConnectionUtils.MessagePacket;
 import Server.Controller.Controller;
-import Server.Enums.MessageType;
 import Server.Messages.GeneralMessage;
 
 import java.io.IOException;
@@ -11,7 +10,7 @@ import java.net.Socket;
 
 public class ClientHandler extends Thread {
     private final Socket socket;
-    private final ServerConnectionHandler connectionHandler;
+    private final ServerConnectionHandlerSOCKET connectionHandler;
     private final ServerSender sender ;
     private final ServerReceiver receiver ;
     private final Thread.UncaughtExceptionHandler h;
@@ -19,7 +18,16 @@ public class ClientHandler extends Thread {
 
 
     ClientHandler me = this;
-    public ClientHandler(ServerConnectionHandler connectionHandler, Socket client, Controller controller) throws IOException, RuntimeException {
+
+    /**
+     * Constructor
+     * @param connectionHandler the ServerConnectionHandler that created this ClientHandler
+     * @param client the client's socket
+     * @param controller the controller of the server
+     * @throws IOException if the sender or receiver can't be created
+     * @throws RuntimeException if the sender or receiver can't be created
+     */
+    public ClientHandler(ServerConnectionHandlerSOCKET connectionHandler, Socket client, Controller controller) throws IOException, RuntimeException {
         this.controller = controller;
         this.socket = client;
         this.connectionHandler = connectionHandler;
@@ -33,12 +41,17 @@ public class ClientHandler extends Thread {
         try {
             sender = new ServerSender(this, this.socket, this.controller);
             receiver = new ServerReceiver(this, this.socket);
+            receiver.setUncaughtExceptionHandler(h);
         } catch (Exception e) {
             System.out.println("LOL2");
             throw e;
         }
     }
 
+
+    /**
+     * Creates the receiver to listen to the client messages
+     */
     public void run() {
         System.out.println("Nuovo Client connesso: " + this.socket.getInetAddress());
         System.out.println("Ora i client connessi sono: ");
@@ -46,7 +59,6 @@ public class ClientHandler extends Thread {
             System.out.print(" " + c.socket.getInetAddress() +" -");
         }
         System.out.println();
-        receiver.setUncaughtExceptionHandler(h);
         receiver.start();
 
         try {
@@ -60,8 +72,11 @@ public class ClientHandler extends Thread {
     }
 
 
-
-    public void sendMessages(GeneralMessage message)  {
+    /**
+     * Sends a message to the client
+     * @param message the message to send
+     */
+    public void sendMessage(GeneralMessage message)  {
         MessagePacket mp = new MessagePacket(message);
         try {
             this.sender.sendMessage(mp.stringify());
@@ -72,10 +87,16 @@ public class ClientHandler extends Thread {
     }
 
 
-    public ServerConnectionHandler getServerConnectionHandler() {
+    /**
+     * Returns the assosiated ServerConnectionHandler
+     */
+    public ServerConnectionHandlerSOCKET getServerConnectionHandler() {
         return this.connectionHandler;
     }
 
+    /**
+     * Returns the receiver of this client
+     */
     public ServerReceiver getReceiver() {
         return this.receiver;
     }
@@ -85,7 +106,13 @@ public class ClientHandler extends Thread {
      * @return the client's address
      */
     public String getSocketAddress() {
-        return this.socket.getInetAddress().toString();
+        return this.socket.getInetAddress().getHostAddress();
     }
+
+    public int getSocketPort() {
+        return this.socket.getPort();
+    }
+
+
 
 }

@@ -1,19 +1,16 @@
 package ConnectionUtils;
 
 
-import Server.Connections.ServerConnectionHandler;
-import Server.Messages.GeneralMessage;
-
-import java.io.IOException;
+import Server.Connections.ServerConnectionHandlerSOCKET;
 
 public class MessageUtils {
-    ServerConnectionHandler serverConnectionHandler;
+    ServerConnectionHandlerSOCKET serverConnectionHandler;
 
     /**
      * Constructor for MessageUtils for server
      * @param serverConnectionHandler the server connection handler
      */
-    public MessageUtils(ServerConnectionHandler serverConnectionHandler) {
+    public MessageUtils(ServerConnectionHandlerSOCKET serverConnectionHandler) {
         this.serverConnectionHandler = serverConnectionHandler;
     }
 

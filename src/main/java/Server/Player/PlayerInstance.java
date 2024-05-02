@@ -155,10 +155,17 @@ public class PlayerInstance implements Player, Serializable {
         this.manuscript = new Manuscript(startingCard, face);
     }
 
+    /**
+     * Sets a player ready status
+     * @param ready, the ready status
+     */
     public void setReady(boolean ready) {
         this.ready = ready;
     }
 
+    /**
+     * @return boolean the player's ready status
+     */
     public boolean isReady() {
         return ready;
     }

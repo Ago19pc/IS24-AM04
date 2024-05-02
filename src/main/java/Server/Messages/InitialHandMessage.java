@@ -11,6 +11,9 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * this class is used to send the initial cards in the hand of the player
+ */
 public class InitialHandMessage implements Serializable, GeneralMessage {
 
     private Card card1, card2, card3;
@@ -31,10 +34,6 @@ public class InitialHandMessage implements Serializable, GeneralMessage {
     public void clientExecute(ClientController controller) {
         controller.setInitialHand(card1, card2, card3);
         InitialHandMessage ack = new InitialHandMessage();
-        try {
-            controller.getClientConnectionHandler().sendMessage(ack);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        controller.getClientConnectionHandler().sendMessage(ack);
     }
 }

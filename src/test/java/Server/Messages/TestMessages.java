@@ -1,13 +1,12 @@
 package Server.Messages;
 
-import Client.Connection.ClientConnectionHandler;
+import Client.Connection.ClientConnectionHandlerSOCKET;
 import Client.Controller.ClientController;
-import Server.Connections.ServerConnectionHandler;
+import Server.Connections.ServerConnectionHandlerSOCKET;
 import Server.Controller.Controller;
 import Server.Controller.ControllerInstance;
 import Server.Enums.Color;
 import Server.Enums.Face;
-import Server.Enums.MessageType;
 import Server.Exception.AlreadySetException;
 import Server.Exception.PlayerNotFoundByNameException;
 import Server.Exception.TooFewElementsException;
@@ -22,10 +21,10 @@ public class TestMessages {
     @Test
     public void TestPlayerNameMessage() throws IOException, InterruptedException, PlayerNotFoundByNameException, TooFewElementsException, AlreadySetException {
         // CREA UN SERVER
-        ServerConnectionHandler connectionHandler;
+        ServerConnectionHandlerSOCKET connectionHandler;
         Controller controller;
         try {
-            connectionHandler = new ServerConnectionHandler(true);
+            connectionHandler = new ServerConnectionHandlerSOCKET(true);
             controller = new ControllerInstance(connectionHandler);
             connectionHandler.setController(controller);
             connectionHandler.start();
@@ -45,9 +44,9 @@ public class TestMessages {
         clientController3.mainDebug();
        //*  clientController1.debugConnect();
       //*   clientController2.debugConnect();
-        ClientConnectionHandler cch =  clientController1.getClientConnectionHandler();
-        ClientConnectionHandler cch2 =  clientController2.getClientConnectionHandler();
-        ClientConnectionHandler cch3 =  clientController3.getClientConnectionHandler();
+        ClientConnectionHandlerSOCKET cch =  clientController1.getClientConnectionHandler();
+        ClientConnectionHandlerSOCKET cch2 =  clientController2.getClientConnectionHandler();
+        ClientConnectionHandlerSOCKET cch3 =  clientController3.getClientConnectionHandler();
 
 
         // GENERA UN MESSAGGIO
@@ -59,9 +58,9 @@ public class TestMessages {
         // SERIALIZZA IL MESSAGGIO
         // INVIA IL MESSAGGIO
         try {
-            cch.sendMessage(playerNameMessage, MessageType.PLAYERNAME);
-            cch2.sendMessage(playerNameMessage2, MessageType.PLAYERNAME);
-            cch3.sendMessage(playerNameMessage3, MessageType.PLAYERNAME);
+            cch.sendMessage(playerNameMessage);
+            cch2.sendMessage(playerNameMessage2);
+            cch3.sendMessage(playerNameMessage3);
         } catch (IOException e) {
             e.printStackTrace();
             throw new IOException();
@@ -78,8 +77,8 @@ public class TestMessages {
         PlayerColorMessage playerColorMessage2 = new PlayerColorMessage("TestPlayer2", Color.BLUE);
 
         try {
-            cch.sendMessage(playerColorMessage, MessageType.PLAYERCOLOR);
-            cch2.sendMessage(playerColorMessage2, MessageType.PLAYERCOLOR);
+            cch.sendMessage(playerColorMessage);
+            cch2.sendMessage(playerColorMessage2);
         } catch (IOException e) {
             e.printStackTrace();
             throw new IOException();
@@ -93,8 +92,8 @@ public class TestMessages {
         ReadyStatusMessage readyStatusMessage2 = new ReadyStatusMessage(true, "TestPlayer2");
 
         try {
-            cch.sendMessage(readyStatusMessage, MessageType.READYSTATUS);
-            cch2.sendMessage(readyStatusMessage2, MessageType.READYSTATUS);
+            cch.sendMessage(readyStatusMessage);
+            cch2.sendMessage(readyStatusMessage2);
         } catch (IOException e) {
             e.printStackTrace();
             throw new IOException();
@@ -112,8 +111,8 @@ public class TestMessages {
         StartingCardsMessage startingCardMessage2 = new StartingCardsMessage("TestPlayer2", Face.BACK);
 
         try {
-            cch.sendMessage(startingCardMessage, MessageType.STARTINGCARDS);
-            cch2.sendMessage(startingCardMessage2, MessageType.STARTINGCARDS);
+            cch.sendMessage(startingCardMessage);
+            cch2.sendMessage(startingCardMessage2);
         } catch (IOException e) {
             e.printStackTrace();
             throw new IOException();

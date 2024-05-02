@@ -9,6 +9,9 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * this class is used to send the leaderboard to the client
+ */
 public class LeaderboardMessage implements Serializable, GeneralMessage {
 
         private final List<Player> p;
