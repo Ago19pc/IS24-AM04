@@ -13,13 +13,15 @@ public class GeneralClientConnectionHandler {
     private ClientController controller;
     private boolean trueifRMI = false;
 
-    public GeneralClientConnectionHandler(ClientController controller, boolean trueifRMI) {
+    public GeneralClientConnectionHandler(ClientController controller, boolean trueifRMI) throws RemoteException {
         this.trueifRMI = trueifRMI;
         this.controller = controller;
         if(!trueifRMI){
             clientConnectionHandlerSOCKET = new ClientConnectionHandlerSOCKET(controller);
-        }
-    }
+        } else {
+            clientConnectionHandlerRMI = new ClientConnectionHandlerRMI();
+
+        }    }
 
     public GeneralClientConnectionHandler(ClientController controller, boolean trueifRMI, boolean debugMode) {
         this.trueifRMI = trueifRMI;
@@ -38,12 +40,12 @@ public class GeneralClientConnectionHandler {
 
     }
 
-    public void setSocket(String host, int port) throws NotBoundException, IOException {
+    public void setSocket(String server_host, int server_port) throws NotBoundException, IOException {
         if(trueifRMI) {
-            clientConnectionHandlerRMI = new ClientConnectionHandlerRMI(host);
+            clientConnectionHandlerRMI.setServer(server_host);
             clientConnectionHandlerRMI.setController(controller);
         } else {
-            clientConnectionHandlerSOCKET.setSocket(host, port);
+            clientConnectionHandlerSOCKET.setSocket(server_host, server_port);
         }
     }
 
@@ -77,4 +79,15 @@ public class GeneralClientConnectionHandler {
         }
     }
 
+    public ClientConnectionHandlerRMI getClientConnectionHandlerRMI() {
+        return clientConnectionHandlerRMI;
+    }
+
+    public ClientConnectionHandlerSOCKET getClientConnectionHandlerSOCKET() {
+        return clientConnectionHandlerSOCKET;
+    }
+
+    public boolean getTrueIfRMI() {
+        return trueifRMI;
+    }
 }
