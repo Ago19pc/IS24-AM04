@@ -152,7 +152,7 @@ public class ServerConnectionHandlerRMI implements ServerConnectionHandler {
     public void setName(String host, int port, String name) {
         try {
             Registry clientRegistry = LocateRegistry.getRegistry(host, 1100);
-            ClientConnectionHandler client = (ClientConnectionHandler) registry.lookup("ClientConnectionHandler");
+            ClientConnectionHandler client = (ClientConnectionHandler) clientRegistry.lookup("ClientConnectionHandler");
             clients.put(name, client);
         } catch (RemoteException | NotBoundException e) {
             throw new RuntimeException(e);
