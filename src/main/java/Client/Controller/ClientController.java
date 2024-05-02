@@ -47,15 +47,17 @@ public class ClientController {
 
     private int turn = 0;
 
-    public void main() {
+    public void main(CLI cli) {
         Scanner scanner = new Scanner(System.in);
         System.out.println("Do you wish to connect with RMI? (Y/N)");
         String choice = scanner.nextLine();
         choice = choice.toUpperCase();
         if (choice.equals("Y")) {
             clientConnectionHandler = new GeneralClientConnectionHandler(this, true);
+            System.out.println("Connecting with RMI");
         } else {
             clientConnectionHandler = new GeneralClientConnectionHandler(this, false);
+            System.out.println("Connecting with SOCKET");
         }
 
         clientConnectionHandler.start();
@@ -101,7 +103,7 @@ public class ClientController {
     public void askSetName(String name) {
         this.proposedName = name;
         PlayerNameMessage playerNameMessage = new PlayerNameMessage(proposedName, true);
-        if (clientConnectionHandler.sender.getOutputBuffer() == null){
+        if (!clientConnectionHandler.isConnectedToServer()){
             cli.needConnection();
             return;
         }

@@ -17,7 +17,7 @@ public class GeneralClientConnectionHandler {
         this.trueifRMI = trueifRMI;
         this.controller = controller;
         if(!trueifRMI){
-        clientConnectionHandlerSOCKET = new ClientConnectionHandlerSOCKET(controller);
+            clientConnectionHandlerSOCKET = new ClientConnectionHandlerSOCKET(controller);
         }
     }
 
@@ -66,6 +66,14 @@ public class GeneralClientConnectionHandler {
             } catch (IOException e) {
                 e.printStackTrace();
             }
+        }
+    }
+
+    public boolean isConnectedToServer() {
+        if(trueifRMI) {
+            return clientConnectionHandlerRMI != null;
+        } else {
+            return clientConnectionHandlerSOCKET.sender.getOutputBuffer() == null;
         }
     }
 

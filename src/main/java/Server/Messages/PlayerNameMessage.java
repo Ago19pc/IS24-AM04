@@ -34,14 +34,14 @@ public class PlayerNameMessage implements GeneralMessage, Serializable {
 
             if (c.getReceiver().threadId() == Thread.currentThread().threadId()) {
                 try {
-                    controller.getConnectionHandler().setName(c, this.name);
+                    controller.getConnectionHandler().setName(c.getSocketAddress(), c.getSocketPort(), this.name);
                     controller.addPlayer(this.name);
                     System.out.println(c.getSocketAddress() + " ha scelto il nome " + this.name);
                 } catch (Exception e) {
                     System.out.println(e.getMessage());
                     e.printStackTrace();
                     PlayerNameMessage playerNameMessage = new PlayerNameMessage(name,false);
-                    c.sendMessages(playerNameMessage);
+                    c.sendMessage(playerNameMessage);
                 }
                 return;
             }
@@ -49,7 +49,7 @@ public class PlayerNameMessage implements GeneralMessage, Serializable {
 
         try {
             controller.addPlayer(this.name);
-            controller.getConnectionHandler().setName(getClientHost(), 1099, this.name);
+            controller.getConnectionHandler().setName(getClientHost(), 1100, this.name);
             PlayerNameMessage playerNameMessage = new PlayerNameMessage(true);
             controller.getConnectionHandler().getServerConnectionHandlerRMI().sendMessage(playerNameMessage, this.name);
             NewPlayerMessage playerMessage = new NewPlayerMessage(controller.getPlayerList());
@@ -58,7 +58,7 @@ public class PlayerNameMessage implements GeneralMessage, Serializable {
 
             try {
                 PlayerNameMessage playerNameMessage = new PlayerNameMessage(false);
-                Registry clientRegistry = LocateRegistry.getRegistry(getClientHost(), 1099);
+                Registry clientRegistry = LocateRegistry.getRegistry(getClientHost(), 1100);
                 ClientConnectionHandler client = (ClientConnectionHandler) clientRegistry.lookup("ClientConnectionHandler");
                 client.executeMessage(playerNameMessage);
             } catch (RemoteException | ServerNotActiveException | NotBoundException ex) {

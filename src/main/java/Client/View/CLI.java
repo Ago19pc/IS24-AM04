@@ -7,6 +7,7 @@ import Server.Player.Player;
 
 import java.io.IOException;
 import java.net.Socket;
+import java.rmi.NotBoundException;
 import java.util.Objects;
 import java.util.Scanner;
 
@@ -70,10 +71,12 @@ public class CLI extends Thread{
                     return;
                 }
                 try {
-                    controller.getClientConnectionHandler().setSocket(new Socket(args[1], Integer.parseInt(args[2])));
+                    controller.getClientConnectionHandler().setSocket(args[1], Integer.parseInt(args[2]));
                     printOnNewLine("Connessione avvenuta con successo al server " + args[1] + ":" + args[2]);
                 } catch (IOException e) {
-                    printOnNewLine("Impossibile connettersi al server");
+                    printOnNewLine("[Probably Socket] Impossibile connettersi al server");
+                } catch (NotBoundException e) {
+                    printOnNewLine("[Probably RMI] Impossibile connettersi al server");
                 }
                 printPromptLine();
                 break;

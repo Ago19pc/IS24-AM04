@@ -10,6 +10,8 @@ module it.am04.demo1 {
 
     opens Client to javafx.fxml;
     exports Client;
+    exports Server.Connections to java.rmi;
+    exports Client.Connection to java.rmi;
 
     opens Server.GameModel to com.google.gson;
     opens Server.Deck to com.google.gson;

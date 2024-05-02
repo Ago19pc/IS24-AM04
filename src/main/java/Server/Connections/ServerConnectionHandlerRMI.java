@@ -18,6 +18,10 @@ import java.util.Scanner;
 
 import static java.rmi.server.RemoteServer.getClientHost;
 
+/**
+ * This class handles the connection between the server and the clients using RMI
+ * The ServerConnectionHandlerRMI port is set to 1099
+ */
 public class ServerConnectionHandlerRMI implements ServerConnectionHandler {
 
     ServerConnectionHandler stub;
@@ -59,10 +63,12 @@ public class ServerConnectionHandlerRMI implements ServerConnectionHandler {
         try {
             stub = (ServerConnectionHandler) UnicastRemoteObject.exportObject((ServerConnectionHandler) this, port);
             registry = LocateRegistry.createRegistry(1099);
-            System.setProperty("java.rmi.server.hostname","localhost");
             registry.rebind("ServerConnectionHandler", stub);
+            System.out.println("[RMI] Server avviato sulla porta: " + port);
             return true;
         } catch (RemoteException e) {
+            e.printStackTrace();
+            System.out.println("[RMI] Errore durante l'avvio del server RMI");
             return false;
         }
     }
@@ -145,7 +151,7 @@ public class ServerConnectionHandlerRMI implements ServerConnectionHandler {
     @Override
     public void setName(String host, int port, String name) {
         try {
-            Registry clientRegistry = LocateRegistry.getRegistry(host, port);
+            Registry clientRegistry = LocateRegistry.getRegistry(host, 1100);
             ClientConnectionHandler client = (ClientConnectionHandler) registry.lookup("ClientConnectionHandler");
             clients.put(name, client);
         } catch (RemoteException | NotBoundException e) {
