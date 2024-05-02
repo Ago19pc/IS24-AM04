@@ -6,6 +6,7 @@ import Server.Exception.PlayerNotInAnyServerConnectionHandlerException;
 import Server.Messages.GeneralMessage;
 
 import java.io.IOException;
+import java.rmi.RemoteException;
 
 public class GeneralServerConnectionHandler {
     private ServerConnectionHandlerSOCKET serverConnectionHandlerSOCKET;
@@ -53,6 +54,8 @@ public class GeneralServerConnectionHandler {
         } catch (PlayerNotInAnyServerConnectionHandlerException e) {
             System.out.println("Player not found in any server connection handler, MESSAGE NOT SENT!");
             e.printStackTrace();
+        } catch (RemoteException e) {
+            throw new RuntimeException(e);
         }
     }
 
@@ -82,7 +85,7 @@ public class GeneralServerConnectionHandler {
     public void killClient(String name) {
         try {
             getServerConnectionHandler(name).killClient(name);
-        } catch (PlayerNotInAnyServerConnectionHandlerException e) {
+        } catch (PlayerNotInAnyServerConnectionHandlerException | RemoteException e) {
             System.out.println("Player not found in any server connection handler, CLIENT NOT KILLED!");
             e.printStackTrace();
         }

@@ -49,7 +49,7 @@ public class PlayerNameMessage implements GeneralMessage, Serializable {
 
         try {
             controller.addPlayer(this.name);
-            controller.getConnectionHandler().setName(getClientHost(), 1099, this.name);
+            controller.getConnectionHandler().setName(getClientHost(), 1100, this.name);
             PlayerNameMessage playerNameMessage = new PlayerNameMessage(true);
             controller.getConnectionHandler().getServerConnectionHandlerRMI().sendMessage(playerNameMessage, this.name);
             NewPlayerMessage playerMessage = new NewPlayerMessage(controller.getPlayerList());
@@ -58,7 +58,7 @@ public class PlayerNameMessage implements GeneralMessage, Serializable {
 
             try {
                 PlayerNameMessage playerNameMessage = new PlayerNameMessage(false);
-                Registry clientRegistry = LocateRegistry.getRegistry(getClientHost(), 1099);
+                Registry clientRegistry = LocateRegistry.getRegistry(getClientHost(), 1100);
                 ClientConnectionHandler client = (ClientConnectionHandler) clientRegistry.lookup("ClientConnectionHandler");
                 client.executeMessage(playerNameMessage);
             } catch (RemoteException | ServerNotActiveException | NotBoundException ex) {

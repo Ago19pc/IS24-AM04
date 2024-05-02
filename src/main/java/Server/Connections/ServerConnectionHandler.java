@@ -11,14 +11,14 @@ public interface ServerConnectionHandler extends Remote {
      * Send a message to all the clients
      * @param message the message to send
      */
-    public void sendAllMessage(GeneralMessage message);
+    public void sendAllMessage(GeneralMessage message) throws RemoteException;
 
     /**
      * Send a message to a specific client
      * @param name the name of the client to send the message to
      * @param message the message to send
      */
-    public void sendMessage(GeneralMessage message, String name);
+    public void sendMessage(GeneralMessage message, String name) throws RemoteException;
 
     /**
      * Execute a message
@@ -30,14 +30,14 @@ public interface ServerConnectionHandler extends Remote {
      * Kill a client
      * @param name the name of the client to kill
      */
-    public void killClient(String name);
+    public void killClient(String name) throws RemoteException;
 
-    public void setName(String host, int port, String name);
+    public void setName(String host, int port, String name) throws RemoteException;
 
-    public boolean isClientNameAvailable(String name);
+    public boolean isClientNameAvailable(String name) throws RemoteException;
 
-    public boolean isClientAddressAvailable(String host, int port);
+    public boolean isClientAddressAvailable(String host, int port) throws RemoteException;
 
-    public void setController(Controller controller);
+    public void setController(Controller controller) throws RemoteException;
 
 }

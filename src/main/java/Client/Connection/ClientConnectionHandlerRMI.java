@@ -12,6 +12,10 @@ import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 
+/**
+ * This class handles the connection between the client and the server using RMI
+ * The ClientConnectionHandlerRMI port is set to 1100
+ */
 public class ClientConnectionHandlerRMI implements ClientConnectionHandler {
     Registry serverRegistry;
     ServerConnectionHandler server;
@@ -22,20 +26,24 @@ public class ClientConnectionHandlerRMI implements ClientConnectionHandler {
     private ClientController controller;
 
 
-    public ClientConnectionHandlerRMI(String server_rmi_host) throws RemoteException, NotBoundException {
+    public ClientConnectionHandlerRMI(String server_rmi_host) throws RemoteException {
         System.out.println("RMI CONNECTING");
         serverRegistry = LocateRegistry.getRegistry(server_rmi_host, 1099);
         System.out.println("GETTED REGISTRY");
         try {
             server = (ServerConnectionHandler) serverRegistry.lookup("ServerConnectionHandler");
+            System.out.println("GETTED SERVER");
         } catch (Exception e) {
             e.printStackTrace();
         }
-        System.out.println("GETTED SERVER");
 
-        stub = (ClientConnectionHandler) UnicastRemoteObject.exportObject((ClientConnectionHandler) this, 1099);
-        registry = LocateRegistry.createRegistry(1099);
-        registry.rebind("ClientConnectionHandler", stub);
+        try {
+            stub = (ClientConnectionHandler) UnicastRemoteObject.exportObject((ClientConnectionHandler) this, 1100);
+            registry = LocateRegistry.createRegistry(1100);
+            registry.rebind("ClientConnectionHandler", stub);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
     }
 

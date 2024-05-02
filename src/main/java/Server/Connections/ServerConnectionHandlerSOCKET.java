@@ -143,6 +143,7 @@ public class ServerConnectionHandlerSOCKET extends Thread implements ServerConne
      */
     public void sendAllMessage(GeneralMessage message) {
         for (ClientHandler c : clients.keySet()) {
+            System.out.println("Sending message to " + c.getSocketAddress());
             c.sendMessage(message);
         }
     }

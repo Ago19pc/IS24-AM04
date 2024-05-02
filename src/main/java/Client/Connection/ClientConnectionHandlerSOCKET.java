@@ -7,6 +7,7 @@ import Server.Exception.ClientExecuteNotCallableException;
 import Server.Messages.GeneralMessage;
 
 import java.io.IOException;
+import java.io.OutputStream;
 import java.net.Socket;
 
 public class ClientConnectionHandlerSOCKET extends Thread implements ClientConnectionHandler {
@@ -39,6 +40,17 @@ public class ClientConnectionHandlerSOCKET extends Thread implements ClientConne
         }
     }
 
+    /**
+     * Gets socket output buffer
+     * @return the socket output buffer
+     */
+    public OutputStream getSocketOutputBuffer() {
+        try {
+            return clientSocket.getOutputStream();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
     /**
      * Sets the socket for the receiver
@@ -48,6 +60,7 @@ public class ClientConnectionHandlerSOCKET extends Thread implements ClientConne
     public void setSocket(String host, int port) throws IOException {
         this.clientSocket = new Socket(host, port);
         try {
+            this.sender.setOutputBuffer(new PrintWriter(clientSocket.getOutputStream(), true));
             this.receiver = new ClientReceiver(this, clientSocket, controller);
             Thread.UncaughtExceptionHandler h = new Thread.UncaughtExceptionHandler() {
                 @Override

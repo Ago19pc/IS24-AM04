@@ -17,7 +17,7 @@ public class GeneralClientConnectionHandler {
         this.trueifRMI = trueifRMI;
         this.controller = controller;
         if(!trueifRMI){
-        clientConnectionHandlerSOCKET = new ClientConnectionHandlerSOCKET(controller);
+            clientConnectionHandlerSOCKET = new ClientConnectionHandlerSOCKET(controller);
         }
     }
 

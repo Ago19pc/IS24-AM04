@@ -18,6 +18,7 @@ public class Main {
             connectionHandler.setController(controller);
             connectionHandler.start();
         } catch (Exception e) {
+            e.printStackTrace();
             System.out.println("Ops. Qualcosa è andato storto.");
         }
 
