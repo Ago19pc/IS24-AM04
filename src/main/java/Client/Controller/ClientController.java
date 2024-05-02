@@ -1,5 +1,7 @@
 package Client.Controller;
 
+import Client.Connection.ClientConnectionHandler;
+import Client.View.CLI;
 import Client.Connection.ClientConnectionHandlerSOCKET;
 import Client.Connection.GeneralClientConnectionHandler;
 import ConnectionUtils.MessagePacket;
@@ -38,6 +40,7 @@ public class ClientController {
     private  Chat chat = new Chat();
     private GeneralClientConnectionHandler clientConnectionHandler;
 
+    private CLI cli ;
     private PossibleCardPlacementSave move;
 
     private String activePlayerName;
@@ -56,7 +59,7 @@ public class ClientController {
         }
 
         clientConnectionHandler.start();
-
+        this.cli = cli;
     }
 
     /**
@@ -97,19 +100,27 @@ public class ClientController {
      */
     public void askSetName(String name) {
         this.proposedName = name;
-        PlayerNameMessage playerNameMessage = new PlayerNameMessage(proposedName);
+        PlayerNameMessage playerNameMessage = new PlayerNameMessage(proposedName, true);
+        if (clientConnectionHandler.sender.getOutputBuffer() == null){
+            cli.needConnection();
+            return;
+        }
         try {
             clientConnectionHandler.sendMessage(playerNameMessage);
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
-
     /**
      * Sets the name of the player to the proposed name
      */
-    public void setName(){
-        this.myName = this.proposedName;
+    public void setName(Boolean confirmation){
+        if(confirmation){
+            this.myName = this.proposedName;
+            cli.nameChanged(myName);
+        } else {
+            cli.nameChangeFailed();
+        }
     }
 
     /**
@@ -185,7 +196,7 @@ public class ClientController {
      */
     public void setReady() {
         if (myName == null || myColor == null) {
-            System.out.println("You must set your name and color first");
+            cli.needNameOrColor();
             return;
         }
         this.myReady = true;
@@ -222,25 +233,22 @@ public class ClientController {
      */
     public void askSetColor(String color) {
         if (this.myName == null) {
-            System.out.println("You must set your name first");
+            cli.needName();
             return;
         }
         Color castedColor;
         try {
             castedColor = Color.valueOf(color.toUpperCase());
             if (unavaiableColors.contains(castedColor)){
-                System.out.println("Color not avaiable, choose one from the following: ");
-                for(Color c : Color.values())
-                    if (!unavaiableColors.contains(c))
-                        System.out.println(c);
+                cli.unavailableColor();
                 return;
             }
         } catch (IllegalArgumentException e) {
-            System.out.println("Invalid color, must be RED, YELLOW, BLUE or GREEN");
+            cli.invalidColor();
             return;
         }
         proposedColor = castedColor;
-        PlayerColorMessage playerColorMessage = new PlayerColorMessage(myName, castedColor);
+        PlayerColorMessage playerColorMessage = new PlayerColorMessage(true, myName, castedColor, true);
         try {
             clientConnectionHandler.sendMessage(playerColorMessage);
         } catch (Exception e) {
@@ -248,11 +256,13 @@ public class ClientController {
         }
     }
 
-    /**
-     * Sets the color of the player
-     */
-    public void setColor(){
-        myColor = proposedColor;
+    public void setColor(boolean confirmation, Color color){
+        if(confirmation){
+            this.myColor = color;
+            cli.colorChanged();
+        } else {
+            cli.colorChangeFailed();
+        }
     }
 
     /**
@@ -261,6 +271,7 @@ public class ClientController {
      */
     public void addChatMessage(Message message){
         chat.addMessage(message);
+        cli.chat(message);
     }
 
     /**
@@ -268,7 +279,10 @@ public class ClientController {
      * @param message, the message to send
      */
     public void sendChatMessage (String message){
-        if (myName == null) {System.out.println("You need to set your name first"); return;}
+        if (myName == null) {
+            cli.needName();
+            return;
+        }
         Message m = new Message(message, myName);
         ChatMessage chatMessage = new ChatMessage(m);
         clientConnectionHandler.sendMessage(chatMessage);
@@ -298,6 +312,7 @@ public class ClientController {
     public void setPlayerList (List<Player> p) {
         System.out.println("Setting player list" + p.get(0));
         this.players = p;
+        cli.playerListChanged();
     }
 
     /**
@@ -323,5 +338,44 @@ public class ClientController {
         this.unavaiableColors = unavaiableColors;
     }
 
+    /**
+     * Gets the available colors
+     * @return list of available colors
+     */
+    public List<Color> getAvailableColors(){
+        List<Color> availableColors = new ArrayList<>();
+        for (Color c : Color.values()){
+            if (!unavaiableColors.contains(c)){
+                availableColors.add(c);
+            }
+        }
+        return availableColors;
+    }
+
+    /**
+     * Updates the player with the new color and tells the user which players have which colors
+     */
+    public void updatePlayerColors(Color color, String name) {
+        try {
+            getPlayerByName(name).setColor(color);
+            cli.displayPlayerColors();
+        } catch (PlayerNotFoundByNameException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    /**
+     * Updates the player with the new ready status
+     * @param ready new ready status
+     * @param name name of the player
+     */
+    public void updatePlayerReady(boolean ready, String name) {
+        try {
+            getPlayerByName(name).setReady(ready);
+            cli.updateReady(name, ready);
+        } catch (PlayerNotFoundByNameException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
 }

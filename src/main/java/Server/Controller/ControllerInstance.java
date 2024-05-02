@@ -15,8 +15,7 @@ import Server.Exception.*;
 import Server.GameModel.GameModel;
 import Server.GameModel.GameModelInstance;
 import Server.Manuscript.Manuscript;
-import Server.Messages.NewPlayerMessage;
-import Server.Messages.PlayerNameMessage;
+import Server.Messages.*;
 import Server.Player.Player;
 import Server.Player.PlayerInstance;
 import com.google.gson.Gson;
@@ -110,9 +109,12 @@ public class ControllerInstance implements Controller{
         List<Color> colors = getPlayerList().stream().map(Player::getColor).toList();
         if(!colors.contains(color)){
             player.setColor(color);
+            PlayerColorMessage playerMessage = new PlayerColorMessage(true, player.getName(), color, true);
+            PlayerColorMessage allPlayersMessage = new PlayerColorMessage(true, player.getName(), color, false);
+            connectionHandler.sendMessage(playerMessage, player.getName());
+            connectionHandler.sendAllMessage(allPlayersMessage);
         } else {
             throw new IllegalArgumentException("Color not available");
-
         }
 
     }
@@ -362,6 +364,8 @@ public class ControllerInstance implements Controller{
             throw new MissingInfoException("Color not set");
         }
         player.setReady(true);
+        ReadyStatusMessage readyStatusMessage = new ReadyStatusMessage(true, player.getName());
+        connectionHandler.sendAllMessage(readyStatusMessage);
         if (getPlayerList().stream().allMatch(Player::isReady) && getPlayerList().size() > 1){
             try {
                 start();
@@ -383,7 +387,8 @@ public class ControllerInstance implements Controller{
 
     public void addMessage(String message, Player sender) throws IllegalArgumentException{
         gameModel.getChat().addMessage(message, sender);
-        //Notify
+        ChatMessage chatMessage = new ChatMessage(new Message(message, sender.getName()));
+        connectionHandler.sendAllMessage(chatMessage);
     }
 
     public List<Message> getChatMessages() {

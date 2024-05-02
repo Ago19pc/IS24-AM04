@@ -21,8 +21,9 @@ public class PlayerNameMessage implements GeneralMessage, Serializable {
     private String name;
     private boolean confirmation;
 
-    public PlayerNameMessage(String name) {
+    public PlayerNameMessage(String name, Boolean confirmation) {
         this.name = name;
+        this.confirmation = confirmation;
     }
     public PlayerNameMessage(Boolean confirmation){this.confirmation = confirmation;}
 
@@ -33,15 +34,14 @@ public class PlayerNameMessage implements GeneralMessage, Serializable {
 
             if (c.getReceiver().threadId() == Thread.currentThread().threadId()) {
                 try {
+                    controller.getConnectionHandler().setName(c, this.name);
                     controller.addPlayer(this.name);
-                    controller.getConnectionHandler().setName(c.getSocketAddress(), c.getSocketPort(), this.name);
-                    PlayerNameMessage playerNameMessage = new PlayerNameMessage(true);
-                    c.sendMessage(playerNameMessage);
-                    NewPlayerMessage playerMessage = new NewPlayerMessage(controller.getPlayerList());
-                    controller.getConnectionHandler().sendAllMessage(playerMessage);
-                } catch (IllegalArgumentException | TooManyPlayersException e) {
-                    PlayerNameMessage playerNameMessage = new PlayerNameMessage(false);
-                    c.sendMessage(playerNameMessage);
+                    System.out.println(c.getSocketAddress() + " ha scelto il nome " + this.name);
+                } catch (Exception e) {
+                    System.out.println(e.getMessage());
+                    e.printStackTrace();
+                    PlayerNameMessage playerNameMessage = new PlayerNameMessage(name,false);
+                    c.sendMessages(playerNameMessage);
                 }
                 return;
             }
@@ -71,14 +71,6 @@ public class PlayerNameMessage implements GeneralMessage, Serializable {
 
     @Override
     public void clientExecute(ClientController controller) {
-
-       if(confirmation) {
-           controller.setName();
-           System.out.println("Accepted name");
-       }
-       else {
-           System.out.println("Invalid name, please choose another one");
-       }
-
+        controller.setName(confirmation);
     }
 }

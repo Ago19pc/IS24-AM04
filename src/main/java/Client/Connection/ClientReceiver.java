@@ -46,7 +46,6 @@ public class ClientReceiver extends Thread {
                     } catch (ClientExecuteNotCallableException e) {
                         System.out.println("Called client execution when should not be done");
                     }
-                    System.out.println("Message received and executed");
                 } catch (ClassNotFoundException | IllegalMessageTypeException e) {
                     System.out.println("Errore pacchetto");
                     throw new RuntimeException(e);
