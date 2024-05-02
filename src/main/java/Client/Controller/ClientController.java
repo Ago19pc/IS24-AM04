@@ -22,6 +22,7 @@ import Server.Player.Player;
 import java.io.IOException;
 import java.net.Socket;
 import java.rmi.NotBoundException;
+import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -47,14 +48,18 @@ public class ClientController {
 
     private int turn = 0;
 
-    public void main(CLI cli) {
+    public void main(CLI cli) throws RemoteException {
         Scanner scanner = new Scanner(System.in);
         System.out.println("Do you wish to connect with RMI? (Y/N)");
         String choice = scanner.nextLine();
         choice = choice.toUpperCase();
         if (choice.equals("Y")) {
             clientConnectionHandler = new GeneralClientConnectionHandler(this, true);
+            System.out.println("Choose a port for the local RMI registry");
+            int port = scanner.nextInt();
+            clientConnectionHandler.getClientConnectionHandlerRMI().setRmi_client_port(port);
             System.out.println("Connecting with RMI");
+
         } else {
             clientConnectionHandler = new GeneralClientConnectionHandler(this, false);
             System.out.println("Connecting with SOCKET");
@@ -102,11 +107,19 @@ public class ClientController {
      */
     public void askSetName(String name) {
         this.proposedName = name;
-        PlayerNameMessage playerNameMessage = new PlayerNameMessage(proposedName, true);
+
         if (!clientConnectionHandler.isConnectedToServer()){
             cli.needConnection();
             return;
         }
+
+        PlayerNameMessage playerNameMessage;
+        if (clientConnectionHandler.getTrueIfRMI()) {
+            playerNameMessage = new PlayerNameMessage(proposedName, true, clientConnectionHandler.getClientConnectionHandlerRMI().getRmi_client_port());
+        } else {
+            playerNameMessage = new PlayerNameMessage(proposedName, true);
+        }
+
         try {
             clientConnectionHandler.sendMessage(playerNameMessage);
         } catch (Exception e) {

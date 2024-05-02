@@ -20,11 +20,19 @@ import static java.rmi.server.RemoteServer.getClientHost;
 public class PlayerNameMessage implements GeneralMessage, Serializable {
     private String name;
     private boolean confirmation;
+    private int rmi_client_port;
 
     public PlayerNameMessage(String name, Boolean confirmation) {
         this.name = name;
         this.confirmation = confirmation;
     }
+
+    public PlayerNameMessage(String name, Boolean confirmation, int rmi_client_port) {
+        this.name = name;
+        this.confirmation = confirmation;
+        this.rmi_client_port = rmi_client_port;
+    }
+
     public PlayerNameMessage(Boolean confirmation){this.confirmation = confirmation;}
 
     @Override
@@ -49,7 +57,7 @@ public class PlayerNameMessage implements GeneralMessage, Serializable {
 
         try {
             controller.addPlayer(this.name);
-            controller.getConnectionHandler().setName(getClientHost(), 1100, this.name);
+            controller.getConnectionHandler().setName(getClientHost(), rmi_client_port, this.name);
             PlayerNameMessage playerNameMessage = new PlayerNameMessage(true);
             controller.getConnectionHandler().getServerConnectionHandlerRMI().sendMessage(playerNameMessage, this.name);
             NewPlayerMessage playerMessage = new NewPlayerMessage(controller.getPlayerList());
@@ -58,7 +66,7 @@ public class PlayerNameMessage implements GeneralMessage, Serializable {
 
             try {
                 PlayerNameMessage playerNameMessage = new PlayerNameMessage(false);
-                Registry clientRegistry = LocateRegistry.getRegistry(getClientHost(), 1100);
+                Registry clientRegistry = LocateRegistry.getRegistry(getClientHost(), rmi_client_port);
                 ClientConnectionHandler client = (ClientConnectionHandler) clientRegistry.lookup("ClientConnectionHandler");
                 client.executeMessage(playerNameMessage);
             } catch (RemoteException | ServerNotActiveException | NotBoundException ex) {

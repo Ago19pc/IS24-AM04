@@ -11,6 +11,7 @@ import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
+import java.util.Scanner;
 
 /**
  * This class handles the connection between the client and the server using RMI
@@ -24,20 +25,16 @@ public class ClientConnectionHandlerRMI implements ClientConnectionHandler {
     ClientConnectionHandler stub;
 
     private ClientController controller;
+    int rmi_client_port;
 
+    public ClientConnectionHandlerRMI() throws RemoteException {
 
-    public ClientConnectionHandlerRMI(String server_rmi_host) throws RemoteException {
+    }
+
+    public void setServer(String server_rmi_host) throws RemoteException {
         serverRegistry = LocateRegistry.getRegistry(server_rmi_host, 1099);
         try {
             server = (ServerConnectionHandler) serverRegistry.lookup("ServerConnectionHandler");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        try {
-            stub = (ClientConnectionHandler) UnicastRemoteObject.exportObject((ClientConnectionHandler) this, 1100);
-            registry = LocateRegistry.createRegistry(1100);
-            registry.rebind("ClientConnectionHandler", stub);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -74,5 +71,21 @@ public class ClientConnectionHandlerRMI implements ClientConnectionHandler {
         }
     }
 
+    public int getRmi_client_port() {
+        return rmi_client_port;
+    }
 
+    public void setRmi_client_port(int rmi_client_port) {
+        this.rmi_client_port = rmi_client_port;
+        try {
+            stub = (ClientConnectionHandler) UnicastRemoteObject.exportObject((ClientConnectionHandler) this, rmi_client_port);
+            registry = LocateRegistry.createRegistry(rmi_client_port);
+            registry.rebind("ClientConnectionHandler", stub);
+            System.out.println("[RMI] Service started on port: " + rmi_client_port);
+        } catch (Exception e) {
+            System.out.println("[RMI] Error with selected port trying with next one...");
+            setRmi_client_port(rmi_client_port + 1);
+
+        }
+    }
 }
