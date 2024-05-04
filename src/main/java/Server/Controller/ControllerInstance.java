@@ -68,11 +68,13 @@ public class ControllerInstance implements Controller{
     public List<Player> getPlayerList() {
         return gameModel.getPlayerList();
     }
-    public void shufflePlayerList() {
+
+    private void shufflePlayerList() {
         gameModel.shufflePlayerList();
         //Notify
     }
-    public void start() throws TooFewElementsException, AlreadySetException {
+
+    private void start() throws TooFewElementsException, AlreadySetException {
         if(gameModel.getPlayerList().size() < 2){
             throw new TooFewElementsException("Not enough players");
         }
@@ -81,12 +83,17 @@ public class ControllerInstance implements Controller{
                 throw new TooFewElementsException("Not all players are ready");
             }
         }
+        //notify start
         shufflePlayerList();
-        gameModel.createGoldResourceDecks();
-        gameModel.createStartingCards();
+        createDecks();
         giveStartingCards();
-
     }
+
+    private void createDecks() throws AlreadySetException {
+        gameModel.createGoldResourceDecks();
+        //notify
+    }
+
     public void setPlayerColor(Color color, Player player) throws IllegalArgumentException{
         List<Color> colors = getPlayerList().stream().map(Player::getColor).toList();
         if(!colors.contains(color)){
@@ -100,7 +107,8 @@ public class ControllerInstance implements Controller{
         }
 
     }
-    public void giveSecretObjectiveCards() {
+    private void giveSecretObjectiveCards() throws AlreadySetException {
+        gameModel.createAchievementDeck();
         getPlayerList().forEach(player -> {
             givenSecretObjectiveCards.put(player, new ArrayList<>());
             List<AchievementCard> secretObjectiveCardsToPlayer = givenSecretObjectiveCards.get(player);
@@ -125,7 +133,8 @@ public class ControllerInstance implements Controller{
             nextTurn();
         }
     }
-    public void giveStartingCards() {
+    private void giveStartingCards() throws AlreadySetException {
+        gameModel.createStartingCards();
         List<StartingCard> startingCards = gameModel.getStartingCards();
         getPlayerList().forEach(player -> {
             StartingCard card = startingCards.removeFirst();
@@ -146,7 +155,7 @@ public class ControllerInstance implements Controller{
         }
         //Notify
     }
-    public void giveInitialHand() throws AlreadySetException, AlreadyFinishedException{
+    private void giveInitialHand() throws AlreadySetException, AlreadyFinishedException{
         for(Player player : getPlayerList()){
             Card card1 = gameModel.getResourceDeck().popCard(DeckPosition.DECK);
             Card card2 = gameModel.getResourceDeck().popCard(DeckPosition.DECK);
@@ -164,7 +173,6 @@ public class ControllerInstance implements Controller{
         //Notify
 
         //Dopo aver dato la mano iniziale si prosegue con la seconda parte dell'inizializzazione: si scoprono gli obiettivi segreti e non
-        gameModel.createAchievementDeck();
         giveSecretObjectiveCards();
 
     }
@@ -296,8 +304,7 @@ public class ControllerInstance implements Controller{
         return null;
     }*/
 
-    @Override
-    public void endGame() throws AlreadySetException {
+    private void endGame() throws AlreadySetException {
         gameModel.setEndGamePhase();
         //if it's the last player to play, the extra round starts immediately
         if(activePlayerIndex == getPlayerList().size() - 1){
@@ -306,7 +313,7 @@ public class ControllerInstance implements Controller{
         //Notify
     }
 
-    public List<Player> computeLeaderboard() throws AlreadyFinishedException {
+    private void computeLeaderboard() throws AlreadyFinishedException {
         AchievementDeck achievementDeck = gameModel.getAchievementDeck();
         AchievementCard commonAchievement1 = achievementDeck.popCard(DeckPosition.FIRST_CARD);
         AchievementCard commonAchievement2 = achievementDeck.popCard(DeckPosition.SECOND_CARD);
@@ -330,10 +337,10 @@ public class ControllerInstance implements Controller{
                 })
                 .collect(Collectors.toList());
         //Notify
-        return leaderboard;
+        clear();
     }
 
-    public void clear() {
+    private void clear() {
         gameModel = new GameModelInstance();
         activePlayerIndex = -1;
         lastRound = false;

@@ -35,10 +35,6 @@ public interface Controller {
      * @return List<Player> the list of players
      */
     public List<Player> getPlayerList();
-    /**
-     * shuffle the player list
-     */
-    public void shufflePlayerList();
 
 
     /**
@@ -76,24 +72,6 @@ public interface Controller {
      */
     public void setStartingCard(Player player, Face face) throws AlreadySetException;
 
-    //GAME INITIALIZATION METHODS
-    /**
-     * initialize the game
-     */
-    public void start() throws TooFewElementsException, AlreadySetException, TooFewElementsException;
-    /**
-     * gives 2 achievement cards to all players
-     */
-    public void giveSecretObjectiveCards();
-    /**
-     * give starting cards to all players
-     */
-    public void giveStartingCards();
-    /**
-     * gives all players their initial hand
-     */
-    public void giveInitialHand() throws AlreadySetException, AlreadyFinishedException;
-
     //GAME FLOW METHODS
     /**
      * goes to next turn
@@ -109,21 +87,6 @@ public interface Controller {
      * @return boolean true if the player is online
      */
     public boolean isOnline(Player player);
-    /**
-     * sets the game to ending phase
-     *
-     */
-    public void endGame() throws AlreadySetException;
-    /**
-     * compute achievement points and leaderboard
-     * @return List<Player> the leaderboard
-     */
-    public List<Player> computeLeaderboard() throws AlreadyFinishedException;
-
-    /**
-     * clears everything, preparing for a new game
-     */
-    public void clear();
 
     //PLAYER ACTIONS
     /**
