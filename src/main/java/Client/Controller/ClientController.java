@@ -2,17 +2,16 @@ package Client.Controller;
 
 import Client.Connection.ClientConnectionHandler;
 import Client.View.CLI;
-import ConnectionUtils.MessagePacket;
+import ConnectionUtils.ToServerMessagePacket;
 import Server.Card.Card;
+import Server.Card.CardFace;
 import Server.Card.CornerCardFace;
 import Server.Chat.Chat;
 import Server.Chat.Message;
 import Server.Deck.AchievementDeck;
 import Server.Deck.GoldDeck;
 import Server.Deck.ResourceDeck;
-import Server.Enums.Color;
-import Server.Enums.Face;
-import Server.Enums.MessageType;
+import Server.Enums.*;
 import Server.Exception.PlayerNotFoundByNameException;
 import Server.Exception.TooManyElementsException;
 import Server.Messages.*;
@@ -22,6 +21,7 @@ import java.io.IOException;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class ClientController {
     private  List<Player> players;
@@ -101,7 +101,7 @@ public class ClientController {
         }
         throw new PlayerNotFoundByNameException(name);
     }
-    public void askForCardPlacement(int hand_pos, Face face, int x, int y){
+    /*public void askForCardPlacement(int hand_pos, Face face, int x, int y){
         CornerCardFace cardFace = null;
         try {
             cardFace = (CornerCardFace) getPlayerByName(myName).getHand().get(hand_pos).getFace(face);
@@ -116,7 +116,7 @@ public class ClientController {
             e.printStackTrace();
         }
 
-    }
+    }*/
 
     public void cardPlacement(){
         try {
@@ -194,9 +194,8 @@ public class ClientController {
             cli.needName();
             return;
         }
-        Message m = new Message(message, myName);
-        ChatMessage chatMessage = new ChatMessage(m);
-        MessagePacket mp = new MessagePacket(chatMessage);
+        ChatMessage chatMessage = new ChatMessage(message);
+        ToServerMessagePacket mp = new ToServerMessagePacket(chatMessage);
         try {
             clientConnectionHandler.sender.sendMessage(mp.stringify());
         } catch (IOException e) {
@@ -270,4 +269,79 @@ public class ClientController {
         }
     }
 
+    public void giveAchievementCards(List<Card> secretCards, List<Card> commonCards) {
+    }
+
+    public void achievementDeckDrawInvalid() {
+    }
+
+    public void alreadyDone(Actions action) {
+    }
+
+    public void cardNotPlaceable() {
+    }
+
+    public void chatMessageIsEmpty() {
+    }
+
+    public void colorNotYetSet() {
+    }
+
+    public void giveDrawnCard(Card drawnCard) {
+    }
+
+    public void emptyDeck() {
+    }
+
+    public void setEndGame() {
+    }
+
+    public void gameAlreadyStarted() {
+    }
+
+    public void gameNotYetStarted() {
+    }
+
+    public void giveInitialHand(List<Card> hand) {
+    }
+
+    public void invalidCard(Actions cardType) {
+    }
+
+    public void displayLeaderboard(Map<String, Integer> playerPoints) {
+    }
+
+    public void nameNotYetSet() {
+    }
+
+    public void newPlayer(List<String> playerNames) {
+    }
+
+    public void notYetGivenCard(Actions type) {
+    }
+
+    public void notYourTurn() {
+    }
+
+    public void drawOtherPlayer(String name, Decks deckFrom, DeckPosition drawPosition, List<Card> newBoardCards, int turnNumber, String activePlayerName) {
+    }
+
+    public void giveOtherPlayerInitialHand(String name) {
+    }
+
+    public void setSecretCard(String name) {
+    }
+
+    public void startingCardChosen(String name, CardFace startingFace) {
+    }
+
+    public void startGame(List<String> playerNames, List<Card> goldBoardCards, List<Card> resourceBoardCards) {
+    }
+
+    public void giveStartingCard(Card card) {
+    }
+
+    public void toDoFirst(Actions actionToDo) {
+
+    }
 }

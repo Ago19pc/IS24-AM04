@@ -9,26 +9,17 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 
-public class LeaderboardMessage implements Serializable, GeneralMessage {
+public class LeaderboardMessage implements Serializable, ToClientMessage {
 
-        private final List<Player> p;
+    private Map<String, Integer> playerPoints;
 
-        public LeaderboardMessage(List<Player> list ){
-            this.p = list ;
-        }
-
-
-    @Override
-    public void serverExecute(Controller controller)throws ServerExecuteNotCallableException {
-        throw new ServerExecuteNotCallableException();
-
+    public LeaderboardMessage(Map<String, Integer> playerPoints){
+        this.playerPoints = playerPoints;
     }
 
 
     @Override
     public void clientExecute(ClientController controller) {
-
-            controller.setPlayerList(p);
-
+            controller.displayLeaderboard(playerPoints);
     }
 }

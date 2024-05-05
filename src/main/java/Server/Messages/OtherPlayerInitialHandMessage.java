@@ -1,23 +1,19 @@
 package Server.Messages;
 
 import Client.Controller.ClientController;
-import Server.Card.Card;
 import Server.Exception.ClientExecuteNotCallableException;
 
 import java.io.Serializable;
 
-public class StartingCardsMessage implements Serializable, ToClientMessage {
-
-    private Card card;
-
-    public StartingCardsMessage(Card card){
-        this.card = card;
+public class OtherPlayerInitialHandMessage implements Serializable, ToClientMessage {
+    private final String name;
+    public OtherPlayerInitialHandMessage(String name){
+        this.name = name;
     }
 
 
     @Override
     public void clientExecute(ClientController controller) throws ClientExecuteNotCallableException {
-        controller.giveStartingCard(card);
+        controller.giveOtherPlayerInitialHand(name);
     }
 }
-

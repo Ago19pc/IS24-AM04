@@ -1,16 +1,13 @@
 package Server.Connections;
 
 
-import Client.Controller.ClientController;
 import Server.Controller.Controller;
-import Server.Enums.MessageType;
-import Server.Messages.GeneralMessage;
+import Server.Messages.ToClientMessage;
 
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class ServerConnectionHandler extends Thread {
     private ServerSocket socket;
@@ -87,6 +84,15 @@ public class ServerConnectionHandler extends Thread {
         return this.clients.keySet().stream().toList();
     }
 
+    /**
+     * Gets the name of a client handler
+     * @param ClientHandler the client handler
+     * @return the player name
+     */
+    public String getThreadName(ClientHandler thread) {
+        return clients.get(thread);
+    }
+
     private boolean startServer(int port) {
         try {
             this.socket = new ServerSocket(port);
@@ -118,15 +124,15 @@ public class ServerConnectionHandler extends Thread {
 
     public Controller getController() {return this.controller;}
 
-    public void sendAllMessage(GeneralMessage message) {
+    public void sendAllMessage(ToClientMessage message) {
         for (ClientHandler c : clients.keySet()) {
             System.out.println("Sending message to " + c.getSocketAddress());
             c.sendMessages(message);
         }
     }
-    public void sendMessage(GeneralMessage message, String name) {
+    public void sendMessage(ToClientMessage message, String name) {
         ClientHandler target = clients.entrySet().stream()
-                .filter(entry -> entry .getValue()!= null && entry.getValue().equals(name))
+                .filter(entry -> entry.getValue()!= null && entry.getValue().equals(name))
                 .toList().getFirst().getKey();
         System.out.println("NAME MATCH FOUND");
         target.sendMessages(message);

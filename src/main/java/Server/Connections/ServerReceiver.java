@@ -1,8 +1,8 @@
 package Server.Connections;
 
 import Client.Connection.ClientConnectionHandler;
-import ConnectionUtils.MessagePacket;
 import ConnectionUtils.MessageUtils;
+import ConnectionUtils.ToServerMessagePacket;
 import Server.Chat.Message;
 import Server.Exception.IllegalMessageTypeException;
 import Server.Exception.ServerExecuteNotCallableException;
@@ -37,11 +37,11 @@ public class ServerReceiver extends Thread {
     @Override
     public void run() {
         while (true) {
-            MessagePacket packet;
+            ToServerMessagePacket packet;
 
             try {
                 String resp = in.readLine();
-                packet = new MessagePacket(resp);
+                packet = new ToServerMessagePacket(resp);
 
                 try {
                     synchronized (serverConnectionHandler.getController()) {

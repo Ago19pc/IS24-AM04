@@ -1,8 +1,8 @@
 package Client.Connection;
 
 import Client.Controller.ClientController;
-import ConnectionUtils.MessagePacket;
 import ConnectionUtils.MessageUtils;
+import ConnectionUtils.ToClientMessagePacket;
 import Server.Exception.ClientExecuteNotCallableException;
 import Server.Exception.IllegalMessageTypeException;
 
@@ -35,12 +35,12 @@ public class ClientReceiver extends Thread {
     @Override
     public void run() {
         while (true) {
-            MessagePacket packet;
+            ToClientMessagePacket packet;
 
             try {
                 String resp = in.readLine();
                 try {
-                    packet = new MessagePacket(resp);
+                    packet = new ToClientMessagePacket(resp);
                     try {
                         packet.getPayload().clientExecute(this.controller);
                     } catch (ClientExecuteNotCallableException e) {

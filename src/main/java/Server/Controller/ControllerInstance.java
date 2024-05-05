@@ -5,7 +5,6 @@ import Server.Card.Card;
 import Server.Card.CornerCardFace;
 import Server.Card.StartingCard;
 import Server.Chat.Message;
-import Server.Connections.ClientHandler;
 import Server.Connections.ServerConnectionHandler;
 import Server.Deck.AchievementDeck;
 import Server.Enums.*;
@@ -94,7 +93,10 @@ public class ControllerInstance implements Controller{
         //notify
     }
 
-    public void setPlayerColor(Color color, Player player) throws IllegalArgumentException{
+    public void setPlayerColor(Color color, Player player) throws IllegalArgumentException, AlreadyStartedException {
+        if(gameModel.getTurn() > 0){
+            throw new AlreadyStartedException("Game already started");
+        }
         List<Color> colors = getPlayerList().stream().map(Player::getColor).toList();
         if(!colors.contains(color)){
             player.setColor(color);
@@ -125,7 +127,13 @@ public class ControllerInstance implements Controller{
         //Notify
     }
 
-    public void setSecretObjectiveCard(Player player, int cardNumber) throws AlreadySetException, AlreadyFinishedException, MissingInfoException {
+    public void setSecretObjectiveCard(Player player, int cardNumber) throws AlreadySetException, MissingInfoException, AlreadyStartedException {
+        if(givenSecretObjectiveCards.get(player) == null || givenSecretObjectiveCards == null){
+            throw new MissingInfoException("Secret Objective not given");
+        }
+        if(gameModel.getTurn() > 1){
+            throw new AlreadyStartedException("Game already started");
+        }
         AchievementCard card = givenSecretObjectiveCards.get(player).get(cardNumber);
         player.setSecretObjective(card);
         boolean allSet = getPlayerList().stream().allMatch(p -> p.getSecretObjective() != null);
@@ -142,7 +150,13 @@ public class ControllerInstance implements Controller{
         });
         //Notify
     }
-    public void setStartingCard(Player player, Face face) throws AlreadySetException {
+    public void setStartingCard(Player player, Face face) throws AlreadySetException, AlreadyStartedException, MissingInfoException {
+        if(gameModel.getTurn() > 1){
+            throw new AlreadyStartedException("Game already started");
+        }
+        if(givenStartingCards.get(player) == null || givenStartingCards == null){
+            throw new MissingInfoException("Starting Card not given");
+        }
         StartingCard card = givenStartingCards.get(player);
         player.initializeManuscript(card, face);
         boolean allSet = getPlayerList().stream().allMatch(p -> p.getManuscript() != null);
@@ -176,16 +190,21 @@ public class ControllerInstance implements Controller{
         giveSecretObjectiveCards();
 
     }
-    public void nextTurn() throws MissingInfoException, AlreadyFinishedException {
+    private void nextTurn(){
         if(activePlayerIndex == -1){ //sets active player as the first player. If it's not the first turn this is not valid
             if(gameModel.getTurn() != 0){
-                throw new MissingInfoException("Active player not set");
+                System.out.println("Active player not set");
+                return;
             }
         }
         //if it is end game and all players have played also an extra round, calculate leaderboard
         if(gameModel.isEndGamePhase() && activePlayerIndex == getPlayerList().size() - 1 ){
             if(lastRound){
-                computeLeaderboard();
+                try{
+                    computeLeaderboard();
+                } catch (AlreadyFinishedException e) {
+                    e.printStackTrace();
+                }
             } else {
                 lastRound = true;
             }
@@ -208,7 +227,6 @@ public class ControllerInstance implements Controller{
             } while (!isOnline(getPlayerList().get(activePlayerIndex)));//if the player is not online skips to the next one
             gameModel.nextTurn();
         }
-        //Notify
     }
     public int getTurn() {
         return gameModel.getTurn();
@@ -265,9 +283,15 @@ public class ControllerInstance implements Controller{
 
         //Notify
     }
-    public void drawCard(Player player, DeckPosition deckPosition, Decks deck) throws TooManyElementsException, InvalidMoveException, AlreadyFinishedException {
+    public void drawCard(Player player, DeckPosition deckPosition, Decks deck) throws TooManyElementsException, InvalidMoveException, AlreadyFinishedException, NotYetStartedException {
+        if(gameModel.getTurn() < 1) {
+            throw new NotYetStartedException("Game not started");
+        }
         if(getPlayerList().indexOf(player) != activePlayerIndex){
             throw new InvalidMoveException("Not player's turn");
+        }
+        if(player.getHand().size() >= 3 /*todo: add case regarding end game phase (you may (but not necessarily) have 1 card less in your hand*/){
+            throw new TooManyElementsException("Hand is full");
         }
         switch (deck) {
             case RESOURCE -> {
@@ -292,17 +316,8 @@ public class ControllerInstance implements Controller{
             }
         }
         //Notify
+        nextTurn();
     }
-    /*public Boolean isPlayable(Card card , Face face)
-    {
-        if(face.equals(Face.BACK)) return Boolean.TRUE;
-        if(card.getType() == Decks.GOLD && card.getFace(Face.FRONT).getScore() == 1 //&& gli angoli mi permetono di giocarla
-            )
-        {
-
-        }
-        return null;
-    }*/
 
     private void endGame() throws AlreadySetException {
         gameModel.setEndGamePhase();
@@ -348,9 +363,12 @@ public class ControllerInstance implements Controller{
         givenSecretObjectiveCards = new HashMap<>();
     }
 
-    public void setReady(Player player) throws MissingInfoException{
+    public void setReady(Player player) throws MissingInfoException, AlreadyStartedException {
         if(player.getColor() == null) {
             throw new MissingInfoException("Color not set");
+        }
+        if(gameModel.getTurn() > 0){
+            throw new AlreadyStartedException("Game already started");
         }
         player.setReady(true);
         ReadyStatusMessage readyStatusMessage = new ReadyStatusMessage(true, player.getName());
@@ -362,12 +380,18 @@ public class ControllerInstance implements Controller{
                 //do nothing as it's normal that it's already set
             }
         }
-        //Notify
     }
 
-    public void setNotReady(Player player) {
+    public void setNotReady(Player player) throws MissingInfoException, AlreadyStartedException{
+        if(player.getColor() == null) {
+            throw new MissingInfoException("Color not set");
+        }
+        if(gameModel.getTurn() > 0){
+            throw new AlreadyStartedException("Game already started");
+        }
         player.setReady(false);
-        //Notify
+        ReadyStatusMessage readyStatusMessage = new ReadyStatusMessage(false, player.getName());
+        connectionHandler.sendAllMessage(readyStatusMessage);
     }
 
     public boolean isReady(Player player) {
@@ -376,7 +400,7 @@ public class ControllerInstance implements Controller{
 
     public void addMessage(String message, Player sender) throws IllegalArgumentException{
         gameModel.getChat().addMessage(message, sender);
-        ChatMessage chatMessage = new ChatMessage(new Message(message, sender.getName()));
+        ChatMessage chatMessage = new ChatMessage(message, sender.getName());
         connectionHandler.sendAllMessage(chatMessage);
     }
 

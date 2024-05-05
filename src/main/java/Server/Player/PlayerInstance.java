@@ -15,7 +15,7 @@ import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
 
-public class PlayerInstance implements Player, Serializable {
+public class PlayerInstance implements Player {
     private AchievementCard secretObjective;
     private final List<ResourceCard> handCards;
     private Color color;

@@ -9,6 +9,7 @@ import Server.Enums.DeckPosition;
 import Server.Enums.Decks;
 import Server.Enums.Face;
 import Server.Exception.*;
+import Server.Messages.GameAlreadyStartedMessage;
 import Server.Player.Player;
 
 import java.io.IOException;
@@ -42,17 +43,17 @@ public interface Controller {
      * @param color the color
      * @param player the player
      */
-    public void setPlayerColor(Color color, Player player) throws IllegalArgumentException;
+    public void setPlayerColor(Color color, Player player) throws IllegalArgumentException, AlreadyStartedException;
     /**
      * sets a player ready status to ready
      * @param player the player
      */
-    public void setReady(Player player) throws MissingInfoException;
+    public void setReady(Player player) throws MissingInfoException, AlreadyStartedException;
     /**
      * sets a player status to not ready
      * @param player the player
      */
-    public void setNotReady(Player player);
+    public void setNotReady(Player player) throws MissingInfoException, AlreadyStartedException;
     /**
      * returns a player's ready status
      * @param player the player
@@ -64,19 +65,15 @@ public interface Controller {
      * @param player the player
      * @param cardNumber the card number between the 2 given (0 or 1)
      */
-    public void setSecretObjectiveCard(Player player, int cardNumber) throws AlreadySetException, AlreadyFinishedException, MissingInfoException;
+    public void setSecretObjectiveCard(Player player, int cardNumber) throws AlreadySetException, MissingInfoException, AlreadyStartedException;
     /**
      * set starting card
      * @param player the player
      * @param face the face
      */
-    public void setStartingCard(Player player, Face face) throws AlreadySetException;
+    public void setStartingCard(Player player, Face face) throws AlreadySetException, AlreadyStartedException, MissingInfoException;
 
     //GAME FLOW METHODS
-    /**
-     * goes to next turn
-     */
-    public void nextTurn() throws MissingInfoException, AlreadyFinishedException;
     /**
      * @return int the current turn
      */
@@ -105,7 +102,7 @@ public interface Controller {
      * @param deckposition where i want to draw the card from
      * @param deck the deck
      */
-    public void drawCard(Player player, DeckPosition deckposition, Decks deck) throws TooManyElementsException, InvalidMoveException, AlreadyFinishedException;
+    public void drawCard(Player player, DeckPosition deckposition, Decks deck) throws TooManyElementsException, InvalidMoveException, AlreadyFinishedException, NotYetStartedException;
 
     //CHAT METHODS
     /**

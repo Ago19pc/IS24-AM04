@@ -1,6 +1,6 @@
 package Server.Connections;
 
-import ConnectionUtils.MessagePacket;
+import ConnectionUtils.ToClientMessagePacket;
 import Server.Controller.Controller;
 
 import java.io.IOException;
@@ -27,7 +27,7 @@ public class ServerSender {
         out.println(message);
     }
 
-    public void sendMessage(MessagePacket mp) throws IOException {
+    public void sendMessage(ToClientMessagePacket mp) throws IOException {
         out.println(mp.stringify());
     }
 }

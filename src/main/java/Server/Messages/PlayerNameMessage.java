@@ -7,7 +7,7 @@ import Server.Enums.MessageType;
 
 import java.io.Serializable;
 
-public class PlayerNameMessage implements GeneralMessage, Serializable {
+public class PlayerNameMessage implements ToClientMessage, ToServerMessage, Serializable {
     private String name;
     private boolean confirmation;
 

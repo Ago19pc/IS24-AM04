@@ -1,17 +1,14 @@
 package Client.Connection;
 
 import Client.Controller.ClientController;
-import ConnectionUtils.MessagePacket;
 import ConnectionUtils.MessageUtils;
-import Server.Enums.MessageType;
-import Server.Messages.GeneralMessage;
-import Server.Messages.PlayerNameMessage;
+import ConnectionUtils.ToServerMessagePacket;
+import Server.Messages.ToServerMessage;
 
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.net.Socket;
-import java.util.Scanner;
 
 public class ClientConnectionHandler extends Thread {
     private Socket clientSocket;
@@ -113,8 +110,8 @@ public class ClientConnectionHandler extends Thread {
         sender.sendMessage(msg);
     }
 
-    public void sendMessage(GeneralMessage message) throws IOException {
-        MessagePacket packet = new MessagePacket(message);
+    public void sendMessage(ToServerMessage message) throws IOException {
+        ToServerMessagePacket packet = new ToServerMessagePacket(message);
         sender.sendMessage(packet.stringify());
 
     }

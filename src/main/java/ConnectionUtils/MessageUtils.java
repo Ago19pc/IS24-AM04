@@ -2,9 +2,6 @@ package ConnectionUtils;
 
 
 import Server.Connections.ServerConnectionHandler;
-import Server.Messages.GeneralMessage;
-
-import java.io.IOException;
 
 public class MessageUtils {
     ServerConnectionHandler serverConnectionHandler;

@@ -1,23 +1,20 @@
 package Server.Messages;
 
 import Client.Controller.ClientController;
-import Server.Card.Card;
+import Server.Enums.Actions;
 import Server.Exception.ClientExecuteNotCallableException;
 
 import java.io.Serializable;
 
-public class StartingCardsMessage implements Serializable, ToClientMessage {
+public class InvalidCardMessage implements ToClientMessage, Serializable {
+    private final Actions cardType;
 
-    private Card card;
-
-    public StartingCardsMessage(Card card){
-        this.card = card;
+    public InvalidCardMessage(Actions cardType) {
+        this.cardType = cardType;
     }
-
 
     @Override
     public void clientExecute(ClientController controller) throws ClientExecuteNotCallableException {
-        controller.giveStartingCard(card);
+        controller.invalidCard(cardType);
     }
 }
-

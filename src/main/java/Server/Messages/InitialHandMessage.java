@@ -10,23 +10,16 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 
-public class InitialHandMessage implements Serializable, GeneralMessage {
+public class InitialHandMessage implements Serializable, ToClientMessage {
 
-    private final Card card1, card2, card3;
+    private final List<Card> hand;
 
-    public InitialHandMessage(Card card1, Card card2, Card card3){
-        this.card1= card1; this.card2 = card2; this.card3 = card3;
-    }
-
-
-    @Override
-    public void serverExecute(Controller controller)throws ServerExecuteNotCallableException {
-        throw new ServerExecuteNotCallableException();
-
+    public InitialHandMessage(List<Card> hand){
+        this.hand = hand;
     }
 
     @Override
     public void clientExecute(ClientController controller) {
-        controller.setInitialHand(card1, card2, card3);
+        controller.giveInitialHand(hand);
     }
 }
