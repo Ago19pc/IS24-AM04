@@ -3,7 +3,6 @@ package Server.Player;
 import Server.Card.AchievementCard;
 import Server.Card.Card;
 import Server.Card.ResourceCard;
-import Server.Card.StartingCard;
 import Server.Enums.Color;
 import Server.Enums.Face;
 import Server.Exception.AlreadySetException;
@@ -11,7 +10,6 @@ import Server.Exception.TooFewElementsException;
 import Server.Exception.TooManyElementsException;
 import Server.Manuscript.Manuscript;
 
-import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -148,7 +146,7 @@ public class PlayerInstance implements Player {
      * @param face         the face of the starting card
      */
     @Override
-    public void initializeManuscript(StartingCard startingCard, Face face) throws AlreadySetException{
+    public void initializeManuscript(Card startingCard, Face face) throws AlreadySetException{
         if(this.manuscript != null){
             throw new AlreadySetException("Manuscript already initialized");
         }

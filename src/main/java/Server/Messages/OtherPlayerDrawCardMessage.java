@@ -17,6 +17,15 @@ public class OtherPlayerDrawCardMessage implements Serializable, ToClientMessage
     private int turnNumber;
     private String activePlayerName;
 
+    public OtherPlayerDrawCardMessage(String name, Decks deckFrom, DeckPosition drawPosition, List<Card> newBoardCards, int turnNumber, String activePlayerName) {
+        this.name = name;
+        this.deckFrom = deckFrom;
+        this.drawPosition = drawPosition;
+        this.newBoardCards = newBoardCards;
+        this.turnNumber = turnNumber;
+        this.activePlayerName = activePlayerName;
+    }
+
     @Override
     public void clientExecute(ClientController controller) {
         controller.drawOtherPlayer(name, deckFrom, drawPosition, newBoardCards, turnNumber, activePlayerName);

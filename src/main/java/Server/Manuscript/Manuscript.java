@@ -1,6 +1,7 @@
 package Server.Manuscript;
 
 import Server.Card.AchievementCard;
+import Server.Card.Card;
 import Server.Card.CornerCardFace;
 import Server.Card.StartingCard;
 import Server.Enums.CardCorners;
@@ -19,7 +20,7 @@ public class Manuscript {
     private final Map<Symbol, Integer> activeSymbols;
 
 
-    public Manuscript(StartingCard card, Face face){
+    public Manuscript(Card card, Face face){
         CornerCardFace cardFace = card.getCornerFace(face);
         graph = new Graph(cardFace);
         activeSymbols = new HashMap<>();
