@@ -2,8 +2,12 @@ package Server.Connections;
 
 
 import Server.Controller.Controller;
+import Server.Enums.Color;
+import Server.Exception.PlayerNotFoundByNameException;
 import Server.Exception.ServerExecuteNotCallableException;
-import Server.Messages.GeneralMessage;
+import Server.Messages.LobbyPlayersMessage;
+import Server.Messages.ToClientMessage;
+import Server.Messages.ToServerMessage;
 
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -76,6 +80,18 @@ public class ServerConnectionHandlerSOCKET extends Thread implements ServerConne
                 clients.put(t, null);
                 t.setUncaughtExceptionHandler(h);
                 t.start();
+                //immediately send the lobby players message
+                List<String> playerNames = controller.getPlayerList().stream().map(p -> p.getName()).toList();
+                Map<String, Color> playerColors = new HashMap<>();
+                controller.getPlayerList().forEach(p -> playerColors.put(p.getName(), p.getColor()));
+                Map<String, Boolean> playerReady = new HashMap<>();
+                controller.getPlayerList().forEach(p -> playerReady.put(p.getName(), p.isReady()));
+                LobbyPlayersMessage message = new LobbyPlayersMessage(
+                        controller.getPlayerList().stream().map(p -> p.getName()).toList(),
+                        playerColors,
+                        playerReady
+                );
+                t.sendMessage(message);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -89,6 +105,10 @@ public class ServerConnectionHandlerSOCKET extends Thread implements ServerConne
      */
     public List<ClientHandler> getThreads() {
         return this.clients.keySet().stream().toList();
+    }
+
+    public String getThreadName(ClientHandler clientHandler) {
+        return clients.get(clientHandler);
     }
 
     private boolean startServer(int port) {
@@ -141,7 +161,7 @@ public class ServerConnectionHandlerSOCKET extends Thread implements ServerConne
      * Send a message to all the clients
      * @param message the message to send
      */
-    public void sendAllMessage(GeneralMessage message) {
+    public void sendAllMessage(ToClientMessage message) {
         for (ClientHandler c : clients.keySet()) {
             System.out.println("Sending message to " + c.getSocketAddress());
             c.sendMessage(message);
@@ -153,9 +173,9 @@ public class ServerConnectionHandlerSOCKET extends Thread implements ServerConne
      * @param message the message to send
      * @param name the name of the client to send the message to
      */
-    public void sendMessage(GeneralMessage message, String name) {
+    public void sendMessage(ToClientMessage message, String name) {
         ClientHandler target = clients.entrySet().stream()
-                .filter(entry -> entry.getValue().equals(name))
+                .filter(entry -> entry.getValue() == name)
                 .toList().getFirst().getKey();
         System.out.println("NAME MATCH FOUND");
         target.sendMessage(message);
@@ -178,12 +198,15 @@ public class ServerConnectionHandlerSOCKET extends Thread implements ServerConne
      * Execute a message
      * @param message, a GeneralMessage to be executed
      */
-    public void executeMessage(GeneralMessage message) {
+    public void executeMessage(ToServerMessage message) {
         synchronized (controller) {
             try {
                 message.serverExecute(controller);
             } catch (ServerExecuteNotCallableException e) {
                 System.out.println("This message should not be executed by the server");
+                System.out.println("Message not executed!");
+            } catch (PlayerNotFoundByNameException e) {
+                System.out.println("Player not found by name");
                 System.out.println("Message not executed!");
             }
             controller.notifyAll();

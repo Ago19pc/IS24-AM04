@@ -1,9 +1,8 @@
 package Server.Connections;
 
 import Server.Controller.Controller;
-import Server.Exception.AddressNotInAnyServerConnectionHandlerException;
 import Server.Exception.PlayerNotInAnyServerConnectionHandlerException;
-import Server.Messages.GeneralMessage;
+import Server.Messages.ToClientMessage;
 
 import java.io.IOException;
 import java.rmi.RemoteException;
@@ -43,12 +42,12 @@ public class GeneralServerConnectionHandler {
         return serverConnectionHandlerSOCKET;
     }
 
-    public void sendAllMessage(GeneralMessage message) {
+    public void sendAllMessage(ToClientMessage message) {
         serverConnectionHandlerSOCKET.sendAllMessage(message);
         serverConnectionHandlerRMI.sendAllMessage(message);
     }
 
-    public void sendMessage(GeneralMessage message, String name) {
+    public void sendMessage(ToClientMessage message, String name) {
         try {
             getServerConnectionHandler(name).sendMessage(message, name);
         } catch (PlayerNotInAnyServerConnectionHandlerException e) {

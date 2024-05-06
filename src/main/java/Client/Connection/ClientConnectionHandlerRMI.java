@@ -3,7 +3,9 @@ package Client.Connection;
 import Client.Controller.ClientController;
 import Server.Connections.ServerConnectionHandler;
 import Server.Exception.ClientExecuteNotCallableException;
-import Server.Messages.GeneralMessage;
+import Server.Exception.PlayerNotFoundByNameException;
+import Server.Messages.ToClientMessage;
+import Server.Messages.ToServerMessage;
 
 import java.io.IOException;
 import java.rmi.NotBoundException;
@@ -53,7 +55,7 @@ public class ClientConnectionHandlerRMI implements ClientConnectionHandler {
      */
 
     @Override
-    public void sendMessage(GeneralMessage message) throws IOException {
+    public void sendMessage(ToServerMessage message) throws IOException {
         server.executeMessage(message);
     }
 
@@ -63,11 +65,13 @@ public class ClientConnectionHandlerRMI implements ClientConnectionHandler {
      * @param message the message to execute
      */
     @Override
-    public void executeMessage(GeneralMessage message)  {
+    public void executeMessage(ToClientMessage message)  {
         try {
             message.clientExecute(controller);
         } catch (ClientExecuteNotCallableException e) {
             System.out.println("This message should not be executed by client");
+        } catch (PlayerNotFoundByNameException e) {
+            System.out.println("Player not found by name");
         }
     }
 

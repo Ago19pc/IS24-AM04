@@ -141,17 +141,6 @@ public interface Controller {
      */
     public void printData();
 
-    /**
-     * Acknowledge the initialization of the hand, its uses a static variable to count up to the player count,
-     * when this condition is met, the Achievement Cards are given to the players
-     */
-    public void ackInitHand();
-
-    /**
-     * Acknowledge the initialization of the board, its uses a static variable to count up to the player count,
-     * when this condition is met, the Starting Cards are given to the players
-     */
-    public void ackInitBoard();
 
 }
 

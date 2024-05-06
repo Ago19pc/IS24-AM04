@@ -32,9 +32,9 @@ public class PlayerColorMessage implements Serializable, ToClientMessage, ToServ
     public void serverExecute(Controller controller) throws PlayerNotFoundByNameException {
         String playerName = "";
         try {
-            ClientHandler client = controller.getConnectionHandler().getThreads()
+            ClientHandler client = controller.getConnectionHandler().getServerConnectionHandlerSOCKET().getThreads()
                     .stream().filter(c -> c.getReceiver().threadId() == Thread.currentThread().threadId()).toList().getFirst();
-            playerName = controller.getConnectionHandler().getThreadName(client);
+            playerName = controller.getConnectionHandler().getServerConnectionHandlerSOCKET().getThreadName(client);
             Player player = controller.getPlayerByName(playerName);
             controller.setPlayerColor(this.color, player);
         } catch (AlreadyStartedException e) {

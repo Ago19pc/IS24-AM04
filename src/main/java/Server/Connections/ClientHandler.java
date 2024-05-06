@@ -76,7 +76,7 @@ public class ClientHandler extends Thread {
      * Sends a message to the client
      * @param message the message to send
      */
-    public void sendMessages(ToClientMessage message)  {
+    public void sendMessage(ToClientMessage message)  {
         ToClientMessagePacket mp = new ToClientMessagePacket(message);
         try {
             this.sender.sendMessage(mp.stringify());

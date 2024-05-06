@@ -42,20 +42,6 @@ public class ServerReceiver extends Thread {
             try {
                 String resp = in.readLine();
                 packet = new ToServerMessagePacket(resp);
-
-                try {
-                    synchronized (serverConnectionHandler.getController()) {
-                        packet.getPayload().serverExecute(serverConnectionHandler.getController());
-                        System.out.println("Azione eseguita con successo!");
-                        serverConnectionHandler.getController().notifyAll();
-                    }
-                }
-                catch (Exception e) {
-                    System.out.println("ServerReciver: Error with synconized block");
-                }
-
-
-                packet = new MessagePacket(resp);
                 serverConnectionHandler.executeMessage(packet.getPayload());
             } catch (NullPointerException e) {
                 try {

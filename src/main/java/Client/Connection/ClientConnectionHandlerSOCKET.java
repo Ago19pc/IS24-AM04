@@ -1,10 +1,13 @@
 package Client.Connection;
 
 import Client.Controller.ClientController;
-import ConnectionUtils.MessagePacket;
+import ConnectionUtils.ToClientMessagePacket;
 import ConnectionUtils.MessageUtils;
+import ConnectionUtils.ToServerMessagePacket;
 import Server.Exception.ClientExecuteNotCallableException;
-import Server.Messages.GeneralMessage;
+import Server.Exception.PlayerNotFoundByNameException;
+import Server.Messages.ToClientMessage;
+import Server.Messages.ToServerMessage;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -26,6 +29,7 @@ public class ClientConnectionHandlerSOCKET extends Thread implements ClientConne
     public ClientConnectionHandlerSOCKET(ClientController controller)  {
         this.controller = controller;
         this.sender = new ClientSender(this, controller);
+        this.start();
     }
 
     /**
@@ -39,6 +43,7 @@ public class ClientConnectionHandlerSOCKET extends Thread implements ClientConne
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+        this.start();
     }
 
     /**
@@ -123,8 +128,8 @@ public class ClientConnectionHandlerSOCKET extends Thread implements ClientConne
      * @param message the message to send
      * @throws IOException
      */
-    public void sendMessage(GeneralMessage message) throws IOException {
-        MessagePacket packet = new MessagePacket(message);
+    public void sendMessage(ToServerMessage message) throws IOException {
+        ToServerMessagePacket packet = new ToServerMessagePacket(message);
         sender.sendMessage(packet.stringify());
 
     }
@@ -139,11 +144,14 @@ public class ClientConnectionHandlerSOCKET extends Thread implements ClientConne
         clientSocket.close();
     }
 
-    public void executeMessage(GeneralMessage message) {
+    public void executeMessage(ToClientMessage message) {
         try {
             message.clientExecute(controller);
         } catch (ClientExecuteNotCallableException e) {
             System.out.println("The received message should not be executed on the client");
+            System.out.println("Message not executed");
+        } catch (PlayerNotFoundByNameException e) {
+            System.out.println("Player not found by name");
             System.out.println("Message not executed");
         }
     }

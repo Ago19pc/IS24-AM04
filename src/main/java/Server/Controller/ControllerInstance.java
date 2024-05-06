@@ -31,8 +31,8 @@ public class ControllerInstance implements Controller{
     private final GeneralServerConnectionHandler connectionHandler;
     private int activePlayerIndex = -1;
     private boolean lastRound = false;
-    private Map<Player, Card> givenStartingCards = new HashMap<>();
-    private Map<Player, List<Card>> givenSecretObjectiveCards = new HashMap<>();
+    private Map<Player, StartingCard> givenStartingCards = new HashMap<>();
+    private Map<Player, List<AchievementCard>> givenSecretObjectiveCards = new HashMap<>();
 
     public ControllerInstance(GeneralServerConnectionHandler connectionHandler) {
         this.connectionHandler = connectionHandler;
@@ -123,7 +123,7 @@ public class ControllerInstance implements Controller{
                 AchievementCard card2 = gameModel.getAchievementDeck().popCard(DeckPosition.DECK);
                 secretObjectiveCardsToPlayer.add(card1);
                 secretObjectiveCardsToPlayer.add(card2);
-                List<Card> commonAchievements = new ArrayList<>();
+                List<AchievementCard> commonAchievements = new ArrayList<>();
                 commonAchievements.add(gameModel.getAchievementDeck().popCard(DeckPosition.FIRST_CARD));
                 commonAchievements.add(gameModel.getAchievementDeck().popCard(DeckPosition.SECOND_CARD));
                 AchievementCardsMessage achievementCardsMessage = new AchievementCardsMessage(secretObjectiveCardsToPlayer, commonAchievements);
