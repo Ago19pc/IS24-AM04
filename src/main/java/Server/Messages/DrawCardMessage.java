@@ -32,9 +32,9 @@ public class DrawCardMessage implements Serializable, ToServerMessage, ToClientM
     public void serverExecute(Controller controller) {
         String playerName = "";
         try {
-            ClientHandler client = controller.getConnectionHandler().getThreads()
+            ClientHandler client = controller.getConnectionHandler().getServerConnectionHandlerSOCKET().getThreads()
                     .stream().filter(c -> c.getReceiver().threadId() == Thread.currentThread().threadId()).toList().getFirst();
-            playerName = controller.getConnectionHandler().getThreadName(client);
+            playerName = controller.getConnectionHandler().getServerConnectionHandlerSOCKET().getThreadName(client);
             Player player = controller.getPlayerByName(playerName);
             if(from == Decks.ACHIEVEMENT){
                 AchievementDeckDrawInvalidMessage achievementDeckDrawInvalidMessage = new AchievementDeckDrawInvalidMessage();

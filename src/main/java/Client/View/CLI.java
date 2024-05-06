@@ -10,6 +10,7 @@ import Server.Enums.Color;
 import Client.Player;
 import Server.Enums.DeckPosition;
 import Server.Enums.Decks;
+import Server.Messages.AchievementCardsMessage;
 import Server.Messages.StartingCardsMessage;
 
 import java.util.ArrayList;
@@ -51,6 +52,21 @@ public class CLI extends Thread{
             String[] args = in.nextLine().split(" ");
             decode(args);
         }
+    }
+
+    public void askConnectionMode(){
+        printOnNewLine("Vuoi connetterti tramite RMI o SOCKET?");
+        printPromptLine();
+        String connectionMode = in.nextLine().toUpperCase();
+        if(connectionMode.equals("RMI")) {
+            controller.setRMIMode(true);
+        } else if (connectionMode.equals("SOCKET")) {
+            controller.setRMIMode(false);
+        } else {
+            printOnNewLine("Modalità di connessione non valida.");
+            askConnectionMode();
+        }
+        printPromptLine();
     }
 
     /**
@@ -304,7 +320,7 @@ public class CLI extends Thread{
         }
         printPromptLine();
     }
-    public void chooseSecretAchievement(List<Card> possibleAchievements){
+    public void chooseSecretAchievement(List<AchievementCard> possibleAchievements){
         printOnNewLine("Scegli un obiettivo segreto: \n");
         potentialSecretAchievements = new ArrayList<>();
         for (int i = 0; i < possibleAchievements.size(); i++) {

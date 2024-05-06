@@ -1,6 +1,8 @@
 package Client.Controller;
 
 import Client.Connection.ClientConnectionHandler;
+import Client.Connection.ClientConnectionHandlerRMI;
+import Client.Connection.GeneralClientConnectionHandler;
 import Client.Deck;
 import Client.View.CLI;
 import ConnectionUtils.ToServerMessagePacket;
@@ -14,14 +16,17 @@ import Client.Player;
 
 import java.io.IOException;
 import java.net.Socket;
+import java.rmi.NotBoundException;
+import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
 public class ClientController {
-    private ClientConnectionHandler clientConnectionHandler;
+    private GeneralClientConnectionHandler clientConnectionHandler;
     private CLI cli ;
+    private boolean rmiMode = false;
 
     //cards not owned by player info
     private List<AchievementCard> commonAchievements;
@@ -46,9 +51,9 @@ public class ClientController {
     private Color proposedColor;
     private AchievementCard proposedSecretAchievement;
 
-    public void main(CLI cli) {
-        clientConnectionHandler = new ClientConnectionHandler(this);
-        clientConnectionHandler.start();
+    public void main(CLI cli) throws RemoteException {
+        cli.askConnectionMode();
+        clientConnectionHandler = new GeneralClientConnectionHandler(this, rmiMode);
         this.cli = cli;
     }
 
@@ -63,8 +68,8 @@ public class ClientController {
     //ui actions
     public void joinServer(String ip, int port) {
         try{
-            clientConnectionHandler.setSocket(new Socket(ip, port));
-        } catch (IOException e){
+            clientConnectionHandler.setSocket(ip, port);
+        } catch (IOException | NotBoundException e){
             cli.connectionFailed();
         }
         cli.successfulConnection();
@@ -112,25 +117,19 @@ public class ClientController {
             return;
         }
         ChatMessage chatMessage = new ChatMessage(message);
-        ToServerMessagePacket mp = new ToServerMessagePacket(chatMessage);
-        try {
-            clientConnectionHandler.sender.sendMessage(mp.stringify());
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        clientConnectionHandler.sendMessage(chatMessage);
     }
     public void askSetName(String name) {
         this.proposedName = name;
         PlayerNameMessage playerNameMessage = new PlayerNameMessage(proposedName, true);
-        if (clientConnectionHandler.sender.getOutputBuffer() == null){
-            cli.needConnection();
-            return;
-        }
         try {
             clientConnectionHandler.sendMessage(playerNameMessage);
         } catch (Exception e) {
-            e.printStackTrace();
+            cli.needConnection();
         }
+    }
+    public void setRMIMode(boolean rmi) {
+        this.rmiMode = rmi;
     }
 
     //ui getters
@@ -221,7 +220,7 @@ public class ClientController {
         }
         cli.displayLobby();
     }
-    public void giveAchievementCards(List<Card> secretCards, List<Card> commonCards) {
+    public void giveAchievementCards(List<AchievementCard> secretCards, List<AchievementCard> commonCards) {
         commonAchievements = new ArrayList<>();
         for (Card c : commonCards){
             commonAchievements.add((AchievementCard) c);

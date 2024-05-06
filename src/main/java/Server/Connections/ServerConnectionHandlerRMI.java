@@ -3,8 +3,10 @@ package Server.Connections;
 import Client.Connection.ClientConnectionHandler;
 import Client.Connection.ClientConnectionHandlerRMI;
 import Server.Controller.Controller;
+import Server.Exception.PlayerNotFoundByNameException;
 import Server.Exception.ServerExecuteNotCallableException;
-import Server.Messages.GeneralMessage;
+import Server.Messages.ToClientMessage;
+import Server.Messages.ToServerMessage;
 
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
@@ -97,7 +99,7 @@ public class ServerConnectionHandlerRMI implements ServerConnectionHandler {
      * @param message the message to send
      */
     @Override
-    public void sendAllMessage(GeneralMessage message) {
+    public void sendAllMessage(ToClientMessage message) {
         for (ClientConnectionHandler client : clients.values()) {
             try {
                 client.executeMessage(message);
@@ -112,7 +114,7 @@ public class ServerConnectionHandlerRMI implements ServerConnectionHandler {
      * @param name the name of the client to send the message to
      * @param message the message to send
      */
-    public void sendMessage(GeneralMessage message, String name) {
+    public void sendMessage(ToClientMessage message, String name) {
         try {
             clients.get(name).executeMessage(message);
         } catch (RemoteException e) {
@@ -126,12 +128,15 @@ public class ServerConnectionHandlerRMI implements ServerConnectionHandler {
      * @param message the message to execute
      */
     @Override
-    public void executeMessage(GeneralMessage message) {
+    public void executeMessage(ToServerMessage message) {
         synchronized (controller) {
             try {
                 message.serverExecute(controller);
             } catch (ServerExecuteNotCallableException e) {
                 System.out.println("This message should not be executed by the server");
+                System.out.println("Message not executed!");
+            } catch (PlayerNotFoundByNameException e) {
+                System.out.println("Player not found by name");
                 System.out.println("Message not executed!");
             }
             controller.notifyAll();
