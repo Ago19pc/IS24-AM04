@@ -1,9 +1,10 @@
 package Server.Controller;
 
-import Server.Card.AchievementCard;
 import Server.Chat.Message;
-import Server.Connections.ClientHandler;
+import Server.Connections.GeneralServerConnectionHandler;
 import Server.Connections.ServerConnectionHandler;
+import Server.Connections.ServerConnectionHandlerRMI;
+import Server.Connections.ServerConnectionHandlerSOCKET;
 import Server.Enums.Color;
 import Server.Enums.DeckPosition;
 import Server.Enums.Decks;
@@ -16,15 +17,8 @@ import java.io.IOException;
 import java.util.List;
 
 public interface Controller {
-    //PLAYER METHODS
-    /**
-     * adds a player to the list of players
-     * @param player the player
-     */
-    public void addPlayer(Player player) throws TooManyPlayersException, IllegalArgumentException, TooManyPlayersException;
 
     public void addPlayer(String name) throws TooManyPlayersException;
-
 
 
     /**
@@ -128,11 +122,36 @@ public interface Controller {
      */
     public void loadGame() throws IOException;
 
+    /**
+     * @param name
+     * @return the Player instance associated with the name
+     * @throws PlayerNotFoundByNameException
+     */
     public Player getPlayerByName(String name) throws PlayerNotFoundByNameException;
 
-    public ServerConnectionHandler getConnectionHandler();
+    /**
+     * @return the ServerConnectionHandler
+     */
 
+    public GeneralServerConnectionHandler getConnectionHandler();
+
+
+    /**
+     * Prints some data
+     */
     public void printData();
+
+    /**
+     * Acknowledge the initialization of the hand, its uses a static variable to count up to the player count,
+     * when this condition is met, the Achievement Cards are given to the players
+     */
+    public void ackInitHand();
+
+    /**
+     * Acknowledge the initialization of the board, its uses a static variable to count up to the player count,
+     * when this condition is met, the Starting Cards are given to the players
+     */
+    public void ackInitBoard();
 
 }
 

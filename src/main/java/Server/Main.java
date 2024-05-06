@@ -1,24 +1,24 @@
 package Server;
 
-import Server.Connections.ServerConnectionHandler;
+import Server.Connections.GeneralServerConnectionHandler;
+import Server.Connections.ServerConnectionHandlerSOCKET;
 import Server.Controller.Controller;
 import Server.Controller.ControllerInstance;
-import Server.Exception.AlreadySetException;
-import Server.Exception.TooFewElementsException;
 
 
 public class Main {
-    private static ServerConnectionHandler connectionHandler;
+    private static GeneralServerConnectionHandler connectionHandler;
     private static Controller controller;
 
 
     public static void main(String[] args) {
         try {
-            connectionHandler = new ServerConnectionHandler();
+            connectionHandler = new GeneralServerConnectionHandler();
             controller = new ControllerInstance(connectionHandler);
             connectionHandler.setController(controller);
             connectionHandler.start();
         } catch (Exception e) {
+            e.printStackTrace();
             System.out.println("Ops. Qualcosa è andato storto.");
         }
 

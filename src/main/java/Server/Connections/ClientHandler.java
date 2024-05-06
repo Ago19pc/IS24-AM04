@@ -10,7 +10,7 @@ import java.net.Socket;
 
 public class ClientHandler extends Thread {
     private final Socket socket;
-    private final ServerConnectionHandler connectionHandler;
+    private final ServerConnectionHandlerSOCKET connectionHandler;
     private final ServerSender sender ;
     private final ServerReceiver receiver ;
     private final Thread.UncaughtExceptionHandler h;
@@ -18,7 +18,16 @@ public class ClientHandler extends Thread {
 
 
     ClientHandler me = this;
-    public ClientHandler(ServerConnectionHandler connectionHandler, Socket client, Controller controller) throws IOException, RuntimeException {
+
+    /**
+     * Constructor
+     * @param connectionHandler the ServerConnectionHandler that created this ClientHandler
+     * @param client the client's socket
+     * @param controller the controller of the server
+     * @throws IOException if the sender or receiver can't be created
+     * @throws RuntimeException if the sender or receiver can't be created
+     */
+    public ClientHandler(ServerConnectionHandlerSOCKET connectionHandler, Socket client, Controller controller) throws IOException, RuntimeException {
         this.controller = controller;
         this.socket = client;
         this.connectionHandler = connectionHandler;
@@ -39,6 +48,10 @@ public class ClientHandler extends Thread {
         }
     }
 
+
+    /**
+     * Creates the receiver to listen to the client messages
+     */
     public void run() {
         System.out.println("Nuovo Client connesso: " + this.socket.getInetAddress());
         System.out.println("Ora i client connessi sono: ");
@@ -59,7 +72,10 @@ public class ClientHandler extends Thread {
     }
 
 
-
+    /**
+     * Sends a message to the client
+     * @param message the message to send
+     */
     public void sendMessages(ToClientMessage message)  {
         ToClientMessagePacket mp = new ToClientMessagePacket(message);
         try {
@@ -71,10 +87,16 @@ public class ClientHandler extends Thread {
     }
 
 
-    public ServerConnectionHandler getServerConnectionHandler() {
+    /**
+     * Returns the assosiated ServerConnectionHandler
+     */
+    public ServerConnectionHandlerSOCKET getServerConnectionHandler() {
         return this.connectionHandler;
     }
 
+    /**
+     * Returns the receiver of this client
+     */
     public ServerReceiver getReceiver() {
         return this.receiver;
     }
@@ -84,7 +106,13 @@ public class ClientHandler extends Thread {
      * @return the client's address
      */
     public String getSocketAddress() {
-        return this.socket.getInetAddress().toString();
+        return this.socket.getInetAddress().getHostAddress();
     }
+
+    public int getSocketPort() {
+        return this.socket.getPort();
+    }
+
+
 
 }

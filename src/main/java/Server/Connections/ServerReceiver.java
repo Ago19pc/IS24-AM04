@@ -18,7 +18,7 @@ public class ServerReceiver extends Thread {
     private ClientHandler clientHandler;
     private MessageUtils messageUtils;
 
-    private ServerConnectionHandler serverConnectionHandler;
+    private ServerConnectionHandlerSOCKET serverConnectionHandler;
 
 
     public ServerReceiver(ClientHandler clientHandler, Socket clientSocket) throws IOException {
@@ -55,6 +55,8 @@ public class ServerReceiver extends Thread {
                 }
 
 
+                packet = new MessagePacket(resp);
+                serverConnectionHandler.executeMessage(packet.getPayload());
             } catch (NullPointerException e) {
                 try {
                     clientSocket.close();

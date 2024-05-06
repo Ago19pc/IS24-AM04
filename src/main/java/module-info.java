@@ -6,10 +6,12 @@ module it.am04.demo1 {
     requires java.sql;
     requires java.desktop;
     requires com.google.gson;
-    requires kotlin.stdlib;
+    requires java.rmi;
 
     opens Client to javafx.fxml;
     exports Client;
+    exports Server.Connections to java.rmi;
+    exports Client.Connection to java.rmi;
 
     opens Server.GameModel to com.google.gson;
     opens Server.Deck to com.google.gson;

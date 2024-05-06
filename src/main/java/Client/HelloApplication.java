@@ -1,6 +1,5 @@
 package Client;
 
-import Client.Connection.ClientConnectionHandler;
 import Client.Controller.ClientController;
 import Client.View.CLI;
 import javafx.application.Application;
@@ -9,6 +8,7 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.rmi.RemoteException;
 import java.util.Scanner;
 
 public class HelloApplication extends Application {
@@ -25,7 +25,8 @@ public class HelloApplication extends Application {
         stage.show();
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws RemoteException {
+
         controller = new ClientController();
         cli = new CLI(controller);
         controller.main(cli);

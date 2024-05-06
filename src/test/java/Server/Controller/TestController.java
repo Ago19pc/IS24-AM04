@@ -1,7 +1,9 @@
 package Server.Controller;
 
 import Server.Card.*;
+import Server.Connections.GeneralServerConnectionHandler;
 import Server.Connections.ServerConnectionHandler;
+import Server.Connections.ServerConnectionHandlerSOCKET;
 import Server.Deck.GoldDeck;
 import Server.Deck.ResourceDeck;
 import Server.Enums.*;
@@ -11,20 +13,17 @@ import Server.Player.PlayerInstance;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 public class TestController {/*
     @Test
     public void testAddPlayer() throws Exception {
-        ServerConnectionHandler connectionHandler = new ServerConnectionHandler(true);
+        GeneralServerConnectionHandler connectionHandler = new GeneralServerConnectionHandler(true);
         Controller controller = new ControllerInstance(connectionHandler);
         Player player = new PlayerInstance("player1");
-        controller.addPlayer(player);
+        controller.addPlayer(player.getName());
         List<Player> playerList = controller.getPlayerList();
         assertEquals(1, playerList.size());
         assertEquals(player, playerList.get(0));
@@ -32,11 +31,11 @@ public class TestController {/*
         Player player3 = new PlayerInstance("player3");
         Player player4 = new PlayerInstance("player4");
         Player player5 = new PlayerInstance("player5");
-        controller.addPlayer(player2);
-        controller.addPlayer(player3);
-        controller.addPlayer(player4);
+        controller.addPlayer(player2.getName());
+        controller.addPlayer(player3.getName());
+        controller.addPlayer(player4.getName());
         TooManyPlayersException exception = assertThrows(TooManyPlayersException.class, () -> {
-            controller.addPlayer(player5);
+            controller.addPlayer(player5.getName());
         });
         playerList = controller.getPlayerList();
         assertEquals(4, playerList.size());
@@ -45,10 +44,10 @@ public class TestController {/*
     }
     @Test
     public void testRemovePlayer() throws Exception {
-        ServerConnectionHandler connectionHandler = new ServerConnectionHandler(true);
+        GeneralServerConnectionHandler connectionHandler = new GeneralServerConnectionHandler(true);
         Controller controller = new ControllerInstance(connectionHandler);
         Player player = new PlayerInstance("player1");
-        controller.addPlayer(player);
+        controller.addPlayer(player.getName());
         List<Player> playerList = controller.getPlayerList();
         assertEquals(1, playerList.size());
         controller.removePlayer(player);
@@ -57,13 +56,13 @@ public class TestController {/*
     }
     @Test
     public void testColor() throws Exception {
-        ServerConnectionHandler connectionHandler = new ServerConnectionHandler(true);
+        GeneralServerConnectionHandler connectionHandler = new GeneralServerConnectionHandler(true);
         Controller controller = new ControllerInstance(connectionHandler);
         Player player = new PlayerInstance("player1");
-        controller.addPlayer(player);
+        controller.addPlayer(player.getName());
         controller.setPlayerColor(Color.RED, player);
         Player player2 = new PlayerInstance("player2");
-        controller.addPlayer(player2);
+        controller.addPlayer(player2.getName());
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
             controller.setPlayerColor(Color.RED, player2);
         });
@@ -107,12 +106,12 @@ public class TestController {/*
     @Test
     public void testGiveInitialHand() throws Exception
     {
-        ServerConnectionHandler connectionHandler = new ServerConnectionHandler(true);
+        GeneralServerConnectionHandler connectionHandler = new GeneralServerConnectionHandler(true);
         Controller controller = new ControllerInstance(connectionHandler);
         Player player = new PlayerInstance("player1");
         Player player2 = new PlayerInstance("player2");
-        controller.addPlayer(player);
-        controller.addPlayer(player2);
+        controller.addPlayer(player.getName());
+        controller.addPlayer(player2.getName());
         controller.setPlayerColor(Color.RED, player);
         controller.setPlayerColor(Color.BLUE, player2);
         controller.setReady(player);
@@ -125,10 +124,10 @@ public class TestController {/*
     }
     @Test
     public void testNextTurn() throws Exception {
-        ServerConnectionHandler connectionHandler = new ServerConnectionHandler(true);
+        GeneralServerConnectionHandler connectionHandler = new GeneralServerConnectionHandler(true);
         Controller controller = new ControllerInstance(connectionHandler);
         Player player = new PlayerInstance("player1");
-        controller.addPlayer(player);
+        controller.addPlayer(player.getName());
         controller.nextTurn();
         assertEquals(1, controller.getTurn());
     }
@@ -213,12 +212,12 @@ public class TestController {/*
     @Test
     public void testDrawCard() throws Exception {
         int sentinel = 0,i;
-        ServerConnectionHandler connectionHandler = new ServerConnectionHandler(true);
+        GeneralServerConnectionHandler connectionHandler = new GeneralServerConnectionHandler(true);
         Controller controller = new ControllerInstance(connectionHandler);
         Player player = new PlayerInstance("player1");
         Player player2 = new PlayerInstance("player2");
-        controller.addPlayer(player);
-        controller.addPlayer(player2);
+        controller.addPlayer(player.getName());
+        controller.addPlayer(player2.getName());
         controller.setPlayerColor(Color.RED, player);
         controller.setPlayerColor(Color.BLUE, player2);
         controller.setReady(player);
@@ -312,12 +311,12 @@ public class TestController {/*
     }
     @Test
     public void testClearGame() throws IOException, TooManyPlayersException, MissingInfoException, AlreadyFinishedException {
-        ServerConnectionHandler connectionHandler = new ServerConnectionHandler(true);
+        GeneralServerConnectionHandler connectionHandler = new GeneralServerConnectionHandler(true);
         Controller controller = new ControllerInstance(connectionHandler);
         Player player = new PlayerInstance("player1");
-        controller.addPlayer(player);
+        controller.addPlayer(player.getName());
         Player player2 = new PlayerInstance("player2");
-        controller.addPlayer(player2);
+        controller.addPlayer(player2.getName());
         controller.nextTurn();
         controller.clear();
         assertEquals(0, controller.getPlayerList().size());
@@ -326,10 +325,10 @@ public class TestController {/*
 
     @Test
     public void testReady() throws IOException, TooManyPlayersException, MissingInfoException {
-        ServerConnectionHandler connectionHandler = new ServerConnectionHandler(true);
+        GeneralServerConnectionHandler connectionHandler = new GeneralServerConnectionHandler(true);
         Controller controller = new ControllerInstance(connectionHandler);
         Player player = new PlayerInstance("player1");
-        controller.addPlayer(player);
+        controller.addPlayer(player.getName());
         assertFalse(player.isReady());
         controller.setPlayerColor(Color.RED, player);
         controller.setReady(player);
@@ -340,10 +339,10 @@ public class TestController {/*
 
     @Test
     public void testChat() throws IOException, TooManyPlayersException {
-        ServerConnectionHandler connectionHandler = new ServerConnectionHandler(true);
+        GeneralServerConnectionHandler connectionHandler = new GeneralServerConnectionHandler(true);
         Controller controller = new ControllerInstance(connectionHandler);
         Player player = new PlayerInstance("player1");
-        controller.addPlayer(player);
+        controller.addPlayer(player.getName());
         assertEquals(0, controller.getChatMessages().size());
         controller.addMessage("Hello", player);
         assertEquals(1, controller.getChatMessages().size());
@@ -353,12 +352,12 @@ public class TestController {/*
 
     @Test
     public void testSaveAndLoad() throws IOException, TooManyPlayersException, AlreadySetException, MissingInfoException, TooFewElementsException, AlreadyFinishedException {
-        ServerConnectionHandler connectionHandler = new ServerConnectionHandler(true);
+        GeneralServerConnectionHandler connectionHandler = new GeneralServerConnectionHandler(true);
         Controller controller = new ControllerInstance(connectionHandler);
         Player player = new PlayerInstance("player1");
-        controller.addPlayer(player);
+        controller.addPlayer(player.getName());
         Player player2 = new PlayerInstance("player2");
-        controller.addPlayer(player2);
+        controller.addPlayer(player2.getName());
         controller.setPlayerColor(Color.RED, player);
         controller.setPlayerColor(Color.BLUE, player2);
         controller.setReady(player);

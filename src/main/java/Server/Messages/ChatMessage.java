@@ -14,6 +14,10 @@ public class ChatMessage implements Serializable, ToServerMessage, ToClientMessa
     private String message;
     private String name;
 
+    /**
+     * Constructor for the ChatMessage, which is the message used to update the chat
+     * @param message
+     */
     public ChatMessage(String message){
         this.message = message;
     }

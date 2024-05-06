@@ -23,10 +23,20 @@ public class ServerSender {
         this.controller = controller;
     }
 
+    /**
+     * Sends a string to the client
+     * @param message
+     */
     public void sendMessage(String message) {
         out.println(message);
     }
 
+
+    /**
+     * Sends a message packet to the client
+     * @param mp, the message packet to be sent
+     * @throws IOException
+     */
     public void sendMessage(ToClientMessagePacket mp) throws IOException {
         out.println(mp.stringify());
     }

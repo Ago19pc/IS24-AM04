@@ -5,7 +5,10 @@ import Server.Card.Card;
 import Server.Card.CornerCardFace;
 import Server.Card.StartingCard;
 import Server.Chat.Message;
+import Server.Connections.GeneralServerConnectionHandler;
 import Server.Connections.ServerConnectionHandler;
+import Server.Connections.ServerConnectionHandlerRMI;
+import Server.Connections.ServerConnectionHandlerSOCKET;
 import Server.Deck.AchievementDeck;
 import Server.Enums.*;
 import Server.Exception.*;
@@ -25,17 +28,22 @@ import java.util.stream.Collectors;
 
 public class ControllerInstance implements Controller{
     private GameModel gameModel;
-    private final ServerConnectionHandler connectionHandler;
+    private final GeneralServerConnectionHandler connectionHandler;
     private int activePlayerIndex = -1;
     private boolean lastRound = false;
     private Map<Player, Card> givenStartingCards = new HashMap<>();
     private Map<Player, List<Card>> givenSecretObjectiveCards = new HashMap<>();
 
-    public ControllerInstance(ServerConnectionHandler connectionHandler) {
+    public ControllerInstance(GeneralServerConnectionHandler connectionHandler) {
         this.connectionHandler = connectionHandler;
         this.gameModel = new GameModelInstance();
     }
-    public void addPlayer(Player player) throws TooManyPlayersException, IllegalArgumentException {
+    @Override
+    public void addPlayer(String name) throws TooManyPlayersException {
+        Player player = new PlayerInstance(name);
+        for (Player p : gameModel.getPlayerList()){
+            if (p.getName().equals(player.getName())) throw new IllegalArgumentException("Player with same name already exists");
+        }
         if(gameModel.getPlayerList().size()<4) {
             gameModel.addPlayer(player);
             PlayerNameMessage playerNameMessage = new PlayerNameMessage(player.getName(), true);
@@ -45,16 +53,6 @@ public class ControllerInstance implements Controller{
         } else {
             throw new TooManyPlayersException("Too many players");
         }
-    }
-
-    @Override
-    public void addPlayer(String name) throws TooManyPlayersException {
-
-        Player player = new PlayerInstance(name);
-        for (Player p : gameModel.getPlayerList()){
-            if (p.getName().equals(player.getName())) throw new IllegalArgumentException("Player with same name already exists");
-        }
-        addPlayer(player);
     }
 
     public void removePlayer(Player player) {
@@ -119,10 +117,10 @@ public class ControllerInstance implements Controller{
         gameModel.createAchievementDeck();
         getPlayerList().forEach(player -> {
             givenSecretObjectiveCards.put(player, new ArrayList<>());
-            List<Card> secretObjectiveCardsToPlayer = givenSecretObjectiveCards.get(player);
+            List<AchievementCard> secretObjectiveCardsToPlayer = givenSecretObjectiveCards.get(player);
             try {
-                Card card1 = gameModel.getAchievementDeck().popCard(DeckPosition.DECK);
-                Card card2 = gameModel.getAchievementDeck().popCard(DeckPosition.DECK);
+                AchievementCard card1 = gameModel.getAchievementDeck().popCard(DeckPosition.DECK);
+                AchievementCard card2 = gameModel.getAchievementDeck().popCard(DeckPosition.DECK);
                 secretObjectiveCardsToPlayer.add(card1);
                 secretObjectiveCardsToPlayer.add(card2);
                 List<Card> commonAchievements = new ArrayList<>();
@@ -158,7 +156,7 @@ public class ControllerInstance implements Controller{
         gameModel.createStartingCards();
         List<StartingCard> startingCards = gameModel.getStartingCards();
         getPlayerList().forEach(player -> {
-            Card card = startingCards.removeFirst();
+            StartingCard card = startingCards.removeFirst();
             givenStartingCards.put(player, card);
             StartingCardsMessage startingCardsMessage = new StartingCardsMessage(card);
             connectionHandler.sendMessage(startingCardsMessage, player.getName());
@@ -459,10 +457,10 @@ public class ControllerInstance implements Controller{
         throw new PlayerNotFoundByNameException(name);
     }
 
-    @Override
-    public ServerConnectionHandler getConnectionHandler() {
+    public GeneralServerConnectionHandler getConnectionHandler() {
         return this.connectionHandler;
     }
+
 
     @Override
     public void printData() {
