@@ -5,6 +5,7 @@ import ConnectionUtils.MessageUtils;
 import ConnectionUtils.ToClientMessagePacket;
 import Server.Exception.ClientExecuteNotCallableException;
 import Server.Exception.IllegalMessageTypeException;
+import Server.Exception.PlayerNotFoundByNameException;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -45,6 +46,8 @@ public class ClientReceiver extends Thread {
                         packet.getPayload().clientExecute(this.controller);
                     } catch (ClientExecuteNotCallableException e) {
                         System.out.println("Called client execution when should not be done");
+                    } catch (PlayerNotFoundByNameException e) {
+                        System.out.println("ERROR: Player not found by name");
                     }
                 } catch (ClassNotFoundException | IllegalMessageTypeException e) {
                     System.out.println("Errore pacchetto");

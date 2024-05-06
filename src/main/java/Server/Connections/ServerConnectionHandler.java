@@ -2,6 +2,8 @@ package Server.Connections;
 
 
 import Server.Controller.Controller;
+import Server.Enums.Color;
+import Server.Messages.LobbyPlayersMessage;
 import Server.Messages.ToClientMessage;
 
 import java.io.IOException;
@@ -69,6 +71,18 @@ public class ServerConnectionHandler extends Thread {
                 clients.put(t, null);
                 t.setUncaughtExceptionHandler(h);
                 t.start();
+                //immediately send the lobby players message
+                List<String> playerNames = controller.getPlayerList().stream().map(p -> p.getName()).toList();
+                Map<String, Color> playerColors = new HashMap<>();
+                controller.getPlayerList().forEach(p -> playerColors.put(p.getName(), p.getColor()));
+                Map<String, Boolean> playerReady = new HashMap<>();
+                controller.getPlayerList().forEach(p -> playerReady.put(p.getName(), p.isReady()));
+                LobbyPlayersMessage message = new LobbyPlayersMessage(
+                        controller.getPlayerList().stream().map(p -> p.getName()).toList(),
+                        playerColors,
+                        playerReady
+                );
+                t.sendMessages(message);
             }
         } catch (Exception e) {
             e.printStackTrace();

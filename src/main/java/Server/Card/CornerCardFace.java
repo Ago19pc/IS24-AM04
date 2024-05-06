@@ -95,4 +95,8 @@ public class CornerCardFace extends EmptyCardFace implements Serializable {
     public Symbol getKingdom() throws UnsupportedOperationException{
         throw new UnsupportedOperationException("Corner card Faces do not have kingdom symbols");
     }
+
+    public String toString(){
+        return getCornerSymbols().toString();
+    }
 }

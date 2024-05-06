@@ -5,16 +5,16 @@ import Server.Exception.ClientExecuteNotCallableException;
 import Server.Exception.PlayerNotFoundByNameException;
 
 import java.io.Serializable;
+import java.util.List;
 
-public class OtherPlayerInitialHandMessage implements Serializable, ToClientMessage {
-    private final String name;
-    public OtherPlayerInitialHandMessage(String name){
-        this.name = name;
+public class PlayerOrderMessage implements Serializable, ToClientMessage {
+
+    private final List<String> playerNames;
+    public PlayerOrderMessage(List<String> playerNames) {
+        this.playerNames = playerNames;
     }
-
-
     @Override
     public void clientExecute(ClientController controller) throws ClientExecuteNotCallableException, PlayerNotFoundByNameException {
-        controller.giveOtherPlayerInitialHand(name);
+        controller.updatePlayerOrder(playerNames);
     }
 }

@@ -54,4 +54,11 @@ public class RegularBackFace extends CornerCardFace {
     public int getScore() throws UnsupportedOperationException{
         throw new UnsupportedOperationException("Regular cards do not have scores");
     }
+
+    public String toString() {
+        String toReturn = "Regno: " + kingdom;
+        toReturn += "\n" + super.toString() + "\n";
+        toReturn += "Simboli centrali: " + centerSymbols;
+        return toReturn;
+    }
 }

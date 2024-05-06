@@ -51,4 +51,11 @@ public class ResourceFrontFace extends CornerCardFace {
         throw new UnsupportedOperationException("Resource cards do not have center symbols");
     }
 
+    @Override
+    public String toString() {
+        String toReturn = "Regno: " + kingdom;
+        toReturn += "\n" + super.toString() + "\n";
+        toReturn += "Punti: " + score;
+        return toReturn;
+    }
 }

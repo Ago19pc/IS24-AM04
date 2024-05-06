@@ -20,10 +20,7 @@ import com.google.gson.Gson;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class ControllerInstance implements Controller{
@@ -70,6 +67,8 @@ public class ControllerInstance implements Controller{
 
     private void shufflePlayerList() {
         gameModel.shufflePlayerList();
+        PlayerOrderMessage playerOrderMessage = new PlayerOrderMessage(gameModel.getPlayerList().stream().map(Player::getName).toList());
+        connectionHandler.sendAllMessage(playerOrderMessage);
     }
 
     private void start() throws TooFewElementsException, AlreadySetException {
@@ -81,11 +80,9 @@ public class ControllerInstance implements Controller{
                 throw new TooFewElementsException("Not all players are ready");
             }
         }
-        shufflePlayerList();
         createDecks();
         giveStartingCards();
         StartGameMessage startGameMessage = new StartGameMessage(
-                gameModel.getPlayerList().stream().map(Player::getName).toList(),
                 List.of(
                         gameModel.getGoldDeck().getBoardCard().get(DeckPosition.FIRST_CARD),
                         gameModel.getGoldDeck().getBoardCard().get(DeckPosition.SECOND_CARD)
@@ -153,6 +150,7 @@ public class ControllerInstance implements Controller{
         connectionHandler.sendAllMessage(setSecretCardMessage);
         boolean allSet = getPlayerList().stream().allMatch(p -> p.getSecretObjective() != null);
         if(allSet){
+            shufflePlayerList();
             nextTurn();
         }
     }
@@ -377,7 +375,7 @@ public class ControllerInstance implements Controller{
             points += manuscript.calculatePoints(commonAchievement2);
             points += manuscript.calculatePoints(player.getSecretObjective());
             player.addPoints(points);
-            leaderboardMap.put(player.getName(), points);
+            leaderboardMap.put(player.getName(), points); //todo: add parity check
         }
         LeaderboardMessage leaderboardMessage = new LeaderboardMessage(leaderboardMap);
         connectionHandler.sendAllMessage(leaderboardMessage);

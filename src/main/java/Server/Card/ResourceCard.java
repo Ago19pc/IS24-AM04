@@ -34,4 +34,8 @@ public class ResourceCard implements Card {
         return face == Face.FRONT ? frontFace : backFace;
     }
 
+    public String toString(){
+        return "Carta risorsa. Faccia anteriore: \n" + frontFace.toString() + "\nFaccia posteriore: \n" + backFace.toString();
+    }
+
 }

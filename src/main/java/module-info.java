@@ -6,6 +6,7 @@ module it.am04.demo1 {
     requires java.sql;
     requires java.desktop;
     requires com.google.gson;
+    requires kotlin.stdlib;
 
     opens Client to javafx.fxml;
     exports Client;

@@ -4,6 +4,7 @@ import Client.Controller.ClientController;
 import Server.Card.Card;
 import Server.Enums.DeckPosition;
 import Server.Enums.Decks;
+import Server.Exception.PlayerNotFoundByNameException;
 
 import java.io.Serializable;
 import java.util.List;
@@ -27,7 +28,7 @@ public class OtherPlayerDrawCardMessage implements Serializable, ToClientMessage
     }
 
     @Override
-    public void clientExecute(ClientController controller) {
+    public void clientExecute(ClientController controller) throws PlayerNotFoundByNameException {
         controller.drawOtherPlayer(name, deckFrom, drawPosition, newBoardCards, turnNumber, activePlayerName);
     }
 }

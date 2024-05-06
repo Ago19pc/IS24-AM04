@@ -34,5 +34,9 @@ public class AchievementCard implements Card {
         throw new UnsupportedOperationException("Achievement cards do not have corner faces");
     }
 
+    public String toString(){
+        return "Puoi ottenere " + frontFace.getScore() + " punti completando i seguenti requisiti: " + frontFace.getScoreRequirements();
+    }
+
 
 }
