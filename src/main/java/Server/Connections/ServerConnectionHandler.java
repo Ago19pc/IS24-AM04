@@ -33,11 +33,39 @@ public interface ServerConnectionHandler extends Remote {
      */
     public void killClient(String name) throws RemoteException;
 
+    /**
+     * Set the name of a client
+     * @param host
+     * @param port
+     * @param name
+     * @throws RemoteException
+     */
     public void setName(String host, int port, String name) throws RemoteException;
+
+    /**
+     * Check if a client name is available
+     * @param name
+     * @return
+     * @throws RemoteException
+     */
 
     public boolean isClientNameAvailable(String name) throws RemoteException;
 
+    /**
+     * Check if a client address is available
+     * @param host
+     * @param port
+     * @return
+     * @throws RemoteException
+     */
+
     public boolean isClientAddressAvailable(String host, int port) throws RemoteException;
+
+    /**
+     * Set the controller
+     * @param controller
+     * @throws RemoteException
+     */
 
     public void setController(Controller controller) throws RemoteException;
 

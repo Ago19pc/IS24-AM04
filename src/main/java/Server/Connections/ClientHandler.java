@@ -88,7 +88,7 @@ public class ClientHandler extends Thread {
 
 
     /**
-     * Returns the assosiated ServerConnectionHandler
+     * Returns the associated ServerConnectionHandler
      */
     public ServerConnectionHandlerSOCKET getServerConnectionHandler() {
         return this.connectionHandler;

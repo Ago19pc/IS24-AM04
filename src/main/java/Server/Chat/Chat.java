@@ -23,7 +23,7 @@ public class Chat {
     /**
      * Add a message to the chat
      * @param message the text of the message
-     * @param sender the player who sent the message
+     * @param player the player who sent the message
      */
     public void addMessage(String message, Player player) {
         Message m = new Message(message, player.getName());

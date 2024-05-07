@@ -38,6 +38,7 @@ public class ControllerInstance implements Controller{
         this.connectionHandler = connectionHandler;
         this.gameModel = new GameModelInstance();
     }
+
     @Override
     public void addPlayer(String name) throws TooManyPlayersException {
         Player player = new PlayerInstance(name);
@@ -63,12 +64,20 @@ public class ControllerInstance implements Controller{
         return gameModel.getPlayerList();
     }
 
+    /**
+     * Shuffles the player list and sends the new order to all players
+     */
     private void shufflePlayerList() {
         gameModel.shufflePlayerList();
         PlayerOrderMessage playerOrderMessage = new PlayerOrderMessage(gameModel.getPlayerList().stream().map(Player::getName).toList());
         connectionHandler.sendAllMessage(playerOrderMessage);
     }
 
+    /**
+     * Starts the game by creating the decks and giving the starting cards to the players
+     * @throws TooFewElementsException if there are not enough players or not all players are ready
+     * @throws AlreadySetException if the decks are already set
+     */
     private void start() throws TooFewElementsException, AlreadySetException {
         if(gameModel.getPlayerList().size() < 2){
             throw new TooFewElementsException("Not enough players");
@@ -93,6 +102,10 @@ public class ControllerInstance implements Controller{
         connectionHandler.sendAllMessage(startGameMessage);
     }
 
+    /**
+     * Creates the decks
+     * @throws AlreadySetException if the decks are already set
+     */
     private void createDecks() throws AlreadySetException {
         gameModel.createGoldResourceDecks();
     }
@@ -113,6 +126,11 @@ public class ControllerInstance implements Controller{
         }
 
     }
+
+    /**
+     * Gives the secret objective cards to the players
+     * @throws AlreadySetException if the secret objective cards are already set
+     */
     private void giveSecretObjectiveCards() throws AlreadySetException {
         gameModel.createAchievementDeck();
         getPlayerList().forEach(player -> {
@@ -152,6 +170,11 @@ public class ControllerInstance implements Controller{
             nextTurn();
         }
     }
+
+    /**
+     * Gives the starting cards to the players
+     * @throws AlreadySetException if the starting cards are already set
+     */
     private void giveStartingCards() throws AlreadySetException {
         gameModel.createStartingCards();
         List<StartingCard> startingCards = gameModel.getStartingCards();
@@ -182,6 +205,12 @@ public class ControllerInstance implements Controller{
             }
         }
     }
+
+    /**
+     * Gives the initial hand to the players
+     * @throws AlreadySetException if the initial hand is already given
+     * @throws AlreadyFinishedException if the deck is empty
+     */
     private void giveInitialHand() throws AlreadySetException, AlreadyFinishedException{
         for(Player player : getPlayerList()){
             Card card1 = gameModel.getResourceDeck().popCard(DeckPosition.DECK);
@@ -206,6 +235,10 @@ public class ControllerInstance implements Controller{
         giveSecretObjectiveCards();
 
     }
+
+    /**
+     * Sets the next turn
+     */
     private void nextTurn(){
         if(activePlayerIndex == -1){ //sets active player as the first player. If it's not the first turn this is not valid
             if(gameModel.getTurn() != 0){
@@ -351,6 +384,10 @@ public class ControllerInstance implements Controller{
         connectionHandler.sendAllMessage(otherPlayerDrawCardMessage);
     }
 
+    /**
+     * Starts the end game phase
+     * @throws AlreadySetException if the end game phase is already set
+     */
     private void endGame() throws AlreadySetException {
         gameModel.setEndGamePhase();
         //if it's the last player to play, the extra round starts immediately
@@ -361,6 +398,10 @@ public class ControllerInstance implements Controller{
         connectionHandler.sendAllMessage(endGamePhaseMessage);
     }
 
+    /**
+     * Computes the leaderboard and sends it to all players
+     * @throws AlreadyFinishedException if there aren't achievement cards to pop
+     */
     private void computeLeaderboard() throws AlreadyFinishedException {
         AchievementDeck achievementDeck = gameModel.getAchievementDeck();
         AchievementCard commonAchievement1 = achievementDeck.popCard(DeckPosition.FIRST_CARD);
@@ -456,7 +497,10 @@ public class ControllerInstance implements Controller{
         }
         throw new PlayerNotFoundByNameException(name);
     }
-
+    /**
+     * get the ConncectionHandler
+     * @return connectionHandler the conncectionHandler
+     */
     public GeneralServerConnectionHandler getConnectionHandler() {
         return this.connectionHandler;
     }
