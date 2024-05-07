@@ -42,6 +42,7 @@ public class ClientController {
     private List<Color> unavaiableColors = new ArrayList<>();
     private Chat chat = new Chat();
     private List<Player> players = new ArrayList<>();
+    private GameState gameState;
 
     //temp stuff
     private String proposedName;
@@ -52,6 +53,7 @@ public class ClientController {
         cli.askConnectionMode();
         clientConnectionHandler = new GeneralClientConnectionHandler(this, rmiMode);
         this.cli = cli;
+        this.gameState = GameState.LOBBY;
     }
 
     //helper methods
@@ -152,6 +154,23 @@ public class ClientController {
     public void setRMIMode(boolean rmi) {
         this.rmiMode = rmi;
     }
+    public void chooseStartingCardFace(Face face) {
+        SetStartingCardMessage startingCardMessage = new SetStartingCardMessage(face, id);
+        try {
+            clientConnectionHandler.sendMessage(startingCardMessage);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    public void chooseSecretAchievement(AchievementCard secretAchievement, int index) {
+        this.proposedSecretAchievement = secretAchievement;
+        SetSecretCardMessage secretAchievementMessage = new SetSecretCardMessage(index, id);
+        try {
+            clientConnectionHandler.sendMessage(secretAchievementMessage);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
     //ui getters
     public String getMyName() {
@@ -159,6 +178,9 @@ public class ClientController {
     }
     public List<Player> getPlayers() {
         return players;
+    }
+    public GameState getGameState() {
+        return gameState;
     }
     /**
      * Gets the available colors
@@ -240,6 +262,7 @@ public class ClientController {
         cli.displayLobby();
     }
     public void giveAchievementCards(List<AchievementCard> secretCards, List<AchievementCard> commonCards) {
+        gameState = GameState.CHOOSE_SECRET_ACHIEVEMENT;
         commonAchievements = new ArrayList<>();
         for (Card c : commonCards){
             commonAchievements.add((AchievementCard) c);
@@ -292,6 +315,7 @@ public class ClientController {
         cli.invalidCardForAction(cardType);
     }
     public void displayLeaderboard(Map<String, Integer> playerPoints) {
+        gameState = GameState.LEADERBOARD;
         for (String name : playerPoints.keySet()){
             try {
                 getPlayerByName(name).setAchievementPoints(playerPoints.get(name) - getPlayerByName(name).getPoints());
@@ -316,6 +340,7 @@ public class ClientController {
         cli.notYourTurn();
     }
     public void drawOtherPlayer(String name, Decks deckFrom, DeckPosition drawPosition, List<Card> newBoardCards, int turnNumber, String activePlayerName) throws PlayerNotFoundByNameException {
+        gameState = GameState.PLACE_CARD;
         switch (deckFrom){
             case GOLD:
                 goldDeck.setBoardCards(newBoardCards);
@@ -333,6 +358,11 @@ public class ClientController {
             p.setActive(p.getName().equals(activePlayerName));
         }
         cli.newTurn();
+    }
+    public void placeOtherPlayer(){
+        if(gameState != gameState.LEADERBOARD){ //otherwise if the leaderboard message comes before this one, the gamestate will still be correct
+            gameState = GameState.DRAW_CARD;
+        }
     }
     public void giveOtherPlayerInitialHand(String name) throws PlayerNotFoundByNameException {
         Player p = getPlayerByName(name);
@@ -388,12 +418,11 @@ public class ClientController {
         cli.secretAchievementChosen(name);
     }
     public void startingCardChosen(String name, CardFace startingFace) {
-        if (name.equals(myName)){
-            //todo: initialize manuscript
-        }
+        //todo: initialize player's manuscript
         cli.startingCardChosen(name);
     }
     public void startGame(List<Card> goldBoardCards, List<Card> resourceBoardCards){
+        gameState = GameState.PLACE_CARD;
         cli.gameStarted();
         goldDeck = new Deck(goldBoardCards);
         resourceDeck = new Deck(resourceBoardCards);
@@ -408,6 +437,7 @@ public class ClientController {
         cli.displayPlayerOrder();
     }
     public void giveStartingCard(Card card) {
+        gameState = GameState.CHOOSE_STARTING_CARD;
         cli.chooseStartingCardFace(card);
     }
     public void toDoFirst(Actions actionToDo) {

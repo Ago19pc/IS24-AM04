@@ -4,11 +4,9 @@ import Client.Controller.ClientController;
 import Client.Player;
 import Server.Card.AchievementCard;
 import Server.Card.Card;
+import Server.Card.CardFace;
 import Server.Chat.Message;
-import Server.Enums.Actions;
-import Server.Enums.Color;
-import Server.Enums.DeckPosition;
-import Server.Enums.Decks;
+import Server.Enums.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,7 +19,6 @@ public class CLI extends Thread{
 
     //temp variables
     private List<AchievementCard> potentialSecretAchievements;
-    private Card startingCard;
 
     public CLI(ClientController controller){
         System.out.println("Avvio gioco...");
@@ -88,6 +85,11 @@ public class CLI extends Thread{
                 printOnNewLine("  ready: mettiti pronto per iniziare la partita");
                 printOnNewLine("");
                 printOnNewLine("  chat <messaggio>: invia un messaggio nella chat");
+                printOnNewLine("");
+                printOnNewLine("  chooseFace <faccia>: scegli la faccia della carta selezionata");
+                printOnNewLine("  Le facce disponibili sono: FRONT, BACK");
+                printPromptLine();
+                printOnNewLine("  chooseCard <numero>: scegli il numero della carta da selezizonare. Se vuoi la prima carta digita 1, etc.");
                 printPromptLine();
                 break;
             case "join":
@@ -120,6 +122,46 @@ public class CLI extends Thread{
                     message += args[i] + " ";
                 }
                 controller.sendChatMessage(message);
+                break;
+            case "chooseFace":
+                if(args.length != 2){
+                    printOnNewLine("Utilizzo corretto: chooseFace <faccia>");
+                    return;
+                }
+                if(!args[1].toUpperCase().equals("FRONT") && !args[1].toUpperCase().equals("BACK")){
+                    printOnNewLine("Faccia non valida. Le facce disponibili sono: FRONT, BACK");
+                    printPromptLine();
+                    return;
+                }
+                switch(controller.getGameState()){
+                    case CHOOSE_STARTING_CARD:
+                        Face chosenFace = Face.valueOf(args[1].toUpperCase());
+                        controller.chooseStartingCardFace(chosenFace);
+                        break;
+                    default:
+                        printOnNewLine("C'è un tempo e un luogo per ogni cosa! Ma non ora...");
+                        printPromptLine();
+                }
+                break;
+            case "chooseCard":
+                if(args.length != 2){
+                    printOnNewLine("Utilizzo corretto: chooseCard <numero>");
+                    return;
+                }
+                int cardNumber = Integer.parseInt(args[1]) - 1;
+                switch(controller.getGameState()){
+                    case CHOOSE_SECRET_ACHIEVEMENT:
+                        if(cardNumber < 0 || cardNumber > 1){
+                            printOnNewLine("Numero non valido. Scegli 1 o 2");
+                            printPromptLine();
+                            return;
+                        }
+                        controller.chooseSecretAchievement(potentialSecretAchievements.get(cardNumber), cardNumber);
+                        break;
+                    default:
+                        printOnNewLine("C'è un tempo e un luogo per ogni cosa! Ma non ora...");
+                        printPromptLine();
+                }
                 break;
             default:
                 printOnNewLine("Comando non valido. Digita \"help\" per la lista dei comandi");
