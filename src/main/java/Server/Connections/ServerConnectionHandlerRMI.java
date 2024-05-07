@@ -3,11 +3,14 @@ package Server.Connections;
 import Client.Connection.ClientConnectionHandler;
 import Client.Connection.ClientConnectionHandlerRMI;
 import Server.Controller.Controller;
+import Server.Enums.Color;
 import Server.Exception.PlayerNotFoundByNameException;
 import Server.Exception.ServerExecuteNotCallableException;
 import Server.Exception.TooManyPlayersException;
+import Server.Messages.LobbyPlayersMessage;
 import Server.Messages.ToClientMessage;
 import Server.Messages.ToServerMessage;
+import Server.Player.Player;
 
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
@@ -165,7 +168,7 @@ public class ServerConnectionHandlerRMI implements ServerConnectionHandler {
         }
     }
 
-    public String join(int rmi_port) throws RemoteException, NotBoundException {
+    public LobbyPlayersMessage join(int rmi_port) throws RemoteException, NotBoundException {
         Random rand = new Random();
         rand.setSeed(System.currentTimeMillis());
         String id = rand.nextInt(9999) + "-" + rand.nextInt(9999) + "-" + rand.nextInt(9999);
@@ -178,7 +181,18 @@ public class ServerConnectionHandlerRMI implements ServerConnectionHandler {
         ClientConnectionHandler client = (ClientConnectionHandler) clientRegistry.lookup("ClientConnectionHandler");
         clients.put(id, client);
         System.out.println("TEST IN SCHRMI, client connected");
-        return id;
+        //immediately send the lobby players message
+        Map<String, Color> playerColors = new HashMap<>();
+        controller.getPlayerList().forEach(p -> playerColors.put(p.getName(), p.getColor()));
+        Map<String, Boolean> playerReady = new HashMap<>();
+        controller.getPlayerList().forEach(p -> playerReady.put(p.getName(), p.isReady()));
+        LobbyPlayersMessage message = new LobbyPlayersMessage(
+                controller.getPlayerList().stream().map(p -> p.getName()).toList(),
+                playerColors,
+                playerReady,
+                id
+        );
+        return message;
     }
 
 

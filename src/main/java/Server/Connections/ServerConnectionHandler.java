@@ -1,6 +1,7 @@
 package Server.Connections;
 
 import Server.Controller.Controller;
+import Server.Messages.LobbyPlayersMessage;
 import Server.Messages.ToClientMessage;
 import Server.Messages.ToServerMessage;
 
@@ -18,7 +19,7 @@ public interface ServerConnectionHandler extends Remote {
 
     /**
      * Send a message to a specific client
-     * @param name the name of the client to send the message to
+     * @param id the name of the client to send the message to
      * @param message the message to send
      */
     public void sendMessage(ToClientMessage message, String id) throws RemoteException;
@@ -41,6 +42,6 @@ public interface ServerConnectionHandler extends Remote {
 
     public void setController(Controller controller) throws RemoteException;
 
-    public String join(int rmi_port) throws RemoteException, NotBoundException;
+    public LobbyPlayersMessage join(int rmi_port) throws RemoteException, NotBoundException;
 
 }

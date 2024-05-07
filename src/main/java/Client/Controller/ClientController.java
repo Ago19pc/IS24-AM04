@@ -1,21 +1,18 @@
 package Client.Controller;
 
-import Client.Connection.ClientConnectionHandler;
-import Client.Connection.ClientConnectionHandlerRMI;
 import Client.Connection.GeneralClientConnectionHandler;
 import Client.Deck;
 import Client.View.CLI;
-import ConnectionUtils.ToServerMessagePacket;
 import Server.Card.*;
 import Server.Chat.Chat;
 import Server.Chat.Message;
 import Server.Enums.*;
+import Server.Exception.ClientExecuteNotCallableException;
 import Server.Exception.PlayerNotFoundByNameException;
 import Server.Messages.*;
 import Client.Player;
 
 import java.io.IOException;
-import java.net.Socket;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
@@ -35,8 +32,6 @@ public class ClientController {
 
     //player info
     private String myName;
-    private Color myColor;
-    private boolean myReady = false;
     private AchievementCard secretAchievement;
     private List<ResourceCard> hand = new ArrayList<>();
 
@@ -66,6 +61,25 @@ public class ClientController {
         }
         throw new PlayerNotFoundByNameException(name);
     }
+    public Color getMyColor() {
+        Color myColor = null;
+        try {
+            myColor = getPlayerByName(myName).getColor();
+        } catch (PlayerNotFoundByNameException e) {
+            e.printStackTrace();
+        }
+        return myColor;
+    }
+    public void setMyColor(Color color) {
+        try {
+            getPlayerByName(myName).setColor(color);
+        } catch (PlayerNotFoundByNameException e) {
+            e.printStackTrace();
+        }
+    }
+    public void setId(String id) {
+        this.id = id;
+    }
 
     //ui actions
     public void joinServer(String ip, int port) {
@@ -76,15 +90,18 @@ public class ClientController {
         } catch (IOException | NotBoundException e){
             e.printStackTrace();
             cli.connectionFailed();
+        } catch (ClientExecuteNotCallableException e) {
+            throw new RuntimeException(e);
+        } catch (PlayerNotFoundByNameException e) {
+            throw new RuntimeException(e);
         }
     }
     public void setReady() {
-        if (myName == null || myColor == null) {
+        if (myName == null || getMyColor() == null) {
             cli.needNameOrColor();
             return;
         }
-        this.myReady = true;
-        ReadyStatusMessage readyStatusMessage = new ReadyStatusMessage(true, myName);
+        ReadyStatusMessage readyStatusMessage = new ReadyStatusMessage(true, id);
         try {
             clientConnectionHandler.sendMessage(readyStatusMessage);
         } catch (Exception e) {
@@ -108,7 +125,7 @@ public class ClientController {
             return;
         }
         proposedColor = castedColor;
-        PlayerColorMessage playerColorMessage = new PlayerColorMessage(true, myName, castedColor, true);
+        PlayerColorMessage playerColorMessage = new PlayerColorMessage(castedColor, id);
         try {
             clientConnectionHandler.sendMessage(playerColorMessage);
         } catch (Exception e) {
@@ -120,7 +137,7 @@ public class ClientController {
             cli.needName();
             return;
         }
-        ChatMessage chatMessage = new ChatMessage(message);
+        ChatMessage chatMessage = new ChatMessage(message, id);
         clientConnectionHandler.sendMessage(chatMessage);
     }
     public void askSetName(String name) {
@@ -136,19 +153,12 @@ public class ClientController {
         this.rmiMode = rmi;
     }
 
-    public void setId(String id) {
-        this.id = id;
-    }
-
     //ui getters
     public String getMyName() {
         return myName;
     }
     public List<Player> getPlayers() {
         return players;
-    }
-    public Color getMyColor(){
-        return myColor;
     }
     /**
      * Gets the available colors
@@ -333,7 +343,7 @@ public class ClientController {
     }
     public void setColor(boolean confirmation, Color color){
         if(confirmation){
-            this.myColor = color;
+            setMyColor(color);
             cli.colorChanged();
         } else {
             cli.colorChangeFailed();

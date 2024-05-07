@@ -105,10 +105,8 @@ public class ControllerInstance implements Controller{
         List<Color> colors = getPlayerList().stream().map(Player::getColor).toList();
         if(!colors.contains(color)){
             player.setColor(color);
-            PlayerColorMessage playerMessage = new PlayerColorMessage(true, player.getName(), color, true);
-            PlayerColorMessage allPlayersMessage = new PlayerColorMessage(true, player.getName(), color, false);
-            connectionHandler.sendMessage(playerMessage, player.getName());
-            connectionHandler.sendAllMessage(allPlayersMessage);
+            PlayerColorMessage message = new PlayerColorMessage(true, player.getName(), color);
+            connectionHandler.sendAllMessage(message);
         } else {
             throw new IllegalArgumentException("Color not available");
         }

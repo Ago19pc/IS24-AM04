@@ -36,6 +36,15 @@ public class GeneralServerConnectionHandler {
         playerID.put(clientID, name);
     }
 
+    /**
+     * Gets a player name by id
+     * @param id, the id
+     * @return the name
+     */
+    public String getPlayerNameByID(String id) {
+        return playerID.get(id);
+    }
+
     public ServerConnectionHandler getServerConnectionHandler() {
         return serverConnectionHandlerSOCKET;
     }

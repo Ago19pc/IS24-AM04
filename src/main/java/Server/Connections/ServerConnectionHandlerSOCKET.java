@@ -90,7 +90,6 @@ public class ServerConnectionHandlerSOCKET extends Thread implements ServerConne
                 t.setUncaughtExceptionHandler(h);
                 t.start();
                 //immediately send the lobby players message
-                List<String> playerNames = controller.getPlayerList().stream().map(p -> p.getName()).toList();
                 Map<String, Color> playerColors = new HashMap<>();
                 controller.getPlayerList().forEach(p -> playerColors.put(p.getName(), p.getColor()));
                 Map<String, Boolean> playerReady = new HashMap<>();
@@ -227,7 +226,7 @@ public class ServerConnectionHandlerSOCKET extends Thread implements ServerConne
         return clients.containsValue(id);
     }
 
-    public String join(int rmi_port) throws RemoteException {
+    public LobbyPlayersMessage join(int rmi_port) throws RemoteException {
         return null;
     }
 

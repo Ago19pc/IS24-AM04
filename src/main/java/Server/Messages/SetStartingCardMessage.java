@@ -16,9 +16,11 @@ public class SetStartingCardMessage implements Serializable, ToClientMessage, To
     private Face face;
     private String name;
     private CardFace startingFace;
+    private String id;
 
-    public SetStartingCardMessage(Face face){
+    public SetStartingCardMessage(Face face, String id){
         this.face = face;
+        this.id = id;
     }
 
     public SetStartingCardMessage(String name, CardFace startingFace){
@@ -35,9 +37,7 @@ public class SetStartingCardMessage implements Serializable, ToClientMessage, To
     public void serverExecute(Controller controller) throws ServerExecuteNotCallableException{
         String playerName = "";
         try {
-            ClientHandler client = controller.getConnectionHandler().getServerConnectionHandlerSOCKET().getThreads()
-                    .stream().filter(c -> c.getReceiver().threadId() == Thread.currentThread().threadId()).toList().getFirst();
-            playerName = controller.getConnectionHandler().getServerConnectionHandlerSOCKET().getThreadName(client);
+            playerName = controller.getConnectionHandler().getPlayerNameByID(this.id);
             Player player = controller.getPlayerByName(playerName);
             controller.setStartingCard(player, face);
         } catch (PlayerNotFoundByNameException e) {

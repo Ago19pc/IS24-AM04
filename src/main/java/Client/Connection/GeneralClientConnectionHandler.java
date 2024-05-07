@@ -1,6 +1,9 @@
 package Client.Connection;
 
 import Client.Controller.ClientController;
+import Server.Exception.ClientExecuteNotCallableException;
+import Server.Exception.PlayerNotFoundByNameException;
+import Server.Messages.LobbyPlayersMessage;
 import Server.Messages.ToServerMessage;
 
 import java.io.IOException;
@@ -36,16 +39,21 @@ public class GeneralClientConnectionHandler {
                 throw new RuntimeException(e);
             } catch (IOException e) {
                 throw new RuntimeException(e);
+            } catch (ClientExecuteNotCallableException e) {
+                throw new RuntimeException(e);
+            } catch (PlayerNotFoundByNameException e) {
+                throw new RuntimeException(e);
             }
         }
 
     }
 
-    public void setSocket(String server_host, int server_port) throws NotBoundException, IOException {
+    public void setSocket(String server_host, int server_port) throws NotBoundException, IOException, ClientExecuteNotCallableException, PlayerNotFoundByNameException {
         if(trueifRMI) {
             clientConnectionHandlerRMI.setServer(server_host);
             clientConnectionHandlerRMI.setController(controller);
-            controller.setId(clientConnectionHandlerRMI.server.join(clientConnectionHandlerRMI.rmi_client_port));
+            LobbyPlayersMessage lobby = clientConnectionHandlerRMI.server.join(clientConnectionHandlerRMI.rmi_client_port);
+            lobby.clientExecute(controller);
         } else {
             clientConnectionHandlerSOCKET.setSocket(server_host, server_port);
         }
