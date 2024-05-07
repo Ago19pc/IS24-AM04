@@ -49,6 +49,7 @@ public class GeneralClientConnectionHandler {
         } else {
             clientConnectionHandlerSOCKET.setSocket(server_host, server_port);
         }
+
     }
 
     public void start() {
