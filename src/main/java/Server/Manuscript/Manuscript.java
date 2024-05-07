@@ -3,14 +3,11 @@ package Server.Manuscript;
 import Server.Card.AchievementCard;
 import Server.Card.Card;
 import Server.Card.CornerCardFace;
-import Server.Card.StartingCard;
 import Server.Enums.CardCorners;
-import Server.Enums.Symbol;
 import Server.Enums.Face;
-
+import Server.Enums.Symbol;
 
 import java.util.HashMap;
-
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -290,6 +287,12 @@ public class Manuscript {
         return points;
     }
 
+    /**
+     * Get all cards under a certain card
+     * @param cardFace the card face to get the cards under
+     * @return Map<CardCorners, CornerCardFace> the cards under the card
+     * @throws IllegalArgumentException if the card is not in the manuscript
+     */
     public Map<CardCorners, CornerCardFace> getCardsUnder(CornerCardFace cardFace) throws IllegalArgumentException{
         return this.graph.getCardsUnder(cardFace);
     }
