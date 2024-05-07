@@ -40,6 +40,8 @@ public class ClientController {
     private AchievementCard secretAchievement;
     private List<ResourceCard> hand = new ArrayList<>();
 
+    private String id;
+
     //other game info
     private int turn = 0;
     private List<Color> unavaiableColors = new ArrayList<>();
@@ -67,12 +69,14 @@ public class ClientController {
 
     //ui actions
     public void joinServer(String ip, int port) {
+        System.out.println("Joining server");
         try{
             clientConnectionHandler.setSocket(ip, port);
+            cli.successfulConnection();
         } catch (IOException | NotBoundException e){
+            e.printStackTrace();
             cli.connectionFailed();
         }
-        cli.successfulConnection();
     }
     public void setReady() {
         if (myName == null || myColor == null) {
@@ -121,7 +125,7 @@ public class ClientController {
     }
     public void askSetName(String name) {
         this.proposedName = name;
-        PlayerNameMessage playerNameMessage = new PlayerNameMessage(proposedName, true);
+        PlayerNameMessage playerNameMessage = new PlayerNameMessage(proposedName, true, id);
         try {
             clientConnectionHandler.sendMessage(playerNameMessage);
         } catch (Exception e) {
@@ -130,6 +134,10 @@ public class ClientController {
     }
     public void setRMIMode(boolean rmi) {
         this.rmiMode = rmi;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     //ui getters
@@ -211,7 +219,8 @@ public class ClientController {
     }
 
     //methods called by incoming messages
-    public void loadLobbyInfo(List<String> playerNames, Map<String, Color> playerColors, Map<String, Boolean> playerReady) {
+    public void loadLobbyInfo(String id, List<String> playerNames, Map<String, Color> playerColors, Map<String, Boolean> playerReady) {
+        setId(id);
         for (String name : playerNames){
             Player p = new Player(name);
             p.setColor(playerColors.get(name));

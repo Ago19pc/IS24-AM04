@@ -5,6 +5,7 @@ import Client.Connection.ClientConnectionHandlerRMI;
 import Server.Controller.Controller;
 import Server.Exception.PlayerNotFoundByNameException;
 import Server.Exception.ServerExecuteNotCallableException;
+import Server.Exception.TooManyPlayersException;
 import Server.Messages.ToClientMessage;
 import Server.Messages.ToServerMessage;
 
@@ -12,11 +13,9 @@ import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
+import java.rmi.server.ServerNotActiveException;
 import java.rmi.server.UnicastRemoteObject;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Scanner;
+import java.util.*;
 
 import static java.rmi.server.RemoteServer.getClientHost;
 
@@ -29,9 +28,13 @@ public class ServerConnectionHandlerRMI implements ServerConnectionHandler {
     ServerConnectionHandler stub;
     Registry registry;
 
+    /**
+     * String is the ID
+     */
     Map<String, ClientConnectionHandler> clients = new HashMap<>();
 
     Controller controller;
+
 
     private int port;
 
@@ -111,12 +114,12 @@ public class ServerConnectionHandlerRMI implements ServerConnectionHandler {
 
     /**
      * Send a message to a specific client
-     * @param name the name of the client to send the message to
+     * @param id the name of the client to send the message to
      * @param message the message to send
      */
-    public void sendMessage(ToClientMessage message, String name) {
+    public void sendMessage(ToClientMessage message, String id) {
         try {
-            clients.get(name).executeMessage(message);
+            clients.get(id).executeMessage(message);
         } catch (RemoteException e) {
             throw new RuntimeException(e);
         }
@@ -146,45 +149,46 @@ public class ServerConnectionHandlerRMI implements ServerConnectionHandler {
     /**
      * Kill a client
      *
-     * @param name the name of the client to kill
+     * @param id the id of the client to kill
      */
     @Override
-    public void killClient(String name) {
-        clients.remove(name);
+    public void killClient(String id) {
+        clients.remove(id);
     }
 
     @Override
-    public void setName(String host, int port, String name) {
+    public void setName(String name, String clientID) {
         try {
-            Registry clientRegistry = LocateRegistry.getRegistry(host, port);
-            ClientConnectionHandler client = (ClientConnectionHandler) clientRegistry.lookup("ClientConnectionHandler");
-            clients.put(name, client);
-        } catch (RemoteException | NotBoundException e) {
+            controller.addPlayer(name, clientID);
+        } catch (TooManyPlayersException e) {
             throw new RuntimeException(e);
         }
     }
 
-    /**
-     * Checks for an association between a name and a ClientConnectionHandler
-     * @param name
-     * @return
-     */
-    public boolean isClientNameAvailable(String name) {
-        return clients.containsKey(name);
+    public String join(int rmi_port) throws RemoteException, NotBoundException {
+        Random rand = new Random();
+        rand.setSeed(System.currentTimeMillis());
+        String id = rand.nextInt(9999) + "-" + rand.nextInt(9999) + "-" + rand.nextInt(9999);
+        Registry clientRegistry = null;
+        try {
+            clientRegistry = LocateRegistry.getRegistry(getClientHost(), rmi_port);
+        } catch (ServerNotActiveException e) {
+            throw new RuntimeException(e);
+        }
+        ClientConnectionHandler client = (ClientConnectionHandler) clientRegistry.lookup("ClientConnectionHandler");
+        clients.put(id, client);
+        System.out.println("TEST IN SCHRMI, client connected");
+        return id;
     }
 
+
+
     /**
-     * Checks for an association between a [host, port] and a ClientConnectionHandler
-     * This function is not implemented and should never be called
-     * Maybe it's useless and the program can work fine without it.
-     * Still thinking about it
-     * @param host
-     * @param port
+     * Checks for an association between an id and a ClientConnectionHandler
+     * @param id
      * @return
      */
-    @Override
-    public boolean isClientAddressAvailable(String host, int port) {
-        System.out.println("isClientAddressAvailable function has not been implemented, and maybe it should never be");
-        return false;
+    public boolean isClientAvailable(String id) {
+        return clients.containsKey(id);
     }
 }

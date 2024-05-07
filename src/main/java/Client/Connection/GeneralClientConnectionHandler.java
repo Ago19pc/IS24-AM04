@@ -20,8 +20,9 @@ public class GeneralClientConnectionHandler {
             clientConnectionHandlerSOCKET = new ClientConnectionHandlerSOCKET(controller);
         } else {
             clientConnectionHandlerRMI = new ClientConnectionHandlerRMI();
-
-        }    }
+            clientConnectionHandlerRMI.setRmi_client_port(2000);
+        }
+    }
 
     public GeneralClientConnectionHandler(ClientController controller, boolean trueifRMI, boolean debugMode) {
         this.trueifRMI = trueifRMI;
@@ -44,6 +45,7 @@ public class GeneralClientConnectionHandler {
         if(trueifRMI) {
             clientConnectionHandlerRMI.setServer(server_host);
             clientConnectionHandlerRMI.setController(controller);
+            controller.setId(clientConnectionHandlerRMI.server.join(clientConnectionHandlerRMI.rmi_client_port));
         } else {
             clientConnectionHandlerSOCKET.setSocket(server_host, server_port);
         }
