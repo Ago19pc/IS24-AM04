@@ -48,9 +48,14 @@ public class GoldFrontFace extends ResourceFrontFace {
 
     @Override
     public String toString() {
-        String toReturn =  super.toString() + "\n";
-        toReturn += "Requisiti di piazzamento: " + placementRequirements + "\n";
-        toReturn += "Requisiti di punteggio: " + scoreRequirements;
+        String toReturn =   "----------\n" +
+                            "|" + getCornerSymbols().get(CardCorners.TOP_LEFT) + "        " + getCornerSymbols().get(CardCorners.TOP_RIGHT) + "|\n" +
+                            "|" + "        |\n" +
+                            "|" + "    "  + getKingdom() + "    |\n" +
+                            "|" + "        |\n" +
+                            "|" + getCornerSymbols().get(CardCorners.BOTTOM_LEFT) + "        " + getCornerSymbols().get(CardCorners.BOTTOM_RIGHT) + "|\n" +
+                            "----------\n";
+
         return toReturn;
     }
 }

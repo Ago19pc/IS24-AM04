@@ -91,6 +91,8 @@ public class CLI extends Thread{
                 printPromptLine();
                 printOnNewLine("  chooseCard <numero>: scegli il numero della carta da selezizonare. Se vuoi la prima carta digita 1, etc.");
                 printPromptLine();
+                printOnNewLine("  printHand: mostra le carte nella tua mano");
+                printPromptLine();
                 break;
             case "join":
                 if (args.length != 3) {
@@ -162,6 +164,9 @@ public class CLI extends Thread{
                         printOnNewLine("C'è un tempo e un luogo per ogni cosa! Ma non ora...");
                         printPromptLine();
                 }
+                break;
+            case "printHand":
+                displayHand();
                 break;
             default:
                 printOnNewLine("Comando non valido. Digita \"help\" per la lista dei comandi");
@@ -435,7 +440,7 @@ public class CLI extends Thread{
     /**
      * says to the player which card he has on his hand
      */
-    public void displayInitialHand(){
+    public void displayHand(){
         printOnNewLine("La tua mano contiene le carte: \n");
         for (Card card : controller.getHand()) {
             System.out.println("    " + card);

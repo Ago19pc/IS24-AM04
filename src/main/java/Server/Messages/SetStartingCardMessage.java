@@ -15,7 +15,7 @@ import java.io.Serializable;
 public class SetStartingCardMessage implements Serializable, ToClientMessage, ToServerMessage {
     private Face face;
     private String name;
-    private CardFace startingFace;
+    private CornerCardFace startingFace;
     private String id;
 
     public SetStartingCardMessage(Face face, String id){
@@ -23,13 +23,13 @@ public class SetStartingCardMessage implements Serializable, ToClientMessage, To
         this.id = id;
     }
 
-    public SetStartingCardMessage(String name, CardFace startingFace){
+    public SetStartingCardMessage(String name, CornerCardFace startingFace){
         this.name = name;
         this.startingFace = startingFace;
     }
 
     @Override
-    public void clientExecute(ClientController controller) throws ClientExecuteNotCallableException {
+    public void clientExecute(ClientController controller) throws ClientExecuteNotCallableException, PlayerNotFoundByNameException {
         controller.startingCardChosen(name, startingFace);
     }
 

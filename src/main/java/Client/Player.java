@@ -1,6 +1,8 @@
 package Client;
 
+import Server.Card.CornerCardFace;
 import Server.Enums.Color;
+import Server.Manuscript.Manuscript;
 
 public class Player {
     private final String name;
@@ -10,6 +12,8 @@ public class Player {
     private boolean active;
     private Color color;
     private boolean ready;
+
+    private Manuscript manuscript;
 
     public Player(String name) {
         this.name = name;
@@ -42,6 +46,10 @@ public class Player {
      */
     public void setManuscriptPoints(int points) {
         this.manuscriptPoints = points;
+    }
+
+    public void initializeManuscript(CornerCardFace startingCard) {
+        this.manuscript = new Manuscript(startingCard);
     }
 
     /**
