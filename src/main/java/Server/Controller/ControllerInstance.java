@@ -193,7 +193,7 @@ public class ControllerInstance implements Controller{
         }
         Card card = givenStartingCards.get(player);
         player.initializeManuscript(card, face);
-        SetStartingCardMessage setStartingCardMessage = new SetStartingCardMessage(player.getName(), card.getFace(face));
+        SetStartingCardMessage setStartingCardMessage = new SetStartingCardMessage(player.getName(), card.getCornerFace(face));
         connectionHandler.sendAllMessage(setStartingCardMessage);
         boolean allSet = getPlayerList().stream().allMatch(p -> p.getManuscript() != null);
         if(allSet){

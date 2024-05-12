@@ -150,7 +150,7 @@ public class PlayerInstance implements Player {
         if(this.manuscript != null){
             throw new AlreadySetException("Manuscript already initialized");
         }
-        this.manuscript = new Manuscript(startingCard, face);
+        this.manuscript = new Manuscript(startingCard.getCornerFace(face));
     }
 
     /**

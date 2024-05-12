@@ -27,8 +27,8 @@ public class ClientController {
 
     //cards not owned by player info
     private List<AchievementCard> commonAchievements;
-    private Deck goldDeck;
-    private Deck resourceDeck;
+    private Deck<GoldCard> goldDeck;
+    private Deck<ResourceCard> resourceDeck;
 
     //player info
     private String myName;
@@ -227,9 +227,11 @@ public class ClientController {
         List<Card> boardCards = new ArrayList<>();
         switch (deck){
             case GOLD:
-                boardCards = goldDeck.getBoardCards();
+                boardCards.add(goldDeck.getBoardCards().getFirst());
+                boardCards.add(goldDeck.getBoardCards().getLast());
             case RESOURCE:
-                boardCards = resourceDeck.getBoardCards();
+                boardCards.add(resourceDeck.getBoardCards().getFirst());
+                boardCards.add(resourceDeck.getBoardCards().getLast());
         }
         return boardCards;
     }
@@ -309,7 +311,7 @@ public class ClientController {
         for (Card c : hand){
             this.hand.add((ResourceCard) c);
         }
-        cli.displayInitialHand();
+        cli.displayHand();
     }
     public void invalidCard(Actions cardType) {
         cli.invalidCardForAction(cardType);
@@ -417,8 +419,8 @@ public class ClientController {
         }
         cli.secretAchievementChosen(name);
     }
-    public void startingCardChosen(String name, CardFace startingFace) {
-        //todo: initialize player's manuscript
+    public void startingCardChosen(String name, CornerCardFace startingFace) throws PlayerNotFoundByNameException {
+        getPlayerByName(name).initializeManuscript(startingFace);
         cli.startingCardChosen(name);
     }
     public void startGame(List<Card> goldBoardCards, List<Card> resourceBoardCards){

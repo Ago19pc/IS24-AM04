@@ -2,13 +2,14 @@ package Client;
 
 import Server.Card.Card;
 
+import java.util.ArrayList;
 import java.util.List;
 
-public class Deck {
+public class Deck<T> {
     private int deckSize;
-    private List<Card> boardCards;
+    private List<T> boardCards;
 
-    public Deck(List<Card> boardCards) {
+    public Deck(List<T> boardCards) {
         this.deckSize = 38;
         this.boardCards = boardCards;
     }
@@ -17,7 +18,7 @@ public class Deck {
      * Get the board cards
      * @return List of Boardcards
      */
-    public List<Card> getBoardCards() {
+    public List<T> getBoardCards() {
         return boardCards;
     }
 
@@ -26,7 +27,8 @@ public class Deck {
      * @param boardCards List of Boardcards
      */
     public void setBoardCards(List<Card> boardCards) {
-        this.boardCards = boardCards;
+        this.boardCards = new ArrayList<>();
+        boardCards.forEach(card -> this.boardCards.add((T) card));
     }
 
     /**
