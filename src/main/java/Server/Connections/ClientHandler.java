@@ -3,6 +3,7 @@ package Server.Connections;
 
 import ConnectionUtils.ToClientMessagePacket;
 import Server.Controller.Controller;
+import Server.Exception.PlayerNotFoundByNameException;
 import Server.Messages.ToClientMessage;
 
 import java.io.IOException;
@@ -35,7 +36,11 @@ public class ClientHandler extends Thread {
             @Override
             public void uncaughtException(Thread th, Throwable ex){
                 System.out.println("Exception, killing ClientHandler Thread " + ex);
-                connectionHandler.killClient(me);
+                try {
+                    connectionHandler.killClient(me);
+                } catch (PlayerNotFoundByNameException e) {
+                    throw new RuntimeException(e);
+                }
             }
         };
         try {

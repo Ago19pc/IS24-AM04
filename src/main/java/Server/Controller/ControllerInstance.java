@@ -265,6 +265,7 @@ public class ControllerInstance implements Controller{
         }
             player.removeCardFromHand(position);
             int cardPoints;
+            int obtainedPoints = 0;
             try {
                 cardPoints = cardFace.getScore();
             } catch (UnsupportedOperationException e) {
@@ -290,13 +291,20 @@ public class ControllerInstance implements Controller{
                             .filter(entry -> entry.getValue() == requiredSymbol).collect(Collectors.toList()).size();
                     actualQuantity += quantityOnCard;
                 }
-                player.addPoints(actualQuantity / requiredQuantity * cardPoints);
+                obtainedPoints = actualQuantity / requiredQuantity * cardPoints;
+                player.addPoints(obtainedPoints);
             } else {
                 player.addPoints(cardPoints);
             }
             player.getManuscript().addCard(xCoord, yCoord, cardFace, getTurn());
-
-        //Notify
+            OtherPlayerPlayCardMessage otherPlayerPlayCardMessage = new OtherPlayerPlayCardMessage(
+                    player.getName(),
+                    cardFace,
+                    xCoord,
+                    yCoord,
+                    obtainedPoints
+            );
+            connectionHandler.sendAllMessage(otherPlayerPlayCardMessage);
     }
     public void drawCard(Player player, DeckPosition deckPosition, Decks deck) throws TooManyElementsException, InvalidMoveException, AlreadyFinishedException, NotYetStartedException {
         if(gameModel.getTurn() < 1) {
@@ -467,6 +475,13 @@ public class ControllerInstance implements Controller{
         System.out.println("Players:");
         this.gameModel.getPlayerList().stream().forEach(p -> System.out.print(p.getName() + " " + p.getColor() + " " + p.isReady() +  ", "));
         System.out.println("\n");
+    }
+
+    @Override
+    public void setOffline(String id) throws PlayerNotFoundByNameException {
+        Player offlinePlayer = getPlayerByName(connectionHandler.getPlayerNameByID(id));
+        //todo: add offline logic
+
     }
 }
 
