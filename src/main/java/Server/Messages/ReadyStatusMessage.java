@@ -1,7 +1,6 @@
 package Server.Messages;
 
 import Client.Controller.ClientController;
-import Server.Connections.ClientHandler;
 import Server.Controller.Controller;
 import Server.Exception.AlreadyStartedException;
 import Server.Exception.MissingInfoException;
@@ -12,24 +11,17 @@ import java.io.Serializable;
 
 public class ReadyStatusMessage implements Serializable, ToClientMessage, ToServerMessage {
     private boolean ready;
-    private String name;
+    private String nameOrId;
 
-    public ReadyStatusMessage(boolean isReady){
+    public ReadyStatusMessage(boolean isReady, String nameOrId) {
         this.ready = isReady;
+        this.nameOrId = nameOrId;
     }
-
-    public ReadyStatusMessage(boolean isReady, String name){
-        this.ready = isReady;
-        this.name = name;
-    }
-
     @Override
     public void serverExecute(Controller controller) {
         String playerName = "";
         try {
-            ClientHandler client = controller.getConnectionHandler().getServerConnectionHandlerSOCKET().getThreads()
-                    .stream().filter(c -> c.getReceiver().threadId() == Thread.currentThread().threadId()).toList().getFirst();
-            playerName = controller.getConnectionHandler().getServerConnectionHandlerSOCKET().getThreadName(client);
+            playerName = controller.getConnectionHandler().getPlayerNameByID(this.nameOrId);
             Player player = controller.getPlayerByName(playerName);
             if(this.ready) {
                 controller.setReady(player);
@@ -51,6 +43,6 @@ public class ReadyStatusMessage implements Serializable, ToClientMessage, ToServ
 
     @Override
     public void clientExecute(ClientController controller) {
-        controller.updatePlayerReady(this.ready, this.name);
+        controller.updatePlayerReady(this.ready, this.nameOrId);
     }
 }

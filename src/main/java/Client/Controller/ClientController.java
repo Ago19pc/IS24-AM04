@@ -1,21 +1,18 @@
 package Client.Controller;
 
-import Client.Connection.ClientConnectionHandler;
-import Client.Connection.ClientConnectionHandlerRMI;
 import Client.Connection.GeneralClientConnectionHandler;
 import Client.Deck;
 import Client.View.CLI;
-import ConnectionUtils.ToServerMessagePacket;
 import Server.Card.*;
 import Server.Chat.Chat;
 import Server.Chat.Message;
 import Server.Enums.*;
+import Server.Exception.ClientExecuteNotCallableException;
 import Server.Exception.PlayerNotFoundByNameException;
 import Server.Messages.*;
 import Client.Player;
 
 import java.io.IOException;
-import java.net.Socket;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
@@ -35,16 +32,17 @@ public class ClientController {
 
     //player info
     private String myName;
-    private Color myColor;
-    private boolean myReady = false;
     private AchievementCard secretAchievement;
     private List<ResourceCard> hand = new ArrayList<>();
+
+    private String id;
 
     //other game info
     private int turn = 0;
     private List<Color> unavaiableColors = new ArrayList<>();
     private Chat chat = new Chat();
     private List<Player> players = new ArrayList<>();
+    private GameState gameState;
 
     //temp stuff
     private String proposedName;
@@ -55,6 +53,7 @@ public class ClientController {
         cli.askConnectionMode();
         clientConnectionHandler = new GeneralClientConnectionHandler(this, rmiMode);
         this.cli = cli;
+        this.gameState = GameState.LOBBY;
     }
 
     //helper methods
@@ -64,23 +63,47 @@ public class ClientController {
         }
         throw new PlayerNotFoundByNameException(name);
     }
+    public Color getMyColor() {
+        Color myColor = null;
+        try {
+            myColor = getPlayerByName(myName).getColor();
+        } catch (PlayerNotFoundByNameException e) {
+            e.printStackTrace();
+        }
+        return myColor;
+    }
+    public void setMyColor(Color color) {
+        try {
+            getPlayerByName(myName).setColor(color);
+        } catch (PlayerNotFoundByNameException e) {
+            e.printStackTrace();
+        }
+    }
+    public void setId(String id) {
+        this.id = id;
+    }
 
     //ui actions
     public void joinServer(String ip, int port) {
+        System.out.println("Joining server");
         try{
             clientConnectionHandler.setSocket(ip, port);
+            cli.successfulConnection();
         } catch (IOException | NotBoundException e){
+            e.printStackTrace();
             cli.connectionFailed();
+        } catch (ClientExecuteNotCallableException e) {
+            throw new RuntimeException(e);
+        } catch (PlayerNotFoundByNameException e) {
+            throw new RuntimeException(e);
         }
-        cli.successfulConnection();
     }
     public void setReady() {
-        if (myName == null || myColor == null) {
+        if (myName == null || getMyColor() == null) {
             cli.needNameOrColor();
             return;
         }
-        this.myReady = true;
-        ReadyStatusMessage readyStatusMessage = new ReadyStatusMessage(true, myName);
+        ReadyStatusMessage readyStatusMessage = new ReadyStatusMessage(true, id);
         try {
             clientConnectionHandler.sendMessage(readyStatusMessage);
         } catch (Exception e) {
@@ -104,7 +127,7 @@ public class ClientController {
             return;
         }
         proposedColor = castedColor;
-        PlayerColorMessage playerColorMessage = new PlayerColorMessage(true, myName, castedColor, true);
+        PlayerColorMessage playerColorMessage = new PlayerColorMessage(castedColor, id);
         try {
             clientConnectionHandler.sendMessage(playerColorMessage);
         } catch (Exception e) {
@@ -116,12 +139,12 @@ public class ClientController {
             cli.needName();
             return;
         }
-        ChatMessage chatMessage = new ChatMessage(message);
+        ChatMessage chatMessage = new ChatMessage(message, id);
         clientConnectionHandler.sendMessage(chatMessage);
     }
     public void askSetName(String name) {
         this.proposedName = name;
-        PlayerNameMessage playerNameMessage = new PlayerNameMessage(proposedName, true);
+        PlayerNameMessage playerNameMessage = new PlayerNameMessage(proposedName, true, id);
         try {
             clientConnectionHandler.sendMessage(playerNameMessage);
         } catch (Exception e) {
@@ -131,6 +154,23 @@ public class ClientController {
     public void setRMIMode(boolean rmi) {
         this.rmiMode = rmi;
     }
+    public void chooseStartingCardFace(Face face) {
+        SetStartingCardMessage startingCardMessage = new SetStartingCardMessage(face, id);
+        try {
+            clientConnectionHandler.sendMessage(startingCardMessage);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    public void chooseSecretAchievement(AchievementCard secretAchievement, int index) {
+        this.proposedSecretAchievement = secretAchievement;
+        SetSecretCardMessage secretAchievementMessage = new SetSecretCardMessage(index, id);
+        try {
+            clientConnectionHandler.sendMessage(secretAchievementMessage);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
     //ui getters
     public String getMyName() {
@@ -139,8 +179,8 @@ public class ClientController {
     public List<Player> getPlayers() {
         return players;
     }
-    public Color getMyColor(){
-        return myColor;
+    public GameState getGameState() {
+        return gameState;
     }
     /**
      * Gets the available colors
@@ -211,7 +251,8 @@ public class ClientController {
     }
 
     //methods called by incoming messages
-    public void loadLobbyInfo(List<String> playerNames, Map<String, Color> playerColors, Map<String, Boolean> playerReady) {
+    public void loadLobbyInfo(String id, List<String> playerNames, Map<String, Color> playerColors, Map<String, Boolean> playerReady) {
+        setId(id);
         for (String name : playerNames){
             Player p = new Player(name);
             p.setColor(playerColors.get(name));
@@ -221,6 +262,7 @@ public class ClientController {
         cli.displayLobby();
     }
     public void giveAchievementCards(List<AchievementCard> secretCards, List<AchievementCard> commonCards) {
+        gameState = GameState.CHOOSE_SECRET_ACHIEVEMENT;
         commonAchievements = new ArrayList<>();
         for (Card c : commonCards){
             commonAchievements.add((AchievementCard) c);
@@ -273,6 +315,7 @@ public class ClientController {
         cli.invalidCardForAction(cardType);
     }
     public void displayLeaderboard(Map<String, Integer> playerPoints) {
+        gameState = GameState.LEADERBOARD;
         for (String name : playerPoints.keySet()){
             try {
                 getPlayerByName(name).setAchievementPoints(playerPoints.get(name) - getPlayerByName(name).getPoints());
@@ -297,6 +340,7 @@ public class ClientController {
         cli.notYourTurn();
     }
     public void drawOtherPlayer(String name, Decks deckFrom, DeckPosition drawPosition, List<Card> newBoardCards, int turnNumber, String activePlayerName) throws PlayerNotFoundByNameException {
+        gameState = GameState.PLACE_CARD;
         switch (deckFrom){
             case GOLD:
                 goldDeck.setBoardCards(newBoardCards);
@@ -315,6 +359,11 @@ public class ClientController {
         }
         cli.newTurn();
     }
+    public void placeOtherPlayer(){
+        if(gameState != gameState.LEADERBOARD){ //otherwise if the leaderboard message comes before this one, the gamestate will still be correct
+            gameState = GameState.DRAW_CARD;
+        }
+    }
     public void giveOtherPlayerInitialHand(String name) throws PlayerNotFoundByNameException {
         Player p = getPlayerByName(name);
         p.setHandSize(3);
@@ -324,7 +373,7 @@ public class ClientController {
     }
     public void setColor(boolean confirmation, Color color){
         if(confirmation){
-            this.myColor = color;
+            setMyColor(color);
             cli.colorChanged();
         } else {
             cli.colorChangeFailed();
@@ -369,12 +418,11 @@ public class ClientController {
         cli.secretAchievementChosen(name);
     }
     public void startingCardChosen(String name, CardFace startingFace) {
-        if (name.equals(myName)){
-            //todo: initialize manuscript
-        }
+        //todo: initialize player's manuscript
         cli.startingCardChosen(name);
     }
     public void startGame(List<Card> goldBoardCards, List<Card> resourceBoardCards){
+        gameState = GameState.PLACE_CARD;
         cli.gameStarted();
         goldDeck = new Deck(goldBoardCards);
         resourceDeck = new Deck(resourceBoardCards);
@@ -389,6 +437,7 @@ public class ClientController {
         cli.displayPlayerOrder();
     }
     public void giveStartingCard(Card card) {
+        gameState = GameState.CHOOSE_STARTING_CARD;
         cli.chooseStartingCardFace(card);
     }
     public void toDoFirst(Actions actionToDo) {

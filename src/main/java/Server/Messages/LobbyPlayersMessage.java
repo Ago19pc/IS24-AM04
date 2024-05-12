@@ -16,14 +16,17 @@ public class LobbyPlayersMessage implements Serializable, ToClientMessage {
     private Map<String, Color> playerColors;
     private Map<String, Boolean> playerReady;
 
-    public LobbyPlayersMessage(List<String> playerNames, Map<String, Color> playerColors, Map<String, Boolean> playerReady) {
+    private String id;
+
+    public LobbyPlayersMessage(List<String> playerNames, Map<String, Color> playerColors, Map<String, Boolean> playerReady, String id) {
         this.playerNames = playerNames;
         this.playerColors = playerColors;
         this.playerReady = playerReady;
+        this.id = id;
     }
 
     @Override
     public void clientExecute(ClientController controller) throws ClientExecuteNotCallableException, PlayerNotFoundByNameException {
-        controller.loadLobbyInfo(playerNames, playerColors, playerReady);
+        controller.loadLobbyInfo(id, playerNames, playerColors, playerReady);
     }
 }

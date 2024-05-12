@@ -18,7 +18,7 @@ import java.util.List;
 
 public interface Controller {
 
-    public void addPlayer(String name) throws TooManyPlayersException;
+    public void addPlayer(String name, String clientID) throws TooManyPlayersException;
 
 
     /**

@@ -9,39 +9,38 @@ import Server.Exception.PlayerNotFoundByNameException;
 import Server.Player.Player;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 public class PlayerColorMessage implements Serializable, ToClientMessage, ToServerMessage {
 
     private String name;
     private Color color;
     private boolean confirmation;
-    private boolean own;
+    private String id;
 
-    public PlayerColorMessage(Color color){
+    public PlayerColorMessage(Color color, String id){
         this.color = color;
+        this.id = id;
     }
 
-    public PlayerColorMessage(Boolean confirmation, String name, Color color, boolean own){
+    public PlayerColorMessage(Boolean confirmation, String name, Color color){
         this.confirmation = confirmation;
         this.name = name;
         this.color = color;
-        this.own = own;
     }
 
     @Override
     public void serverExecute(Controller controller) throws PlayerNotFoundByNameException {
         String playerName = "";
         try {
-            ClientHandler client = controller.getConnectionHandler().getServerConnectionHandlerSOCKET().getThreads()
-                    .stream().filter(c -> c.getReceiver().threadId() == Thread.currentThread().threadId()).toList().getFirst();
-            playerName = controller.getConnectionHandler().getServerConnectionHandlerSOCKET().getThreadName(client);
+            playerName = controller.getConnectionHandler().getPlayerNameByID(this.id);
             Player player = controller.getPlayerByName(playerName);
             controller.setPlayerColor(this.color, player);
         } catch (AlreadyStartedException e) {
             GameAlreadyStartedMessage gameAlreadyStartedMessage = new GameAlreadyStartedMessage();
             controller.getConnectionHandler().sendMessage(gameAlreadyStartedMessage, playerName);
         } catch (IllegalArgumentException e) {
-            PlayerColorMessage playerColorMessage = new PlayerColorMessage(false, playerName, this.color, true);
+            PlayerColorMessage playerColorMessage = new PlayerColorMessage(false, playerName, this.color);
             controller.getConnectionHandler().sendMessage(playerColorMessage, playerName);
         } catch (PlayerNotFoundByNameException e) {
             NameNotYetSetMessage nameNotYetSetMessage = new NameNotYetSetMessage();
@@ -51,7 +50,7 @@ public class PlayerColorMessage implements Serializable, ToClientMessage, ToServ
 
     @Override
     public void clientExecute(ClientController controller) {
-        if(!this.own){
+        if(!Objects.equals(this.name, controller.getMyName())){
             controller.updatePlayerColors(this.color, this.name);
         } else {
             controller.setColor(confirmation, this.color);

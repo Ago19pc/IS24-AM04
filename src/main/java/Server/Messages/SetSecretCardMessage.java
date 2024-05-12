@@ -1,7 +1,6 @@
 package Server.Messages;
 
 import Client.Controller.ClientController;
-import Server.Connections.ClientHandler;
 import Server.Controller.Controller;
 import Server.Enums.Actions;
 import Server.Exception.*;
@@ -12,8 +11,10 @@ import java.io.Serializable;
 public class SetSecretCardMessage implements Serializable, ToClientMessage, ToServerMessage {
     private String name;
     private int chosenCard;
-    public SetSecretCardMessage(int chosenCard){
+    private String id;
+    public SetSecretCardMessage(int chosenCard, String id){
         this.chosenCard = chosenCard;
+        this.id = id;
     }
     public SetSecretCardMessage(String player){
         this.name = player;
@@ -28,9 +29,7 @@ public class SetSecretCardMessage implements Serializable, ToClientMessage, ToSe
     public void serverExecute(Controller controller) throws ServerExecuteNotCallableException {
         String playerName = "";
         try {
-            ClientHandler client = controller.getConnectionHandler().getServerConnectionHandlerSOCKET().getThreads()
-                    .stream().filter(c -> c.getReceiver().threadId() == Thread.currentThread().threadId()).toList().getFirst();
-            playerName = controller.getConnectionHandler().getServerConnectionHandlerSOCKET().getThreadName(client);
+            playerName = controller.getConnectionHandler().getPlayerNameByID(this.id);
             Player player = controller.getPlayerByName(playerName);
             if(chosenCard < 0 || chosenCard > 1){
                 InvalidCardMessage invalidCardMessage = new InvalidCardMessage(Actions.SECRET_ACHIEVEMENT_CHOICE);
