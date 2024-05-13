@@ -51,5 +51,7 @@ public class StartingFrontFace extends  CornerCardFace implements Serializable {
         throw new UnsupportedOperationException("Starting cards do not have kingdoms");
     }
 
-    
+    public String toString(){
+        return super.toString() + "\nSimboli centrali: " + centerSymbols;
+    }
 }

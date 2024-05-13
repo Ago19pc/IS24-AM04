@@ -1,7 +1,7 @@
 package Client.Connection;
 
 import Client.Controller.ClientController;
-import Server.Messages.GeneralMessage;
+import Server.Messages.ToServerMessage;
 
 import java.io.IOException;
 import java.rmi.NotBoundException;
@@ -55,7 +55,7 @@ public class GeneralClientConnectionHandler {
         }
     }
 
-    public void sendMessage(GeneralMessage message){
+    public void sendMessage(ToServerMessage message){
         if(trueifRMI) {
             try {
                 clientConnectionHandlerRMI.sendMessage(message);

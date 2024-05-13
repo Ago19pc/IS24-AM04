@@ -8,22 +8,16 @@ import Server.Player.Player;
 import java.io.Serializable;
 import java.util.List;
 
-public class NewPlayerMessage implements Serializable, GeneralMessage {
+public class NewPlayerMessage implements Serializable, ToClientMessage {
 
-    private  final List<Player> p;
-
+    private final List<String> playerNames;
 
     public NewPlayerMessage(List<Player> p) {
-        this.p = p;
+        this.playerNames = p.stream().map(Player::getName).toList();
     }
 
-    @Override
-    public void serverExecute(Controller controller)throws ServerExecuteNotCallableException {
-        throw new ServerExecuteNotCallableException();
-
-    }
     @Override
     public void clientExecute(ClientController controller) {
-        controller.setPlayerList(p);
+        controller.newPlayer(playerNames);
     }
 }

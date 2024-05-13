@@ -80,7 +80,8 @@ public interface Player extends Serializable {
      * @param startingCard the manuscript's starting card
      * @param face the face of the starting card
      */
-    public void initializeManuscript(StartingCard startingCard, Face face) throws AlreadySetException;
+    public void initializeManuscript(Card startingCard, Face face) throws AlreadySetException;
+
 
     /**
      * Sets a player ready status

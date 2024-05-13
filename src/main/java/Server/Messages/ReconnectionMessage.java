@@ -6,7 +6,7 @@ import Server.Exception.ServerExecuteNotCallableException;
 
 import java.io.Serializable;
 
-public class ReconnectionMessage implements Serializable, GeneralMessage {
+public class ReconnectionMessage implements Serializable {/*
     @Override
     public void serverExecute(Controller controller)throws ServerExecuteNotCallableException {
         throw new ServerExecuteNotCallableException();
@@ -16,5 +16,5 @@ public class ReconnectionMessage implements Serializable, GeneralMessage {
     @Override
     public void clientExecute(ClientController controller) {
 
-    }
+    }*/
 }

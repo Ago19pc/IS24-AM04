@@ -36,4 +36,8 @@ public class StartingCard implements Card, Serializable {
         return face == Face.FRONT ? frontFace : backFace;
     }
 
+    public String toString(){
+        return "Carta iniziale: \n Faccia anteriore: " + frontFace.toString() + "\n Faccia posteriore: " + backFace.toString();
+    }
+
 }

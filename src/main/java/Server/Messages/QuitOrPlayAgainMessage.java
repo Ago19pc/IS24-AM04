@@ -7,7 +7,7 @@ import Server.Exception.ClientExecuteNotCallableException;
 
 import java.io.Serializable;
 
-public class QuitOrPlayAgainMessage implements Serializable, GeneralMessage {
+public class QuitOrPlayAgainMessage implements Serializable {/*
 
     private QuitOrPlayAgain quitOrPlayAgain;
     private String name;
@@ -29,5 +29,5 @@ public class QuitOrPlayAgainMessage implements Serializable, GeneralMessage {
 
         throw new ClientExecuteNotCallableException();
 
-    }
+    }*/
 }

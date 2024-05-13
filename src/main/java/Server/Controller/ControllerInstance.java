@@ -23,10 +23,7 @@ import com.google.gson.Gson;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class ControllerInstance implements Controller{
@@ -37,23 +34,22 @@ public class ControllerInstance implements Controller{
     private Map<Player, StartingCard> givenStartingCards = new HashMap<>();
     private Map<Player, List<AchievementCard>> givenSecretObjectiveCards = new HashMap<>();
 
-    private static int ackInitBoard = 0;
-    private static int ackInitHand = 0;
-
     public ControllerInstance(GeneralServerConnectionHandler connectionHandler) {
         this.connectionHandler = connectionHandler;
         this.gameModel = new GameModelInstance();
     }
-
     @Override
     public void addPlayer(String name) throws TooManyPlayersException {
-
         Player player = new PlayerInstance(name);
         for (Player p : gameModel.getPlayerList()){
             if (p.getName().equals(player.getName())) throw new IllegalArgumentException("Player with same name already exists");
         }
         if(gameModel.getPlayerList().size()<4) {
             gameModel.addPlayer(player);
+            PlayerNameMessage playerNameMessage = new PlayerNameMessage(player.getName(), true);
+            connectionHandler.sendMessage(playerNameMessage, player.getName());
+            NewPlayerMessage playerMessage = new NewPlayerMessage(gameModel.getPlayerList());
+            connectionHandler.sendAllMessage(playerMessage);
         } else {
             throw new TooManyPlayersException("Too many players");
         }
@@ -66,11 +62,14 @@ public class ControllerInstance implements Controller{
     public List<Player> getPlayerList() {
         return gameModel.getPlayerList();
     }
-    public void shufflePlayerList() {
+
+    private void shufflePlayerList() {
         gameModel.shufflePlayerList();
-        //Notify
+        PlayerOrderMessage playerOrderMessage = new PlayerOrderMessage(gameModel.getPlayerList().stream().map(Player::getName).toList());
+        connectionHandler.sendAllMessage(playerOrderMessage);
     }
-    public void start() throws TooFewElementsException, AlreadySetException {
+
+    private void start() throws TooFewElementsException, AlreadySetException {
         if(gameModel.getPlayerList().size() < 2){
             throw new TooFewElementsException("Not enough players");
         }
@@ -79,33 +78,29 @@ public class ControllerInstance implements Controller{
                 throw new TooFewElementsException("Not all players are ready");
             }
         }
-        shufflePlayerList();
+        createDecks();
+        giveStartingCards();
+        StartGameMessage startGameMessage = new StartGameMessage(
+                List.of(
+                        gameModel.getGoldDeck().getBoardCard().get(DeckPosition.FIRST_CARD),
+                        gameModel.getGoldDeck().getBoardCard().get(DeckPosition.SECOND_CARD)
+                ),
+                List.of(
+                        gameModel.getResourceDeck().getBoardCard().get(DeckPosition.FIRST_CARD),
+                        gameModel.getResourceDeck().getBoardCard().get(DeckPosition.SECOND_CARD)
+                )
+        );
+        connectionHandler.sendAllMessage(startGameMessage);
+    }
+
+    private void createDecks() throws AlreadySetException {
         gameModel.createGoldResourceDecks();
-
     }
 
-    public void ackInitBoard() {
-        if (ackInitBoard == gameModel.getPlayerList().size()) {
-            try {
-                gameModel.createStartingCards();
-                giveStartingCards();
-            } catch (AlreadySetException e) {
-                System.out.println("ERROR IN INITIALBOARD ACK");
-            }
-        } else {
-            ackInitBoard++;
+    public void setPlayerColor(Color color, Player player) throws IllegalArgumentException, AlreadyStartedException {
+        if(gameModel.getTurn() > 0){
+            throw new AlreadyStartedException("Game already started");
         }
-    }
-
-    public void ackInitHand() {
-        if (ackInitHand == gameModel.getPlayerList().size()) {
-                giveSecretObjectiveCards();
-        } else {
-            ackInitHand++;
-        }
-    }
-
-    public void setPlayerColor(Color color, Player player) throws IllegalArgumentException{
         List<Color> colors = getPlayerList().stream().map(Player::getColor).toList();
         if(!colors.contains(color)){
             player.setColor(color);
@@ -118,7 +113,8 @@ public class ControllerInstance implements Controller{
         }
 
     }
-    public void giveSecretObjectiveCards() {
+    private void giveSecretObjectiveCards() throws AlreadySetException {
+        gameModel.createAchievementDeck();
         getPlayerList().forEach(player -> {
             givenSecretObjectiveCards.put(player, new ArrayList<>());
             List<AchievementCard> secretObjectiveCardsToPlayer = givenSecretObjectiveCards.get(player);
@@ -127,33 +123,56 @@ public class ControllerInstance implements Controller{
                 AchievementCard card2 = gameModel.getAchievementDeck().popCard(DeckPosition.DECK);
                 secretObjectiveCardsToPlayer.add(card1);
                 secretObjectiveCardsToPlayer.add(card2);
+                List<AchievementCard> commonAchievements = new ArrayList<>();
+                commonAchievements.add(gameModel.getAchievementDeck().popCard(DeckPosition.FIRST_CARD));
+                commonAchievements.add(gameModel.getAchievementDeck().popCard(DeckPosition.SECOND_CARD));
+                AchievementCardsMessage achievementCardsMessage = new AchievementCardsMessage(secretObjectiveCardsToPlayer, commonAchievements);
+                connectionHandler.sendMessage(achievementCardsMessage, player.getName());
             } catch (AlreadyFinishedException e) {
                 throw new RuntimeException(e);
             }
 
         });
-        //Notify
     }
 
-    public void setSecretObjectiveCard(Player player, int cardNumber) throws AlreadySetException, AlreadyFinishedException, MissingInfoException {
-        AchievementCard card = givenSecretObjectiveCards.get(player).get(cardNumber);
+    public void setSecretObjectiveCard(Player player, int cardNumber) throws AlreadySetException, MissingInfoException, AlreadyStartedException {
+        if(givenSecretObjectiveCards.get(player) == null || givenSecretObjectiveCards == null){
+            throw new MissingInfoException("Secret Objective not given");
+        }
+        if(gameModel.getTurn() > 1){
+            throw new AlreadyStartedException("Game already started");
+        }
+        AchievementCard card = (AchievementCard) givenSecretObjectiveCards.get(player).get(cardNumber);
         player.setSecretObjective(card);
+        SetSecretCardMessage setSecretCardMessage = new SetSecretCardMessage(player.getName());
+        connectionHandler.sendAllMessage(setSecretCardMessage);
         boolean allSet = getPlayerList().stream().allMatch(p -> p.getSecretObjective() != null);
         if(allSet){
+            shufflePlayerList();
             nextTurn();
         }
     }
-    public void giveStartingCards() {
+    private void giveStartingCards() throws AlreadySetException {
+        gameModel.createStartingCards();
         List<StartingCard> startingCards = gameModel.getStartingCards();
         getPlayerList().forEach(player -> {
             StartingCard card = startingCards.removeFirst();
             givenStartingCards.put(player, card);
+            StartingCardsMessage startingCardsMessage = new StartingCardsMessage(card);
+            connectionHandler.sendMessage(startingCardsMessage, player.getName());
         });
-        //Notify
     }
-    public void setStartingCard(Player player, Face face) throws AlreadySetException {
-        StartingCard card = givenStartingCards.get(player);
+    public void setStartingCard(Player player, Face face) throws AlreadySetException, AlreadyStartedException, MissingInfoException {
+        if(gameModel.getTurn() > 1){
+            throw new AlreadyStartedException("Game already started");
+        }
+        if(givenStartingCards.get(player) == null || givenStartingCards == null){
+            throw new MissingInfoException("Starting Card not given");
+        }
+        Card card = givenStartingCards.get(player);
         player.initializeManuscript(card, face);
+        SetStartingCardMessage setStartingCardMessage = new SetStartingCardMessage(player.getName(), card.getFace(face));
+        connectionHandler.sendAllMessage(setStartingCardMessage);
         boolean allSet = getPlayerList().stream().allMatch(p -> p.getManuscript() != null);
         if(allSet){
             try {
@@ -162,9 +181,8 @@ public class ControllerInstance implements Controller{
                 //do nothing as it's normal that it's already set
             }
         }
-        //Notify
     }
-    public void giveInitialHand() throws AlreadySetException, AlreadyFinishedException{
+    private void giveInitialHand() throws AlreadySetException, AlreadyFinishedException{
         for(Player player : getPlayerList()){
             Card card1 = gameModel.getResourceDeck().popCard(DeckPosition.DECK);
             Card card2 = gameModel.getResourceDeck().popCard(DeckPosition.DECK);
@@ -173,29 +191,36 @@ public class ControllerInstance implements Controller{
                 player.addCardToHand(card1);
                 player.addCardToHand(card2);
                 player.addCardToHand(card3);
+                InitialHandMessage initialHandMessage = new InitialHandMessage(List.of(card1, card2, card3));
+                connectionHandler.sendMessage(initialHandMessage, player.getName());
+                OtherPlayerInitialHandMessage otherPlayerInitialHandMessage = new OtherPlayerInitialHandMessage(player.getName());
+                connectionHandler.sendAllMessage(otherPlayerInitialHandMessage);
             } catch (TooManyElementsException e) {
                 throw new AlreadySetException("Initial Hand already given");
             }
 
         }
-
-        //Notify
+        //si potrebbero accorpare i messaggi della mano con quelli degli obiettivi segreti in un unico messaggio
 
         //Dopo aver dato la mano iniziale si prosegue con la seconda parte dell'inizializzazione: si scoprono gli obiettivi segreti e non
-        gameModel.createAchievementDeck();
         giveSecretObjectiveCards();
 
     }
-    public void nextTurn() throws MissingInfoException, AlreadyFinishedException {
+    private void nextTurn(){
         if(activePlayerIndex == -1){ //sets active player as the first player. If it's not the first turn this is not valid
             if(gameModel.getTurn() != 0){
-                throw new MissingInfoException("Active player not set");
+                System.out.println("Active player not set");
+                return;
             }
         }
         //if it is end game and all players have played also an extra round, calculate leaderboard
         if(gameModel.isEndGamePhase() && activePlayerIndex == getPlayerList().size() - 1 ){
             if(lastRound){
-                computeLeaderboard();
+                try{
+                    computeLeaderboard();
+                } catch (AlreadyFinishedException e) {
+                    e.printStackTrace();
+                }
             } else {
                 lastRound = true;
             }
@@ -218,7 +243,6 @@ public class ControllerInstance implements Controller{
             } while (!isOnline(getPlayerList().get(activePlayerIndex)));//if the player is not online skips to the next one
             gameModel.nextTurn();
         }
-        //Notify
     }
     public int getTurn() {
         return gameModel.getTurn();
@@ -275,24 +299,33 @@ public class ControllerInstance implements Controller{
 
         //Notify
     }
-    public void drawCard(Player player, DeckPosition deckPosition, Decks deck) throws TooManyElementsException, InvalidMoveException, AlreadyFinishedException {
+    public void drawCard(Player player, DeckPosition deckPosition, Decks deck) throws TooManyElementsException, InvalidMoveException, AlreadyFinishedException, NotYetStartedException {
+        if(gameModel.getTurn() < 1) {
+            throw new NotYetStartedException("Game not started");
+        }
         if(getPlayerList().indexOf(player) != activePlayerIndex){
             throw new InvalidMoveException("Not player's turn");
         }
+        if(player.getHand().size() >= 3 /*todo: add case regarding end game phase (you may (but not necessarily) have 1 card less in your hand*/){
+            throw new TooManyElementsException("Hand is full");
+        }
+        Card drawnCard;
         switch (deck) {
             case RESOURCE -> {
-                Card card = gameModel.getResourceDeck().popCard(deckPosition);
-                player.addCardToHand(card);
+                drawnCard = gameModel.getResourceDeck().popCard(deckPosition);
+                player.addCardToHand(drawnCard);
 
             }
             case GOLD -> {
-                Card card = gameModel.getGoldDeck().popCard(deckPosition);
-                player.addCardToHand(card);
+                drawnCard = gameModel.getGoldDeck().popCard(deckPosition);
+                player.addCardToHand(drawnCard);
             }
             default -> {
                 throw new IllegalArgumentException("Invalid deck");
             }
         }
+        DrawCardMessage drawCardMessage = new DrawCardMessage(drawnCard);
+        connectionHandler.sendMessage(drawCardMessage, player.getName());
         //if both decks are empty, end game phase is set
         if(gameModel.getResourceDeck().isEmpty() && gameModel.getGoldDeck().isEmpty()){
             try {
@@ -301,57 +334,53 @@ public class ControllerInstance implements Controller{
                 //do nothing as it's normal that it's already set
             }
         }
-        //Notify
+        nextTurn();
+        OtherPlayerDrawCardMessage otherPlayerDrawCardMessage = new OtherPlayerDrawCardMessage(
+                player.getName(),
+                deck,
+                deckPosition,
+                switch (deck) {
+                    //todo: aggiungere un metodo ai deck che ritorni le boardcards in una lista per evitare sto macello
+                    case RESOURCE -> List.of(gameModel.getResourceDeck().getBoardCard().get(DeckPosition.FIRST_CARD), gameModel.getResourceDeck().getBoardCard().get(DeckPosition.SECOND_CARD));
+                    case GOLD -> List.of(gameModel.getGoldDeck().getBoardCard().get(DeckPosition.FIRST_CARD), gameModel.getGoldDeck().getBoardCard().get(DeckPosition.SECOND_CARD));
+                    default -> null;
+                },
+                getTurn(),
+                getPlayerList().get(activePlayerIndex).getName()
+        );
+        connectionHandler.sendAllMessage(otherPlayerDrawCardMessage);
     }
-    /*public Boolean isPlayable(Card card , Face face)
-    {
-        if(face.equals(Face.BACK)) return Boolean.TRUE;
-        if(card.getType() == Decks.GOLD && card.getFace(Face.FRONT).getScore() == 1 //&& gli angoli mi permetono di giocarla
-            )
-        {
 
-        }
-        return null;
-    }*/
-
-    @Override
-    public void endGame() throws AlreadySetException {
+    private void endGame() throws AlreadySetException {
         gameModel.setEndGamePhase();
         //if it's the last player to play, the extra round starts immediately
         if(activePlayerIndex == getPlayerList().size() - 1){
             lastRound = true;
         }
-        //Notify
+        EndGamePhaseMessage endGamePhaseMessage = new EndGamePhaseMessage();
+        connectionHandler.sendAllMessage(endGamePhaseMessage);
     }
 
-    public List<Player> computeLeaderboard() throws AlreadyFinishedException {
+    private void computeLeaderboard() throws AlreadyFinishedException {
         AchievementDeck achievementDeck = gameModel.getAchievementDeck();
         AchievementCard commonAchievement1 = achievementDeck.popCard(DeckPosition.FIRST_CARD);
         AchievementCard commonAchievement2 = achievementDeck.popCard(DeckPosition.SECOND_CARD);
-        Map<Player,Integer> playerAchievementsPoints = new HashMap<>();
         List<Player> playerlist = getPlayerList();
+        Map<String,Integer> leaderboardMap = new HashMap<>();
         for (Player player : playerlist) {
             Manuscript manuscript = player.getManuscript();
             int points = manuscript.calculatePoints(commonAchievement1);
             points += manuscript.calculatePoints(commonAchievement2);
             points += manuscript.calculatePoints(player.getSecretObjective());
             player.addPoints(points);
-            playerAchievementsPoints.put(player, points);
+            leaderboardMap.put(player.getName(), points); //todo: add parity check
         }
-        gameModel.setPlayerList(playerlist);
-        List<Player> leaderboard = getPlayerList().stream()
-                .sorted((p1, p2) -> {
-                    if(p1.getPoints() == p2.getPoints()){
-                        return playerAchievementsPoints.get(p2) - playerAchievementsPoints.get(p1);
-                    }
-                    return p2.getPoints() - p1.getPoints();
-                })
-                .collect(Collectors.toList());
-        //Notify
-        return leaderboard;
+        LeaderboardMessage leaderboardMessage = new LeaderboardMessage(leaderboardMap);
+        connectionHandler.sendAllMessage(leaderboardMessage);
+        clear();
     }
 
-    public void clear() {
+    private void clear() {
         gameModel = new GameModelInstance();
         activePlayerIndex = -1;
         lastRound = false;
@@ -359,9 +388,12 @@ public class ControllerInstance implements Controller{
         givenSecretObjectiveCards = new HashMap<>();
     }
 
-    public void setReady(Player player) throws MissingInfoException{
+    public void setReady(Player player) throws MissingInfoException, AlreadyStartedException {
         if(player.getColor() == null) {
             throw new MissingInfoException("Color not set");
+        }
+        if(gameModel.getTurn() > 0){
+            throw new AlreadyStartedException("Game already started");
         }
         player.setReady(true);
         ReadyStatusMessage readyStatusMessage = new ReadyStatusMessage(true, player.getName());
@@ -373,12 +405,18 @@ public class ControllerInstance implements Controller{
                 //do nothing as it's normal that it's already set
             }
         }
-        //Notify
     }
 
-    public void setNotReady(Player player) {
+    public void setNotReady(Player player) throws MissingInfoException, AlreadyStartedException{
+        if(player.getColor() == null) {
+            throw new MissingInfoException("Color not set");
+        }
+        if(gameModel.getTurn() > 0){
+            throw new AlreadyStartedException("Game already started");
+        }
         player.setReady(false);
-        //Notify
+        ReadyStatusMessage readyStatusMessage = new ReadyStatusMessage(false, player.getName());
+        connectionHandler.sendAllMessage(readyStatusMessage);
     }
 
     public boolean isReady(Player player) {
@@ -387,7 +425,7 @@ public class ControllerInstance implements Controller{
 
     public void addMessage(String message, Player sender) throws IllegalArgumentException{
         gameModel.getChat().addMessage(message, sender);
-        ChatMessage chatMessage = new ChatMessage(new Message(message, sender.getName()));
+        ChatMessage chatMessage = new ChatMessage(message, sender.getName());
         connectionHandler.sendAllMessage(chatMessage);
     }
 
@@ -418,19 +456,6 @@ public class ControllerInstance implements Controller{
         }
         throw new PlayerNotFoundByNameException(name);
     }
-
-    /*
-    @Override
-    public ServerConnectionHandler getConnectionHandler(String name) {
-        try {
-            return this.connectionHandler.getServerConnectionHandler(name);
-        } catch (PlayerNotInAnyServerConnectionHandlerException e) {
-            System.out.println("Player not found in any connection handler");
-            throw new RuntimeException(e);
-        }
-    }
-
-     */
 
     public GeneralServerConnectionHandler getConnectionHandler() {
         return this.connectionHandler;

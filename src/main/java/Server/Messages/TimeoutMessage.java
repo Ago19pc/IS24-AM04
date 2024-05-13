@@ -7,7 +7,7 @@ import Server.Player.Player;
 
 import java.io.Serializable;
 
-public class TimeoutMessage implements Serializable, GeneralMessage{
+public class TimeoutMessage implements Serializable{/*
         private final Player player;
 
         public TimeoutMessage(Player player){
@@ -23,5 +23,5 @@ public class TimeoutMessage implements Serializable, GeneralMessage{
     @Override
     public void clientExecute(ClientController controller) {
 
-    }
+    }*/
 }

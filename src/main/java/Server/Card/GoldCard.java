@@ -32,5 +32,8 @@ public class GoldCard extends ResourceCard implements Card{
         return face == Face.FRONT ? frontFace : backFace;
     }
 
+    public String toString(){
+        return "Carta oro. Faccia anteriore: \n" + frontFace.toString() + "\nFaccia posteriore: \n" + backFace.toString();
+    }
 
 }

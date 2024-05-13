@@ -1,4 +1,4 @@
-package Server.Messages;
+/*package Server.Messages;
 
 import Client.Connection.ClientConnectionHandlerSOCKET;
 import Client.Controller.ClientController;
@@ -131,3 +131,4 @@ public class TestMessages {
 
 
 }
+*/

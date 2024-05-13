@@ -7,7 +7,7 @@ import Server.Player.Player;
 
 import java.io.Serializable;
 
-public class OtherReconnectionMessage implements Serializable, GeneralMessage {
+public class OtherReconnectionMessage implements Serializable{/*
 
     private Player player;
     @Override
@@ -22,5 +22,5 @@ public class OtherReconnectionMessage implements Serializable, GeneralMessage {
             if (p.getName() == player.getName())
                 p = player;
         }
-    }
+    }*/
 }

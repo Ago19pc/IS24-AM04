@@ -45,4 +45,12 @@ public class GoldFrontFace extends ResourceFrontFace {
     public List<Symbol> getCenterSymbols() throws UnsupportedOperationException{
         throw new UnsupportedOperationException("Gold cards do not have center symbols");
     }
+
+    @Override
+    public String toString() {
+        String toReturn =  super.toString() + "\n";
+        toReturn += "Requisiti di piazzamento: " + placementRequirements + "\n";
+        toReturn += "Requisiti di punteggio: " + scoreRequirements;
+        return toReturn;
+    }
 }

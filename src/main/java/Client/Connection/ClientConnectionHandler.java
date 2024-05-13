@@ -1,6 +1,7 @@
 package Client.Connection;
 
-import Server.Messages.GeneralMessage;
+import Server.Messages.ToServerMessage;
+import Server.Messages.ToClientMessage;
 
 import java.io.IOException;
 import java.rmi.Remote;
@@ -12,13 +13,13 @@ public interface ClientConnectionHandler extends Remote {
      * @param message the message to send
      * @throws IOException
      */
-    public void sendMessage(GeneralMessage message) throws IOException;
+    public void sendMessage(ToServerMessage message) throws IOException;
 
     /**
      * Execute a message
      * @param message the message to execute
      */
-    public void executeMessage(GeneralMessage message) throws RemoteException;
+    public void executeMessage(ToClientMessage message) throws RemoteException;
 
 
 }

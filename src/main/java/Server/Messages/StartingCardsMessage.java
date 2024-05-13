@@ -1,44 +1,23 @@
 package Server.Messages;
 
 import Client.Controller.ClientController;
-import Server.Controller.Controller;
-import Server.Enums.Face;
-import Server.Exception.AlreadySetException;
-import Server.Exception.PlayerNotFoundByNameException;
-import Server.Player.Player;
+import Server.Card.Card;
+import Server.Exception.ClientExecuteNotCallableException;
 
 import java.io.Serializable;
 
-public class StartingCardsMessage implements Serializable, GeneralMessage {
+public class StartingCardsMessage implements Serializable, ToClientMessage {
 
-    private final String name;
-    private final Face face;
-    private Player player;
+    private Card card;
 
-    public StartingCardsMessage(String name, Face face) {
-        this.name = name;
-        this.face = face;
+    public StartingCardsMessage(Card card){
+        this.card = card;
     }
 
+
     @Override
-    public void serverExecute(Controller  controller) {
-        try{
-            controller.setStartingCard(controller.getPlayerByName(this.name), this.face );
-            System.out.println(controller.getPlayerByName(this.name).getName());
-        }catch(PlayerNotFoundByNameException | AlreadySetException e){
-            e.printStackTrace();
-        }
-
-
+    public void clientExecute(ClientController controller) throws ClientExecuteNotCallableException {
+        controller.giveStartingCard(card);
     }
-
-    @Override
-    public void clientExecute(ClientController controller) {
-
-
-        }
-
-
-
 }
 

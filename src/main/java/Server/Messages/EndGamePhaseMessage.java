@@ -6,19 +6,13 @@ import Server.Exception.ServerExecuteNotCallableException;
 
 import java.io.Serializable;
 
-public class EndGamePhaseMessage implements Serializable, GeneralMessage {
+public class EndGamePhaseMessage implements Serializable, ToClientMessage {
 
-
-    @Override
-    public void serverExecute(Controller controller)throws ServerExecuteNotCallableException {
-        throw new ServerExecuteNotCallableException();
-
+    public EndGamePhaseMessage() {
     }
 
     @Override
     public void clientExecute(ClientController controller) {
-
-        System.out.println("Last turn");
-
+        controller.setEndGame();
     }
 }

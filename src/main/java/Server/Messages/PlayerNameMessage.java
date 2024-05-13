@@ -17,7 +17,7 @@ import java.rmi.server.ServerNotActiveException;
 
 import static java.rmi.server.RemoteServer.getClientHost;
 
-public class PlayerNameMessage implements GeneralMessage, Serializable {
+public class PlayerNameMessage implements ToClientMessage, ToServerMessage, Serializable {
     private String name;
     private boolean confirmation;
     private int rmi_client_port;

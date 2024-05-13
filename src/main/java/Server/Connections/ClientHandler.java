@@ -1,9 +1,9 @@
 package Server.Connections;
 
 
-import ConnectionUtils.MessagePacket;
+import ConnectionUtils.ToClientMessagePacket;
 import Server.Controller.Controller;
-import Server.Messages.GeneralMessage;
+import Server.Messages.ToClientMessage;
 
 import java.io.IOException;
 import java.net.Socket;
@@ -76,8 +76,8 @@ public class ClientHandler extends Thread {
      * Sends a message to the client
      * @param message the message to send
      */
-    public void sendMessage(GeneralMessage message)  {
-        MessagePacket mp = new MessagePacket(message);
+    public void sendMessage(ToClientMessage message)  {
+        ToClientMessagePacket mp = new ToClientMessagePacket(message);
         try {
             this.sender.sendMessage(mp.stringify());
         } catch (IOException e) {

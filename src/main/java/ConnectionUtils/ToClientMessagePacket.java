@@ -1,8 +1,7 @@
 package ConnectionUtils;
 
-
 import Server.Exception.IllegalMessageTypeException;
-import Server.Messages.*;
+import Server.Messages.ToClientMessage;
 
 import java.io.*;
 import java.util.Base64;
@@ -11,21 +10,20 @@ import java.util.Base64;
  * MessagePacket class is a wrapper class for GeneralMessage and EventType
  * It is used to send messages between server and client
  */
-public class MessagePacket implements Serializable {
+public class ToClientMessagePacket implements Serializable {
     /**
      * payload: GeneralMessage object
      * type: EventType object
      */
-    GeneralMessage payload;
+    ToClientMessage payload;
 
     /**
      * Constructor
      * @param payload: GeneralMessage object
 
      */
-    public MessagePacket(GeneralMessage payload) {
+    public ToClientMessagePacket(ToClientMessage payload) {
         this.payload = payload;
-
     }
 
     /**
@@ -34,18 +32,18 @@ public class MessagePacket implements Serializable {
      * @throws IOException
      * @throws ClassNotFoundException
      */
-    public MessagePacket(String serialized) throws IOException, ClassNotFoundException, IllegalMessageTypeException {
+    public ToClientMessagePacket(String serialized) throws IOException, ClassNotFoundException, IllegalMessageTypeException {
         byte[] data = Base64.getDecoder().decode(serialized);
 
         ObjectInputStream oInputStream = new ObjectInputStream(new ByteArrayInputStream(data));
-        this.payload =  ((MessagePacket) oInputStream.readObject()).getPayload();
+        this.payload =  ((ConnectionUtils.ToClientMessagePacket) oInputStream.readObject()).getPayload();
         oInputStream.close();
     }
 
     /**
      * @return payload: GeneralMessage object, aka the payload of the packet (data but not the event info)
      */
-    public GeneralMessage getPayload() {
+    public ToClientMessage getPayload() {
         return payload;
     }
 
@@ -67,7 +65,7 @@ public class MessagePacket implements Serializable {
     /**
      * @return boolean: true if the two packets are equal, false otherwise
      */
-    public boolean equals(MessagePacket other){
+    public boolean equals(ConnectionUtils.ToClientMessagePacket other){
         return this.payload.equals(other.getPayload());
     }
 
