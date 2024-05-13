@@ -2,22 +2,22 @@ package Server.Controller;
 
 import Server.Chat.Message;
 import Server.Connections.GeneralServerConnectionHandler;
-import Server.Connections.ServerConnectionHandler;
-import Server.Connections.ServerConnectionHandlerRMI;
-import Server.Connections.ServerConnectionHandlerSOCKET;
 import Server.Enums.Color;
 import Server.Enums.DeckPosition;
 import Server.Enums.Decks;
 import Server.Enums.Face;
 import Server.Exception.*;
-import Server.Messages.GameAlreadyStartedMessage;
 import Server.Player.Player;
 
 import java.io.IOException;
 import java.util.List;
 
 public interface Controller {
-
+    /**
+     * add a player to the list of players
+     * @param name the player name
+     * @throws TooManyPlayersException if the maximum number of players is reached
+     */
     public void addPlayer(String name) throws TooManyPlayersException;
 
 
