@@ -160,6 +160,19 @@ public class ServerConnectionHandlerSOCKET extends Thread implements ServerConne
         killClient(target);
     }
 
+    public boolean ping(String id) {
+        return clients.entrySet().stream()
+                .filter(entry -> entry.getValue().equals(id))
+                .toList().getFirst().getKey().isOnline();
+    }
+
+
+
+    public List<String> getAllIds(){
+        return clients.values().stream().toList();
+    }
+
+
     /**
      * Get the controller instance
      * @return the ControllerInstance of the server

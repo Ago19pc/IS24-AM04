@@ -6,7 +6,9 @@ import Server.Messages.ToClientMessage;
 
 import java.io.IOException;
 import java.rmi.RemoteException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class GeneralServerConnectionHandler {
@@ -43,6 +45,10 @@ public class GeneralServerConnectionHandler {
      */
     public String getPlayerNameByID(String id) {
         return playerID.get(id);
+    }
+
+    public String getIdByName(String name) {
+        return playerID.entrySet().stream().filter(entry -> entry.getValue().equals(name)).findFirst().get().getKey();
     }
 
     public ServerConnectionHandler getServerConnectionHandler() {
@@ -105,6 +111,30 @@ public class GeneralServerConnectionHandler {
     public void start() {
         serverConnectionHandlerSOCKET.start();
     }
+
+    /**
+     *
+     * @return a list of disconnected clients ids
+     */
+    public List<String> getDisconnected(){
+       List<String> disconnected = new ArrayList<>();
+        serverConnectionHandlerSOCKET.getAllIds().forEach(id -> {
+                if (!serverConnectionHandlerSOCKET.ping(id)){
+                    disconnected.add(getPlayerNameByID(id));
+                }
+        });
+
+        serverConnectionHandlerRMI.getAllIds().forEach(id -> {
+            if (!serverConnectionHandlerRMI.ping(id)){
+                disconnected.add(getPlayerNameByID(id));
+
+            }
+        });
+
+        return disconnected;
+    }
+
+
 
     public void killClient(String name) {
         String id = playerID.entrySet().stream().filter(entry -> entry.getValue().equals(name)).findFirst().get().getKey();

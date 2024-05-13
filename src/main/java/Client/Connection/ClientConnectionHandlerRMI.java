@@ -76,6 +76,10 @@ public class ClientConnectionHandlerRMI implements ClientConnectionHandler {
         }
     }
 
+    public boolean ping() {
+        return true;
+    }
+
     public int getRmi_client_port() {
         return rmi_client_port;
     }

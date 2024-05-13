@@ -141,6 +141,8 @@ public interface Controller {
      */
     public void printData();
 
+    public void reactToDisconnection(List<String> names);
+
 
 }
 

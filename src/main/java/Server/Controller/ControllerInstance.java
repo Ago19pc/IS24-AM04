@@ -23,6 +23,7 @@ import com.google.gson.Gson;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.rmi.RemoteException;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -282,7 +283,15 @@ public class ControllerInstance implements Controller{
 
     public boolean isOnline(Player player) {
         //Todo implementare
-        return true;
+        String id = connectionHandler.getIdByName(player.getName());
+        try {
+           return connectionHandler.getServerConnectionHandler(id).ping(id);
+        } catch (RemoteException e) {
+            return false;
+        } catch (PlayerNotInAnyServerConnectionHandlerException e) {
+            throw new RuntimeException(e);
+        }
+
     }
     public void playCard(Player player, int position, int xCoord, int yCoord, Face face) throws TooFewElementsException, InvalidMoveException {
         //if it's not the player's turn, throw exception
@@ -511,6 +520,63 @@ public class ControllerInstance implements Controller{
         System.out.println("Players:");
         this.gameModel.getPlayerList().stream().forEach(p -> System.out.print(p.getName() + " " + p.getColor() + " " + p.isReady() +  ", "));
         System.out.println("\n");
+    }
+
+    public void reactToDisconnection(List<String> names){
+
+        // Assicurati che dalla parte della rete sia gestita la disconnessione di chi non ha ancora un nome
+
+        if(names.size() == gameModel.getPlayerList().size() - 1){
+            Countdown timer = new Countdown();
+            timer.start(60000);
+            while(!timer.isTimerOver()){
+                if(gameModel.getPlayerList().size() - connectionHandler.getDisconnected().size() > 2) {
+                    timer.cancel();
+                }
+                if(connectionHandler.getDisconnected().size() == gameModel.getPlayerList().size() - 1){
+                    try {
+                        Player winner = gameModel.getPlayerList().stream().filter(p -> !connectionHandler.getDisconnected().contains(p.getName())).findFirst().get();
+                        winner.addPoints(1000000000);
+                        computeLeaderboard();
+                    } catch (AlreadyFinishedException e) {
+                        e.printStackTrace();
+                    }
+                    break;
+
+                }
+
+            }
+        } else {
+            for (String name : names) {
+                boolean matchHasStarted = true;
+                for(Player player : gameModel.getPlayerList()){
+                    if (player.isReady() == false) {
+                        matchHasStarted = false;
+                    }
+                }
+                if (!matchHasStarted){
+                    // se tutti i player hanno messo pronnto assegna un colore e ready
+                    List<Player> others = gameModel.getPlayerList().stream().filter(p -> !p.getName().equals(name)).toList();
+                    boolean allOtherReady = others.stream().allMatch(Player::isReady);
+                    if (allOtherReady) {
+                        Player p = gameModel.getPlayerList().stream().filter(player -> player.getName().equals(name)).findFirst().get();
+                        // prendi il colore che non ha nessun altro
+                        for (Color c : Color.values()) {
+                            if (!others.stream().map(Player::getColor).toList().contains(c)) {
+                                p.setColor(c);
+                                p.setReady(true);
+                                break;
+                            }
+                        }
+                    }
+                } else {/*  //todo mettere a posto
+                    if (gameModel.getTurn() == player's turn')
+                        if (playCardPhase)
+                            nextTurn();
+                        else drawRandomCard(); */
+                }
+            }
+        }
     }
 }
 

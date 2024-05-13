@@ -13,6 +13,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.rmi.RemoteException;
 
 public class ClientConnectionHandlerSOCKET extends Thread implements ClientConnectionHandler {
     private Socket clientSocket;
@@ -154,6 +155,17 @@ public class ClientConnectionHandlerSOCKET extends Thread implements ClientConne
             System.out.println("Player not found by name");
             System.out.println("Message not executed");
         }
+    }
+
+
+    /**
+     * This function is not used but is required by the interface
+     * @return false
+     * @throws RemoteException
+     */
+    @Override
+    public boolean ping() throws RemoteException {
+        return false;
     }
 
 
