@@ -20,10 +20,12 @@ public class HelloApplication extends Application {
 
     @Override
     public void start(Stage stage) throws IOException {
-        generateScene("graficap1.fxml", SceneName.JOIN, stage);
-        generateScene("login1.fxml", SceneName.NAMECOLORREADY, stage);
+        generateScene("/rmi_or_socket.fxml", SceneName.NETWORK, stage);
+        generateScene("/graficap1.fxml", SceneName.JOIN, stage);
+        generateScene("/login1.fxml", SceneName.NAMECOLORREADY, stage);
+
         stage.setTitle("Hello!");
-        stage.setScene(sceneMap.get(SceneName.JOIN));
+        stage.setScene(sceneMap.get(SceneName.NETWORK));
         stage.show();
     }
 
@@ -38,7 +40,7 @@ public class HelloApplication extends Application {
         launch();
     }
     private void generateScene(String fxmlPath, SceneName sceneName, Stage stage) throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(JoinSceneController.class.getResource(fxmlPath));
+        FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource(fxmlPath));
         Scene scene = new Scene(fxmlLoader.load());
         SceneController controller = (SceneController) fxmlLoader.getController();
         controller.setAll(HelloApplication.controller, stage, sceneMap);
