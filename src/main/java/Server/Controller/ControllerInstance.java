@@ -23,6 +23,7 @@ import com.google.gson.Gson;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.rmi.RemoteException;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -64,12 +65,20 @@ public class ControllerInstance implements Controller{
         return gameModel.getPlayerList();
     }
 
+    /**
+     * Shuffles the player list and sends the new order to all players
+     */
     private void shufflePlayerList() {
         gameModel.shufflePlayerList();
         PlayerOrderMessage playerOrderMessage = new PlayerOrderMessage(gameModel.getPlayerList().stream().map(Player::getName).toList());
         connectionHandler.sendAllMessage(playerOrderMessage);
     }
 
+    /**
+     * Starts the game by creating the decks and giving the starting cards to the players
+     * @throws TooFewElementsException if there are not enough players or not all players are ready
+     * @throws AlreadySetException if the decks are already set
+     */
     private void start() throws TooFewElementsException, AlreadySetException {
         if(gameModel.getPlayerList().size() < 2){
             throw new TooFewElementsException("Not enough players");
@@ -94,6 +103,10 @@ public class ControllerInstance implements Controller{
         connectionHandler.sendAllMessage(startGameMessage);
     }
 
+    /**
+     * Creates the decks
+     * @throws AlreadySetException if the decks are already set
+     */
     private void createDecks() throws AlreadySetException {
         gameModel.createGoldResourceDecks();
     }
@@ -112,6 +125,11 @@ public class ControllerInstance implements Controller{
         }
 
     }
+
+    /**
+     * Gives the secret objective cards to the players
+     * @throws AlreadySetException if the secret objective cards are already set
+     */
     private void giveSecretObjectiveCards() throws AlreadySetException {
         gameModel.createAchievementDeck();
         getPlayerList().forEach(player -> {
@@ -151,6 +169,11 @@ public class ControllerInstance implements Controller{
             nextTurn();
         }
     }
+
+    /**
+     * Gives the starting cards to the players
+     * @throws AlreadySetException if the starting cards are already set
+     */
     private void giveStartingCards() throws AlreadySetException {
         gameModel.createStartingCards();
         List<StartingCard> startingCards = gameModel.getStartingCards();
@@ -181,6 +204,12 @@ public class ControllerInstance implements Controller{
             }
         }
     }
+
+    /**
+     * Gives the initial hand to the players
+     * @throws AlreadySetException if the initial hand is already given
+     * @throws AlreadyFinishedException if the deck is empty
+     */
     private void giveInitialHand() throws AlreadySetException, AlreadyFinishedException{
         for(Player player : getPlayerList()){
             Card card1 = gameModel.getResourceDeck().popCard(DeckPosition.DECK);
@@ -205,6 +234,10 @@ public class ControllerInstance implements Controller{
         giveSecretObjectiveCards();
 
     }
+
+    /**
+     * Sets the next turn
+     */
     private void nextTurn(){
         if(activePlayerIndex == -1){ //sets active player as the first player. If it's not the first turn this is not valid
             if(gameModel.getTurn() != 0){
@@ -249,7 +282,15 @@ public class ControllerInstance implements Controller{
 
     public boolean isOnline(Player player) {
         //Todo implementare
-        return true;
+        String id = connectionHandler.getIdByName(player.getName());
+        try {
+           return connectionHandler.getServerConnectionHandler(id).ping(id);
+        } catch (RemoteException e) {
+            return false;
+        } catch (PlayerNotInAnyServerConnectionHandlerException e) {
+            throw new RuntimeException(e);
+        }
+
     }
     public void playCard(Player player, int position, int xCoord, int yCoord, Face face) throws TooFewElementsException, InvalidMoveException {
         //if it's not the player's turn, throw exception
@@ -265,6 +306,7 @@ public class ControllerInstance implements Controller{
         }
             player.removeCardFromHand(position);
             int cardPoints;
+            int obtainedPoints = 0;
             try {
                 cardPoints = cardFace.getScore();
             } catch (UnsupportedOperationException e) {
@@ -290,13 +332,20 @@ public class ControllerInstance implements Controller{
                             .filter(entry -> entry.getValue() == requiredSymbol).collect(Collectors.toList()).size();
                     actualQuantity += quantityOnCard;
                 }
-                player.addPoints(actualQuantity / requiredQuantity * cardPoints);
+                obtainedPoints = actualQuantity / requiredQuantity * cardPoints;
+                player.addPoints(obtainedPoints);
             } else {
                 player.addPoints(cardPoints);
             }
             player.getManuscript().addCard(xCoord, yCoord, cardFace, getTurn());
-
-        //Notify
+            OtherPlayerPlayCardMessage otherPlayerPlayCardMessage = new OtherPlayerPlayCardMessage(
+                    player.getName(),
+                    cardFace,
+                    xCoord,
+                    yCoord,
+                    obtainedPoints
+            );
+            connectionHandler.sendAllMessage(otherPlayerPlayCardMessage);
     }
     public void drawCard(Player player, DeckPosition deckPosition, Decks deck) throws TooManyElementsException, InvalidMoveException, AlreadyFinishedException, NotYetStartedException {
         if(gameModel.getTurn() < 1) {
@@ -350,6 +399,10 @@ public class ControllerInstance implements Controller{
         connectionHandler.sendAllMessage(otherPlayerDrawCardMessage);
     }
 
+    /**
+     * Starts the end game phase
+     * @throws AlreadySetException if the end game phase is already set
+     */
     private void endGame() throws AlreadySetException {
         gameModel.setEndGamePhase();
         //if it's the last player to play, the extra round starts immediately
@@ -360,6 +413,10 @@ public class ControllerInstance implements Controller{
         connectionHandler.sendAllMessage(endGamePhaseMessage);
     }
 
+    /**
+     * Computes the leaderboard and sends it to all players
+     * @throws AlreadyFinishedException if there aren't achievement cards to pop
+     */
     private void computeLeaderboard() throws AlreadyFinishedException {
         AchievementDeck achievementDeck = gameModel.getAchievementDeck();
         AchievementCard commonAchievement1 = achievementDeck.popCard(DeckPosition.FIRST_CARD);
@@ -455,7 +512,10 @@ public class ControllerInstance implements Controller{
         }
         throw new PlayerNotFoundByNameException(name);
     }
-
+    /**
+     * get the ConncectionHandler
+     * @return connectionHandler the conncectionHandler
+     */
     public GeneralServerConnectionHandler getConnectionHandler() {
         return this.connectionHandler;
     }
@@ -467,6 +527,70 @@ public class ControllerInstance implements Controller{
         System.out.println("Players:");
         this.gameModel.getPlayerList().stream().forEach(p -> System.out.print(p.getName() + " " + p.getColor() + " " + p.isReady() +  ", "));
         System.out.println("\n");
+    }
+
+    @Override
+    public void setOffline(String id) throws PlayerNotFoundByNameException {
+        Player offlinePlayer = getPlayerByName(connectionHandler.getPlayerNameByID(id));
+        //todo: add offline logic
+
+    }
+
+    public void reactToDisconnection(List<String> names){
+
+        // Assicurati che dalla parte della rete sia gestita la disconnessione di chi non ha ancora un nome
+
+        if(names.size() == gameModel.getPlayerList().size() - 1){
+            Countdown timer = new Countdown();
+            timer.start(60000);
+            while(!timer.isTimerOver()){
+                if(gameModel.getPlayerList().size() - connectionHandler.getDisconnected().size() > 2) {
+                    timer.cancel();
+                }
+                if(connectionHandler.getDisconnected().size() == gameModel.getPlayerList().size() - 1){
+                    try {
+                        Player winner = gameModel.getPlayerList().stream().filter(p -> !connectionHandler.getDisconnected().contains(p.getName())).findFirst().get();
+                        winner.addPoints(1000000000);
+                        computeLeaderboard();
+                    } catch (AlreadyFinishedException e) {
+                        e.printStackTrace();
+                    }
+                    break;
+
+                }
+
+            }
+        } else {
+            for (String name : names) {
+                boolean matchHasStarted = true;
+                for(Player player : gameModel.getPlayerList()){
+                    if (player.isReady() == false) {
+                        matchHasStarted = false;
+                    }
+                }
+                if (!matchHasStarted){
+                    // se tutti i player hanno messo pronnto assegna un colore e ready
+                    List<Player> others = gameModel.getPlayerList().stream().filter(p -> !p.getName().equals(name)).toList();
+                    boolean allOtherReady = others.stream().allMatch(Player::isReady);
+                    if (allOtherReady) {
+                        Player p = gameModel.getPlayerList().stream().filter(player -> player.getName().equals(name)).findFirst().get();
+                        // prendi il colore che non ha nessun altro
+                        for (Color c : Color.values()) {
+                            if (!others.stream().map(Player::getColor).toList().contains(c)) {
+                                p.setColor(c);
+                                p.setReady(true);
+                                break;
+                            }
+                        }
+                    }
+                } else {/*  //todo mettere a posto
+                    if (gameModel.getTurn() == player's turn')
+                        if (playCardPhase)
+                            nextTurn();
+                        else drawRandomCard(); */
+                }
+            }
+        }
     }
 }
 

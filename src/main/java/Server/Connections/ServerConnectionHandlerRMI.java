@@ -38,7 +38,6 @@ public class ServerConnectionHandlerRMI implements ServerConnectionHandler {
 
     Controller controller;
 
-
     private int port;
 
     public ServerConnectionHandlerRMI() {
@@ -90,6 +89,11 @@ public class ServerConnectionHandlerRMI implements ServerConnectionHandler {
     public void setController(Controller controller) {
         this.controller = controller;
     }
+
+    public List<String> getAllIds(){
+        return clients.keySet().stream().toList();
+    }
+
 
     /**
      * Get the stub for RMI
@@ -195,7 +199,19 @@ public class ServerConnectionHandlerRMI implements ServerConnectionHandler {
         return message;
     }
 
-
+    /**
+     * Checks if the client is still connected
+     * @param id the id of the client to check
+     * @return true if the client is still connected, false otherwise
+     */
+    @Override
+    public boolean ping(String id) {
+        try {
+           return clients.get(id).ping();
+        } catch (RemoteException e) {
+            return false;
+        }
+    }
 
     /**
      * Checks for an association between an id and a ClientConnectionHandler

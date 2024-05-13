@@ -39,7 +39,9 @@ public class GameModelInstance implements GameModel{
     }
 
 
-
+    /**
+     * Generate the starting cards
+     */
     private void generateStartingCards() {
         File fileFRONT;
         File fileBACK;
