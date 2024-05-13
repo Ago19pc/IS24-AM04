@@ -16,12 +16,11 @@ public class PingPong extends Thread{
 
     public void run(){
         while(true) {
-            List<String> removed = new ArrayList<>();
             connectionHandler.getServerConnectionHandlerRMI().pingAll();
-            connectionHandler.getDisconnected().forEach((id) -> {
+            connectionHandler.getPlayersToDisconnect().forEach((id) -> {
                 try {
                     connectionHandler.getServerConnectionHandler(id).killClient(id);
-                    removed.add(id);
+                    connectionHandler.getDisconnected().add(id);
                 } catch (RemoteException e) {
                     throw new RuntimeException(e);
                 } catch (PlayerNotFoundByNameException e) {
@@ -30,7 +29,7 @@ public class PingPong extends Thread{
                     throw new RuntimeException(e);
                 }
             });
-            removed.forEach(connectionHandler::removeFromDisconnected);
+            connectionHandler.getPlayersToDisconnect().clear();
             try {
                 Thread.sleep(5000);
             } catch (InterruptedException e) {

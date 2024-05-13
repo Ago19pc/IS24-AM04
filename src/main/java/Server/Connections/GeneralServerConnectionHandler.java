@@ -20,6 +20,8 @@ public class GeneralServerConnectionHandler {
      */
     private Map<String, String> playerID = new HashMap<>();
 
+    //List of ids of players to disconnect
+    private List<String> playersToDisconnect = new ArrayList<>();
     //List of disconnected players' ids
     private List<String> disconnectedPlayers = new ArrayList<>();
 
@@ -126,11 +128,18 @@ public class GeneralServerConnectionHandler {
     }
 
     /**
-     * Sets a player as offline i.e. adds it to the disconnected list
+     * @returns the list of players to disconnecy
+     */
+    public List<String> getPlayersToDisconnect() {
+        return playersToDisconnect;
+    }
+
+    /**
+     * Sets a player as offline i.e. adds it to the to disconnect list
      * @param id the player's id
      */
     public void setOffline(String id){
-        disconnectedPlayers.add(id);
+        playersToDisconnect.add(id);
     }
 
     /**
