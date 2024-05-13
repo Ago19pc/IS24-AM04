@@ -1,5 +1,7 @@
 package Server.Connections;
 
+import Server.Exception.PlayerNotFoundByNameException;
+
 import java.rmi.RemoteException;
 
 public class PingPong extends Thread{
@@ -16,6 +18,8 @@ public class PingPong extends Thread{
                     try {
                         connectionHandler.getServerConnectionHandler().killClient(id);
                     } catch (RemoteException e) {
+                        throw new RuntimeException(e);
+                    } catch (PlayerNotFoundByNameException e) {
                         throw new RuntimeException(e);
                     }
                 });

@@ -1,6 +1,7 @@
 package Server.Connections;
 
 import Server.Controller.Controller;
+import Server.Exception.PlayerNotFoundByNameException;
 import Server.Exception.PlayerNotInAnyServerConnectionHandlerException;
 import Server.Messages.ToClientMessage;
 
@@ -143,6 +144,8 @@ public class GeneralServerConnectionHandler {
         } catch (PlayerNotInAnyServerConnectionHandlerException | RemoteException e) {
             System.out.println("Player not found in any server connection handler, CLIENT NOT KILLED!");
             e.printStackTrace();
+        } catch (PlayerNotFoundByNameException e) {
+            throw new RuntimeException(e);
         }
     }
 }
