@@ -1,22 +1,19 @@
 package Client.Connection;
 
 import Client.Controller.ClientController;
-import ConnectionUtils.ToClientMessagePacket;
-import ConnectionUtils.MessageUtils;
-import ConnectionUtils.ToServerMessagePacket;
 import Server.Exception.ClientExecuteNotCallableException;
 import Server.Exception.PlayerNotFoundByNameException;
 import Server.Messages.ToClientMessage;
 import Server.Messages.ToServerMessage;
 
 import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.net.Socket;
 
 public class ClientConnectionHandlerSOCKET extends Thread implements ClientConnectionHandler {
     private Socket clientSocket;
-    private MessageUtils messageUtils = new MessageUtils();
     public ClientSender sender;
     public ClientReceiver receiver;
     private ClientController controller;
@@ -28,7 +25,7 @@ public class ClientConnectionHandlerSOCKET extends Thread implements ClientConne
      */
     public ClientConnectionHandlerSOCKET(ClientController controller)  {
         this.controller = controller;
-        this.sender = new ClientSender(this, controller);
+        this.sender = new ClientSender();
         this.start();
     }
 
@@ -39,7 +36,7 @@ public class ClientConnectionHandlerSOCKET extends Thread implements ClientConne
         try {
             this.controller = controller;
             clientSocket = new Socket("localhost", 1234);
-            sender = new ClientSender(this, controller);
+            sender = new ClientSender();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -67,8 +64,8 @@ public class ClientConnectionHandlerSOCKET extends Thread implements ClientConne
     public void setSocket(String host, int port) throws IOException {
         this.clientSocket = new Socket(host, port);
         try {
-            this.sender.setOutputBuffer(new PrintWriter(clientSocket.getOutputStream(), true));
-            this.receiver = new ClientReceiver(this, clientSocket, controller);
+            this.sender.setOutputBuffer(new ObjectOutputStream(clientSocket.getOutputStream()));
+            this.receiver = new ClientReceiver(clientSocket, controller);
             Thread.UncaughtExceptionHandler h = new Thread.UncaughtExceptionHandler() {
                 @Override
                 public void uncaughtException(Thread th, Throwable ex) {
@@ -114,23 +111,15 @@ public class ClientConnectionHandlerSOCKET extends Thread implements ClientConne
     }
 
 
-    /**
-     *
-     * @param msg String to send
-     * @throws IOException
-     */
-    public void sendMessage(String msg) throws IOException {
-        sender.sendMessage(msg);
-    }
+
 
     /**
      * Sends a message to the server
-     * @param message the message to send
+     * @param message    e the message to send
      * @throws IOException
      */
     public void sendMessage(ToServerMessage message) throws IOException {
-        ToServerMessagePacket packet = new ToServerMessagePacket(message);
-        sender.sendMessage(packet.stringify());
+        sender.sendMessage(message);
 
     }
 

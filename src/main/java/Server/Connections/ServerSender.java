@@ -1,43 +1,26 @@
 package Server.Connections;
 
-import ConnectionUtils.ToClientMessagePacket;
-import Server.Controller.Controller;
+
+
+import Server.Messages.ToClientMessage;
 
 import java.io.IOException;
-import java.io.PrintWriter;
+import java.io.ObjectOutputStream;
 import java.net.Socket;
-import java.util.Scanner;
 
 public class ServerSender {
-    private Socket clientSocket;
-    private Scanner in;
-    private PrintWriter out;
-    private ClientHandler clientHandler;
-    private Controller controller;
+    private ObjectOutputStream out;
 
-    public ServerSender(ClientHandler clientHandler, Socket clientSocket, Controller controller) throws IOException {
-        this.clientHandler = clientHandler;
-        this.clientSocket = clientSocket;
-        out = new PrintWriter(clientSocket.getOutputStream(), true);
-        in = new Scanner(System.in);
-        this.controller = controller;
+    public ServerSender(Socket clientSocket) throws IOException {
+        out = new ObjectOutputStream(clientSocket.getOutputStream());
     }
-
-    /**
-     * Sends a string to the client
-     * @param message
-     */
-    public void sendMessage(String message) {
-        out.println(message);
-    }
-
 
     /**
      * Sends a message packet to the client
-     * @param mp, the message packet to be sent
+     * @param message, the message packet to be sent
      * @throws IOException
      */
-    public void sendMessage(ToClientMessagePacket mp) throws IOException {
-        out.println(mp.stringify());
+    public void sendMessage(ToClientMessage message) throws IOException {
+        out.writeObject(message);
     }
 }

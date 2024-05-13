@@ -1,22 +1,15 @@
 package Server.Connections;
 
-import Client.Connection.ClientConnectionHandler;
-import ConnectionUtils.MessageUtils;
-import ConnectionUtils.ToServerMessagePacket;
-import Server.Chat.Message;
-import Server.Exception.IllegalMessageTypeException;
-import Server.Exception.ServerExecuteNotCallableException;
 
-import java.io.BufferedReader;
+import Server.Messages.ToServerMessage;
 import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.ObjectInputStream;
 import java.net.Socket;
 
 public class ServerReceiver extends Thread {
     private Socket clientSocket;
-    private BufferedReader in;
+    private ObjectInputStream in;
     private ClientHandler clientHandler;
-    private MessageUtils messageUtils;
 
     private ServerConnectionHandlerSOCKET serverConnectionHandler;
 
@@ -24,9 +17,8 @@ public class ServerReceiver extends Thread {
     public ServerReceiver(ClientHandler clientHandler, Socket clientSocket) throws IOException {
         this.clientSocket = clientSocket;
         this.clientHandler = clientHandler;
-        this.in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+        this.in = new ObjectInputStream(clientSocket.getInputStream());
         this.serverConnectionHandler = clientHandler.getServerConnectionHandler();
-        this.messageUtils = new MessageUtils(serverConnectionHandler);
     }
 
 
@@ -37,12 +29,11 @@ public class ServerReceiver extends Thread {
     @Override
     public void run() {
         while (true) {
-            ToServerMessagePacket packet;
+            ToServerMessage packet;
 
             try {
-                String resp = in.readLine();
-                packet = new ToServerMessagePacket(resp);
-                serverConnectionHandler.executeMessage(packet.getPayload());
+                packet = (ToServerMessage) in.readObject();
+                serverConnectionHandler.executeMessage(packet);
             } catch (NullPointerException e) {
                 try {
                     clientSocket.close();

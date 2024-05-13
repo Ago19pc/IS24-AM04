@@ -1,7 +1,6 @@
 package Server.Connections;
 
 
-import ConnectionUtils.ToClientMessagePacket;
 import Server.Controller.Controller;
 import Server.Messages.ToClientMessage;
 
@@ -39,7 +38,7 @@ public class ClientHandler extends Thread {
             }
         };
         try {
-            sender = new ServerSender(this, this.socket, this.controller);
+            sender = new ServerSender(this.socket);
             receiver = new ServerReceiver(this, this.socket);
             receiver.setUncaughtExceptionHandler(h);
         } catch (Exception e) {
@@ -77,9 +76,8 @@ public class ClientHandler extends Thread {
      * @param message the message to send
      */
     public void sendMessage(ToClientMessage message)  {
-        ToClientMessagePacket mp = new ToClientMessagePacket(message);
         try {
-            this.sender.sendMessage(mp.stringify());
+            this.sender.sendMessage(message);
         } catch (IOException e) {
             System.out.println("Unable to stringify chat message");
             throw new RuntimeException(e);
