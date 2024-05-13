@@ -1,8 +1,11 @@
 package Server.Connections;
 
 import Server.Exception.PlayerNotFoundByNameException;
+import Server.Exception.PlayerNotInAnyServerConnectionHandlerException;
 
 import java.rmi.RemoteException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class PingPong extends Thread{
     private GeneralServerConnectionHandler connectionHandler;
@@ -12,24 +15,25 @@ public class PingPong extends Thread{
     }
 
     public void run(){
-        while(true){
+        while(true) {
+            List<String> removed = new ArrayList<>();
+            connectionHandler.getServerConnectionHandlerRMI().pingAll();
+            connectionHandler.getDisconnected().forEach((id) -> {
+                try {
+                    connectionHandler.getServerConnectionHandler(id).killClient(id);
+                    removed.add(id);
+                } catch (RemoteException e) {
+                    throw new RuntimeException(e);
+                } catch (PlayerNotFoundByNameException e) {
+                    throw new RuntimeException(e);
+                } catch (PlayerNotInAnyServerConnectionHandlerException e) {
+                    throw new RuntimeException(e);
+                }
+            });
+            removed.forEach(connectionHandler::removeFromDisconnected);
             try {
-                connectionHandler.getDisconnected().forEach((id) -> {
-                    try {
-                        connectionHandler.getServerConnectionHandler().killClient(id);
-                    } catch (RemoteException e) {
-                        throw new RuntimeException(e);
-                    } catch (PlayerNotFoundByNameException e) {
-                        throw new RuntimeException(e);
-                    }
-                });
                 Thread.sleep(5000);
             } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            try {
-                connectionHandler.getServerConnectionHandler().ping("ping");
-            } catch (RemoteException e) {
                 throw new RuntimeException(e);
             }
         }

@@ -7,6 +7,7 @@ import Server.Exception.PlayerNotFoundByNameException;
 import Server.Exception.ServerExecuteNotCallableException;
 import Server.Exception.TooManyPlayersException;
 import Server.Messages.LobbyPlayersMessage;
+import Server.Messages.PlayerDisconnectedMessage;
 import Server.Messages.ToClientMessage;
 import Server.Messages.ToServerMessage;
 
@@ -140,33 +141,17 @@ public class ServerConnectionHandlerSOCKET extends Thread implements ServerConne
 
     /**
      * Kill a ClientHandler thread
-     * @param target the client thread to kill
-     */
-    public void killClient(ClientHandler target ) throws PlayerNotFoundByNameException {
-        //target.interrupt();
-        String clientId = clients.get(target);
-        clients.remove(target);
-        controller.setOffline(clientId);
-    }
-
-    /**
-     * Kill a ClientHandler thread
      * @param id the name of the client thread to kill
      */
     public void killClient(String id) throws PlayerNotFoundByNameException {
+        PlayerDisconnectedMessage message = new PlayerDisconnectedMessage(controller.getConnectionHandler().getPlayerNameByID(id));
         ClientHandler target = clients.entrySet().stream()
                 .filter(entry -> entry.getValue().equals(id))
                 .toList().getFirst().getKey();
-        killClient(target);
+        clients.remove(target);
+        target.interrupt();
+        controller.getConnectionHandler().sendAllMessage(message);
     }
-
-    public boolean ping(String id) {
-        return clients.entrySet().stream()
-                .filter(entry -> entry.getValue().equals(id))
-                .toList().getFirst().getKey().isOnline();
-    }
-
-
 
     public List<String> getAllIds(){
         return clients.values().stream().toList();

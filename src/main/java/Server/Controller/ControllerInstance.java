@@ -281,17 +281,10 @@ public class ControllerInstance implements Controller{
     }
 
     public boolean isOnline(Player player) {
-        //Todo implementare
         String id = connectionHandler.getIdByName(player.getName());
-        try {
-           return connectionHandler.getServerConnectionHandler(id).ping(id);
-        } catch (RemoteException e) {
-            return false;
-        } catch (PlayerNotInAnyServerConnectionHandlerException e) {
-            throw new RuntimeException(e);
-        }
-
+        return !connectionHandler.getDisconnected().contains(id);
     }
+
     public void playCard(Player player, int position, int xCoord, int yCoord, Face face) throws TooFewElementsException, InvalidMoveException {
         //if it's not the player's turn, throw exception
         if(getPlayerList().indexOf(player) != activePlayerIndex){
@@ -527,13 +520,6 @@ public class ControllerInstance implements Controller{
         System.out.println("Players:");
         this.gameModel.getPlayerList().stream().forEach(p -> System.out.print(p.getName() + " " + p.getColor() + " " + p.isReady() +  ", "));
         System.out.println("\n");
-    }
-
-    @Override
-    public void setOffline(String id) throws PlayerNotFoundByNameException {
-        Player offlinePlayer = getPlayerByName(connectionHandler.getPlayerNameByID(id));
-        //todo: add offline logic
-
     }
 
     public void reactToDisconnection(List<String> names){

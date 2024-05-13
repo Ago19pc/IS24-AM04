@@ -8,6 +8,7 @@ import Server.Exception.PlayerNotFoundByNameException;
 import Server.Exception.ServerExecuteNotCallableException;
 import Server.Exception.TooManyPlayersException;
 import Server.Messages.LobbyPlayersMessage;
+import Server.Messages.PlayerDisconnectedMessage;
 import Server.Messages.ToClientMessage;
 import Server.Messages.ToServerMessage;
 import Server.Player.Player;
@@ -161,6 +162,8 @@ public class ServerConnectionHandlerRMI implements ServerConnectionHandler {
     @Override
     public void killClient(String id) {
         clients.remove(id);
+        PlayerDisconnectedMessage message = new PlayerDisconnectedMessage(controller.getConnectionHandler().getPlayerNameByID(id));
+        controller.getConnectionHandler().sendAllMessage(message);
     }
 
     @Override
@@ -204,13 +207,23 @@ public class ServerConnectionHandlerRMI implements ServerConnectionHandler {
      * @param id the id of the client to check
      * @return true if the client is still connected, false otherwise
      */
-    @Override
     public boolean ping(String id) {
         try {
            return clients.get(id).ping();
         } catch (RemoteException e) {
             return false;
         }
+    }
+
+    /**
+     * Pings all clients and sets the disconnected ones as offline
+     */
+    public void pingAll() {
+        clients.keySet().forEach(id -> {
+            if (!ping(id)) {
+                controller.getConnectionHandler().setOffline(id);
+            }
+        });
     }
 
     /**

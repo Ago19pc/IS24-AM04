@@ -55,6 +55,4 @@ public interface ServerConnectionHandler extends Remote {
     public void setController(Controller controller) throws RemoteException;
 
     public LobbyPlayersMessage join(int rmi_port) throws RemoteException, NotBoundException;
-
-    boolean ping(String id) throws RemoteException;
 }

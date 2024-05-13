@@ -20,9 +20,14 @@ public class GeneralServerConnectionHandler {
      */
     private Map<String, String> playerID = new HashMap<>();
 
+    //List of disconnected players' ids
+    private List<String> disconnectedPlayers = new ArrayList<>();
+
     public GeneralServerConnectionHandler() throws IOException {
         serverConnectionHandlerRMI = new ServerConnectionHandlerRMI();
         serverConnectionHandlerSOCKET = new ServerConnectionHandlerSOCKET();
+        PingPong pingPong = new PingPong(this);
+        pingPong.start();
     }
 
     public GeneralServerConnectionHandler(boolean debugMode) {
@@ -114,38 +119,25 @@ public class GeneralServerConnectionHandler {
     }
 
     /**
-     *
      * @return a list of disconnected clients ids
      */
     public List<String> getDisconnected(){
-       List<String> disconnected = new ArrayList<>();
-        serverConnectionHandlerSOCKET.getAllIds().forEach(id -> {
-                if (!serverConnectionHandlerSOCKET.ping(id)){
-                    disconnected.add(getPlayerNameByID(id));
-                }
-        });
-
-        serverConnectionHandlerRMI.getAllIds().forEach(id -> {
-            if (!serverConnectionHandlerRMI.ping(id)){
-                disconnected.add(getPlayerNameByID(id));
-
-            }
-        });
-
-        return disconnected;
+       return disconnectedPlayers;
     }
 
+    /**
+     * Sets a player as offline i.e. adds it to the disconnected list
+     * @param id the player's id
+     */
+    public void setOffline(String id){
+        disconnectedPlayers.add(id);
+    }
 
-
-    public void killClient(String name) {
-        String id = playerID.entrySet().stream().filter(entry -> entry.getValue().equals(name)).findFirst().get().getKey();
-        try {
-            getServerConnectionHandler(id).killClient(id);
-        } catch (PlayerNotInAnyServerConnectionHandlerException | RemoteException e) {
-            System.out.println("Player not found in any server connection handler, CLIENT NOT KILLED!");
-            e.printStackTrace();
-        } catch (PlayerNotFoundByNameException e) {
-            throw new RuntimeException(e);
-        }
+    /**
+     * Removes a player from the disconnected list
+     * @param id the player's id
+     */
+    public void removeFromDisconnected(String id){
+        disconnectedPlayers.remove(id);
     }
 }
