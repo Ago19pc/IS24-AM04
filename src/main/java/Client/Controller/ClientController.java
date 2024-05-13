@@ -171,6 +171,22 @@ public class ClientController {
             e.printStackTrace();
         }
     }
+    public void askPlayCard(int cardNumber, Face face, int x, int y) {
+        PlayCardMessage placeCardMessage = new PlayCardMessage(id, cardNumber, face, x, y);
+        try {
+            clientConnectionHandler.sendMessage(placeCardMessage);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    public void askDrawCard(Decks deck, DeckPosition deckPosition) {
+        DrawCardMessage drawCardMessage = new DrawCardMessage(deckPosition, deck, id);
+        try {
+            clientConnectionHandler.sendMessage(drawCardMessage);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
     //ui getters
     public String getMyName() {
@@ -361,11 +377,6 @@ public class ClientController {
         }
         cli.newTurn();
     }
-    public void placeOtherPlayer(){
-        if(gameState != gameState.LEADERBOARD){ //otherwise if the leaderboard message comes before this one, the gamestate will still be correct
-            gameState = GameState.DRAW_CARD;
-        }
-    }
     public void giveOtherPlayerInitialHand(String name) throws PlayerNotFoundByNameException {
         Player p = getPlayerByName(name);
         p.setHandSize(3);
@@ -424,7 +435,6 @@ public class ClientController {
         cli.startingCardChosen(name);
     }
     public void startGame(List<Card> goldBoardCards, List<Card> resourceBoardCards){
-        gameState = GameState.PLACE_CARD;
         cli.gameStarted();
         goldDeck = new Deck(goldBoardCards);
         resourceDeck = new Deck(resourceBoardCards);
@@ -436,6 +446,7 @@ public class ClientController {
             newPlayerList.add(getPlayerByName(name));
         }
         players = newPlayerList;
+        gameState = GameState.PLACE_CARD;
         cli.displayPlayerOrder();
     }
     public void giveStartingCard(Card card) {
@@ -444,5 +455,20 @@ public class ClientController {
     }
     public void toDoFirst(Actions actionToDo) {
         cli.doFirst(actionToDo);
+    }
+    public void placeCard(String playerName, CornerCardFace placedCardFace, int x, int y, int points) throws PlayerNotFoundByNameException {
+        getPlayerByName(playerName).addManuscriptPoints(points);
+        getPlayerByName(playerName).addCardToManuscript(x, y, placedCardFace, turn);
+        getPlayerByName(playerName).setHandSize(getPlayerByName(playerName).getHandSize() - 1);
+        cli.cardPlaced(playerName, x, y);
+        if(points > 0){
+            cli.displayPlayerPoints(playerName);
+        }
+        gameState = GameState.DRAW_CARD;
+    }
+
+    public void playerDisconnected(String playerName) {
+        //todo: add logic
+        cli.playerDisconnected(playerName);
     }
 }

@@ -142,18 +142,18 @@ public class ServerConnectionHandlerSOCKET extends Thread implements ServerConne
      * Kill a ClientHandler thread
      * @param target the client thread to kill
      */
-    public void killClient(ClientHandler target ) {
+    public void killClient(ClientHandler target ) throws PlayerNotFoundByNameException {
         //target.interrupt();
+        String clientId = clients.get(target);
         clients.remove(target);
-        //String/Player offlineplayer = target.getPlayer()
-        //controller.setOffline(offlineplayer);
+        controller.setOffline(clientId);
     }
 
     /**
      * Kill a ClientHandler thread
      * @param id the name of the client thread to kill
      */
-    public void killClient(String id) {
+    public void killClient(String id) throws PlayerNotFoundByNameException {
         ClientHandler target = clients.entrySet().stream()
                 .filter(entry -> entry.getValue().equals(id))
                 .toList().getFirst().getKey();
