@@ -2,7 +2,6 @@ package Server.Messages;
 
 import Client.Controller.ClientController;
 import Server.Card.Card;
-import Server.Connections.ClientHandler;
 import Server.Controller.Controller;
 import Server.Enums.Actions;
 import Server.Enums.DeckPosition;
@@ -16,11 +15,13 @@ public class DrawCardMessage implements Serializable, ToServerMessage, ToClientM
     private Decks from;
     private DeckPosition deckPosition;
     private Card drawnCard;
+    private String id;
 
 
-    public DrawCardMessage(DeckPosition deckPosition, Decks from) {
+    public DrawCardMessage(DeckPosition deckPosition, Decks from, String id) {
         this.from = from;
         this.deckPosition= deckPosition;
+        this.id = id;
     }
 
     public DrawCardMessage(Card drawnCard){
@@ -32,9 +33,7 @@ public class DrawCardMessage implements Serializable, ToServerMessage, ToClientM
     public void serverExecute(Controller controller) {
         String playerName = "";
         try {
-            ClientHandler client = controller.getConnectionHandler().getServerConnectionHandlerSOCKET().getThreads()
-                    .stream().filter(c -> c.getReceiver().threadId() == Thread.currentThread().threadId()).toList().getFirst();
-            playerName = controller.getConnectionHandler().getServerConnectionHandlerSOCKET().getThreadName(client);
+            playerName = controller.getConnectionHandler().getPlayerNameByID(this.id);
             Player player = controller.getPlayerByName(playerName);
             if(from == Decks.ACHIEVEMENT){
                 AchievementDeckDrawInvalidMessage achievementDeckDrawInvalidMessage = new AchievementDeckDrawInvalidMessage();

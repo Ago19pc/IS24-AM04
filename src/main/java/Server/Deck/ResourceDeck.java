@@ -1,6 +1,9 @@
 package Server.Deck;
 
-import Server.Card.*;
+import Server.Card.Card;
+import Server.Card.RegularBackFace;
+import Server.Card.ResourceCard;
+import Server.Card.ResourceFrontFace;
 import Server.Enums.CardCorners;
 import Server.Enums.DeckPosition;
 import Server.Enums.Symbol;
@@ -13,7 +16,6 @@ import java.io.FileReader;
 import java.util.*;
 
 import static Server.Enums.DeckPosition.*;
-import static Server.Enums.DeckPosition.DECK;
 
 public class ResourceDeck implements Deckable {
     protected List<ResourceCard> cards;

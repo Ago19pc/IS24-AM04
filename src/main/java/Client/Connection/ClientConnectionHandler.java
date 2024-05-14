@@ -22,4 +22,5 @@ public interface ClientConnectionHandler extends Remote {
     public void executeMessage(ToClientMessage message) throws RemoteException;
 
 
+    public boolean ping() throws RemoteException;
 }

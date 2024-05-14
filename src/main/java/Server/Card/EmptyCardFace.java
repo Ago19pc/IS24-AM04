@@ -1,11 +1,11 @@
 package Server.Card;
 
+import Server.Enums.CardCorners;
+import Server.Enums.Symbol;
+
 import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
-
-import Server.Enums.CardCorners;
-import Server.Enums.Symbol;
 
 public class EmptyCardFace implements CardFace, Serializable {
     private final String imageURI;

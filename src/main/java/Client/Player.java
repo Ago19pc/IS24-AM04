@@ -1,6 +1,8 @@
 package Client;
 
+import Server.Card.CornerCardFace;
 import Server.Enums.Color;
+import Server.Manuscript.Manuscript;
 
 public class Player {
     private final String name;
@@ -10,6 +12,8 @@ public class Player {
     private boolean active;
     private Color color;
     private boolean ready;
+
+    private Manuscript manuscript;
 
     public Player(String name) {
         this.name = name;
@@ -40,9 +44,15 @@ public class Player {
      * Set the manuscript points of the player
      * @param points the manuscript points of the player
      */
-    public void setManuscriptPoints(int points) {
-        this.manuscriptPoints = points;
+    public void addManuscriptPoints(int points) {
+        this.manuscriptPoints += points;
     }
+
+    public void initializeManuscript(CornerCardFace startingCard) {
+        this.manuscript = new Manuscript(startingCard);
+    }
+
+
 
     /**
      * Set the achievement points of the player
@@ -122,5 +132,16 @@ public class Player {
      */
     public boolean isReady() {
         return ready;
+    }
+
+    /**
+     * Adds a card to the manuscript of the player
+     * @param x the x coordinate of the card
+     * @param y the y coordinate of the card
+     * @param cardFace the face of the card
+     * @param turn the turn of the card
+     */
+    public void addCardToManuscript(int x, int y, CornerCardFace cardFace, int turn) {
+        manuscript.addCard(x, y, cardFace, turn);
     }
 }

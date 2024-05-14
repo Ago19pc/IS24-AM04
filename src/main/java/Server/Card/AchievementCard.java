@@ -1,6 +1,5 @@
 package Server.Card;
 
-import Server.Enums.Decks;
 import Server.Enums.Face;
 public class AchievementCard implements Card {
     private final AchievementFrontFace frontFace;

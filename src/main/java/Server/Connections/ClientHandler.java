@@ -1,8 +1,9 @@
 package Server.Connections;
 
 
-import ConnectionUtils.ToClientMessagePacket;
 import Server.Controller.Controller;
+import Server.Exception.AlreadyFinishedException;
+import Server.Exception.PlayerNotFoundByNameException;
 import Server.Messages.ToClientMessage;
 
 import java.io.IOException;
@@ -35,12 +36,18 @@ public class ClientHandler extends Thread {
             @Override
             public void uncaughtException(Thread th, Throwable ex){
                 System.out.println("Exception, killing ClientHandler Thread " + ex);
-                connectionHandler.killClient(me);
+                try {
+                    connectionHandler.killClient(connectionHandler.getThreadName(me));
+                } catch (PlayerNotFoundByNameException e) {
+                    throw new RuntimeException(e);
+                } catch (AlreadyFinishedException e) {
+                    throw new RuntimeException(e);
+                }
             }
         };
         try {
-            sender = new ServerSender(this, this.socket, this.controller);
-            receiver = new ServerReceiver(this, this.socket);
+            sender = new ServerSender(this.socket);
+            receiver = new ServerReceiver(this, this.socket, this.controller);
             receiver.setUncaughtExceptionHandler(h);
         } catch (Exception e) {
             System.out.println("LOL2");
@@ -53,8 +60,8 @@ public class ClientHandler extends Thread {
      * Creates the receiver to listen to the client messages
      */
     public void run() {
-        System.out.println("Nuovo Client connesso: " + this.socket.getInetAddress());
-        System.out.println("Ora i client connessi sono: ");
+        System.out.println("[SOCKET] Nuovo Client connesso: " + this.socket.getInetAddress());
+        System.out.println("[SOCKET] Ora i client connessi sono: ");
         for (ClientHandler c : connectionHandler.getThreads()) {
             System.out.print(" " + c.socket.getInetAddress() +" -");
         }
@@ -77,9 +84,8 @@ public class ClientHandler extends Thread {
      * @param message the message to send
      */
     public void sendMessage(ToClientMessage message)  {
-        ToClientMessagePacket mp = new ToClientMessagePacket(message);
         try {
-            this.sender.sendMessage(mp.stringify());
+            this.sender.sendMessage(message);
         } catch (IOException e) {
             System.out.println("Unable to stringify chat message");
             throw new RuntimeException(e);
@@ -88,7 +94,7 @@ public class ClientHandler extends Thread {
 
 
     /**
-     * Returns the assosiated ServerConnectionHandler
+     * Returns the associated ServerConnectionHandler
      */
     public ServerConnectionHandlerSOCKET getServerConnectionHandler() {
         return this.connectionHandler;
@@ -114,5 +120,6 @@ public class ClientHandler extends Thread {
     }
 
 
+    public boolean isOnline() {return this.socket.isConnected();}
+    }
 
-}

@@ -5,10 +5,8 @@ import Client.Player;
 import Server.Card.AchievementCard;
 import Server.Card.Card;
 import Server.Chat.Message;
-import Server.Enums.Actions;
-import Server.Enums.Color;
-import Server.Enums.DeckPosition;
-import Server.Enums.Decks;
+import Server.Enums.*;
+import Server.Exception.PlayerNotFoundByNameException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,7 +19,7 @@ public class CLI extends Thread{
 
     //temp variables
     private List<AchievementCard> potentialSecretAchievements;
-    private Card startingCard;
+    private Integer chosenHandCard;
 
     public CLI(ClientController controller){
         System.out.println("Avvio gioco...");
@@ -88,6 +86,21 @@ public class CLI extends Thread{
                 printOnNewLine("  ready: mettiti pronto per iniziare la partita");
                 printOnNewLine("");
                 printOnNewLine("  chat <messaggio>: invia un messaggio nella chat");
+                printOnNewLine("");
+                printOnNewLine("  chooseFace <faccia>: scegli la faccia della carta selezionata");
+                printOnNewLine("  Le facce disponibili sono: FRONT, BACK");
+                printOnNewLine("");
+                printOnNewLine("  chooseCard <numero>: scegli il numero della carta da selezizonare. Se vuoi la prima carta digita 1, etc.");
+                printOnNewLine("");
+                printOnNewLine("  printHand: mostra le carte nella tua mano");
+                printOnNewLine("");
+                printOnNewLine("  placeCard <faccia> <x> <y>: piazza la carta selezionata nella posizione x, y");
+                printOnNewLine("  Le facce disponibili sono: FRONT, BACK");
+                printOnNewLine("");
+                printOnNewLine("  drawCard <mazzo> (opzionale <posizione a terra>): pesca una carta dal mazzo specificato. Se <posizione a terra> è specificata, pesca la carta dalla posizione specificata, altrimenti pesca dal mazzo");
+                printOnNewLine("  I mazzi disponibili sono: GOLD, RESOURCE");
+                printOnNewLine("  Le posizioni a terra disponibili sono: 1, 2");
+                printOnNewLine("");
                 printPromptLine();
                 break;
             case "join":
@@ -120,6 +133,92 @@ public class CLI extends Thread{
                     message += args[i] + " ";
                 }
                 controller.sendChatMessage(message);
+                break;
+            case "chooseFace":
+                if(args.length != 2){
+                    printOnNewLine("Utilizzo corretto: chooseFace <faccia>");
+                    return;
+                }
+                if(!args[1].toUpperCase().equals("FRONT") && !args[1].toUpperCase().equals("BACK")){
+                    printOnNewLine("Faccia non valida. Le facce disponibili sono: FRONT, BACK");
+                    return;
+                }
+                switch(controller.getGameState()){
+                    case CHOOSE_STARTING_CARD:
+                        Face chosenFace = Face.valueOf(args[1].toUpperCase());
+                        controller.chooseStartingCardFace(chosenFace);
+                        break;
+                    default:
+                        printOnNewLine("C'è un tempo e un luogo per ogni cosa! Ma non ora...");
+                }
+                break;
+            case "chooseCard":
+                if(args.length != 2){
+                    printOnNewLine("Utilizzo corretto: chooseCard <numero>");
+                    return;
+                }
+                int cardNumber = Integer.parseInt(args[1]) - 1;
+                switch(controller.getGameState()){
+                    case CHOOSE_SECRET_ACHIEVEMENT:
+                        if(cardNumber < 0 || cardNumber > 1){
+                            printOnNewLine("Numero non valido. Scegli 1 o 2");
+                            return;
+                        }
+                        controller.chooseSecretAchievement(potentialSecretAchievements.get(cardNumber), cardNumber);
+                        break;
+                    case PLACE_CARD:
+                        chosenHandCard = cardNumber;
+                        printOnNewLine("Carta selezionata: " + controller.getHand().get(cardNumber));
+                        break;
+                    default:
+                        printOnNewLine("C'è un tempo e un luogo per ogni cosa! Ma non ora...");
+                }
+                break;
+            case "printHand":
+                displayHand();
+                break;
+            case "placeCard":
+                if(args.length != 4){
+                    printOnNewLine("Utilizzo corretto: placeCard <faccia> <x> <y>");
+                    return;
+                }
+                if(chosenHandCard == null){
+                    printOnNewLine("Devi selezionare una carta della tua mano");
+                    printPromptLine();
+                    return;
+                }
+                if(!args[1].toUpperCase().equals("FRONT") && !args[1].toUpperCase().equals("BACK")){
+                    printOnNewLine("Faccia non valida. Le facce disponibili sono: FRONT, BACK");
+                    return;
+                }
+                int x = Integer.parseInt(args[2]);
+                int y = Integer.parseInt(args[3]);
+                Face face = Face.valueOf(args[1].toUpperCase());
+                controller.askPlayCard(chosenHandCard, face, x, y);
+                chosenHandCard = null;
+                break;
+            case "drawCard":
+                if(args.length < 2 || args.length > 3){
+                    printOnNewLine("Utilizzo corretto: drawCard <mazzo> (opzionale <posizione a terra>)");
+                    return;
+                }
+                DeckPosition position = DeckPosition.DECK;
+                if(args.length == 3){
+                    if(args[2].equals("1")){
+                        position = DeckPosition.FIRST_CARD;
+                    } else if(args[2].equals("2")){
+                        position = DeckPosition.SECOND_CARD;
+                    } else {
+                        printOnNewLine("Posizione non valida. Le posizioni a terra disponibili sono: 1, 2");
+                        return;
+                    }
+                }
+                if(!args[1].equalsIgnoreCase("GOLD") && !args[1].equalsIgnoreCase("RESOURCE")){
+                    printOnNewLine("Mazzo non valido. I mazzi disponibili sono: GOLD, RESOURCE");
+                    return;
+                }
+                Decks deck = Decks.valueOf(args[1].toUpperCase());
+                controller.askDrawCard(deck, position);
                 break;
             default:
                 printOnNewLine("Comando non valido. Digita \"help\" per la lista dei comandi");
@@ -393,7 +492,7 @@ public class CLI extends Thread{
     /**
      * says to the player which card he has on his hand
      */
-    public void displayInitialHand(){
+    public void displayHand(){
         printOnNewLine("La tua mano contiene le carte: \n");
         for (Card card : controller.getHand()) {
             System.out.println("    " + card);
@@ -534,6 +633,32 @@ public class CLI extends Thread{
                 System.out.print("Non pronto");
             }
         }
+        printPromptLine();
+    }
+
+    /**
+     * Displays the points of a player
+     * @param playerName the name of the player to display the points of
+     */
+    public void displayPlayerPoints(String playerName) throws PlayerNotFoundByNameException {
+        Player player = controller.getPlayerByName(playerName);
+        printOnNewLine("Punti di " + playerName + ": " + player.getPoints());
+        printPromptLine();
+    }
+
+    /**
+     * Shows that a player has placed a card
+     * @param playerName
+     * @param x
+     * @param y
+     */
+    public void cardPlaced(String playerName, int x, int y) {
+        printOnNewLine(playerName + " ha piazzato una carta in posizione " + x + ", " + y);
+        printPromptLine();
+    }
+
+    public void playerDisconnected(String playerName) {
+        printOnNewLine(playerName + " si è disconnesso");
         printPromptLine();
     }
 }

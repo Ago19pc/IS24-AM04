@@ -1,22 +1,25 @@
 package Server.Connections;
 
 import Client.Connection.ClientConnectionHandler;
-import Client.Connection.ClientConnectionHandlerRMI;
 import Server.Controller.Controller;
-import Server.Exception.PlayerNotFoundByNameException;
-import Server.Exception.ServerExecuteNotCallableException;
+import Server.Enums.Color;
+import Server.Exception.*;
+import Server.Messages.LobbyPlayersMessage;
+import Server.Messages.PlayerDisconnectedMessage;
 import Server.Messages.ToClientMessage;
 import Server.Messages.ToServerMessage;
 
+import java.net.InetAddress;
+import java.net.NetworkInterface;
+import java.net.UnknownHostException;
 import java.rmi.NotBoundException;
+import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
+import java.rmi.server.ServerNotActiveException;
 import java.rmi.server.UnicastRemoteObject;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Scanner;
+import java.util.*;
 
 import static java.rmi.server.RemoteServer.getClientHost;
 
@@ -24,11 +27,14 @@ import static java.rmi.server.RemoteServer.getClientHost;
  * This class handles the connection between the server and the clients using RMI
  * The ServerConnectionHandlerRMI port is set to 1099
  */
-public class ServerConnectionHandlerRMI implements ServerConnectionHandler {
+public class ServerConnectionHandlerRMI implements ServerConnectionHandler, Remote {
 
     ServerConnectionHandler stub;
     Registry registry;
 
+    /**
+     * String is the ID
+     */
     Map<String, ClientConnectionHandler> clients = new HashMap<>();
 
     Controller controller;
@@ -63,6 +69,29 @@ public class ServerConnectionHandlerRMI implements ServerConnectionHandler {
 
     private boolean startServer(int port) {
         try {
+            String ip;
+            try { //todo. @ago19 questa è una soliuzione temporanea per ottenere l'ip del server
+                Enumeration<NetworkInterface> interfaces = NetworkInterface.getNetworkInterfaces();
+                while (interfaces.hasMoreElements()) {
+                    NetworkInterface iface = interfaces.nextElement();
+                    // filters out 127.0.0.1 and inactive interfaces
+                    if (iface.isLoopback() || !iface.isUp())
+                        continue;
+
+                    Enumeration<InetAddress> addresses = iface.getInetAddresses();
+                    while(addresses.hasMoreElements()) {
+                        InetAddress addr = addresses.nextElement();
+                        ip = addr.getHostAddress();
+                        if(ip.contains(":")) continue;
+                        System.setProperty("java.rmi.server.hostname", ip);;
+                        System.out.println(iface.getDisplayName() + " " + ip);
+                    }
+                }
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+
+            System.out.println("Server hostname is " + System.getProperty("java.rmi.server.hostname"));
             stub = (ServerConnectionHandler) UnicastRemoteObject.exportObject((ServerConnectionHandler) this, port);
             registry = LocateRegistry.createRegistry(1099);
             registry.rebind("ServerConnectionHandler", stub);
@@ -85,6 +114,11 @@ public class ServerConnectionHandlerRMI implements ServerConnectionHandler {
         this.controller = controller;
     }
 
+    public List<String> getAllIds(){
+        return clients.keySet().stream().toList();
+    }
+
+
     /**
      * Get the stub for RMI
      * @return the stub of RMI
@@ -100,6 +134,7 @@ public class ServerConnectionHandlerRMI implements ServerConnectionHandler {
      */
     @Override
     public void sendAllMessage(ToClientMessage message) {
+        pingAll();
         for (ClientConnectionHandler client : clients.values()) {
             try {
                 client.executeMessage(message);
@@ -111,12 +146,13 @@ public class ServerConnectionHandlerRMI implements ServerConnectionHandler {
 
     /**
      * Send a message to a specific client
-     * @param name the name of the client to send the message to
+     * @param id the name of the client to send the message to
      * @param message the message to send
      */
-    public void sendMessage(ToClientMessage message, String name) {
+    public void sendMessage(ToClientMessage message, String id) {
+        ping(id);
         try {
-            clients.get(name).executeMessage(message);
+            clients.get(id).executeMessage(message);
         } catch (RemoteException e) {
             throw new RuntimeException(e);
         }
@@ -146,45 +182,90 @@ public class ServerConnectionHandlerRMI implements ServerConnectionHandler {
     /**
      * Kill a client
      *
-     * @param name the name of the client to kill
+     * @param id the id of the client to kill
      */
     @Override
-    public void killClient(String name) {
-        clients.remove(name);
+    public void killClient(String id) throws AlreadyFinishedException, PlayerNotFoundByNameException {
+        PlayerDisconnectedMessage message = new PlayerDisconnectedMessage(controller.getConnectionHandler().getPlayerNameByID(id));
+        controller.reactToDisconnection(id);
+        clients.remove(id);
+        System.out.println("Client killed. Sending message");
+        controller.getConnectionHandler().sendAllMessage(message);
     }
 
     @Override
-    public void setName(String host, int port, String name) {
+    public void setName(String name, String clientID) {
         try {
-            Registry clientRegistry = LocateRegistry.getRegistry(host, port);
-            ClientConnectionHandler client = (ClientConnectionHandler) clientRegistry.lookup("ClientConnectionHandler");
-            clients.put(name, client);
-        } catch (RemoteException | NotBoundException e) {
+            controller.addPlayer(name, clientID);
+        } catch (TooManyPlayersException e) {
             throw new RuntimeException(e);
         }
     }
 
-    /**
-     * Checks for an association between a name and a ClientConnectionHandler
-     * @param name
-     * @return
-     */
-    public boolean isClientNameAvailable(String name) {
-        return clients.containsKey(name);
+    public LobbyPlayersMessage join(int rmi_port) throws RemoteException, NotBoundException {
+        Random rand = new Random();
+        rand.setSeed(System.currentTimeMillis());
+        String id = rand.nextInt(9999) + "-" + rand.nextInt(9999) + "-" + rand.nextInt(9999);
+        Registry clientRegistry = null;
+        try {
+            clientRegistry = LocateRegistry.getRegistry(getClientHost(), rmi_port);
+
+            ClientConnectionHandler client = (ClientConnectionHandler) clientRegistry.lookup("ClientConnectionHandler");
+            clients.put(id, client);
+            System.out.println("[RMI] Client connected " + getClientHost());
+        } catch (ServerNotActiveException e) {
+            throw new RuntimeException(e);
+        }
+        //immediately send the lobby players message
+        Map<String, Color> playerColors = new HashMap<>();
+        controller.getPlayerList().forEach(p -> playerColors.put(p.getName(), p.getColor()));
+        Map<String, Boolean> playerReady = new HashMap<>();
+        controller.getPlayerList().forEach(p -> playerReady.put(p.getName(), p.isReady()));
+        LobbyPlayersMessage message = new LobbyPlayersMessage(
+                controller.getPlayerList().stream().map(p -> p.getName()).toList(),
+                playerColors,
+                playerReady,
+                id
+        );
+        return message;
     }
 
     /**
-     * Checks for an association between a [host, port] and a ClientConnectionHandler
-     * This function is not implemented and should never be called
-     * Maybe it's useless and the program can work fine without it.
-     * Still thinking about it
-     * @param host
-     * @param port
+     * Pings a client. If it fails, sets the client as offline
+     * @param id the id of the client to check
+     */
+    public void ping(String id) {
+        System.out.println("Pinging " + id);
+        try {
+           clients.get(id).ping();
+        } catch (RemoteException e) {
+            try {
+                System.out.println("ClientIDs are " + clients.keySet());
+                controller.getConnectionHandler().setOffline(id);
+            } catch (PlayerNotInAnyServerConnectionHandlerException | AlreadyFinishedException | RemoteException |
+                     PlayerNotFoundByNameException exception) {
+                System.out.println("Exception while Pinging " + id);
+                exception.printStackTrace();
+                throw new RuntimeException(e);
+            }
+        }
+    }
+
+    /**
+     * Pings all clients and sets the disconnected ones as offline
+     */
+    public void pingAll() {
+        Map<String, ClientConnectionHandler> allClients = new HashMap<>(clients);
+        System.out.println("Pinging all clients. They are: " + allClients.keySet());
+        allClients.keySet().forEach(this::ping);
+    }
+
+    /**
+     * Checks for an association between an id and a ClientConnectionHandler
+     * @param id
      * @return
      */
-    @Override
-    public boolean isClientAddressAvailable(String host, int port) {
-        System.out.println("isClientAddressAvailable function has not been implemented, and maybe it should never be");
-        return false;
+    public boolean isClientAvailable(String id) {
+        return clients.containsKey(id);
     }
 }

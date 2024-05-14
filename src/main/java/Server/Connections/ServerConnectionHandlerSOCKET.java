@@ -3,19 +3,26 @@ package Server.Connections;
 
 import Server.Controller.Controller;
 import Server.Enums.Color;
+import Server.Exception.AlreadyFinishedException;
 import Server.Exception.PlayerNotFoundByNameException;
 import Server.Exception.ServerExecuteNotCallableException;
+import Server.Exception.TooManyPlayersException;
 import Server.Messages.LobbyPlayersMessage;
+import Server.Messages.PlayerDisconnectedMessage;
 import Server.Messages.ToClientMessage;
 import Server.Messages.ToServerMessage;
 
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.rmi.RemoteException;
 import java.util.*;
 
 public class ServerConnectionHandlerSOCKET extends Thread implements ServerConnectionHandler {
     private ServerSocket socket;
+    /**
+     * The String is the ID
+     */
     private Map<ClientHandler, String> clients;
     private int port;
 
@@ -68,7 +75,7 @@ public class ServerConnectionHandlerSOCKET extends Thread implements ServerConne
         Thread.UncaughtExceptionHandler h = new Thread.UncaughtExceptionHandler() {
             @Override
             public void uncaughtException(Thread th, Throwable ex) {
-                System.out.println("[Socket] ServerConnnectionHandler gestore eccezioni thread figli: " + ex);
+                System.out.println("[Socket] ServerConnectionHandler gestore eccezioni thread figli: " + ex);
                 th.interrupt();
             }
         };
@@ -77,11 +84,13 @@ public class ServerConnectionHandlerSOCKET extends Thread implements ServerConne
                 Socket client = this.socket.accept();
                 System.out.println("[Socket] Nuova connessione accettata");
                 ClientHandler t = new ClientHandler(this, client, controller);
-                clients.put(t, null);
+                Random rand = new Random();
+                rand.setSeed(System.currentTimeMillis());
+                String id = rand.nextInt(9999) + "-" + rand.nextInt(9999) + "-" + rand.nextInt(9999);
+                clients.put(t, id);
                 t.setUncaughtExceptionHandler(h);
                 t.start();
                 //immediately send the lobby players message
-                List<String> playerNames = controller.getPlayerList().stream().map(p -> p.getName()).toList();
                 Map<String, Color> playerColors = new HashMap<>();
                 controller.getPlayerList().forEach(p -> playerColors.put(p.getName(), p.getColor()));
                 Map<String, Boolean> playerReady = new HashMap<>();
@@ -89,7 +98,8 @@ public class ServerConnectionHandlerSOCKET extends Thread implements ServerConne
                 LobbyPlayersMessage message = new LobbyPlayersMessage(
                         controller.getPlayerList().stream().map(p -> p.getName()).toList(),
                         playerColors,
-                        playerReady
+                        playerReady,
+                        id
                 );
                 t.sendMessage(message);
             }
@@ -131,25 +141,23 @@ public class ServerConnectionHandlerSOCKET extends Thread implements ServerConne
 
     /**
      * Kill a ClientHandler thread
-     * @param target the client thread to kill
+     * @param id the name of the client thread to kill
      */
-    public void killClient(ClientHandler target ) {
-        //target.interrupt();
+    public void killClient(String id) throws PlayerNotFoundByNameException, AlreadyFinishedException {
+        PlayerDisconnectedMessage message = new PlayerDisconnectedMessage(controller.getConnectionHandler().getPlayerNameByID(id));
+        ClientHandler target = clients.entrySet().stream()
+                .filter(entry -> entry.getValue().equals(id))
+                .toList().getFirst().getKey();
         clients.remove(target);
-        //String/Player offlineplayer = target.getPlayer()
-        //controller.setOffline(offlineplayer);
+        controller.reactToDisconnection(id);
+        target.interrupt();
+        controller.getConnectionHandler().sendAllMessage(message);
     }
 
-    /**
-     * Kill a ClientHandler thread
-     * @param name the name of the client thread to kill
-     */
-    public void killClient(String name) {
-        ClientHandler target = clients.entrySet().stream()
-                .filter(entry -> entry.getValue().equals(name))
-                .toList().getFirst().getKey();
-        killClient(target);
+    public List<String> getAllIds(){
+        return clients.values().stream().toList();
     }
+
 
     /**
      * Get the controller instance
@@ -171,27 +179,26 @@ public class ServerConnectionHandlerSOCKET extends Thread implements ServerConne
     /**
      * Send a message to a specific client
      * @param message the message to send
-     * @param name the name of the client to send the message to
+     * @param id the name of the client to send the message to
      */
-    public void sendMessage(ToClientMessage message, String name) {
+    public void sendMessage(ToClientMessage message, String id) {
         ClientHandler target = clients.entrySet().stream()
-                .filter(entry -> entry.getValue() == name)
+                .filter(entry -> Objects.equals(entry.getValue(), id))
                 .toList().getFirst().getKey();
-        System.out.println("NAME MATCH FOUND");
         target.sendMessage(message);
     }
 
     /**
      * Sets a name for the ClientHandler to be easier to find later
-     * @param host the ip of the client
-     * @param port the port of the client
-     * @param name the name to associate with the ClientHandler
+     * @param id the id of the client to associate with the name
+     * @param name the name
      */
-    public void setName(String host, int port, String name) {
-        ClientHandler clientHandler = clients.keySet().stream()
-                .filter(c -> c.getSocketAddress().equals(host) && c.getSocketPort() == port)
-                .toList().getFirst();
-        clients.put(clientHandler, name);
+    public void setName(String name, String id) {
+        try {
+            controller.addPlayer(name, id);
+        } catch (TooManyPlayersException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     /**
@@ -213,14 +220,12 @@ public class ServerConnectionHandlerSOCKET extends Thread implements ServerConne
         }
     }
 
-    public boolean isClientNameAvailable(String name) {
-        return clients.values().contains(name);
+    public boolean isClientAvailable(String id) {
+        return clients.containsValue(id);
     }
 
-    @Override
-    public boolean isClientAddressAvailable(String host, int port) {
-    return clients.keySet().stream()
-                .anyMatch(c -> c.getSocketAddress().equals(host) && c.getSocketPort() == port);
+    public LobbyPlayersMessage join(int rmi_port) throws RemoteException {
+        return null;
     }
 
 }

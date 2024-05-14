@@ -2,7 +2,6 @@ package Server.Messages;
 
 import Client.Controller.ClientController;
 import Server.Chat.Message;
-import Server.Connections.ClientHandler;
 import Server.Controller.Controller;
 import Server.Exception.PlayerNotFoundByNameException;
 import Server.Player.Player;
@@ -11,28 +10,23 @@ import java.io.Serializable;
 
 public class ChatMessage implements Serializable, ToServerMessage, ToClientMessage {
     private String message;
-    private String name;
+    private String nameOrId;
 
     /**
      * Constructor for the ChatMessage, which is the message used to update the chat
      * @param message
+     * @param player
      */
-    public ChatMessage(String message){
-        this.message = message;
-    }
-
     public ChatMessage(String message, String player){
         this.message = message;
-        this.name = player;
+        this.nameOrId = player;
     }
 
     @Override
     public void serverExecute(Controller controller) {
         String playerName = "";
         try {
-            ClientHandler client = controller.getConnectionHandler().getServerConnectionHandlerSOCKET().getThreads()
-                    .stream().filter(c -> c.getReceiver().threadId() == Thread.currentThread().threadId()).toList().getFirst();
-            playerName = controller.getConnectionHandler().getServerConnectionHandlerSOCKET().getThreadName(client);
+            playerName = controller.getConnectionHandler().getPlayerNameByID(this.nameOrId);
             Player player = controller.getPlayerByName(playerName);
             controller.addMessage(message, player);
         } catch (PlayerNotFoundByNameException e) {
@@ -47,6 +41,6 @@ public class ChatMessage implements Serializable, ToServerMessage, ToClientMessa
 
     @Override
     public void clientExecute(ClientController controller) {
-        controller.addChatMessage(new Message(message, name));
+        controller.addChatMessage(new Message(message, nameOrId));
     }
 }

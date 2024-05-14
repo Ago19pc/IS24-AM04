@@ -1,24 +1,23 @@
 package Server.Manuscript;
 
 import Server.Card.AchievementCard;
-import Server.Card.Card;
 import Server.Card.CornerCardFace;
 import Server.Enums.CardCorners;
 import Server.Enums.Face;
 import Server.Enums.Symbol;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-public class Manuscript {
+public class Manuscript implements Serializable {
     private final Graph graph;
     private final Map<Symbol, Integer> activeSymbols;
 
 
-    public Manuscript(Card card, Face face){
-        CornerCardFace cardFace = card.getCornerFace(face);
+    public Manuscript(CornerCardFace cardFace){
         graph = new Graph(cardFace);
         activeSymbols = new HashMap<>();
         for (Symbol symbol : Symbol.values()) {

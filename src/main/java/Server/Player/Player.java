@@ -2,7 +2,6 @@ package Server.Player;
 
 import Server.Card.AchievementCard;
 import Server.Card.Card;
-import Server.Card.StartingCard;
 import Server.Enums.Color;
 import Server.Enums.Face;
 import Server.Exception.AlreadySetException;

@@ -13,12 +13,8 @@ import java.io.IOException;
 import java.util.List;
 
 public interface Controller {
-    /**
-     * add a player to the list of players
-     * @param name the player name
-     * @throws TooManyPlayersException if the maximum number of players is reached
-     */
-    public void addPlayer(String name) throws TooManyPlayersException;
+
+    public void addPlayer(String name, String clientID) throws TooManyPlayersException;
 
 
     /**
@@ -140,6 +136,8 @@ public interface Controller {
      * Prints some data
      */
     public void printData();
+
+    public void reactToDisconnection(String id) throws AlreadyFinishedException, PlayerNotFoundByNameException;
 
 
 }

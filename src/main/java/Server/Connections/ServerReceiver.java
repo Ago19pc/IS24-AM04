@@ -1,32 +1,29 @@
 package Server.Connections;
 
-import Client.Connection.ClientConnectionHandler;
-import ConnectionUtils.MessageUtils;
-import ConnectionUtils.ToServerMessagePacket;
-import Server.Chat.Message;
-import Server.Exception.IllegalMessageTypeException;
-import Server.Exception.ServerExecuteNotCallableException;
 
-import java.io.BufferedReader;
+import Server.Controller.Controller;
+import Server.Messages.ToServerMessage;
+
+import java.io.EOFException;
 import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.ObjectInputStream;
 import java.net.Socket;
 
 public class ServerReceiver extends Thread {
     private Socket clientSocket;
-    private BufferedReader in;
+    private ObjectInputStream in;
     private ClientHandler clientHandler;
-    private MessageUtils messageUtils;
+    private Controller controller;
 
     private ServerConnectionHandlerSOCKET serverConnectionHandler;
 
 
-    public ServerReceiver(ClientHandler clientHandler, Socket clientSocket) throws IOException {
+    public ServerReceiver(ClientHandler clientHandler, Socket clientSocket, Controller controller) throws IOException {
         this.clientSocket = clientSocket;
         this.clientHandler = clientHandler;
-        this.in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+        this.in = new ObjectInputStream(clientSocket.getInputStream());
         this.serverConnectionHandler = clientHandler.getServerConnectionHandler();
-        this.messageUtils = new MessageUtils(serverConnectionHandler);
+        this.controller = controller;
     }
 
 
@@ -37,16 +34,15 @@ public class ServerReceiver extends Thread {
     @Override
     public void run() {
         while (true) {
-            ToServerMessagePacket packet;
+            ToServerMessage packet;
 
             try {
-                String resp = in.readLine();
-                packet = new ToServerMessagePacket(resp);
-                serverConnectionHandler.executeMessage(packet.getPayload());
-            } catch (NullPointerException e) {
+                packet = (ToServerMessage) in.readObject();
+                serverConnectionHandler.executeMessage(packet);
+            } catch (EOFException e) {
                 try {
                     clientSocket.close();
-                    serverConnectionHandler.killClient(clientHandler);
+                    controller.getConnectionHandler().setOffline(serverConnectionHandler.getThreadName(clientHandler));
                     System.out.println("Client disconnesso ");
                     System.out.println("Ora i client connessi sono: ");
                     for (ClientHandler c : serverConnectionHandler.getThreads()) {
