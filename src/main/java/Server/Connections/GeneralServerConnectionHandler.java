@@ -1,9 +1,11 @@
 package Server.Connections;
 
 import Server.Controller.Controller;
+import Server.Exception.AlreadyFinishedException;
 import Server.Exception.PlayerNotFoundByNameException;
 import Server.Exception.PlayerNotInAnyServerConnectionHandlerException;
 import Server.Messages.ToClientMessage;
+import Server.Player.Player;
 
 import java.io.IOException;
 import java.rmi.RemoteException;
@@ -46,6 +48,11 @@ public class GeneralServerConnectionHandler {
         playerID.put(clientID, name);
     }
 
+    public void removePlayerByName(String name) {
+        String id = playerID.entrySet().stream().filter(entry -> entry.getValue().equals(name)).findFirst().get().getKey();
+        playerID.remove(id);
+    }
+
     /**
      * Gets a player name by id
      * @param id, the id
@@ -81,6 +88,7 @@ public class GeneralServerConnectionHandler {
     }
 
     public void sendAllMessage(ToClientMessage message) {
+        System.out.println("Sending message to all clients");
         serverConnectionHandlerSOCKET.sendAllMessage(message);
         serverConnectionHandlerRMI.sendAllMessage(message);
     }
@@ -138,8 +146,11 @@ public class GeneralServerConnectionHandler {
      * Sets a player as offline i.e. adds it to the to disconnect list
      * @param id the player's id
      */
-    public void setOffline(String id){
+    public void setOffline(String id) throws PlayerNotInAnyServerConnectionHandlerException, AlreadyFinishedException, RemoteException, PlayerNotFoundByNameException {
         playersToDisconnect.add(id);
+        System.out.println("Player " + getPlayerNameByID(id) + " is now set offline");
+        getServerConnectionHandler(id).killClient(id);
+        System.out.println("Client killed");
     }
 
     /**

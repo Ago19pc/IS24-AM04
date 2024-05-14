@@ -141,7 +141,7 @@ public interface Controller {
      */
     public void printData();
 
-    public void reactToDisconnection(List<String> names);
+    public void reactToDisconnection(String id) throws AlreadyFinishedException, PlayerNotFoundByNameException;
 
 
 }

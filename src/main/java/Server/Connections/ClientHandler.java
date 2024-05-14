@@ -2,6 +2,7 @@ package Server.Connections;
 
 
 import Server.Controller.Controller;
+import Server.Exception.AlreadyFinishedException;
 import Server.Exception.PlayerNotFoundByNameException;
 import Server.Messages.ToClientMessage;
 
@@ -38,6 +39,8 @@ public class ClientHandler extends Thread {
                 try {
                     connectionHandler.killClient(connectionHandler.getThreadName(me));
                 } catch (PlayerNotFoundByNameException e) {
+                    throw new RuntimeException(e);
+                } catch (AlreadyFinishedException e) {
                     throw new RuntimeException(e);
                 }
             }

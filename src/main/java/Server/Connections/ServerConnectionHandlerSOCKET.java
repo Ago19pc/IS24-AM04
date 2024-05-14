@@ -3,6 +3,7 @@ package Server.Connections;
 
 import Server.Controller.Controller;
 import Server.Enums.Color;
+import Server.Exception.AlreadyFinishedException;
 import Server.Exception.PlayerNotFoundByNameException;
 import Server.Exception.ServerExecuteNotCallableException;
 import Server.Exception.TooManyPlayersException;
@@ -75,7 +76,7 @@ public class ServerConnectionHandlerSOCKET extends Thread implements ServerConne
         Thread.UncaughtExceptionHandler h = new Thread.UncaughtExceptionHandler() {
             @Override
             public void uncaughtException(Thread th, Throwable ex) {
-                System.out.println("[Socket] ServerConnnectionHandler gestore eccezioni thread figli: " + ex);
+                System.out.println("[Socket] ServerConnectionHandler gestore eccezioni thread figli: " + ex);
                 th.interrupt();
             }
         };
@@ -143,12 +144,13 @@ public class ServerConnectionHandlerSOCKET extends Thread implements ServerConne
      * Kill a ClientHandler thread
      * @param id the name of the client thread to kill
      */
-    public void killClient(String id) throws PlayerNotFoundByNameException {
+    public void killClient(String id) throws PlayerNotFoundByNameException, AlreadyFinishedException {
         PlayerDisconnectedMessage message = new PlayerDisconnectedMessage(controller.getConnectionHandler().getPlayerNameByID(id));
         ClientHandler target = clients.entrySet().stream()
                 .filter(entry -> entry.getValue().equals(id))
                 .toList().getFirst().getKey();
         clients.remove(target);
+        controller.reactToDisconnection(id);
         target.interrupt();
         controller.getConnectionHandler().sendAllMessage(message);
     }

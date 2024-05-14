@@ -18,16 +18,7 @@ public class PingPong extends Thread{
         while(true) {
             connectionHandler.getServerConnectionHandlerRMI().pingAll();
             connectionHandler.getPlayersToDisconnect().forEach((id) -> {
-                try {
-                    connectionHandler.getServerConnectionHandler(id).killClient(id);
-                    connectionHandler.getDisconnected().add(id);
-                } catch (RemoteException e) {
-                    throw new RuntimeException(e);
-                } catch (PlayerNotFoundByNameException e) {
-                    throw new RuntimeException(e);
-                } catch (PlayerNotInAnyServerConnectionHandlerException e) {
-                    throw new RuntimeException(e);
-                }
+                connectionHandler.getDisconnected().add(id);
             });
             connectionHandler.getPlayersToDisconnect().clear();
             try {
