@@ -4,10 +4,9 @@ import Client.Connection.ClientConnectionHandler;
 import Client.Connection.ClientConnectionHandlerRMI;
 import Server.Controller.Controller;
 import Server.Enums.Color;
-import Server.Exception.PlayerNotFoundByNameException;
-import Server.Exception.ServerExecuteNotCallableException;
-import Server.Exception.TooManyPlayersException;
+import Server.Exception.*;
 import Server.Messages.LobbyPlayersMessage;
+import Server.Messages.PlayerDisconnectedMessage;
 import Server.Messages.ToClientMessage;
 import Server.Messages.ToServerMessage;
 import Server.Player.Player;
@@ -110,6 +109,7 @@ public class ServerConnectionHandlerRMI implements ServerConnectionHandler {
      */
     @Override
     public void sendAllMessage(ToClientMessage message) {
+        pingAll();
         for (ClientConnectionHandler client : clients.values()) {
             try {
                 client.executeMessage(message);
@@ -125,6 +125,7 @@ public class ServerConnectionHandlerRMI implements ServerConnectionHandler {
      * @param message the message to send
      */
     public void sendMessage(ToClientMessage message, String id) {
+        ping(id);
         try {
             clients.get(id).executeMessage(message);
         } catch (RemoteException e) {
@@ -159,8 +160,12 @@ public class ServerConnectionHandlerRMI implements ServerConnectionHandler {
      * @param id the id of the client to kill
      */
     @Override
-    public void killClient(String id) {
+    public void killClient(String id) throws AlreadyFinishedException, PlayerNotFoundByNameException {
+        PlayerDisconnectedMessage message = new PlayerDisconnectedMessage(controller.getConnectionHandler().getPlayerNameByID(id));
+        controller.reactToDisconnection(id);
         clients.remove(id);
+        System.out.println("Client killed. Sending message");
+        controller.getConnectionHandler().sendAllMessage(message);
     }
 
     @Override
@@ -200,17 +205,33 @@ public class ServerConnectionHandlerRMI implements ServerConnectionHandler {
     }
 
     /**
-     * Checks if the client is still connected
+     * Pings a client. If it fails, sets the client as offline
      * @param id the id of the client to check
-     * @return true if the client is still connected, false otherwise
      */
-    @Override
-    public boolean ping(String id) {
+    public void ping(String id) {
+        System.out.println("Pinging " + id);
         try {
-           return clients.get(id).ping();
+           clients.get(id).ping();
         } catch (RemoteException e) {
-            return false;
+            try {
+                System.out.println("ClientIDs are " + clients.keySet());
+                controller.getConnectionHandler().setOffline(id);
+            } catch (PlayerNotInAnyServerConnectionHandlerException | AlreadyFinishedException | RemoteException |
+                     PlayerNotFoundByNameException exception) {
+                System.out.println("Exception while Pinging " + id);
+                exception.printStackTrace();
+                throw new RuntimeException(e);
+            }
         }
+    }
+
+    /**
+     * Pings all clients and sets the disconnected ones as offline
+     */
+    public void pingAll() {
+        Map<String, ClientConnectionHandler> allClients = new HashMap<>(clients);
+        System.out.println("Pinging all clients. They are: " + allClients.keySet());
+        allClients.keySet().forEach(this::ping);
     }
 
     /**

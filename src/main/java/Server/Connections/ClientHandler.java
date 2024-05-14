@@ -2,6 +2,7 @@ package Server.Connections;
 
 
 import Server.Controller.Controller;
+import Server.Exception.AlreadyFinishedException;
 import Server.Exception.PlayerNotFoundByNameException;
 import Server.Messages.ToClientMessage;
 
@@ -36,15 +37,17 @@ public class ClientHandler extends Thread {
             public void uncaughtException(Thread th, Throwable ex){
                 System.out.println("Exception, killing ClientHandler Thread " + ex);
                 try {
-                    connectionHandler.killClient(me);
+                    connectionHandler.killClient(connectionHandler.getThreadName(me));
                 } catch (PlayerNotFoundByNameException e) {
+                    throw new RuntimeException(e);
+                } catch (AlreadyFinishedException e) {
                     throw new RuntimeException(e);
                 }
             }
         };
         try {
             sender = new ServerSender(this.socket);
-            receiver = new ServerReceiver(this, this.socket);
+            receiver = new ServerReceiver(this, this.socket, this.controller);
             receiver.setUncaughtExceptionHandler(h);
         } catch (Exception e) {
             System.out.println("LOL2");

@@ -1,9 +1,11 @@
 package Server.Connections;
 
 import Server.Controller.Controller;
+import Server.Exception.AlreadyFinishedException;
 import Server.Exception.PlayerNotFoundByNameException;
 import Server.Exception.PlayerNotInAnyServerConnectionHandlerException;
 import Server.Messages.ToClientMessage;
+import Server.Player.Player;
 
 import java.io.IOException;
 import java.rmi.RemoteException;
@@ -20,9 +22,16 @@ public class GeneralServerConnectionHandler {
      */
     private Map<String, String> playerID = new HashMap<>();
 
+    //List of ids of players to disconnect
+    private List<String> playersToDisconnect = new ArrayList<>();
+    //List of disconnected players' ids
+    private List<String> disconnectedPlayers = new ArrayList<>();
+
     public GeneralServerConnectionHandler() throws IOException {
         serverConnectionHandlerRMI = new ServerConnectionHandlerRMI();
         serverConnectionHandlerSOCKET = new ServerConnectionHandlerSOCKET();
+        PingPong pingPong = new PingPong(this);
+        pingPong.start();
     }
 
     public GeneralServerConnectionHandler(boolean debugMode) {
@@ -37,6 +46,11 @@ public class GeneralServerConnectionHandler {
      */
     public void addPlayerByID(String name, String clientID) {
         playerID.put(clientID, name);
+    }
+
+    public void removePlayerByName(String name) {
+        String id = playerID.entrySet().stream().filter(entry -> entry.getValue().equals(name)).findFirst().get().getKey();
+        playerID.remove(id);
     }
 
     /**
@@ -74,6 +88,7 @@ public class GeneralServerConnectionHandler {
     }
 
     public void sendAllMessage(ToClientMessage message) {
+        System.out.println("Sending message to all clients");
         serverConnectionHandlerSOCKET.sendAllMessage(message);
         serverConnectionHandlerRMI.sendAllMessage(message);
     }
@@ -114,38 +129,35 @@ public class GeneralServerConnectionHandler {
     }
 
     /**
-     *
      * @return a list of disconnected clients ids
      */
     public List<String> getDisconnected(){
-       List<String> disconnected = new ArrayList<>();
-        serverConnectionHandlerSOCKET.getAllIds().forEach(id -> {
-                if (!serverConnectionHandlerSOCKET.ping(id)){
-                    disconnected.add(getPlayerNameByID(id));
-                }
-        });
-
-        serverConnectionHandlerRMI.getAllIds().forEach(id -> {
-            if (!serverConnectionHandlerRMI.ping(id)){
-                disconnected.add(getPlayerNameByID(id));
-
-            }
-        });
-
-        return disconnected;
+       return disconnectedPlayers;
     }
 
+    /**
+     * @returns the list of players to disconnecy
+     */
+    public List<String> getPlayersToDisconnect() {
+        return playersToDisconnect;
+    }
 
+    /**
+     * Sets a player as offline i.e. adds it to the to disconnect list
+     * @param id the player's id
+     */
+    public void setOffline(String id) throws PlayerNotInAnyServerConnectionHandlerException, AlreadyFinishedException, RemoteException, PlayerNotFoundByNameException {
+        playersToDisconnect.add(id);
+        System.out.println("Player " + getPlayerNameByID(id) + " is now set offline");
+        getServerConnectionHandler(id).killClient(id);
+        System.out.println("Client killed");
+    }
 
-    public void killClient(String name) {
-        String id = playerID.entrySet().stream().filter(entry -> entry.getValue().equals(name)).findFirst().get().getKey();
-        try {
-            getServerConnectionHandler(id).killClient(id);
-        } catch (PlayerNotInAnyServerConnectionHandlerException | RemoteException e) {
-            System.out.println("Player not found in any server connection handler, CLIENT NOT KILLED!");
-            e.printStackTrace();
-        } catch (PlayerNotFoundByNameException e) {
-            throw new RuntimeException(e);
-        }
+    /**
+     * Removes a player from the disconnected list
+     * @param id the player's id
+     */
+    public void removeFromDisconnected(String id){
+        disconnectedPlayers.remove(id);
     }
 }

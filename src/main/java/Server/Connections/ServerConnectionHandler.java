@@ -1,6 +1,7 @@
 package Server.Connections;
 
 import Server.Controller.Controller;
+import Server.Exception.AlreadyFinishedException;
 import Server.Exception.PlayerNotFoundByNameException;
 import Server.Messages.LobbyPlayersMessage;
 import Server.Messages.ToClientMessage;
@@ -36,7 +37,7 @@ public interface ServerConnectionHandler extends Remote {
      * Kill a client
      * @param name the name of the client to kill
      */
-    public void killClient(String name) throws RemoteException, PlayerNotFoundByNameException;
+    public void killClient(String name) throws RemoteException, PlayerNotFoundByNameException, AlreadyFinishedException;
 
     public void setName(String name, String clientID) throws RemoteException;
 
@@ -55,6 +56,4 @@ public interface ServerConnectionHandler extends Remote {
     public void setController(Controller controller) throws RemoteException;
 
     public LobbyPlayersMessage join(int rmi_port) throws RemoteException, NotBoundException;
-
-    boolean ping(String id) throws RemoteException;
 }
