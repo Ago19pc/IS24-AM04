@@ -9,7 +9,11 @@ import Server.Messages.PlayerDisconnectedMessage;
 import Server.Messages.ToClientMessage;
 import Server.Messages.ToServerMessage;
 
+import java.net.InetAddress;
+import java.net.NetworkInterface;
+import java.net.UnknownHostException;
 import java.rmi.NotBoundException;
+import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
@@ -23,7 +27,7 @@ import static java.rmi.server.RemoteServer.getClientHost;
  * This class handles the connection between the server and the clients using RMI
  * The ServerConnectionHandlerRMI port is set to 1099
  */
-public class ServerConnectionHandlerRMI implements ServerConnectionHandler {
+public class ServerConnectionHandlerRMI implements ServerConnectionHandler, Remote {
 
     ServerConnectionHandler stub;
     Registry registry;
@@ -65,6 +69,29 @@ public class ServerConnectionHandlerRMI implements ServerConnectionHandler {
 
     private boolean startServer(int port) {
         try {
+            String ip;
+            try { //todo. @ago19 questa è una soliuzione temporanea per ottenere l'ip del server
+                Enumeration<NetworkInterface> interfaces = NetworkInterface.getNetworkInterfaces();
+                while (interfaces.hasMoreElements()) {
+                    NetworkInterface iface = interfaces.nextElement();
+                    // filters out 127.0.0.1 and inactive interfaces
+                    if (iface.isLoopback() || !iface.isUp())
+                        continue;
+
+                    Enumeration<InetAddress> addresses = iface.getInetAddresses();
+                    while(addresses.hasMoreElements()) {
+                        InetAddress addr = addresses.nextElement();
+                        ip = addr.getHostAddress();
+                        if(ip.contains(":")) continue;
+                        System.setProperty("java.rmi.server.hostname", ip);;
+                        System.out.println(iface.getDisplayName() + " " + ip);
+                    }
+                }
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+
+            System.out.println("Server hostname is " + System.getProperty("java.rmi.server.hostname"));
             stub = (ServerConnectionHandler) UnicastRemoteObject.exportObject((ServerConnectionHandler) this, port);
             registry = LocateRegistry.createRegistry(1099);
             registry.rebind("ServerConnectionHandler", stub);
