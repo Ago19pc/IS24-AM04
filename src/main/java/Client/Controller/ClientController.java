@@ -357,8 +357,17 @@ public class ClientController {
     public void notYourTurn() {
         cli.notYourTurn();
     }
-    public void drawOtherPlayer(String name, Decks deckFrom, DeckPosition drawPosition, List<Card> newBoardCards, int turnNumber, String activePlayerName) throws PlayerNotFoundByNameException {
-        gameState = GameState.PLACE_CARD;
+    public void newTurn(String activePlayerName, int turnNumber) {
+        if(!gameState.equals(GameState.LEADERBOARD)) {
+            gameState = GameState.PLACE_CARD;
+            turn = turnNumber;
+            for (Player p : players) {
+                p.setActive(p.getName().equals(activePlayerName));
+            }
+            cli.newTurn();
+        }
+    }
+    public void drawOtherPlayer(String name, Decks deckFrom, DeckPosition drawPosition, List<Card> newBoardCards) throws PlayerNotFoundByNameException {
         switch (deckFrom){
             case GOLD:
                 goldDeck.setBoardCards(newBoardCards);
@@ -371,11 +380,6 @@ public class ClientController {
         }
         getPlayerByName(name).setHandSize(getPlayerByName(name).getHandSize() + 1);
         cli.otherPlayerDraw(name, deckFrom, drawPosition);
-        turn = turnNumber;
-        for(Player p : players){
-            p.setActive(p.getName().equals(activePlayerName));
-        }
-        cli.newTurn();
     }
     public void giveOtherPlayerInitialHand(String name) throws PlayerNotFoundByNameException {
         Player p = getPlayerByName(name);
@@ -468,7 +472,7 @@ public class ClientController {
     }
 
     public void playerDisconnected(String playerName) {
-        //todo: add logic
+        players.removeIf(p -> p.getName().equals(playerName));
         cli.playerDisconnected(playerName);
     }
 }

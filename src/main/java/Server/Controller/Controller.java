@@ -141,13 +141,7 @@ public interface Controller {
      */
     public void printData();
 
-    /**
-     * Sets a player as offline
-     * @param id the player's id
-     */
-    public void setOffline(String id) throws PlayerNotFoundByNameException;
-
-    public void reactToDisconnection(List<String> names);
+    public void reactToDisconnection(String id) throws AlreadyFinishedException, PlayerNotFoundByNameException;
 
 
 }
