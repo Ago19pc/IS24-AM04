@@ -21,7 +21,7 @@ public class HelloApplication extends Application {
     @Override
     public void start(Stage stage) throws IOException {
         generateScene("graficap1.fxml", SceneName.JOIN, stage);
-        generateScene("login1.fxml", SceneName.NAMECOLORREADY, stage);
+        generateScene("NameAndColor.fxml", SceneName.NAMECOLORREADY, stage);
         stage.setTitle("Hello!");
         stage.setScene(sceneMap.get(SceneName.JOIN));
         stage.show();

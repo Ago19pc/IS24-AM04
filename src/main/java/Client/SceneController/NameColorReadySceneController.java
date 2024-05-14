@@ -23,7 +23,7 @@ public class NameColorReadySceneController extends SceneController{
     public Button readyButton;
     public String color;
     public Pane user_pane;
-    public Label label_officialName;
+    public Label label_ready;
     @FXML
     private Label welcomeText;
 
@@ -80,14 +80,15 @@ public class NameColorReadySceneController extends SceneController{
         label_Username.setOpacity(0);
         possible_Name.setDisable(true);
         possible_Name.setText("You are " + name);
-        label_officialName.setOpacity(1);
+        //label_officialName.setOpacity(1);
     }
 
     public void askSetReady(ActionEvent actionEvent) {
         controller.askSetColor(color);
         controller.setReady();
         readyButton.setDisable(true);
-        readyButton.setText("You are Ready!");
+        readyButton.setOpacity(0);
+        label_ready.setOpacity(1);
     }
 
 
