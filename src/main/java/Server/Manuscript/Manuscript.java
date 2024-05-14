@@ -1,7 +1,6 @@
 package Server.Manuscript;
 
 import Server.Card.AchievementCard;
-import Server.Card.Card;
 import Server.Card.CornerCardFace;
 import Server.Enums.CardCorners;
 import Server.Enums.Face;

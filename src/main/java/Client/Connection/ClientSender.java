@@ -1,11 +1,9 @@
 package Client.Connection;
 
-import Client.Controller.ClientController;
 import Server.Messages.ToServerMessage;
 
 import java.io.IOException;
 import java.io.ObjectOutputStream;
-import java.io.PrintWriter;
 
 public class ClientSender{
 

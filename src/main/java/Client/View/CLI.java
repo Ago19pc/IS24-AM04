@@ -4,8 +4,6 @@ import Client.Controller.ClientController;
 import Client.Player;
 import Server.Card.AchievementCard;
 import Server.Card.Card;
-import Server.Card.CardFace;
-import Server.Card.ResourceCard;
 import Server.Chat.Message;
 import Server.Enums.*;
 import Server.Exception.PlayerNotFoundByNameException;

@@ -1,12 +1,5 @@
 package Server.Connections;
 
-import Server.Exception.PlayerNotFoundByNameException;
-import Server.Exception.PlayerNotInAnyServerConnectionHandlerException;
-
-import java.rmi.RemoteException;
-import java.util.ArrayList;
-import java.util.List;
-
 public class PingPong extends Thread{
     private GeneralServerConnectionHandler connectionHandler;
 

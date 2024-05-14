@@ -2,7 +2,7 @@ package Server.Messages;
 
 import Client.Controller.ClientController;
 import Server.Card.AchievementCard;
-import Server.Exception.*;
+import Server.Exception.ClientExecuteNotCallableException;
 
 import java.io.Serializable;
 import java.util.List;

@@ -1,21 +1,10 @@
 package Server.Messages;
 
-import Client.Connection.ClientConnectionHandler;
 import Client.Controller.ClientController;
-import Server.Connections.ClientHandler;
 import Server.Controller.Controller;
-import Server.Exception.TooManyElementsException;
-import Server.Exception.TooManyPlayersException;
 
 import java.io.Serializable;
-import java.lang.invoke.MethodHandles;
-import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
-import java.rmi.registry.LocateRegistry;
-import java.rmi.registry.Registry;
-import java.rmi.server.ServerNotActiveException;
-
-import static java.rmi.server.RemoteServer.getClientHost;
 
 public class PlayerNameMessage implements ToClientMessage, ToServerMessage, Serializable {
     private String name;

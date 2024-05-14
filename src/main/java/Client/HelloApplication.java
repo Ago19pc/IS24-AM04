@@ -5,17 +5,13 @@ import Client.View.CLI;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.stage.Window;
 
-import java.awt.*;
 import java.io.IOException;
 import java.rmi.RemoteException;
-import java.util.Scanner;
 
 public class HelloApplication extends Application {
 

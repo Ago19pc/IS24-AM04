@@ -2,19 +2,16 @@ package Client.Connection;
 
 import Client.Controller.ClientController;
 import Server.Connections.ServerConnectionHandler;
-import Server.Connections.ServerConnectionHandlerRMI;
 import Server.Exception.ClientExecuteNotCallableException;
 import Server.Exception.PlayerNotFoundByNameException;
 import Server.Messages.ToClientMessage;
 import Server.Messages.ToServerMessage;
 
 import java.io.IOException;
-import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
-import java.util.Scanner;
 
 /**
  * This class handles the connection between the client and the server using RMI

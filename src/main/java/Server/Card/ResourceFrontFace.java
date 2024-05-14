@@ -3,7 +3,6 @@ package Server.Card;
 import Server.Enums.CardCorners;
 import Server.Enums.Symbol;
 
-
 import java.util.List;
 import java.util.Map;
 

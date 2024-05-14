@@ -2,7 +2,6 @@ package Server.Connections;
 
 
 import Server.Controller.Controller;
-import Server.Controller.ControllerInstance;
 import Server.Messages.ToServerMessage;
 
 import java.io.EOFException;

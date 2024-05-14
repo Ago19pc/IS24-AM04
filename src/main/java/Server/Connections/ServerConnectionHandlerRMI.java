@@ -1,7 +1,6 @@
 package Server.Connections;
 
 import Client.Connection.ClientConnectionHandler;
-import Client.Connection.ClientConnectionHandlerRMI;
 import Server.Controller.Controller;
 import Server.Enums.Color;
 import Server.Exception.*;
@@ -9,7 +8,6 @@ import Server.Messages.LobbyPlayersMessage;
 import Server.Messages.PlayerDisconnectedMessage;
 import Server.Messages.ToClientMessage;
 import Server.Messages.ToServerMessage;
-import Server.Player.Player;
 
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;

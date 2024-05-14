@@ -2,7 +2,6 @@ package Server.Messages;
 
 import Client.Controller.ClientController;
 import Server.Chat.Message;
-import Server.Connections.ClientHandler;
 import Server.Controller.Controller;
 import Server.Exception.PlayerNotFoundByNameException;
 import Server.Player.Player;

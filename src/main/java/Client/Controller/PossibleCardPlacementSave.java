@@ -1,6 +1,5 @@
 package Client.Controller;
 
-import Server.Card.CardFace;
 import Server.Card.CornerCardFace;
 
 public class PossibleCardPlacementSave {

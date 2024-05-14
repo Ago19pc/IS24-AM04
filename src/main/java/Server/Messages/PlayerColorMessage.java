@@ -1,7 +1,6 @@
 package Server.Messages;
 
 import Client.Controller.ClientController;
-import Server.Connections.ClientHandler;
 import Server.Controller.Controller;
 import Server.Enums.Color;
 import Server.Exception.AlreadyStartedException;
