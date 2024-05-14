@@ -28,7 +28,15 @@
             <Font size="32.0" />
          </font>
       </Button>
-      <TextField fx:id="text_ip" layoutX="367.0" layoutY="218.0" prefHeight="60.0" prefWidth="348.0" />
-      <TextField fx:id="text_Port" layoutX="367.0" layoutY="398.0" prefHeight="60.0" prefWidth="348.0" />
+      <TextField fx:id="text_ip" layoutX="367.0" layoutY="218.0" prefHeight="60.0" prefWidth="348.0">
+         <font>
+            <Font size="32.0" />
+         </font>
+      </TextField>
+      <TextField fx:id="text_Port" layoutX="367.0" layoutY="398.0" prefHeight="60.0" prefWidth="348.0">
+         <font>
+            <Font size="32.0" />
+         </font>
+      </TextField>
    </children>
 </Pane>

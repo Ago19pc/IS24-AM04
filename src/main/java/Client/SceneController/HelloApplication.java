@@ -23,7 +23,7 @@ public class HelloApplication extends Application {
         generateScene("graficap1.fxml", SceneName.JOIN, stage);
         generateScene("NameAndColor.fxml", SceneName.NAMECOLORREADY, stage);
         stage.setTitle("Hello!");
-        stage.setScene(sceneMap.get(SceneName.NETWORK));
+        stage.setScene(sceneMap.get(SceneName.JOIN));
         stage.show();
     }
 

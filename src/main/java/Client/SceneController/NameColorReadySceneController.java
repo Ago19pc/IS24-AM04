@@ -87,6 +87,10 @@ public class NameColorReadySceneController extends SceneController{
         controller.askSetColor(color);
         controller.setReady();
         readyButton.setDisable(true);
+        green_Button.setDisable(true);
+        blue_Button.setDisable(true);
+        yellow_Button.setDisable(true);
+        red_Button.setDisable(true);
         readyButton.setOpacity(0);
         label_ready.setOpacity(1);
     }
