@@ -199,7 +199,6 @@ public class ServerConnectionHandlerSOCKET extends Thread implements ServerConne
         ClientHandler target = clients.entrySet().stream()
                 .filter(entry -> Objects.equals(entry.getValue(), id))
                 .toList().getFirst().getKey();
-        System.out.println("NAME MATCH FOUND");
         target.sendMessage(message);
     }
 

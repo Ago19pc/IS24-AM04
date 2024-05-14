@@ -57,8 +57,8 @@ public class ClientHandler extends Thread {
      * Creates the receiver to listen to the client messages
      */
     public void run() {
-        System.out.println("Nuovo Client connesso: " + this.socket.getInetAddress());
-        System.out.println("Ora i client connessi sono: ");
+        System.out.println("[SOCKET] Nuovo Client connesso: " + this.socket.getInetAddress());
+        System.out.println("[SOCKET] Ora i client connessi sono: ");
         for (ClientHandler c : connectionHandler.getThreads()) {
             System.out.print(" " + c.socket.getInetAddress() +" -");
         }

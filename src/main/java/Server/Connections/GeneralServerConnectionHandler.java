@@ -1,6 +1,7 @@
 package Server.Connections;
 
 import Server.Controller.Controller;
+import Server.Exception.AddressNotInAnyServerConnectionHandlerException;
 import Server.Exception.PlayerNotFoundByNameException;
 import Server.Exception.PlayerNotInAnyServerConnectionHandlerException;
 import Server.Messages.ToClientMessage;
@@ -93,14 +94,12 @@ public class GeneralServerConnectionHandler {
     public void setName(String name, String clientID) throws RemoteException {
          if (serverConnectionHandlerSOCKET.isClientAvailable(clientID)) {
             serverConnectionHandlerSOCKET.setName(name, clientID);
-        } else {
-             System.out.println("Client not found in [Socket], assuming it is in [RMI]... Hope it works, if not I'm the problem (FIND ME IN GeneralServerConnectionHandler.java)");
+        } else if (serverConnectionHandlerRMI.isClientAvailable(clientID)){
              serverConnectionHandlerRMI.setName(name, clientID);
          }
-         //else {
-         //   System.out.println("Client not found in any server connection handler, NAME NOT SET!");
-         //   throw new AddressNotInAnyServerConnectionHandlerException();
-        //}
+         else {
+            System.out.println("Client not found in any server connection handler, NAME NOT SET!");
+        }
 
     }
 

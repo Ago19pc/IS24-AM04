@@ -148,7 +148,7 @@ public class ClientController {
         try {
             clientConnectionHandler.sendMessage(playerNameMessage);
         } catch (Exception e) {
-            cli.needConnection();
+            cli.nameChangeFailed();
         }
     }
     public void setRMIMode(boolean rmi) {

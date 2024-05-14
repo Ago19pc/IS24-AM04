@@ -179,12 +179,13 @@ public class ServerConnectionHandlerRMI implements ServerConnectionHandler {
         Registry clientRegistry = null;
         try {
             clientRegistry = LocateRegistry.getRegistry(getClientHost(), rmi_port);
+
+            ClientConnectionHandler client = (ClientConnectionHandler) clientRegistry.lookup("ClientConnectionHandler");
+            clients.put(id, client);
+            System.out.println("[RMI] Client connected " + getClientHost());
         } catch (ServerNotActiveException e) {
             throw new RuntimeException(e);
         }
-        ClientConnectionHandler client = (ClientConnectionHandler) clientRegistry.lookup("ClientConnectionHandler");
-        clients.put(id, client);
-        System.out.println("TEST IN SCHRMI, client connected");
         //immediately send the lobby players message
         Map<String, Color> playerColors = new HashMap<>();
         controller.getPlayerList().forEach(p -> playerColors.put(p.getName(), p.getColor()));
