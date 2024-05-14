@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.RadioButton?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="768.0" prefWidth="1024.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Client.SceneController.NetworkSceneController">
+   <children>
+      <RadioButton fx:id="rmi_radio_button" layoutX="433.0" layoutY="396.0" mnemonicParsing="false" onAction="#setRMI" text="RMI">
+         <font>
+            <Font size="35.0" />
+         </font>
+      </RadioButton>
+      <RadioButton fx:id="socket_radio_button" layoutX="433.0" layoutY="471.0" mnemonicParsing="false" onAction="#setSocket" text="SOCKET">
+         <font>
+            <Font size="35.0" />
+         </font>
+      </RadioButton>
+      <Button fx:id="next_button" layoutX="421.0" layoutY="622.0" mnemonicParsing="false" onAction="#select_connection_method" prefHeight="77.0" prefWidth="169.0" text="Next" disable="true">
+         <font>
+            <Font size="35.0" />
+         </font>
+      </Button>
+      <Text layoutX="344.0" layoutY="74.0" strokeType="OUTSIDE" strokeWidth="0.0" text="WELCOME TO" wrappingWidth="369.59661865234375">
+         <font>
+            <Font name="Arial" size="50.0" />
+         </font>
+      </Text>
+      <Text layoutX="57.0" layoutY="370.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Please choose how you would like to connect to the server">
+         <font>
+            <Font size="35.0" />
+         </font>
+      </Text>
+   </children>
+</AnchorPane>

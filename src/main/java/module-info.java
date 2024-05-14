@@ -20,6 +20,7 @@ module it.am04.demo1 {
     opens Server.Card to com.google.gson;
     opens Server.Chat to com.google.gson;
     opens Server.Manuscript to com.google.gson;
-    exports Client.SceneController;
     opens Client.SceneController to javafx.fxml;
+    exports Client.SceneController;
+
 }
