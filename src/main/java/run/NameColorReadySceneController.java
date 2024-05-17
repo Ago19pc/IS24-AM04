@@ -1,7 +1,6 @@
-package Client.SceneController;
+package run;
 
 import javafx.event.ActionEvent;
-import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
@@ -24,13 +23,6 @@ public class NameColorReadySceneController extends SceneController{
     public String color;
     public Pane user_pane;
     public Label label_ready;
-    @FXML
-    private Label welcomeText;
-
-    @FXML
-    protected void onHelloButtonClick() {
-        welcomeText.setText("Welcome to JavaFX Application!");
-    }
 
     public void askColorGreen(ActionEvent actionEvent) {
         green_Button.setStyle("-fx-background-color: #00FF00");
@@ -68,20 +60,19 @@ public class NameColorReadySceneController extends SceneController{
         readyButton.setOpacity(1);
     }
 
-    public void askSetName(ActionEvent actionEvent) {
+    /*public void askSetName(ActionEvent actionEvent) {
         name = possible_Name.getText();
         controller.askSetName(name);
-        green_Button.setOpacity(1);
         blue_Button.setOpacity(1);
         yellow_Button.setOpacity(1);
         red_Button.setOpacity(1);
+        green_Button.setOpacity(1);
         label_color.setOpacity(1);
         confirm_Button.setOpacity(0);
         label_Username.setOpacity(0);
         possible_Name.setDisable(true);
-        possible_Name.setText("You are " + name);
         //label_officialName.setOpacity(1);
-    }
+    }*/
 
     public void askSetReady(ActionEvent actionEvent) {
         controller.askSetColor(color);
@@ -94,7 +85,5 @@ public class NameColorReadySceneController extends SceneController{
         readyButton.setOpacity(0);
         label_ready.setOpacity(1);
     }
-
-
 
 }

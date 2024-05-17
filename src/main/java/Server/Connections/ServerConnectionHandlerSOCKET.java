@@ -194,6 +194,7 @@ public class ServerConnectionHandlerSOCKET extends Thread implements ServerConne
      * @param name the name
      */
     public void setName(String name, String id) {
+        System.out.println("Setting name " + name + " for id " + id);
         try {
             controller.addPlayer(name, id);
         } catch (TooManyPlayersException e) {

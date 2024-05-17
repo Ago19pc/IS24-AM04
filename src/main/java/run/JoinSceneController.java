@@ -1,4 +1,4 @@
-package Client.SceneController;
+package run;
 
 import javafx.event.ActionEvent;
 import javafx.scene.control.Button;
@@ -11,6 +11,6 @@ public class JoinSceneController extends SceneController{
 
     public void setJoin(ActionEvent actionEvent) {
         controller.joinServer(text_ip.getText(), Integer.parseInt(text_Port.getText()));
-        stage.setScene(sceneMap.get(SceneName.NAMECOLORREADY));
+
     }
 }

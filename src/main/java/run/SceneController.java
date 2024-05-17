@@ -1,4 +1,4 @@
-package Client.SceneController;
+package run;
 
 import Client.Controller.ClientController;
 import javafx.scene.Scene;
@@ -13,16 +13,18 @@ public abstract class SceneController {
     protected ClientController controller;
     protected Stage stage;
     protected Map<SceneName, Scene> sceneMap;
+    protected SceneController sceneController;
     /**
      * Set all the necessary attributes for the SceneController
      * @param controller the ClientController
      * @param stage the stage
      * @param sceneMap the map of scenes
      */
-    void setAll(ClientController controller, Stage stage, Map<SceneName, Scene> sceneMap){
+    public void setAll(ClientController controller, Stage stage, Map<SceneName, Scene> sceneMap){
         this.controller = controller;
         this.stage = stage;
         this.sceneMap = sceneMap;
     }
+
 
 }

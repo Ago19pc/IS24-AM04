@@ -1,9 +1,10 @@
-package Client.SceneController;
+package run;
 
 public enum SceneName {
     NETWORK,
     JOIN,
-    NAMECOLORREADY,
+    SETNAME,
+    SETCOLOR,
     WAIT,
     GAME,
     END

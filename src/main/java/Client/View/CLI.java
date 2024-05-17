@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Scanner;
 
-public class CLI extends Thread{
+public class CLI extends Thread implements UI {
     private ClientController controller;
     private final Scanner in = new Scanner(System.in);
 
@@ -38,6 +38,7 @@ public class CLI extends Thread{
      * Runs CLI thread: reads input from the console and calls the decoding method
      */
     public void run(){
+        askConnectionMode();
         printOnNewLine("> Digita \"help\" per la lista dei comandi");
         printPromptLine();
         while(true){
@@ -455,6 +456,10 @@ public class CLI extends Thread{
         printOnNewLine(message.getName() + ": " + message.getMessage());
         printPromptLine();
     }
+
+
+
+
     /**
      * Tells the users which are the common achievements
      */
