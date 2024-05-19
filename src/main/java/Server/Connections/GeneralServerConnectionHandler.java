@@ -143,7 +143,7 @@ public class GeneralServerConnectionHandler {
         System.out.println("Player " + getPlayerNameByID(id) + " is now set offline");
     }
 
-    public boolean isOnline(String id) {
-        return !disconnectedPlayerIds.contains(id);
+    public boolean isInDisconnectedList(String id) {
+        return disconnectedPlayerIds.contains(id);
     }
 }

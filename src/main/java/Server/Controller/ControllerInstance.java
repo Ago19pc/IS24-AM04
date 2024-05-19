@@ -67,7 +67,9 @@ public class ControllerInstance implements Controller{
         connectionHandler.setOffline(id);
         PlayerDisconnectedMessage message = new PlayerDisconnectedMessage(connectionHandler.getPlayerNameByID(id));
         reactToDisconnection(id);
-        connectionHandler.sendAllMessage(message);
+        if(connectionHandler.isInDisconnectedList(id)){
+            connectionHandler.sendAllMessage(message);
+        }
     }
 
     public List<Player> getPlayerList() {
@@ -297,7 +299,7 @@ public class ControllerInstance implements Controller{
 
     public boolean isOnline(Player player) {
         String id = connectionHandler.getIdByName(player.getName());
-        return getConnectionHandler().isOnline(id);
+        return !getConnectionHandler().isInDisconnectedList(id);
     }
 
     public void playCard(Player player, int position, int xCoord, int yCoord, Face face) throws TooFewElementsException, InvalidMoveException {
