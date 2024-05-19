@@ -8,10 +8,7 @@ import Server.Chat.Message;
 import Server.Enums.*;
 import Server.Exception.PlayerNotFoundByNameException;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Scanner;
+import java.util.*;
 
 public class CLI extends Thread{
     private ClientController controller;
@@ -503,11 +500,12 @@ public class CLI extends Thread{
     /**
      * Shows the players and their final points
      */
-    public void displayLeaderboard(){
+    public void displayLeaderboard(LinkedHashMap<String, Integer> playerPoints){
         printOnNewLine("Classifica: \n");
-        controller.getLeaderboard().forEach((player, points) -> {
-            System.out.println("    " + player + ": " + points);
-        });
+        int i = 1;
+        for(String player: playerPoints.keySet()){
+            System.out.println("    Il giocatore n." + i++ + "è " + player + ": " + playerPoints.get(player) + " punti");
+        }
         printPromptLine();
     }
 

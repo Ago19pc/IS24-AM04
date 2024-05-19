@@ -332,7 +332,7 @@ public class ClientController {
     public void invalidCard(Actions cardType) {
         cli.invalidCardForAction(cardType);
     }
-    public void displayLeaderboard(Map<String, Integer> playerPoints) {
+    public void displayLeaderboard(LinkedHashMap<String, Integer> playerPoints) {
         gameState = GameState.LEADERBOARD;
         for (String name : playerPoints.keySet()){
             try {
@@ -341,7 +341,7 @@ public class ClientController {
                 throw new RuntimeException(e);
             }
         }
-        cli.displayLeaderboard();
+        cli.displayLeaderboard(playerPoints);
     }
     public void nameNotYetSet() {
         cli.needName();
