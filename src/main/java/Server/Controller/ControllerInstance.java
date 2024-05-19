@@ -54,7 +54,7 @@ public class ControllerInstance implements Controller{
             throw new TooManyPlayersException("Too many players");
         }
     }
-
+    @Override
     public void removePlayer(Player player) {
         System.out.println("Removing player object" + player.getName());
         gameModel.removePlayer(player);
@@ -62,6 +62,14 @@ public class ControllerInstance implements Controller{
         connectionHandler.removePlayerByName(player.getName());
         System.out.println("Player removed");
     }
+
+    public void setOffline(String id){
+        connectionHandler.setOffline(id);
+        PlayerDisconnectedMessage message = new PlayerDisconnectedMessage(connectionHandler.getPlayerNameByID(id));
+        reactToDisconnection(id);
+        connectionHandler.sendAllMessage(message);
+    }
+
     public List<Player> getPlayerList() {
         return gameModel.getPlayerList();
     }
@@ -289,7 +297,7 @@ public class ControllerInstance implements Controller{
 
     public boolean isOnline(Player player) {
         String id = connectionHandler.getIdByName(player.getName());
-        return !connectionHandler.getDisconnected().contains(id);
+        return getConnectionHandler().isOnline(id);
     }
 
     public void playCard(Player player, int position, int xCoord, int yCoord, Face face) throws TooFewElementsException, InvalidMoveException {
@@ -555,7 +563,7 @@ public class ControllerInstance implements Controller{
         System.out.println("\n");
     }
 
-    public void reactToDisconnection(String id) throws AlreadyFinishedException, PlayerNotFoundByNameException {
+    public void reactToDisconnection(String id){
         if(getPlayerByName(connectionHandler.getPlayerNameByID(id)) == null) return; //this means the client is not a player
         switch(gameState){
             case LOBBY: //if lobby, just remove the player
@@ -610,7 +618,11 @@ public class ControllerInstance implements Controller{
         if(!gameState.equals(GameState.LOBBY) && !gameState.equals(GameState.LEADERBOARD) && getPlayerList().size() == 1){
             Player winner = getPlayerList().getFirst();
             winner.addPoints(2000000); //this is just to make the player win
-            computeLeaderboard();
+            try{
+                computeLeaderboard();
+            } catch (AlreadyFinishedException e) {
+                e.printStackTrace();
+            }
         }
     }
 }

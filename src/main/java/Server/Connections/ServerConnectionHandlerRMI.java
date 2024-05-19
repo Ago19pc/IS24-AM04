@@ -184,11 +184,10 @@ public class ServerConnectionHandlerRMI implements ServerConnectionHandler, Remo
      */
     @Override
     public void killClient(String id) throws AlreadyFinishedException, PlayerNotFoundByNameException {
-        PlayerDisconnectedMessage message = new PlayerDisconnectedMessage(controller.getConnectionHandler().getPlayerNameByID(id));
-        controller.reactToDisconnection(id);
+
         clients.remove(id);
         System.out.println("Client killed. Sending message");
-        controller.getConnectionHandler().sendAllMessage(message);
+
     }
 
     @Override
@@ -233,15 +232,8 @@ public class ServerConnectionHandlerRMI implements ServerConnectionHandler, Remo
         try {
            clients.get(id).ping();
         } catch (RemoteException e) {
-            try {
-                System.out.println("ClientIDs are " + clients.keySet());
-                controller.getConnectionHandler().setOffline(id);
-            } catch (PlayerNotInAnyServerConnectionHandlerException | AlreadyFinishedException | RemoteException |
-                     PlayerNotFoundByNameException exception) {
-                System.out.println("Exception while Pinging " + id);
-                exception.printStackTrace();
-                throw new RuntimeException(e);
-            }
+            System.out.println("ClientIDs are " + clients.keySet());
+            controller.setOffline(id);
         }
     }
 

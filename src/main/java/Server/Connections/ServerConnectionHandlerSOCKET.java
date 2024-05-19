@@ -138,14 +138,11 @@ public class ServerConnectionHandlerSOCKET extends Thread implements ServerConne
      * @param id the name of the client thread to kill
      */
     public void killClient(String id) throws PlayerNotFoundByNameException, AlreadyFinishedException {
-        PlayerDisconnectedMessage message = new PlayerDisconnectedMessage(controller.getConnectionHandler().getPlayerNameByID(id));
         ClientHandler target = clients.entrySet().stream()
                 .filter(entry -> entry.getValue().equals(id))
                 .toList().getFirst().getKey();
         clients.remove(target);
-        controller.reactToDisconnection(id);
         target.interrupt();
-        controller.getConnectionHandler().sendAllMessage(message);
     }
 
     public List<String> getAllIds(){

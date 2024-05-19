@@ -27,6 +27,8 @@ public interface Controller {
      */
     public List<Player> getPlayerList();
 
+    public void setOffline(String id);
+
 
     /**
      * set the player color

@@ -25,3 +25,14 @@
 |Add RMI port choice|currently they are hardcoded and the user choice is fake| 2        |⏱|
 |Improve CLI|It works but it's not enjoyable| 7        |⏱|
 |Finish GUI|-------| WIP      |⚙️|
+
+###Reconnections to do list:
+
+| To Do                                                                    |Comments | Status    |
+|--------------------------------------------------------------------------|-------|-----------|
+| Get and set player online status                                         |either with a player's attribute or with a disconnectedPlayerIdsList| Done      |
+| Handle disconnection kick timeout                                        |if a player is disconnected for too long, kick him| Yet to do |
+| Differentiate between a player's disconnection and the player's deletion |--------| Doing     |
+| CLI reconnection command                                                 |-------| Yet to do |
+| Messages sent on reconnection                                            |-------| Yet to do |
+| Don't send messages to disconnected players                              |-------| Yet to do |

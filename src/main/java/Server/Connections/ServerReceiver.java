@@ -42,7 +42,7 @@ public class ServerReceiver extends Thread {
             } catch (EOFException e) {
                 try {
                     clientSocket.close();
-                    controller.getConnectionHandler().setOffline(serverConnectionHandler.getThreadName(clientHandler));
+                    controller.setOffline(serverConnectionHandler.getThreadName(clientHandler));
                     System.out.println("Client disconnesso ");
                     System.out.println("Ora i client connessi sono: ");
                     for (ClientHandler c : serverConnectionHandler.getThreads()) {
