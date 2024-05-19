@@ -22,6 +22,7 @@ public class MainGUI extends Application {
         gui.generateScene("rmi_or_socket.fxml", SceneName.NETWORK, stage);
         gui.generateScene("graficap1.fxml", SceneName.JOIN, stage);
         gui.generateScene("setName.fxml", SceneName.SETNAME, stage);
+        gui.generateScene("setColor.fxml", SceneName.SETCOLOR, stage);
         stage.setTitle("Hello!");
         gui.askConnectionMode();
         controller.main( gui);

@@ -12,9 +12,7 @@ import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import run.MainGUI;
-import run.SceneController;
-import run.SceneName;
+import run.*;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -25,6 +23,7 @@ public class GUI implements UI{
     private static ClientController controller;
     private static Map<SceneName,Scene> sceneMap = new HashMap<>();
     private Stage stage;
+    private Map<SceneName,SceneController> sceneControllerMap = new HashMap<>();
 
 
     public GUI(ClientController controller) {
@@ -36,6 +35,7 @@ public class GUI implements UI{
         SceneController sceneController = (SceneController) fxmlLoader.getController();
         sceneController.setAll(controller, stage, sceneMap);
         sceneMap.put(sceneName, scene);
+        sceneControllerMap.put(sceneName, sceneController);
     }
 
     public Scene getScene(SceneName sceneName) {
@@ -63,8 +63,42 @@ public class GUI implements UI{
 
     @Override
     public void colorChanged() {
-
+        Platform.runLater(() -> {
+            ((ColorReadySceneController) sceneControllerMap.get(SceneName.SETCOLOR)).confirm_Color_Button.setDisable(false);
+            ((ColorReadySceneController) sceneControllerMap.get(SceneName.SETCOLOR)).green_Button.setDisable(false);
+            ((ColorReadySceneController) sceneControllerMap.get(SceneName.SETCOLOR)).blue_Button.setDisable(false);
+            ((ColorReadySceneController) sceneControllerMap.get(SceneName.SETCOLOR)).yellow_Button.setDisable(false);
+            ((ColorReadySceneController) sceneControllerMap.get(SceneName.SETCOLOR)).red_Button.setDisable(false);
+            ((ColorReadySceneController) sceneControllerMap.get(SceneName.SETCOLOR)).label_color.setOpacity(0);
+            ((ColorReadySceneController) sceneControllerMap.get(SceneName.SETCOLOR)).confirm_Color_Button.setOpacity(0);
+            ((ColorReadySceneController) sceneControllerMap.get(SceneName.SETCOLOR)).green_Button.setOpacity(0);
+            ((ColorReadySceneController) sceneControllerMap.get(SceneName.SETCOLOR)).blue_Button.setOpacity(0);
+            ((ColorReadySceneController) sceneControllerMap.get(SceneName.SETCOLOR)).yellow_Button.setOpacity(0);
+            ((ColorReadySceneController) sceneControllerMap.get(SceneName.SETCOLOR)).red_Button.setOpacity(0);
+            ((ColorReadySceneController) sceneControllerMap.get(SceneName.SETCOLOR)).readyButton.setOpacity(1);
+            for(int i = 0; i < controller.getPlayers().size(); i++) {
+                String name = controller.getPlayers().get(i).getName();
+                String color = controller.getPlayers().get(i).getColor() == null ? "No Color" : controller.getPlayers().get(i).getColor().toString();
+                String ready = controller.getPlayers().get(i).isReady() ? "Ready" : "Not Ready";
+                ((ColorReadySceneController) sceneControllerMap.get(SceneName.SETCOLOR)).list_Player.getItems().set(i, name + "   " + color + "   " + ready);
+                switch (controller.getPlayers().getLast().getColor()) {
+                    case RED:
+                        ((ColorReadySceneController) sceneControllerMap.get(SceneName.SETCOLOR)).red_Button.setDisable(true);
+                        break;
+                    case GREEN:
+                        ((ColorReadySceneController) sceneControllerMap.get(SceneName.SETCOLOR)).green_Button.setDisable(true);
+                        break;
+                    case BLUE:
+                        ((ColorReadySceneController) sceneControllerMap.get(SceneName.SETCOLOR)).blue_Button.setDisable(true);
+                        break;
+                    case YELLOW:
+                        ((ColorReadySceneController) sceneControllerMap.get(SceneName.SETCOLOR)).yellow_Button.setDisable(true);
+                        break;
+                }
+            }
+        });
     }
+
 
     @Override
     public void successfulConnection() {
@@ -79,8 +113,12 @@ public class GUI implements UI{
 
     @Override
     public void nameChangeFailed() {
-        stage.setScene(getScene(SceneName.SETNAME));
-        stage.show();
+        Platform.runLater(() -> {
+            ((NameReadySceneController) sceneControllerMap.get(SceneName.SETNAME)).name_exist.setOpacity(1);
+            ((NameReadySceneController) sceneControllerMap.get(SceneName.SETNAME)).possible_Name.clear();
+            stage.setScene(getScene(SceneName.SETNAME));
+            stage.show();
+        });
     }
 
     @Override
@@ -181,7 +219,31 @@ public class GUI implements UI{
 
     @Override
     public void displayPlayerColors() {
+        System.out.println("displayPlayerColors");
+        Platform.runLater(() -> {
+            for(int i = 0; i < controller.getPlayers().size(); i++) {
+                String name = controller.getPlayers().get(i).getName();
+                String color = controller.getPlayers().get(i).getColor() == null ? "No Color" : controller.getPlayers().get(i).getColor().toString();
+                String ready = controller.getPlayers().get(i).isReady() ? "Ready" : "Not Ready";
+                ((ColorReadySceneController) sceneControllerMap.get(SceneName.SETCOLOR)).list_Player.getItems().set(i, name + "   " + color + "   " + ready);
+                switch (controller.getPlayers().getLast().getColor()) {
+                    case RED:
+                        ((ColorReadySceneController) sceneControllerMap.get(SceneName.SETCOLOR)).red_Button.setDisable(true);
+                        break;
+                    case GREEN:
+                        ((ColorReadySceneController) sceneControllerMap.get(SceneName.SETCOLOR)).green_Button.setDisable(true);
+                        break;
+                    case BLUE:
+                        ((ColorReadySceneController) sceneControllerMap.get(SceneName.SETCOLOR)).blue_Button.setDisable(true);
+                        break;
+                    case YELLOW:
+                        ((ColorReadySceneController) sceneControllerMap.get(SceneName.SETCOLOR)).yellow_Button.setDisable(true);
+                        break;
+                }
+            }
 
+
+        });
     }
 
     @Override
@@ -216,6 +278,12 @@ public class GUI implements UI{
 
     @Override
     public void displayNewPlayer() {
+        Platform.runLater(() -> {
+            String name = controller.getPlayers().getLast().getName();
+            String color = controller.getPlayers().getLast().getColor() == null ? "No Color" : controller.getPlayers().getLast().getColor().toString();
+            String ready = controller.getPlayers().getLast().isReady() ? "Ready" : "Not Ready";
+            ((ColorReadySceneController) sceneControllerMap.get(SceneName.SETCOLOR)).list_Player.getItems().add(name + "   " + color + "   " + ready);
+        });
 
     }
 
@@ -271,6 +339,25 @@ public class GUI implements UI{
 
     @Override
     public void displayLobby() {
+        Platform.runLater(() -> {
+            for (int i = 0; i < controller.getPlayers().size(); i++) {
+                ((ColorReadySceneController) sceneControllerMap.get(SceneName.SETCOLOR)).list_Player.getItems().add(controller.getPlayers().get(i).getName() + "   " + controller.getPlayers().get(i).getColor().toString() + "   " + (controller.getPlayers().get(i).isReady() ? "Ready" : "Not Ready"));
+                switch (controller.getPlayers().getLast().getColor()) {
+                    case RED:
+                        ((ColorReadySceneController) sceneControllerMap.get(SceneName.SETCOLOR)).red_Button.setDisable(true);
+                        break;
+                    case GREEN:
+                        ((ColorReadySceneController) sceneControllerMap.get(SceneName.SETCOLOR)).green_Button.setDisable(true);
+                        break;
+                    case BLUE:
+                        ((ColorReadySceneController) sceneControllerMap.get(SceneName.SETCOLOR)).blue_Button.setDisable(true);
+                        break;
+                    case YELLOW:
+                        ((ColorReadySceneController) sceneControllerMap.get(SceneName.SETCOLOR)).yellow_Button.setDisable(true);
+                        break;
+                }
+            }
+        });
 
     }
 

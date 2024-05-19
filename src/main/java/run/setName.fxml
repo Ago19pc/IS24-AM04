@@ -31,5 +31,10 @@
             </Label>
          </children>
       </Pane>
+      <Label fx:id="name_exist" layoutX="447.0" layoutY="172.0" opacity="0.0" text="name already used">
+         <font>
+            <Font size="19.0" />
+         </font>
+      </Label>
    </children>
 </Pane>

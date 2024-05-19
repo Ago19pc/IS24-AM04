@@ -24,41 +24,7 @@ public class NameColorReadySceneController extends SceneController{
     public Pane user_pane;
     public Label label_ready;
 
-    public void askColorGreen(ActionEvent actionEvent) {
-        green_Button.setStyle("-fx-background-color: #00FF00");
-        blue_Button.setStyle("-fx-background-color: #FFFFFF");
-        yellow_Button.setStyle("-fx-background-color: #FFFFFF");
-        red_Button.setStyle("-fx-background-color: #FFFFFF");
-        color = "green";
-        readyButton.setOpacity(1);
-    }
 
-    public void askColorBlue(ActionEvent actionEvent) {
-        green_Button.setStyle("-fx-background-color: #FFFFFF");
-        blue_Button.setStyle("-fx-background-color: #0000FF");
-        yellow_Button.setStyle("-fx-background-color: #FFFFFF");
-        red_Button.setStyle("-fx-background-color: #FFFFFF");
-        color = "blue";
-        readyButton.setOpacity(1);
-    }
-
-    public void askColorYellow(ActionEvent actionEvent) {
-        green_Button.setStyle("-fx-background-color: #FFFFFF");
-        blue_Button.setStyle("-fx-background-color: #FFFFFF");
-        yellow_Button.setStyle("-fx-background-color: #FFFF00");
-        red_Button.setStyle("-fx-background-color: #FFFFFF");
-        color = "yellow";
-        readyButton.setOpacity(1);
-    }
-
-    public void askColorRed(ActionEvent actionEvent) {
-        green_Button.setStyle("-fx-background-color: #FFFFFF");
-        blue_Button.setStyle("-fx-background-color: #FFFFFF");
-        yellow_Button.setStyle("-fx-background-color: #FFFFFF");
-        red_Button.setStyle("-fx-background-color: #FF0000");
-        color = "red";
-        readyButton.setOpacity(1);
-    }
 
     /*public void askSetName(ActionEvent actionEvent) {
         name = possible_Name.getText();

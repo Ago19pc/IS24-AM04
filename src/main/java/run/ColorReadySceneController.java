@@ -1,8 +1,10 @@
 package run;
 
+import Server.Enums.Color;
 import javafx.event.ActionEvent;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
 import javafx.scene.layout.Pane;
 
 public class ColorReadySceneController extends  SceneController{
@@ -16,21 +18,50 @@ public class ColorReadySceneController extends  SceneController{
     public Button yellow_Button;
     public Label label_color;
     public Button readyButton;
+    public Color color;
+    public ListView<String> list_Player;
+    public Button confirm_Color_Button;
 
-
-    public void askColorRed(ActionEvent actionEvent) {
-    }
 
     public void askColorGreen(ActionEvent actionEvent) {
+        green_Button.setStyle("-fx-background-color: #00FF00");
+        blue_Button.setStyle("-fx-background-color: #FFFFFF");
+        yellow_Button.setStyle("-fx-background-color: #FFFFFF");
+        red_Button.setStyle("-fx-background-color: #FFFFFF");
+        color = Color.GREEN;
     }
 
     public void askColorBlue(ActionEvent actionEvent) {
+        green_Button.setStyle("-fx-background-color: #FFFFFF");
+        blue_Button.setStyle("-fx-background-color: #0000FF");
+        yellow_Button.setStyle("-fx-background-color: #FFFFFF");
+        red_Button.setStyle("-fx-background-color: #FFFFFF");
+        color = Color.BLUE;
     }
 
     public void askColorYellow(ActionEvent actionEvent) {
+        green_Button.setStyle("-fx-background-color: #FFFFFF");
+        blue_Button.setStyle("-fx-background-color: #FFFFFF");
+        yellow_Button.setStyle("-fx-background-color: #FFFF00");
+        red_Button.setStyle("-fx-background-color: #FFFFFF");
+        color = Color.YELLOW;
+
+    }
+
+    public void askColorRed(ActionEvent actionEvent) {
+        green_Button.setStyle("-fx-background-color: #FFFFFF");
+        blue_Button.setStyle("-fx-background-color: #FFFFFF");
+        yellow_Button.setStyle("-fx-background-color: #FFFFFF");
+        red_Button.setStyle("-fx-background-color: #FF0000");
+        color = Color.RED;
+
     }
 
     public void askSetReady(ActionEvent actionEvent) {
 
+    }
+
+    public void setColorConfirm(ActionEvent actionEvent) {
+        controller.askSetColor(color.toString());
     }
 }
