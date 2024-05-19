@@ -94,4 +94,5 @@ public interface UI {
     void cardPlaced(String playerName, int x, int y);
     void playerDisconnected(String playerName);
     void displayCommonAchievements();
+    void tooManyPlayers();
 }

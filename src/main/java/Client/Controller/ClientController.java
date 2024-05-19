@@ -476,9 +476,9 @@ public class ClientController {
     }
 
     public void invalidName() {
-        cli.nameChangeFailed();
+        ui.nameChangeFailed();
     }
     public void tooManyPlayers() {
-        cli.tooManyPlayers();
+        ui.tooManyPlayers();
     }
 }

@@ -8,11 +8,11 @@ import Server.Enums.Actions;
 import Server.Enums.DeckPosition;
 import Server.Enums.Decks;
 import Server.Exception.PlayerNotFoundByNameException;
+import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import run.MainGUI;
-import run.NameColorReadySceneController;
 import run.SceneController;
 import run.SceneName;
 
@@ -25,12 +25,10 @@ public class GUI implements UI{
     private static ClientController controller;
     private static Map<SceneName,Scene> sceneMap = new HashMap<>();
     private Stage stage;
-    private final NameColorReadySceneController nameColorReadySceneController;
 
 
-    public GUI(ClientController controller, NameColorReadySceneController nameColorReadySceneController) {
+    public GUI(ClientController controller) {
         this.controller = controller;
-        this.nameColorReadySceneController = nameColorReadySceneController;
     }
     public void generateScene(String fxmlPath, SceneName sceneName, Stage stage) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(MainGUI.class.getResource(fxmlPath));
@@ -57,8 +55,10 @@ public class GUI implements UI{
 
     @Override
     public void nameChanged(String name) {
-        stage.setScene(getScene(SceneName.SETCOLOR));
-        stage.show();
+        Platform.runLater(() -> {
+            stage.setScene(getScene(SceneName.SETCOLOR));
+            stage.show();
+        });
     }
 
     @Override
@@ -294,6 +294,10 @@ public class GUI implements UI{
 
     }
 
+    @Override
+    public void tooManyPlayers() {
+
+    }
 
 
 }
