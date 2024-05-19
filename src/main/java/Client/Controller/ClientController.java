@@ -475,4 +475,11 @@ public class ClientController {
         players.removeIf(p -> p.getName().equals(playerName));
         cli.playerDisconnected(playerName);
     }
+
+    public void invalidName() {
+        cli.nameChangeFailed();
+    }
+    public void tooManyPlayers() {
+        cli.tooManyPlayers();
+    }
 }

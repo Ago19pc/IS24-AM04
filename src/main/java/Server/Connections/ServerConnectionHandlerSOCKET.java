@@ -7,10 +7,7 @@ import Server.Exception.AlreadyFinishedException;
 import Server.Exception.PlayerNotFoundByNameException;
 import Server.Exception.ServerExecuteNotCallableException;
 import Server.Exception.TooManyPlayersException;
-import Server.Messages.LobbyPlayersMessage;
-import Server.Messages.PlayerDisconnectedMessage;
-import Server.Messages.ToClientMessage;
-import Server.Messages.ToServerMessage;
+import Server.Messages.*;
 
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -197,7 +194,10 @@ public class ServerConnectionHandlerSOCKET extends Thread implements ServerConne
         try {
             controller.addPlayer(name, id);
         } catch (TooManyPlayersException e) {
-            throw new RuntimeException(e);
+
+        } catch (IllegalArgumentException e) {
+            InvalidNameMessage message = new InvalidNameMessage();
+            sendMessage(message, id);
         }
     }
 
