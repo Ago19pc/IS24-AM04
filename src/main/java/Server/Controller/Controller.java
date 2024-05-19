@@ -14,7 +14,7 @@ import java.util.List;
 
 public interface Controller {
 
-    public void addPlayer(String name, String clientID) throws TooManyPlayersException, IllegalArgumentException;
+    public void addPlayer(String name, String clientID) throws TooManyPlayersException, IllegalArgumentException, AlreadyStartedException;
 
 
     /**

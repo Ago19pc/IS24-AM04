@@ -24,7 +24,7 @@ public class OtherPlayerDrawCardMessage implements Serializable, ToClientMessage
     }
 
     @Override
-    public void clientExecute(ClientController controller) throws PlayerNotFoundByNameException {
+    public void clientExecute(ClientController controller){
         controller.drawOtherPlayer(name, deckFrom, drawPosition, newBoardCards);
     }
 }

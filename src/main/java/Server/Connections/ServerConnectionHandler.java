@@ -2,7 +2,9 @@ package Server.Connections;
 
 import Server.Controller.Controller;
 import Server.Exception.AlreadyFinishedException;
+import Server.Exception.AlreadyStartedException;
 import Server.Exception.PlayerNotFoundByNameException;
+import Server.Exception.TooManyPlayersException;
 import Server.Messages.LobbyPlayersMessage;
 import Server.Messages.ToClientMessage;
 import Server.Messages.ToServerMessage;
@@ -39,7 +41,7 @@ public interface ServerConnectionHandler extends Remote {
      */
     public void killClient(String name) throws RemoteException, PlayerNotFoundByNameException, AlreadyFinishedException;
 
-    public void setName(String name, String clientID) throws RemoteException;
+    public void setName(String name, String clientID) throws RemoteException, IllegalArgumentException, TooManyPlayersException, AlreadyStartedException;
 
     public boolean isClientAvailable(String id) throws RemoteException;
 

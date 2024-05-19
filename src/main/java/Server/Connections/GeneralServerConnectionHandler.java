@@ -1,9 +1,7 @@
 package Server.Connections;
 
 import Server.Controller.Controller;
-import Server.Exception.AlreadyFinishedException;
-import Server.Exception.PlayerNotFoundByNameException;
-import Server.Exception.PlayerNotInAnyServerConnectionHandlerException;
+import Server.Exception.*;
 import Server.Messages.ToClientMessage;
 
 import java.io.IOException;
@@ -100,11 +98,12 @@ public class GeneralServerConnectionHandler {
             System.out.println("Player not found in any server connection handler, MESSAGE NOT SENT!");
             e.printStackTrace();
         } catch (RemoteException e) {
-            throw new RuntimeException(e);
+            System.out.println("Remote exception, MESSAGE NOT SENT!");
+            e.printStackTrace();
         }
     }
 
-    public void setName(String name, String clientID) throws RemoteException {
+    public void setName(String name, String clientID) throws IllegalArgumentException, TooManyPlayersException, AlreadyStartedException {
          if (serverConnectionHandlerSOCKET.isClientAvailable(clientID)) {
             serverConnectionHandlerSOCKET.setName(name, clientID);
         } else if (serverConnectionHandlerRMI.isClientAvailable(clientID)){

@@ -20,7 +20,11 @@ public class ServerSender {
      * @param message, the message packet to be sent
      * @throws IOException
      */
-    public void sendMessage(ToClientMessage message) throws IOException {
-        out.writeObject(message);
+    public void sendMessage(ToClientMessage message){
+        try{
+            out.writeObject(message);
+        } catch (IOException e) {
+            System.out.println("Error sending message to client");
+        }
     }
 }

@@ -3,10 +3,7 @@ package Server.Connections;
 
 import Server.Controller.Controller;
 import Server.Enums.Color;
-import Server.Exception.AlreadyFinishedException;
-import Server.Exception.PlayerNotFoundByNameException;
-import Server.Exception.ServerExecuteNotCallableException;
-import Server.Exception.TooManyPlayersException;
+import Server.Exception.*;
 import Server.Messages.*;
 
 import java.io.IOException;
@@ -190,15 +187,8 @@ public class ServerConnectionHandlerSOCKET extends Thread implements ServerConne
      * @param id the id of the client to associate with the name
      * @param name the name
      */
-    public void setName(String name, String id) {
-        try {
-            controller.addPlayer(name, id);
-        } catch (TooManyPlayersException e) {
-
-        } catch (IllegalArgumentException e) {
-            InvalidNameMessage message = new InvalidNameMessage();
-            sendMessage(message, id);
-        }
+    public void setName(String name, String id) throws IllegalArgumentException, TooManyPlayersException, AlreadyStartedException {
+        controller.addPlayer(name, id);
     }
 
     /**
@@ -207,15 +197,7 @@ public class ServerConnectionHandlerSOCKET extends Thread implements ServerConne
      */
     public void executeMessage(ToServerMessage message) {
         synchronized (controller) {
-            try {
-                message.serverExecute(controller);
-            } catch (ServerExecuteNotCallableException e) {
-                System.out.println("This message should not be executed by the server");
-                System.out.println("Message not executed!");
-            } catch (PlayerNotFoundByNameException e) {
-                System.out.println("Player not found by name");
-                System.out.println("Message not executed!");
-            }
+            message.serverExecute(controller);
             controller.notifyAll();
         }
     }

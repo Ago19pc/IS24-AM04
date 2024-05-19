@@ -17,7 +17,7 @@ public class StartGameMessage implements Serializable, ToClientMessage {
     }
 
     @Override
-    public void clientExecute(ClientController controller) throws ClientExecuteNotCallableException{
+    public void clientExecute(ClientController controller){
         controller.startGame(goldBoardCards, resourceBoardCards);
     }
 }

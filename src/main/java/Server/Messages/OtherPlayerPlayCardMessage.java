@@ -23,7 +23,7 @@ public class OtherPlayerPlayCardMessage implements Serializable, ToClientMessage
     }
 
     @Override
-    public void clientExecute(ClientController controller) throws ClientExecuteNotCallableException, PlayerNotFoundByNameException {
+    public void clientExecute(ClientController controller){
         controller.placeCard(playerName, placedCardFace, x, y, obtainedPoints);
     }
 }

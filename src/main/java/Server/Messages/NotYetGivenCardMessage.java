@@ -12,7 +12,7 @@ public class NotYetGivenCardMessage implements Serializable, ToClientMessage {
         this.type = type;
     }
     @Override
-    public void clientExecute(ClientController controller) throws ClientExecuteNotCallableException {
+    public void clientExecute(ClientController controller){
         controller.notYetGivenCard(type);
     }
 }

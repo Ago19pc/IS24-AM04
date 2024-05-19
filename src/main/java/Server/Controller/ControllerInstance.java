@@ -40,7 +40,8 @@ public class ControllerInstance implements Controller{
         this.gameModel = new GameModelInstance();
     }
     @Override
-    public void addPlayer(String name, String clientID) throws TooManyPlayersException {
+    public void addPlayer(String name, String clientID) throws TooManyPlayersException, AlreadyStartedException, IllegalArgumentException {
+        if(gameState != GameState.LOBBY) throw new AlreadyStartedException("Game already started");
         Player player = new PlayerInstance(name);
         for (Player p : gameModel.getPlayerList()){
             if (p.getName().equals(player.getName())) throw new IllegalArgumentException("Player with same name already exists");

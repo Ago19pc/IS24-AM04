@@ -16,7 +16,7 @@ public class InvalidNameMessage implements ToClientMessage, Serializable {
      * @throws PlayerNotFoundByNameException     if the player is not found by name
      */
     @Override
-    public void clientExecute(ClientController controller) throws ClientExecuteNotCallableException, PlayerNotFoundByNameException {
+    public void clientExecute(ClientController controller){
         controller.invalidName();
     }
 }
