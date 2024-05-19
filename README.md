@@ -23,6 +23,6 @@
 |Switch to state pattern|currently clientcontroller and servercontroller use a gamestate variable|6|⏱|
 |Add missing javadoc|-------|5|⚙️|
 |Add missing tests|tests are currently broken|7|⚙️|
-|Add rmi port choice|currently they are hardcoded and the user choice is fake|3|⏱|
-|Improve cli|It works but it's not enjoyable|8|⏱|
+|Add RMI port choice|currently they are hardcoded and the user choice is fake|3|⏱|
+|Improve CLI|It works but it's not enjoyable|8|⏱|
 |Finish GUI|-------|WIP|⚙️|
