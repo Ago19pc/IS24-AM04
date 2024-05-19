@@ -13,6 +13,7 @@ public class NetworkSceneController extends SceneController{
         rmi_radio_button.setSelected(true);
         socket_radio_button.setSelected(false);
         next_button.setDisable(false);
+        controller.setRMIMode(true);
     }
 
     @FXML
@@ -20,15 +21,11 @@ public class NetworkSceneController extends SceneController{
         rmi_radio_button.setSelected(false);
         socket_radio_button.setSelected(true);
         next_button.setDisable(false);
+        controller.setRMIMode(false);
     }
 
     @FXML
     public void select_connection_method(){
-        if(rmi_radio_button.isSelected()){
-            System.out.println("RMI selected");
-        }else{
-            System.out.println("Socket selected");
-        }
         stage.setScene(sceneMap.get(SceneName.JOIN));
     }
 

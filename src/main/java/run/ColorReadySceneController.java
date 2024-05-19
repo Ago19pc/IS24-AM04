@@ -58,7 +58,10 @@ public class ColorReadySceneController extends  SceneController{
     }
 
     public void askSetReady(ActionEvent actionEvent) {
-
+        controller.setReady();
+        label_ready.setOpacity(1);
+        readyButton.setDisable(true);
+        readyButton.setOpacity(0);
     }
 
     public void setColorConfirm(ActionEvent actionEvent) {

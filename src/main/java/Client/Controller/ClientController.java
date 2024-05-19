@@ -50,7 +50,7 @@ public class ClientController {
     private AchievementCard proposedSecretAchievement;
 
     public void main(UI ui) throws RemoteException {
-        clientConnectionHandler = new GeneralClientConnectionHandler(this, rmiMode);
+
         this.ui = ui;
         this.gameState = GameState.LOBBY;
     }
@@ -84,6 +84,11 @@ public class ClientController {
 
     //ui actions
     public void joinServer(String ip, int port) {
+        try {
+            clientConnectionHandler = new GeneralClientConnectionHandler(this, rmiMode);
+        } catch (RemoteException e) {
+            throw new RuntimeException(e);
+        }
         System.out.println("Joining server");
         try{
             clientConnectionHandler.setSocket(ip, port);
