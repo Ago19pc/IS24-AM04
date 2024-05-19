@@ -5,6 +5,7 @@ import Server.Controller.Controller;
 import Server.Enums.Color;
 import Server.Exception.AlreadyStartedException;
 import Server.Exception.PlayerNotFoundByNameException;
+import Server.Exception.PlayerNotInAnyServerConnectionHandlerException;
 import Server.Player.Player;
 
 import java.io.Serializable;
@@ -29,7 +30,7 @@ public class PlayerColorMessage implements Serializable, ToClientMessage, ToServ
     }
 
     @Override
-    public void serverExecute(Controller controller) throws PlayerNotFoundByNameException {
+    public void serverExecute(Controller controller){
         String playerName = "";
         try {
             playerName = controller.getConnectionHandler().getPlayerNameByID(this.id);
@@ -42,8 +43,14 @@ public class PlayerColorMessage implements Serializable, ToClientMessage, ToServ
             PlayerColorMessage playerColorMessage = new PlayerColorMessage(false, playerName, this.color);
             controller.getConnectionHandler().sendMessage(playerColorMessage, playerName);
         } catch (PlayerNotFoundByNameException e) {
-            NameNotYetSetMessage nameNotYetSetMessage = new NameNotYetSetMessage();
-            //todo: send message to client based on ip
+            NameNotYetSetMessage message = new NameNotYetSetMessage();
+            try{
+                controller.getConnectionHandler().getServerConnectionHandler(id).sendMessage(message, id);
+            } catch (PlayerNotInAnyServerConnectionHandlerException exception) {
+                System.out.println("Player not found");
+            } catch (java.rmi.RemoteException exception) {
+                System.out.println("Remote exception");
+            }
         }
     }
 

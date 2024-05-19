@@ -12,7 +12,7 @@ public class NewTurnMessage implements Serializable, ToClientMessage{
     }
 
     @Override
-    public void clientExecute(Client.Controller.ClientController controller) throws Server.Exception.PlayerNotFoundByNameException {
+    public void clientExecute(Client.Controller.ClientController controller){
         controller.newTurn(activePlayerName, turnNumber);
     }
 }

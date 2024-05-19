@@ -17,7 +17,7 @@ public class AchievementCardsMessage implements Serializable, ToClientMessage {
     }
 
     @Override
-    public void clientExecute(ClientController controller) throws ClientExecuteNotCallableException {
+    public void clientExecute(ClientController controller){
         controller.giveAchievementCards(secretCards, commonCards);
     }
 }

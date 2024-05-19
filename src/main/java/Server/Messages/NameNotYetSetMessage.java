@@ -10,7 +10,7 @@ public class NameNotYetSetMessage implements Serializable, ToClientMessage{
     }
 
     @Override
-    public void clientExecute(ClientController controller) throws ClientExecuteNotCallableException {
+    public void clientExecute(ClientController controller){
         controller.nameNotYetSet();
     }
 }

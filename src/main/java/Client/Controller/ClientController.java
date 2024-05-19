@@ -332,7 +332,7 @@ public class ClientController {
     public void invalidCard(Actions cardType) {
         cli.invalidCardForAction(cardType);
     }
-    public void displayLeaderboard(Map<String, Integer> playerPoints) {
+    public void displayLeaderboard(LinkedHashMap<String, Integer> playerPoints) {
         gameState = GameState.LEADERBOARD;
         for (String name : playerPoints.keySet()){
             try {
@@ -341,7 +341,7 @@ public class ClientController {
                 throw new RuntimeException(e);
             }
         }
-        cli.displayLeaderboard();
+        cli.displayLeaderboard(playerPoints);
     }
     public void nameNotYetSet() {
         cli.needName();
@@ -367,7 +367,7 @@ public class ClientController {
             cli.newTurn();
         }
     }
-    public void drawOtherPlayer(String name, Decks deckFrom, DeckPosition drawPosition, List<Card> newBoardCards) throws PlayerNotFoundByNameException {
+    public void drawOtherPlayer(String name, Decks deckFrom, DeckPosition drawPosition, List<Card> newBoardCards){
         switch (deckFrom){
             case GOLD:
                 goldDeck.setBoardCards(newBoardCards);
@@ -378,15 +378,23 @@ public class ClientController {
                 resourceDeck.setDeckSize(resourceDeck.getDeckSize() - 1);
                 break;
         }
+        try{
         getPlayerByName(name).setHandSize(getPlayerByName(name).getHandSize() + 1);
         cli.otherPlayerDraw(name, deckFrom, drawPosition);
+        } catch (PlayerNotFoundByNameException e) {
+            throw new RuntimeException(e);
+        }
     }
-    public void giveOtherPlayerInitialHand(String name) throws PlayerNotFoundByNameException {
-        Player p = getPlayerByName(name);
-        p.setHandSize(3);
-        resourceDeck.setDeckSize(resourceDeck.getDeckSize() - 2);
-        goldDeck.setDeckSize(goldDeck.getDeckSize() - 1);
-        cli.otherPlayerInitialHand(name);
+    public void giveOtherPlayerInitialHand(String name){
+        try {
+            Player p = getPlayerByName(name);
+            p.setHandSize(3);
+            resourceDeck.setDeckSize(resourceDeck.getDeckSize() - 2);
+            goldDeck.setDeckSize(goldDeck.getDeckSize() - 1);
+            cli.otherPlayerInitialHand(name);
+        } catch (PlayerNotFoundByNameException e) {
+            throw new RuntimeException(e);
+        }
     }
     public void setColor(boolean confirmation, Color color){
         if(confirmation){
@@ -434,9 +442,13 @@ public class ClientController {
         }
         cli.secretAchievementChosen(name);
     }
-    public void startingCardChosen(String name, CornerCardFace startingFace) throws PlayerNotFoundByNameException {
-        getPlayerByName(name).initializeManuscript(startingFace);
-        cli.startingCardChosen(name);
+    public void startingCardChosen(String name, CornerCardFace startingFace) {
+        try{
+            getPlayerByName(name).initializeManuscript(startingFace);
+            cli.startingCardChosen(name);
+        } catch (PlayerNotFoundByNameException e) {
+            throw new RuntimeException(e);
+        }
     }
     public void startGame(List<Card> goldBoardCards, List<Card> resourceBoardCards){
         cli.gameStarted();
@@ -444,14 +456,18 @@ public class ClientController {
         resourceDeck = new Deck(resourceBoardCards);
         cli.displayBoardCards();
     }
-    public void updatePlayerOrder(List<String> playerNames) throws PlayerNotFoundByNameException {
+    public void updatePlayerOrder(List<String> playerNames){
         List<Player> newPlayerList = new ArrayList<>();
-        for (String name : playerNames){
-            newPlayerList.add(getPlayerByName(name));
+        try {
+            for (String name : playerNames) {
+                newPlayerList.add(getPlayerByName(name));
+            }
+            players = newPlayerList;
+            gameState = GameState.PLACE_CARD;
+            cli.displayPlayerOrder();
+        } catch (PlayerNotFoundByNameException e) {
+            throw new RuntimeException(e);
         }
-        players = newPlayerList;
-        gameState = GameState.PLACE_CARD;
-        cli.displayPlayerOrder();
     }
     public void giveStartingCard(Card card) {
         gameState = GameState.CHOOSE_STARTING_CARD;
@@ -460,15 +476,19 @@ public class ClientController {
     public void toDoFirst(Actions actionToDo) {
         cli.doFirst(actionToDo);
     }
-    public void placeCard(String playerName, CornerCardFace placedCardFace, int x, int y, int points) throws PlayerNotFoundByNameException {
-        getPlayerByName(playerName).addManuscriptPoints(points);
-        getPlayerByName(playerName).addCardToManuscript(x, y, placedCardFace, turn);
-        getPlayerByName(playerName).setHandSize(getPlayerByName(playerName).getHandSize() - 1);
-        cli.cardPlaced(playerName, x, y);
-        if(points > 0){
-            cli.displayPlayerPoints(playerName);
+    public void placeCard(String playerName, CornerCardFace placedCardFace, int x, int y, int points){
+        try{
+            getPlayerByName(playerName).addManuscriptPoints(points);
+            getPlayerByName(playerName).addCardToManuscript(x, y, placedCardFace, turn);
+            getPlayerByName(playerName).setHandSize(getPlayerByName(playerName).getHandSize() - 1);
+            cli.cardPlaced(playerName, x, y);
+            if(points > 0){
+                cli.displayPlayerPoints(playerName);
+            }
+            gameState = GameState.DRAW_CARD;
+        } catch (PlayerNotFoundByNameException e) {
+            throw new RuntimeException(e);
         }
-        gameState = GameState.DRAW_CARD;
     }
 
     public void playerDisconnected(String playerName) {

@@ -3,10 +3,7 @@ package Server.Messages;
 import Server.Controller.Controller;
 import Server.Enums.Actions;
 import Server.Enums.Face;
-import Server.Exception.InvalidMoveException;
-import Server.Exception.PlayerNotFoundByNameException;
-import Server.Exception.ServerExecuteNotCallableException;
-import Server.Exception.TooFewElementsException;
+import Server.Exception.*;
 import Server.Player.Player;
 
 import java.io.Serializable;
@@ -27,7 +24,7 @@ public class PlayCardMessage implements Serializable, ToServerMessage{
     }
 
     @Override
-    public void serverExecute(Controller controller) throws ServerExecuteNotCallableException, PlayerNotFoundByNameException {
+    public void serverExecute(Controller controller){
         String playerName = "";
         try {
             playerName = controller.getConnectionHandler().getPlayerNameByID(this.id);
@@ -39,6 +36,15 @@ public class PlayCardMessage implements Serializable, ToServerMessage{
         } catch (InvalidMoveException e) {
             CardNotPlaceableMessage invalidMoveMessage = new CardNotPlaceableMessage();
             controller.getConnectionHandler().sendMessage(invalidMoveMessage, playerName);
+        } catch (PlayerNotFoundByNameException e) {
+            NameNotYetSetMessage message = new NameNotYetSetMessage();
+            try {
+                controller.getConnectionHandler().getServerConnectionHandler(id).sendMessage(message, id);
+            } catch (PlayerNotInAnyServerConnectionHandlerException exception) {
+                System.out.println("Player not found");
+            } catch (java.rmi.RemoteException exception) {
+                System.out.println("Remote exception");
+            }
         }
     }
 }

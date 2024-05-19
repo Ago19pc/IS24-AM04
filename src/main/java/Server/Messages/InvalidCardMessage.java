@@ -14,7 +14,7 @@ public class InvalidCardMessage implements ToClientMessage, Serializable {
     }
 
     @Override
-    public void clientExecute(ClientController controller) throws ClientExecuteNotCallableException {
+    public void clientExecute(ClientController controller){
         controller.invalidCard(cardType);
     }
 }

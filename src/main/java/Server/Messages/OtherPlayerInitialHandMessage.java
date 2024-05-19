@@ -14,7 +14,7 @@ public class OtherPlayerInitialHandMessage implements Serializable, ToClientMess
 
 
     @Override
-    public void clientExecute(ClientController controller) throws ClientExecuteNotCallableException, PlayerNotFoundByNameException {
+    public void clientExecute(ClientController controller){
         controller.giveOtherPlayerInitialHand(name);
     }
 }

@@ -27,20 +27,26 @@ public class SetStartingCardMessage implements Serializable, ToClientMessage, To
     }
 
     @Override
-    public void clientExecute(ClientController controller) throws ClientExecuteNotCallableException, PlayerNotFoundByNameException {
+    public void clientExecute(ClientController controller){
         controller.startingCardChosen(name, startingFace);
     }
 
     @Override
-    public void serverExecute(Controller controller) throws ServerExecuteNotCallableException{
+    public void serverExecute(Controller controller){
         String playerName = "";
         try {
             playerName = controller.getConnectionHandler().getPlayerNameByID(this.id);
             Player player = controller.getPlayerByName(playerName);
             controller.setStartingCard(player, face);
         } catch (PlayerNotFoundByNameException e) {
-            NameNotYetSetMessage nameNotYetSetMessage = new NameNotYetSetMessage();
-            //todo: send message to correct client based on ip
+            NameNotYetSetMessage message = new NameNotYetSetMessage();
+            try{
+                controller.getConnectionHandler().getServerConnectionHandler(id).sendMessage(message, id);
+            } catch (PlayerNotInAnyServerConnectionHandlerException exception) {
+                System.out.println("Player not found");
+            } catch (java.rmi.RemoteException exception) {
+                System.out.println("Remote exception");
+            }
         } catch (AlreadySetException e) {
             AlreadyDoneMessage alreadyDoneMessage = new AlreadyDoneMessage(Actions.STARTING_CARD_CHOICE);
             controller.getConnectionHandler().sendMessage(alreadyDoneMessage, playerName);

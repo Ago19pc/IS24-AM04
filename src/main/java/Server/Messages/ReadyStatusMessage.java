@@ -5,6 +5,7 @@ import Server.Controller.Controller;
 import Server.Exception.AlreadyStartedException;
 import Server.Exception.MissingInfoException;
 import Server.Exception.PlayerNotFoundByNameException;
+import Server.Exception.PlayerNotInAnyServerConnectionHandlerException;
 import Server.Player.Player;
 
 import java.io.Serializable;
@@ -29,8 +30,14 @@ public class ReadyStatusMessage implements Serializable, ToClientMessage, ToServ
                 controller.setNotReady(player);
             }
         } catch(PlayerNotFoundByNameException e){
-            NameNotYetSetMessage nameNotYetSetMessage = new NameNotYetSetMessage();
-            //todo: send message to client based on ip
+            NameNotYetSetMessage message = new NameNotYetSetMessage();
+            try{
+                controller.getConnectionHandler().getServerConnectionHandler(nameOrId).sendMessage(message, nameOrId);
+            } catch (PlayerNotInAnyServerConnectionHandlerException exception) {
+                System.out.println("Player not found");
+            } catch (java.rmi.RemoteException exception) {
+                System.out.println("Remote exception");
+            }
         } catch (MissingInfoException e){
             ColorNotYetSetMessage colorNotYetSetMessage = new ColorNotYetSetMessage();
             controller.getConnectionHandler().sendMessage(colorNotYetSetMessage, playerName);

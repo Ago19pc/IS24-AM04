@@ -4,6 +4,7 @@ import Client.Controller.ClientController;
 import Server.Chat.Message;
 import Server.Controller.Controller;
 import Server.Exception.PlayerNotFoundByNameException;
+import Server.Exception.PlayerNotInAnyServerConnectionHandlerException;
 import Server.Player.Player;
 
 import java.io.Serializable;
@@ -30,8 +31,14 @@ public class ChatMessage implements Serializable, ToServerMessage, ToClientMessa
             Player player = controller.getPlayerByName(playerName);
             controller.addMessage(message, player);
         } catch (PlayerNotFoundByNameException e) {
-            NameNotYetSetMessage nameNotYetSetMessage = new NameNotYetSetMessage();
-            //todo: send message to correct client based on ip
+            NameNotYetSetMessage message = new NameNotYetSetMessage();
+            try{
+                controller.getConnectionHandler().getServerConnectionHandler(nameOrId).sendMessage(message, nameOrId);
+            } catch (PlayerNotInAnyServerConnectionHandlerException exception) {
+                System.out.println("Player not found");
+            } catch (java.rmi.RemoteException exception) {
+                System.out.println("Remote exception");
+            }
         } catch (IllegalArgumentException e) {
             ChatMessageIsEmptyMessage chatMessageIsEmptyMessage = new ChatMessageIsEmptyMessage();
             controller.getConnectionHandler().sendMessage(chatMessageIsEmptyMessage, playerName);

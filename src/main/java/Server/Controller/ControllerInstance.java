@@ -20,10 +20,7 @@ import com.google.gson.Gson;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class ControllerInstance implements Controller{
@@ -40,7 +37,8 @@ public class ControllerInstance implements Controller{
         this.gameModel = new GameModelInstance();
     }
     @Override
-    public void addPlayer(String name, String clientID) throws TooManyPlayersException {
+    public void addPlayer(String name, String clientID) throws TooManyPlayersException, AlreadyStartedException, IllegalArgumentException {
+        if(gameState != GameState.LOBBY) throw new AlreadyStartedException("Game already started");
         Player player = new PlayerInstance(name);
         for (Player p : gameModel.getPlayerList()){
             if (p.getName().equals(player.getName())) throw new IllegalArgumentException("Player with same name already exists");
@@ -255,6 +253,7 @@ public class ControllerInstance implements Controller{
             if(lastRound){
                 try{
                     computeLeaderboard();
+                    return;
                 } catch (AlreadyFinishedException e) {
                     e.printStackTrace();
                 }
@@ -263,26 +262,26 @@ public class ControllerInstance implements Controller{
             }
         } else {
             //sets end game if necessary
-            if (activePlayerIndex != -1 && getPlayerList().get(activePlayerIndex).getPoints() >= 20) {
+            if (activePlayerIndex != -1 && getPlayerList().get(activePlayerIndex).getPoints() >= 0) {
                 try {
                     endGame();
                 } catch (AlreadySetException e) {
                     //do nothing as it's normal that it's already set
                 }
             }
-            //sets new active player
-            do {
-                if (activePlayerIndex == gameModel.getPlayerList().size() - 1) {
-                    activePlayerIndex = 0;
-                } else {
-                    activePlayerIndex++;
-                }
-                gameState = GameState.PLACE_CARD;
-            } while (!isOnline(getPlayerList().get(activePlayerIndex)));//if the player is not online skips to the next one
-            gameModel.nextTurn();
-            NewTurnMessage newTurnMessage = new NewTurnMessage(getPlayerList().get(activePlayerIndex).getName(), gameModel.getTurn());
-            connectionHandler.sendAllMessage(newTurnMessage);
         }
+        //sets new active player
+        do {
+            if (activePlayerIndex == gameModel.getPlayerList().size() - 1) {
+                activePlayerIndex = 0;
+            } else {
+                activePlayerIndex++;
+            }
+            gameState = GameState.PLACE_CARD;
+        } while (!isOnline(getPlayerList().get(activePlayerIndex)));//if the player is not online skips to the next one
+        gameModel.nextTurn();
+        NewTurnMessage newTurnMessage = new NewTurnMessage(getPlayerList().get(activePlayerIndex).getName(), gameModel.getTurn());
+        connectionHandler.sendAllMessage(newTurnMessage);
     }
     public int getTurn() {
         return gameModel.getTurn();
@@ -296,13 +295,16 @@ public class ControllerInstance implements Controller{
     public void playCard(Player player, int position, int xCoord, int yCoord, Face face) throws TooFewElementsException, InvalidMoveException {
         //if it's not the player's turn, throw exception
         if(getPlayerList().indexOf(player) != activePlayerIndex){
+            System.out.println("Not player's turn");
             throw new InvalidMoveException("Not player's turn");
         }
         CornerCardFace cardFace = player.getHand().get(position).getCornerFace(face);
         if(!player.getManuscript().isPlaceable(xCoord, yCoord, cardFace)) {
+            System.out.println("Card not placeable because of position or requirements");
             throw new InvalidMoveException("Card not placeable. Check the position and the placement requirements");
         }
         if(!gameState.equals(GameState.PLACE_CARD)){
+            System.out.println("Player has already played");
             throw new TooFewElementsException("Already played");
         }
         player.removeCardFromHand(position);
@@ -422,14 +424,38 @@ public class ControllerInstance implements Controller{
         AchievementCard commonAchievement1 = achievementDeck.popCard(DeckPosition.FIRST_CARD);
         AchievementCard commonAchievement2 = achievementDeck.popCard(DeckPosition.SECOND_CARD);
         List<Player> playerlist = getPlayerList();
-        Map<String,Integer> leaderboardMap = new HashMap<>();
+        Map<String, Integer> playerCardPoints = new HashMap<>();
+        Map<String, Integer> playerAchievementPoints = new HashMap<>();
         for (Player player : playerlist) {
+            int cardPoints = player.getPoints();
+            playerCardPoints.put(player.getName(), cardPoints);
             Manuscript manuscript = player.getManuscript();
-            int points = manuscript.calculatePoints(commonAchievement1);
-            points += manuscript.calculatePoints(commonAchievement2);
-            points += manuscript.calculatePoints(player.getSecretObjective());
-            player.addPoints(points);
-            leaderboardMap.put(player.getName(), points); //todo: add parity and forfeit check
+            int achievementPoints = manuscript.calculatePoints(commonAchievement1);
+            achievementPoints += manuscript.calculatePoints(commonAchievement2);
+            achievementPoints += manuscript.calculatePoints(player.getSecretObjective());
+            playerAchievementPoints.put(player.getName(), achievementPoints);
+        }
+        LinkedHashMap<String, Integer> leaderboardMap = new LinkedHashMap<>();//linkedhashmap keeps order of insertion which will be the player order
+        for(int i = 0; i < playerlist.size(); i++){
+            List<String> playersWithMaxPoints = new ArrayList<>();
+            playerCardPoints.forEach((player, points) -> {
+                if(playersWithMaxPoints.isEmpty()){
+                    playersWithMaxPoints.add(player);
+                }
+                else if(points == Collections.max(playerCardPoints.values())){
+                    playersWithMaxPoints.add(player);
+                }
+                else if(points > Collections.max(playerCardPoints.values())){
+                    playersWithMaxPoints.clear();
+                    playersWithMaxPoints.add(player);
+                }
+            });
+            String firstPlayer = playerAchievementPoints.entrySet().stream()
+                    .filter(entry -> playersWithMaxPoints.contains(entry.getKey()))
+                    .max(Map.Entry.comparingByValue()).get().getKey();
+            leaderboardMap.put(firstPlayer, playerCardPoints.get(firstPlayer) + playerAchievementPoints.get(firstPlayer));
+            playerCardPoints.remove(firstPlayer);
+            playerAchievementPoints.remove(firstPlayer);
         }
         LeaderboardMessage leaderboardMessage = new LeaderboardMessage(leaderboardMap);
         connectionHandler.sendAllMessage(leaderboardMessage);

@@ -84,12 +84,7 @@ public class ClientHandler extends Thread {
      * @param message the message to send
      */
     public void sendMessage(ToClientMessage message)  {
-        try {
-            this.sender.sendMessage(message);
-        } catch (IOException e) {
-            System.out.println("Unable to stringify chat message");
-            throw new RuntimeException(e);
-        }
+        this.sender.sendMessage(message);
     }
 
 

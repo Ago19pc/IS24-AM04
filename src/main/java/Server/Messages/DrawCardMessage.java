@@ -10,6 +10,7 @@ import Server.Exception.*;
 import Server.Player.Player;
 
 import java.io.Serializable;
+import java.rmi.RemoteException;
 
 public class DrawCardMessage implements Serializable, ToServerMessage, ToClientMessage {
     private Decks from;
@@ -41,8 +42,14 @@ public class DrawCardMessage implements Serializable, ToServerMessage, ToClientM
             }
             controller.drawCard(player, deckPosition, from);
         } catch (PlayerNotFoundByNameException e) {
-            NameNotYetSetMessage nameNotYetSetMessage = new NameNotYetSetMessage();
-            //todo: send message to correct client based on ip
+            NameNotYetSetMessage message = new NameNotYetSetMessage();
+            try{
+                controller.getConnectionHandler().getServerConnectionHandler(id).sendMessage(message, id);
+            } catch (PlayerNotInAnyServerConnectionHandlerException exception) {
+                System.out.println("Player not found");
+            } catch (RemoteException exception) {
+                System.out.println("Remote exception");
+            }
         } catch (NotYetStartedException e) {
             GameNotYetStartedMessage gameNotYetStartedMessage = new GameNotYetStartedMessage();
             controller.getConnectionHandler().sendMessage(gameNotYetStartedMessage, playerName);

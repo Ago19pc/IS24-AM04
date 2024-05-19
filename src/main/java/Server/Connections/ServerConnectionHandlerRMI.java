@@ -67,6 +67,12 @@ public class ServerConnectionHandlerRMI implements ServerConnectionHandler, Remo
         System.out.println("[RMI] Server avviato sulla porta: " + port);
     }
 
+    /**
+     * Starts the server
+     * @param port
+     * @return
+     */
+
     private boolean startServer(int port) {
         try {
             String ip;
@@ -92,7 +98,7 @@ public class ServerConnectionHandlerRMI implements ServerConnectionHandler, Remo
             }
 
             System.out.println("Server hostname is " + System.getProperty("java.rmi.server.hostname"));
-            stub = (ServerConnectionHandler) UnicastRemoteObject.exportObject((ServerConnectionHandler) this, port);
+            stub = (ServerConnectionHandler) UnicastRemoteObject.exportObject( this, port);
             registry = LocateRegistry.createRegistry(1099);
             registry.rebind("ServerConnectionHandler", stub);
             System.out.println("[RMI] Server avviato sulla porta: " + port);
@@ -139,7 +145,7 @@ public class ServerConnectionHandlerRMI implements ServerConnectionHandler, Remo
             try {
                 client.executeMessage(message);
             } catch (RemoteException e) {
-                throw new RuntimeException(e);
+                System.out.println("Client disconnected");
             }
         }
     }
@@ -151,10 +157,10 @@ public class ServerConnectionHandlerRMI implements ServerConnectionHandler, Remo
      */
     public void sendMessage(ToClientMessage message, String id) {
         ping(id);
-        try {
+        try{
             clients.get(id).executeMessage(message);
         } catch (RemoteException e) {
-            throw new RuntimeException(e);
+            System.out.println("Client disconnected");
         }
     }
 
@@ -166,15 +172,7 @@ public class ServerConnectionHandlerRMI implements ServerConnectionHandler, Remo
     @Override
     public void executeMessage(ToServerMessage message) {
         synchronized (controller) {
-            try {
-                message.serverExecute(controller);
-            } catch (ServerExecuteNotCallableException e) {
-                System.out.println("This message should not be executed by the server");
-                System.out.println("Message not executed!");
-            } catch (PlayerNotFoundByNameException e) {
-                System.out.println("Player not found by name");
-                System.out.println("Message not executed!");
-            }
+            message.serverExecute(controller);
             controller.notifyAll();
         }
     }
@@ -194,12 +192,8 @@ public class ServerConnectionHandlerRMI implements ServerConnectionHandler, Remo
     }
 
     @Override
-    public void setName(String name, String clientID) {
-        try {
-            controller.addPlayer(name, clientID);
-        } catch (TooManyPlayersException e) {
-            throw new RuntimeException(e);
-        }
+    public void setName(String name, String clientID) throws IllegalArgumentException, TooManyPlayersException, AlreadyStartedException {
+        controller.addPlayer(name, clientID);
     }
 
     public LobbyPlayersMessage join(int rmi_port) throws RemoteException, NotBoundException {

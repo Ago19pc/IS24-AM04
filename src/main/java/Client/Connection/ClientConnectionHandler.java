@@ -13,7 +13,7 @@ public interface ClientConnectionHandler extends Remote {
      * @param message the message to send
      * @throws IOException
      */
-    public void sendMessage(ToServerMessage message) throws IOException;
+    public void sendMessage(ToServerMessage message) throws IOException, RemoteException;
 
     /**
      * Execute a message

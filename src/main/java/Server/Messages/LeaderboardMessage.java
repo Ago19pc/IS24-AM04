@@ -3,13 +3,14 @@ package Server.Messages;
 import Client.Controller.ClientController;
 
 import java.io.Serializable;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class LeaderboardMessage implements Serializable, ToClientMessage {
 
-    private Map<String, Integer> playerPoints;
+    private LinkedHashMap<String, Integer> playerPoints;
 
-    public LeaderboardMessage(Map<String, Integer> playerPoints){
+    public LeaderboardMessage(LinkedHashMap<String, Integer> playerPoints){
         this.playerPoints = playerPoints;
     }
 
