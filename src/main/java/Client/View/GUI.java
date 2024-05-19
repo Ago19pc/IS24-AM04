@@ -96,6 +96,8 @@ public class GUI implements UI{
                         break;
                 }
             }
+            ((NameReadySceneController) sceneControllerMap.get(SceneName.SETNAME)).list_Player = ((ColorReadySceneController) sceneControllerMap.get(SceneName.SETCOLOR)).list_Player;
+
         });
     }
 
@@ -104,6 +106,9 @@ public class GUI implements UI{
     public void successfulConnection() {
         stage.setScene(getScene(SceneName.SETNAME));
         stage.show();
+        Platform.runLater(() -> {
+               ((NameReadySceneController) sceneControllerMap.get(SceneName.SETNAME)).list_Player = ((ColorReadySceneController) sceneControllerMap.get(SceneName.SETCOLOR)).list_Player;
+        });
     }
 
     @Override
@@ -242,6 +247,7 @@ public class GUI implements UI{
                 }
             }
 
+            ((NameReadySceneController) sceneControllerMap.get(SceneName.SETNAME)).list_Player = ((ColorReadySceneController) sceneControllerMap.get(SceneName.SETCOLOR)).list_Player;
 
         });
     }
@@ -283,6 +289,8 @@ public class GUI implements UI{
             String color = controller.getPlayers().getLast().getColor() == null ? "No Color" : controller.getPlayers().getLast().getColor().toString();
             String ready = controller.getPlayers().getLast().isReady() ? "Ready" : "Not Ready";
             ((ColorReadySceneController) sceneControllerMap.get(SceneName.SETCOLOR)).list_Player.getItems().add(name + "   " + color + "   " + ready);
+            ((NameReadySceneController) sceneControllerMap.get(SceneName.SETNAME)).list_Player = ((ColorReadySceneController) sceneControllerMap.get(SceneName.SETCOLOR)).list_Player;
+
         });
 
     }
@@ -357,6 +365,8 @@ public class GUI implements UI{
                         break;
                 }
             }
+            ((NameReadySceneController) sceneControllerMap.get(SceneName.SETNAME)).list_Player = ((ColorReadySceneController) sceneControllerMap.get(SceneName.SETCOLOR)).list_Player;
+
         });
 
     }

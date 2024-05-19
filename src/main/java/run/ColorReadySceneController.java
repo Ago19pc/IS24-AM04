@@ -22,7 +22,6 @@ public class ColorReadySceneController extends  SceneController{
     public ListView<String> list_Player;
     public Button confirm_Color_Button;
 
-
     public void askColorGreen(ActionEvent actionEvent) {
         green_Button.setStyle("-fx-background-color: #00FF00");
         blue_Button.setStyle("-fx-background-color: #FFFFFF");
@@ -62,6 +61,12 @@ public class ColorReadySceneController extends  SceneController{
         label_ready.setOpacity(1);
         readyButton.setDisable(true);
         readyButton.setOpacity(0);
+        for(int i = 0; i < controller.getPlayers().size(); i++) {
+            String name = controller.getPlayers().get(i).getName();
+            String color = controller.getPlayers().get(i).getColor() == null ? "No Color" : controller.getPlayers().get(i).getColor().toString();
+            String ready = controller.getPlayers().get(i).isReady() ? "Ready" : "Not Ready";
+            list_Player.getItems().set(i, name + "   " + color + "   " + ready);
+        }
     }
 
     public void setColorConfirm(ActionEvent actionEvent) {
