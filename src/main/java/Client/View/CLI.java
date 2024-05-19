@@ -666,4 +666,9 @@ public class CLI extends Thread implements UI {
         printOnNewLine(playerName + " si è disconnesso");
         printPromptLine();
     }
+
+    public void tooManyPlayers() {
+        printOnNewLine("E' stato già raggiunto il limite massimo di giocatori, sei uno spettatore");
+        printPromptLine();
+    }
 }
