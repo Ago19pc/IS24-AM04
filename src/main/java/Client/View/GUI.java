@@ -123,27 +123,27 @@ public class GUI implements UI{
 
     @Override
     public void needNameOrColor() {
-
+        //maybe useless here
     }
 
     @Override
     public void unavailableColor() {
-
+        //maybe useless here
     }
 
     @Override
     public void colorChangeFailed() {
-
+        //maybe useless here
     }
 
     @Override
     public void invalidColor() {
-
+        //maybe useless here
     }
 
     @Override
     public void needConnection() {
-
+        //maybe useless here
     }
 
     @Override
@@ -234,7 +234,11 @@ public class GUI implements UI{
 
     @Override
     public void chat(Message message) {
-
+        Platform.runLater(()->
+        {
+            ((ColorReadySceneController) sceneControllerMap.get(SceneName.SETCOLOR)).chat_messages.getItems().add( message.getName() + ": "+  message.getMessage());
+            //todo: for others scene
+        });
     }
 
     @Override
@@ -393,8 +397,6 @@ public class GUI implements UI{
             String ready = controller.getPlayers().get(i).isReady() ? "Ready" : "Not Ready";
             ((ColorReadySceneController) sceneControllerMap.get(SceneName.SETCOLOR)).list_Player.getItems().set(i, name + "   " + color + "   " + ready);
             //----------------------------------------------------------q
-            ((NameReadySceneController) sceneControllerMap.get(SceneName.SETNAME)).cloneListView(((ColorReadySceneController) sceneControllerMap.get(SceneName.SETCOLOR)).list_Player);
-
             switch (controller.getPlayers().getLast().getColor()) {
                 case RED:
                     ((ColorReadySceneController) sceneControllerMap.get(SceneName.SETCOLOR)).red_Button.setDisable(true);
@@ -410,5 +412,7 @@ public class GUI implements UI{
                     break;
             }
         }
+        ((NameReadySceneController) sceneControllerMap.get(SceneName.SETNAME)).cloneListView(((ColorReadySceneController) sceneControllerMap.get(SceneName.SETCOLOR)).list_Player);
     }
+
 }
