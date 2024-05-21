@@ -67,6 +67,8 @@ public class ColorReadySceneController extends  SceneController{
             String ready = controller.getPlayers().get(i).isReady() ? "Ready" : "Not Ready";
             list_Player.getItems().set(i, name + "   " + color + "   " + ready);
         }
+
+
     }
 
     public void setColorConfirm(ActionEvent actionEvent) {
