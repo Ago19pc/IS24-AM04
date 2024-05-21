@@ -5,6 +5,7 @@ import javafx.event.ActionEvent;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.Pane;
 
 public class ColorReadySceneController extends  SceneController{
@@ -21,6 +22,10 @@ public class ColorReadySceneController extends  SceneController{
     public Color color;
     public ListView<String> list_Player;
     public Button confirm_Color_Button;
+    public ListView<String> chat_messages;
+    public TextField messageToSend;
+
+
 
     public void askColorGreen(ActionEvent actionEvent) {
         green_Button.setStyle("-fx-background-color: #00FF00");
@@ -67,5 +72,9 @@ public class ColorReadySceneController extends  SceneController{
 
     public void setColorConfirm(ActionEvent actionEvent) {
         controller.askSetColor(color.toString());
+    }
+
+    public void sendMessages(ActionEvent actionEvent) {
+        controller.sendChatMessage(messageToSend.getText());
     }
 }
