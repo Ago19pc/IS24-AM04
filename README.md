@@ -25,3 +25,5 @@
 |Add RMI port choice|currently they are hardcoded and the user choice is fake| 2        |⏱|
 |Improve CLI|It works but it's not enjoyable| 7        |⏱|
 |Finish GUI|-------| WIP      |⚙️|
+|Finish UML|-------| 9|⚙️|
+|Create interfaces|-------| 8|⚙️|
