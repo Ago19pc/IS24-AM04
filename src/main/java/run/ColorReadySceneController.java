@@ -61,12 +61,6 @@ public class ColorReadySceneController extends  SceneController{
         label_ready.setOpacity(1);
         readyButton.setDisable(true);
         readyButton.setOpacity(0);
-        for(int i = 0; i < controller.getPlayers().size(); i++) {
-            String name = controller.getPlayers().get(i).getName();
-            String color = controller.getPlayers().get(i).getColor() == null ? "No Color" : controller.getPlayers().get(i).getColor().toString();
-            String ready = controller.getPlayers().get(i).isReady() ? "Ready" : "Not Ready";
-            list_Player.getItems().set(i, name + "   " + color + "   " + ready);
-        }
 
 
     }
