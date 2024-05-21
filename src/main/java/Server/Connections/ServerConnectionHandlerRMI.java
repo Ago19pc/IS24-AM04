@@ -211,7 +211,12 @@ public class ServerConnectionHandlerRMI implements ServerConnectionHandler, Remo
         }
         //immediately send the lobby players message
         Map<String, Color> playerColors = new HashMap<>();
-        controller.getPlayerList().forEach(p -> playerColors.put(p.getName(), p.getColor()));
+        System.out.println(controller.getPlayerList());
+        controller.getPlayerList().forEach((p) -> {
+            System.out.println(p);
+            System.out.println(p.getName() + " " + p.getColor());
+            playerColors.put(p.getName(), p.getColor());
+        });
         Map<String, Boolean> playerReady = new HashMap<>();
         controller.getPlayerList().forEach(p -> playerReady.put(p.getName(), p.isReady()));
         LobbyPlayersMessage message = new LobbyPlayersMessage(
@@ -242,6 +247,9 @@ public class ServerConnectionHandlerRMI implements ServerConnectionHandler, Remo
      */
     public void pingAll() {
         Map<String, ClientConnectionHandler> allClients = new HashMap<>(clients);
+        allClients = allClients.entrySet().stream().filter(entry -> {
+            return !controller.getConnectionHandler().isInDisconnectedList(entry.getKey());
+        }).collect(HashMap::new, (m, v) -> m.put(v.getKey(), v.getValue()), HashMap::putAll);
         System.out.println("Pinging all clients. They are: " + allClients.keySet());
         allClients.keySet().forEach(this::ping);
     }

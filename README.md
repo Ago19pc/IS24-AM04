@@ -26,13 +26,14 @@
 |Improve CLI|It works but it's not enjoyable| 7        |⏱|
 |Finish GUI|-------| WIP      |⚙️|
 
-###Reconnections to do list:
+### Reconnections to do list:
 
-| To Do                                                                    |Comments | Status    |
-|--------------------------------------------------------------------------|-------|-----------|
-| Get and set player online status                                         |either with a player's attribute or with a disconnectedPlayerIdsList| Done      |
-| Handle disconnection kick timeout                                        |if a player is disconnected for too long, kick him| Yet to do |
-| Differentiate between a player's disconnection and the player's deletion |--------| Doing     |
-| CLI reconnection command                                                 |-------| Yet to do |
-| Messages sent on reconnection                                            |-------| Yet to do |
-| Don't send messages to disconnected players                              |-------| Yet to do |
+| To Do                                                                    | Comments                                                                                                              | Status |
+|--------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------|--------|
+| Get and set player online status                                         | GeneralServerConnectionHandler has a list of all disconnected (but not yet kicked) player ids                         | Done   |
+| Handle disconnection kick timeout                                        | -------                                                                                                               | Done   |
+| Differentiate between a player's disconnection and the player's deletion | --------                                                                                                              | Done   |
+| CLI reconnection command                                                 | -------                                                                                                               | Done   |
+| Messages sent on reconnection                                            | client does not receive gameinfo message when he reconnects while choosing either secret achievement or starting face | Doing  |
+| Don't send messages to disconnected players                              | -------                                                                                                               | Done   |
+| Test | ------- | Doing |

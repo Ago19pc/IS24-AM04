@@ -107,8 +107,14 @@ public class ServerConnectionHandlerSOCKET extends Thread implements ServerConne
      * Get the client threads list
      * @return this.threads the list of all client thread
      */
-    public List<ClientHandler> getThreads() {
-        return this.clients.keySet().stream().toList();
+    public List<ClientHandler> getConnectedThreads() {
+        List<ClientHandler> connected = new ArrayList<>();
+        for (ClientHandler c : clients.keySet()) {
+            if(!controller.getConnectionHandler().isInDisconnectedList(clients.get(c))){
+                connected.add(c);
+            }
+        }
+        return connected;
     }
 
     public String getThreadName(ClientHandler clientHandler) {

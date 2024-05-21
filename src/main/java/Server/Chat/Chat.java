@@ -2,10 +2,11 @@ package Server.Chat;
 
 import Server.Player.Player;
 
+import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
 
-public class Chat {
+public class Chat implements Serializable {
     private final List<Message> messages;
 
     public Chat(){

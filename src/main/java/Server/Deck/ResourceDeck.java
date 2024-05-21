@@ -63,10 +63,10 @@ public class ResourceDeck implements Deckable {
     /**
      * @return Card the card from the position
      */
-    public Map<DeckPosition, Card> getBoardCard() {
-        Map<DeckPosition, Card> boardCardsToReturn = new HashMap<>();
+    public Map<DeckPosition, ResourceCard> getBoardCard() {
+        Map<DeckPosition, ResourceCard> boardCardsToReturn = new HashMap<>();
         for (DeckPosition position : boardCards.keySet()) {
-            boardCardsToReturn.put(position, (Card) boardCards.get(position));
+            boardCardsToReturn.put(position, boardCards.get(position));
         }
         return boardCardsToReturn;
     }
@@ -89,10 +89,10 @@ public class ResourceDeck implements Deckable {
     }
 
     /**
-     * @return boolean true if the deck is empty
+     * @return boolean true if the deck is empty (and there are no board cards)
      */
     public boolean isEmpty() {
-        return cards.isEmpty();
+        return cards.isEmpty() && boardCards.get(FIRST_CARD) == null && boardCards.get(SECOND_CARD) == null;
     }
 
     /**

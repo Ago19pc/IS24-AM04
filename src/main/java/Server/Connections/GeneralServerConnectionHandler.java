@@ -2,6 +2,7 @@ package Server.Connections;
 
 import Server.Controller.Controller;
 import Server.Exception.*;
+import Server.Messages.RemovedPlayerMessage;
 import Server.Messages.ToClientMessage;
 
 import java.io.IOException;
@@ -25,10 +26,6 @@ public class GeneralServerConnectionHandler {
         serverConnectionHandlerSOCKET = new ServerConnectionHandlerSOCKET();
         PingPong pingPong = new PingPong(this);
         pingPong.start();
-    }
-
-    public void setPlayerAsDisconnected(String id) {
-        disconnectedPlayerIds.add(id);
     }
 
     public GeneralServerConnectionHandler(boolean debugMode) {
@@ -58,6 +55,8 @@ public class GeneralServerConnectionHandler {
         }
         disconnectedPlayerIds.remove(id);
         playerID.remove(id);
+        RemovedPlayerMessage message = new RemovedPlayerMessage(name);
+        sendAllMessage(message);
     }
 
     /**
@@ -103,6 +102,9 @@ public class GeneralServerConnectionHandler {
     public void sendMessage(ToClientMessage message, String name) {
         try {
             String id = playerID.entrySet().stream().filter(entry -> entry.getValue().equals(name)).findFirst().get().getKey();
+            if(disconnectedPlayerIds.contains(id)) {
+                return;
+            }
             getServerConnectionHandler(id).sendMessage(message, id);
         } catch (PlayerNotInAnyServerConnectionHandlerException e) {
             System.out.println("Player not found in any server connection handler, MESSAGE NOT SENT!");
@@ -141,6 +143,11 @@ public class GeneralServerConnectionHandler {
     public void setOffline(String id) {
         disconnectedPlayerIds.add(id);
         System.out.println("Player " + getPlayerNameByID(id) + " is now set offline");
+    }
+
+    public void setOnline(String id) {
+        disconnectedPlayerIds.remove(id);
+        System.out.println("Player " + getPlayerNameByID(id) + " is now set online");
     }
 
     public boolean isInDisconnectedList(String id) {

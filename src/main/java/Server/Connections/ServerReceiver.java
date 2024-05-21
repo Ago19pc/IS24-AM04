@@ -8,6 +8,7 @@ import java.io.EOFException;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.net.Socket;
+import java.net.SocketException;
 
 public class ServerReceiver extends Thread {
     private Socket clientSocket;
@@ -39,13 +40,13 @@ public class ServerReceiver extends Thread {
             try {
                 packet = (ToServerMessage) in.readObject();
                 serverConnectionHandler.executeMessage(packet);
-            } catch (EOFException e) {
+            } catch (EOFException | SocketException e) {
                 try {
                     clientSocket.close();
                     controller.setOffline(serverConnectionHandler.getThreadName(clientHandler));
                     System.out.println("Client disconnesso ");
                     System.out.println("Ora i client connessi sono: ");
-                    for (ClientHandler c : serverConnectionHandler.getThreads()) {
+                    for (ClientHandler c : serverConnectionHandler.getConnectedThreads()) {
                         System.out.print(" " + c.getSocketAddress() + " -");
                     }
                     System.out.println();
