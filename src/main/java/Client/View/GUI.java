@@ -33,7 +33,7 @@ public class GUI implements UI{
         FXMLLoader fxmlLoader = new FXMLLoader(MainGUI.class.getResource(fxmlPath));
         Scene scene = new Scene(fxmlLoader.load());
         SceneController sceneController = (SceneController) fxmlLoader.getController();
-        sceneController.setAll(controller, stage, sceneMap);
+        sceneController.setAll(controller, stage, sceneMap, sceneControllerMap);
         sceneMap.put(sceneName, scene);
         sceneControllerMap.put(sceneName, sceneController);
     }
@@ -104,10 +104,15 @@ public class GUI implements UI{
 
     @Override
     public void successfulConnection() {
-        stage.setScene(getScene(SceneName.SETNAME));
-        stage.show();
         Platform.runLater(() -> {
-               ((NameReadySceneController) sceneControllerMap.get(SceneName.SETNAME)).list_Player = ((ColorReadySceneController) sceneControllerMap.get(SceneName.SETCOLOR)).list_Player;
+            for(int i = 0; i < controller.getPlayers().size(); i++) {
+                String name = controller.getPlayers().get(i).getName();
+                String color = controller.getPlayers().get(i).getColor() == null ? "No Color" : controller.getPlayers().get(i).getColor().toString();
+                String ready = controller.getPlayers().get(i).isReady() ? "Ready" : "Not Ready";
+                ((NameReadySceneController) sceneControllerMap.get(SceneName.SETNAME)).list_Player.getItems().set(i, name + "   " + color + "   " + ready);
+            }
+            stage.setScene(getScene(SceneName.SETNAME));
+            stage.show();
         });
     }
 
@@ -121,6 +126,7 @@ public class GUI implements UI{
         Platform.runLater(() -> {
             ((NameReadySceneController) sceneControllerMap.get(SceneName.SETNAME)).name_exist.setOpacity(1);
             ((NameReadySceneController) sceneControllerMap.get(SceneName.SETNAME)).possible_Name.clear();
+
             stage.setScene(getScene(SceneName.SETNAME));
             stage.show();
         });
@@ -348,8 +354,12 @@ public class GUI implements UI{
     @Override
     public void displayLobby() {
         Platform.runLater(() -> {
+            // see better
             for (int i = 0; i < controller.getPlayers().size(); i++) {
-                ((ColorReadySceneController) sceneControllerMap.get(SceneName.SETCOLOR)).list_Player.getItems().add(controller.getPlayers().get(i).getName() + "   " + controller.getPlayers().get(i).getColor().toString() + "   " + (controller.getPlayers().get(i).isReady() ? "Ready" : "Not Ready"));
+                String name = controller.getPlayers().get(i).getName();
+                String color = controller.getPlayers().get(i).getColor() == null ? "No Color" : controller.getPlayers().get(i).getColor().toString();
+                String ready = controller.getPlayers().get(i).isReady() ? "Ready" : "Not Ready";
+                ((ColorReadySceneController) sceneControllerMap.get(SceneName.SETCOLOR)).list_Player.getItems().add(name + "   " + color + "   " + ready);
                 switch (controller.getPlayers().getLast().getColor()) {
                     case RED:
                         ((ColorReadySceneController) sceneControllerMap.get(SceneName.SETCOLOR)).red_Button.setDisable(true);
@@ -363,6 +373,9 @@ public class GUI implements UI{
                     case YELLOW:
                         ((ColorReadySceneController) sceneControllerMap.get(SceneName.SETCOLOR)).yellow_Button.setDisable(true);
                         break;
+                    case null:
+                        break;
+
                 }
             }
             ((NameReadySceneController) sceneControllerMap.get(SceneName.SETNAME)).list_Player = ((ColorReadySceneController) sceneControllerMap.get(SceneName.SETCOLOR)).list_Player;
