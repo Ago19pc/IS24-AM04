@@ -37,4 +37,11 @@ public class NameReadySceneController extends SceneController{
     public void initialize(URL url, ResourceBundle resourceBundle){
         name_exist.setOpacity(0);
     }
+
+    public void cloneListView(ListView<String> other) {
+        list_Player.getItems().clear();
+        for (String item : other.getItems()) {
+            list_Player.getItems().add(item);
+        }
+    }
 }
