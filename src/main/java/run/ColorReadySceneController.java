@@ -77,4 +77,5 @@ public class ColorReadySceneController extends  SceneController{
     public void sendMessages(ActionEvent actionEvent) {
         controller.sendChatMessage(messageToSend.getText());
     }
+
 }
