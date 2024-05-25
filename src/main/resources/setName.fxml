@@ -4,36 +4,34 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
 
-<Pane fx:id="loginScene" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="768.0" prefWidth="1024.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="run.NameReadySceneController">
+<Pane fx:id="loginScene" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="768.0" prefWidth="1024.0" style="-fx-background-color: eae1b8;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="run.NameReadySceneController">
    <children>
-      <Label fx:id="label_title" layoutX="334.0" layoutY="71.0" text="Codex Naturalis">
+      <ImageView fitHeight="776.0" fitWidth="747.0">
+         <image>
+            <Image url="@./images/otherImages/logovuoto.jpg" />
+         </image>
+      </ImageView>
+      <Label fx:id="label_Username" layoutX="302.0" layoutY="253.0" text="Username" textFill="#203eab">
          <font>
-            <Font name="System Bold" size="52.0" />
+            <Font name="System Bold" size="32.0" />
          </font>
       </Label>
-      <Label fx:id="label_Username" layoutX="285.0" layoutY="240.0" text="Username">
-         <font>
-            <Font size="32.0" />
-         </font>
-      </Label>
-      <TextField fx:id="possible_Name" layoutX="177.0" layoutY="323.0" prefHeight="60.0" prefWidth="348.0">
+      <TextField fx:id="possible_Name" layoutX="200.0" layoutY="340.0" prefHeight="60.0" prefWidth="348.0">
          <font>
             <Font size="32.0" />
          </font>
       </TextField>
-      <Label fx:id="name_exist" layoutX="447.0" layoutY="172.0" opacity="0.0" text="name already used" textAlignment="CENTER">
+      <ListView fx:id="list_Player" layoutX="747.0" prefHeight="180.0" prefWidth="277.0" style="-fx-background-color: eae1b8;" />
+      <Button fx:id="confirm_Button" layoutX="294.0" layoutY="451.0" mnemonicParsing="false" onAction="#askSetName" style="-fx-border-width: 3; -fx-border-color: White; -fx-background-color: transparent; -fx-border-radius: 3;" text="Confirm" textFill="#203eab">
          <font>
-            <Font size="19.0" />
-         </font>
-      </Label>
-      <ListView fx:id="list_Player" layoutX="630.0" layoutY="190.0" prefHeight="400.0" prefWidth="300.0" />
-      <Button fx:id="confirm_Button" layoutX="275.0" layoutY="430.0" mnemonicParsing="false" onAction="#askSetName" text="Confirm">
-         <font>
-            <Font size="32.0" />
+            <Font name="System Bold" size="32.0" />
          </font>
       </Button>
+      <ListView fx:id="chat_message" layoutX="747.0" layoutY="180.0" prefHeight="588.0" prefWidth="277.0" style="-fx-background-color: eae1b8;" />
    </children>
 </Pane>

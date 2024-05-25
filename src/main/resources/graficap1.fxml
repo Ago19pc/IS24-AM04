@@ -3,37 +3,39 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
 
 <Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="768.0" prefWidth="1024.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="run.JoinSceneController">
    <children>
-      <Label layoutX="182.0" layoutY="230.0" prefHeight="39.0" prefWidth="139.0" text="Server IP" textAlignment="CENTER">
+      <ImageView fitHeight="776.0" fitWidth="747.0" layoutX="138.0" scaleX="1.37" scaleY="1.01">
+         <image>
+            <Image url="@./images/otherImages/logovuoto.jpg" />
+         </image>
+      </ImageView>
+      <Label layoutX="240.0" layoutY="300.0" prefHeight="39.0" prefWidth="139.0" text="Server IP" textAlignment="CENTER" textFill="#2dff00">
          <font>
             <Font size="32.0" />
          </font>
       </Label>
-      <Label layoutX="182.0" layoutY="409.0" prefHeight="39.0" prefWidth="163.0" text="Server port" textAlignment="CENTER">
+      <Label layoutX="240.0" layoutY="409.0" prefHeight="39.0" prefWidth="163.0" text="Server port" textAlignment="CENTER" textFill="#db00ff">
          <font>
             <Font size="32.0" />
          </font>
       </Label>
-      <Label layoutX="334.0" layoutY="71.0" text="Codex Naturalis" textAlignment="CENTER">
+      <Button fx:id="join_Button" layoutX="442.0" layoutY="540.0" mnemonicParsing="false" onAction="#setJoin" prefHeight="65.0" prefWidth="140.0" style="-fx-background-color: transparent; -fx-border-color: white; -fx-border-width: 3; -fx-border-radius: 3;" text="JOIN" textFill="#f53d00">
          <font>
-            <Font name="System Bold" size="52.0" />
-         </font>
-      </Label>
-      <Button fx:id="join_Button" layoutX="442.0" layoutY="591.0" mnemonicParsing="false" onAction="#setJoin" prefHeight="65.0" prefWidth="140.0" text="JOIN">
-         <font>
-            <Font size="32.0" />
+            <Font name="System Bold" size="32.0" />
          </font>
       </Button>
-      <TextField fx:id="text_ip" layoutX="367.0" layoutY="218.0" prefHeight="60.0" prefWidth="348.0">
+      <TextField fx:id="text_ip" layoutX="396.0" layoutY="289.0" prefHeight="60.0" prefWidth="348.0">
          <font>
             <Font size="32.0" />
          </font>
       </TextField>
-      <TextField fx:id="text_Port" layoutX="367.0" layoutY="398.0" prefHeight="60.0" prefWidth="348.0">
+      <TextField fx:id="text_Port" layoutX="396.0" layoutY="399.0" prefHeight="60.0" prefWidth="348.0">
          <font>
             <Font size="32.0" />
          </font>

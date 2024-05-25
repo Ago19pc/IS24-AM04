@@ -56,6 +56,7 @@ public class GUI implements UI{
     @Override
     public void nameChanged(String name) {
         Platform.runLater(() -> {
+            ((ColorReadySceneController) sceneControllerMap.get(SceneName.SETCOLOR)).messageToSend.setPromptText("Scrivi un messaggio!");
             stage.setScene(getScene(SceneName.SETCOLOR));
             stage.show();
         });
@@ -103,9 +104,8 @@ public class GUI implements UI{
     @Override
     public void nameChangeFailed() {
         Platform.runLater(() -> {
-            ((NameReadySceneController) sceneControllerMap.get(SceneName.SETNAME)).name_exist.setOpacity(1);
             ((NameReadySceneController) sceneControllerMap.get(SceneName.SETNAME)).possible_Name.clear();
-
+            ((NameReadySceneController) sceneControllerMap.get(SceneName.SETNAME)).possible_Name.setPromptText("Nome già esistente");
             stage.setScene(getScene(SceneName.SETNAME));
             stage.show();
         });
@@ -148,6 +148,14 @@ public class GUI implements UI{
 
     @Override
     public void connectionFailed() {
+        Platform.runLater(() -> {
+            ((JoinSceneController) sceneControllerMap.get(SceneName.JOIN)).text_ip.clear();
+            ((JoinSceneController) sceneControllerMap.get(SceneName.JOIN)).text_Port.clear();
+            ((JoinSceneController) sceneControllerMap.get(SceneName.JOIN)).text_ip.setPromptText("Indirizzo IP non valido");
+            ((JoinSceneController) sceneControllerMap.get(SceneName.JOIN)).text_Port.setPromptText("Porta non valida");
+            stage.setScene(getScene(SceneName.JOIN));
+            stage.show();
+        });
         stage.setScene(getScene(SceneName.JOIN));
         stage.show();
     }
@@ -245,6 +253,9 @@ public class GUI implements UI{
         Platform.runLater(()->
         {
             ((ColorReadySceneController) sceneControllerMap.get(SceneName.SETCOLOR)).chat_messages.getItems().add( message.getName() + ": "+  message.getMessage());
+            ((ColorReadySceneController) sceneControllerMap.get(SceneName.SETCOLOR)).messageToSend.clear();
+            ((NameReadySceneController) sceneControllerMap.get(SceneName.SETNAME)).chat_message.getItems().add( message.getName() + ": "+  message.getMessage());
+
             //todo: for others scene
         });
     }
