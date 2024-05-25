@@ -23,7 +23,8 @@ public class MainGUI extends Application {
         gui.generateScene("/graficap1.fxml", SceneName.JOIN, stage);
         gui.generateScene("/setName.fxml", SceneName.SETNAME, stage);
         gui.generateScene("/setColor.fxml", SceneName.SETCOLOR, stage);
-        stage.setTitle("Hello!");
+        gui.generateScene("/mainboard.fxml", SceneName.GAME, stage);
+        stage.setTitle("Welcome to Codex Naturalis!");
         gui.askConnectionMode();
         controller.main( gui);
 

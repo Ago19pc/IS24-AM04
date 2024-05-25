@@ -30,7 +30,7 @@
             <Font size="35.0" />
          </font>
       </Button>
-      <Text fill="WHITE" layoutX="331.0" layoutY="54.0" stroke="BLACK" strokeType="OUTSIDE" strokeWidth="2.0" text="WELCOME TO" wrappingWidth="369.59661865234375">
+      <Text fill="WHITE" layoutX="367.0" layoutY="51.0" stroke="BLACK" strokeType="OUTSIDE" strokeWidth="2.0" text="WELCOME TO" wrappingWidth="369.59661865234375">
          <font>
             <Font name="Constantia" size="50.0" />
          </font>

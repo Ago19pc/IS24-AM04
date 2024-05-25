@@ -94,7 +94,6 @@ public class ClientController {
             clientConnectionHandler.setSocket(ip, port);
             ui.successfulConnection();
         } catch (IOException | NotBoundException e){
-            e.printStackTrace();
             ui.connectionFailed();
         } catch (ClientExecuteNotCallableException e) {
             throw new RuntimeException(e);

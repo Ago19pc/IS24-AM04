@@ -220,7 +220,8 @@ public class GUI implements UI{
     public void updateReady(String name, boolean ready) {
         Platform.runLater(() ->
         {
-            for(int i = 0; i < controller.getPlayers().size(); i++) {
+            int i;
+            for(i = 0; i < controller.getPlayers().size(); i++) {
                 String name1 = controller.getPlayers().get(i).getName();
                 String color = controller.getPlayers().get(i).getColor() == null ? "No Color" : controller.getPlayers().get(i).getColor().toString();
                 String ready1 = controller.getPlayers().get(i).isReady() ? "Ready" : "Not Ready";
@@ -228,7 +229,14 @@ public class GUI implements UI{
                 //------------------------------------------------------------------
                 ((NameReadySceneController) sceneControllerMap.get(SceneName.SETNAME)).cloneListView(((ColorReadySceneController) sceneControllerMap.get(SceneName.SETCOLOR)).list_Player);
             }
-
+            for (i = 0; i < controller.getPlayers().size(); i++) {
+                if(!controller.getPlayers().get(i).isReady()) {
+                    break;
+                }
+            }
+            if(i == controller.getPlayers().size() && i > 1) {
+                stage.setScene(getScene(SceneName.GAME));
+            }
         });
     }
 
