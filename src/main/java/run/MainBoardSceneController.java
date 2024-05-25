@@ -121,9 +121,9 @@ public class MainBoardSceneController extends SceneController {
 
     public void updateManuscript(CardFace cardFace, int x, int y) {
         ImageView imageView = new ImageView(getImageFromCard(cardFace));
-        imageView.setFitWidth(100);
+        imageView.setFitWidth(130);
         imageView.setFitHeight(100);
-        imageView.setLayoutX(x*100);
+        imageView.setLayoutX(x*130);
         imageView.setLayoutY(y*100);
         yourManuscript.getChildren().add(imageView);
 
