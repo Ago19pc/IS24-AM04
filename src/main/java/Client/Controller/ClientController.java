@@ -285,7 +285,7 @@ public class ClientController {
     //methods called by incoming messages
     public void loadLobbyInfo(String id, List<String> playerNames, Map<String, Color> playerColors, Map<String, Boolean> playerReady) {
         setId(id);
-        cli.displayId();
+        ui.displayId();
         for (String name : playerNames){
             Player p = new Player(name);
             p.setColor(playerColors.get(name));

@@ -45,8 +45,8 @@ public class ChooseStartingCardController extends SceneController {
 
     public void setUp(Card card) {
         confirmButton.setDisable(true);
-        firstCard.setImage(new Image(getClass().getResource("/images/FrontFaces/0.jpeg").toExternalForm()));
-        secondCard.setImage(new Image(getClass().getResource("/images/BackFaces/0.jpeg").toExternalForm()));
+        firstCard.setImage(new Image(getClass().getResource("/images/FrontFaces/"+ card.getImageURI()).toExternalForm()));
+        secondCard.setImage(new Image(getClass().getResource("/images/BackFaces/"+ card.getImageURI()).toExternalForm()));
         waitText.setVisible(false);
     }
 }

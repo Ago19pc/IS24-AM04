@@ -135,7 +135,9 @@ public class GoldDeck implements Deckable {
 
             String lineF;
             int cardNumber = 0;
+            int counter = 39;
             while ((lineF = readerFRONT.readLine()) != null) {
+                counter++;
 
                 String[] partsF = lineF.split(" ");
                 //System.out.println(lineF);
@@ -202,16 +204,16 @@ public class GoldDeck implements Deckable {
                     System.out.println("corner: " + CardCorners.values()[j] + " symbol: " + cornerSymbolsF.get(CardCorners.values()[j]) + " Kingdom: "+kingdom );
                 }*/
 
-                GoldFrontFace frontFace = new GoldFrontFace("GOLDFRONT", cornerSymbolsF, point, placementRequirementsF, scoreRequirementsF, kingdom);
+                GoldFrontFace frontFace = new GoldFrontFace(counter + ".jpeg", cornerSymbolsF, point, placementRequirementsF, scoreRequirementsF, kingdom);
 
                 // DA QUI E DA VEDERE
                 List<Symbol> centerSymbolsB = new ArrayList<>();
                 centerSymbolsB.add(Symbol.valueOf(partsB));
 
 
-                RegularBackFace backFace = new RegularBackFace("GOLDBACK", centerSymbolsB);
+                RegularBackFace backFace = new RegularBackFace(counter + ".jpeg", centerSymbolsB);
 
-                GoldCard card = new GoldCard(frontFace, backFace);
+                GoldCard card = new GoldCard(frontFace, backFace,counter + ".jpeg");
                 this.cards.add(card);
                 cardNumber++;
             }

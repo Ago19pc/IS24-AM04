@@ -8,6 +8,7 @@ import Server.Enums.DeckPosition;
 import Server.Enums.Decks;
 import Server.Exception.PlayerNotFoundByNameException;
 
+import java.util.LinkedHashMap;
 import java.util.List;
 
 public interface UI {
@@ -73,7 +74,7 @@ public interface UI {
 
     void displayHand();
 
-    void displayLeaderboard();
+    void displayLeaderboard(LinkedHashMap<String, Integer> playerPoints);
 
     void displayNewPlayer();
 
@@ -95,4 +96,11 @@ public interface UI {
     void playerDisconnected(String playerName);
     void displayCommonAchievements();
     void tooManyPlayers();
+    void displayId();
+    void playerRemoved(String name);
+    void otherPlayerReconnected(String name);
+    void idNotInGame();
+    void playerAlreadyPlaying();
+    void displayGameInfo();
+
 }

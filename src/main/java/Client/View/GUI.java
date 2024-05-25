@@ -16,6 +16,7 @@ import run.*;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -261,7 +262,6 @@ public class GUI implements UI{
 
     @Override
     public void chooseSecretAchievement(List<AchievementCard> possibleAchievements) {
-        System.out.println("Choose secret achievement");
         Platform.runLater( () -> {
             ((ChooseSecretCardController) sceneControllerMap.get(SceneName.SECRETCARDCHOICE)).setUp(possibleAchievements);
             stage.setScene(getScene(SceneName.SECRETCARDCHOICE));
@@ -284,7 +284,7 @@ public class GUI implements UI{
     }
 
     @Override
-    public void displayLeaderboard() {
+    public void displayLeaderboard(LinkedHashMap<String, Integer> playerPoints) {
 
     }
 
@@ -321,6 +321,7 @@ public class GUI implements UI{
     public void secretAchievementChosen(String name) {
         Platform.runLater(() -> {
             if (name.equals(controller.getMyName())){
+                ((MainBoardSceneController) sceneControllerMap.get(SceneName.GAME)).setSecretCard(controller.getSecretAchievement());
                 stage.setScene(getScene(SceneName.GAME));
             }
 
@@ -421,8 +422,35 @@ public class GUI implements UI{
 
     }
 
+    @Override
+    public void displayId() {
+        
+    }
 
+    @Override
+    public void playerRemoved(String name) {
 
+    }
+
+    @Override
+    public void otherPlayerReconnected(String name) {
+
+    }
+
+    @Override
+    public void idNotInGame() {
+
+    }
+
+    @Override
+    public void playerAlreadyPlaying() {
+
+    }
+
+    @Override
+    public void displayGameInfo() {
+
+    }
 
 
     // Only GUI methods

@@ -10,8 +10,8 @@ public class GoldCard extends ResourceCard implements Card{
      * @param frontFace the front face
      * @param backFace the back face
      */
-    public GoldCard(GoldFrontFace frontFace, RegularBackFace backFace) {
-        super(frontFace, backFace);
+    public GoldCard(GoldFrontFace frontFace, RegularBackFace backFace, String imageURI) {
+        super(frontFace, backFace, imageURI);
     }
 
     /**

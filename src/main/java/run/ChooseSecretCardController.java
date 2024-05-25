@@ -46,8 +46,8 @@ public class ChooseSecretCardController extends SceneController {
 
     public void setUp(List<AchievementCard> cards) {
         confirmButton.setDisable(true);
-        firstCard.setImage(new Image(getClass().getResource("/images/FrontFaces/0.jpeg").toExternalForm()));
-        secondCard.setImage(new Image(getClass().getResource("/images/BackFaces/0.jpeg").toExternalForm()));
+        firstCard.setImage(new Image(getClass().getResource("/images/FrontFaces/" + cards.get(0).getImageURI()).toExternalForm()));
+        secondCard.setImage(new Image(getClass().getResource("/images/FrontFaces/" + cards.get(1).getImageURI()).toExternalForm()));
         waitText.setVisible(false);
     }
 }

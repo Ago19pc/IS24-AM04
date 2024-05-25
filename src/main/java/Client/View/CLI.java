@@ -61,6 +61,11 @@ public class CLI extends Thread implements UI {
         printPromptLine();
     }
 
+    @Override
+    public void nameChanged(String name) {
+
+    }
+
     /**
      * Decodes the input from the console and calls the corresponding method in the controller
      */

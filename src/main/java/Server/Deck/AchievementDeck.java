@@ -90,7 +90,9 @@ public class AchievementDeck implements Deckable{
         
 
             String lineF;
+            int counter = 85;
             while ((lineF = readerFRONT.readLine()) != null) {
+                counter++;
 
                 String[] partsF = lineF.split(" ");
 
@@ -110,11 +112,11 @@ public class AchievementDeck implements Deckable{
                     }
                 }
             
-                AchievementFrontFace frontFace = new AchievementFrontFace("ACHIEVEMENTFRONT", scoreRequirements, score);
+                AchievementFrontFace frontFace = new AchievementFrontFace(counter + ".jpeg", scoreRequirements, score);
             
-                EmptyCardFace backFace = new EmptyCardFace("ACHIEVEMENTBACK");
+                EmptyCardFace backFace = new EmptyCardFace(counter + ".jpeg");
             
-                AchievementCard card = new AchievementCard(frontFace, backFace);
+                AchievementCard card = new AchievementCard(frontFace, backFace, counter + ".jpeg");
                 this.cards.add(card);
             }
         } catch (Exception e) {

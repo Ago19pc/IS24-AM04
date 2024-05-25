@@ -56,45 +56,47 @@ public class GameModelInstance implements GameModel{
         
         
 
-        String lineF;
-        while ((lineF = readerFRONT.readLine()) != null) {
+            String lineF;
+            int counter = 79;
+            while ((lineF = readerFRONT.readLine()) != null) {
+                counter++;
 
-            String[] partsF = lineF.split(" ");
+                String[] partsF = lineF.split(" ");
 
-            String[] partsB = readerBACK.readLine().split(" ");
+                String[] partsB = readerBACK.readLine().split(" ");
 
-            // La faccia davanti ha sia angoli che centrali
+                // La faccia davanti ha sia angoli che centrali
 
-            Map<CardCorners, Symbol> cornerSymbolsF = new HashMap<>();
-            List<Symbol> centerSymbols = new ArrayList<>();
-            for (int i = 0; i < partsF.length; i++) {
-                if (i < 4) {
-                    //System.out.print(CardCorners.values()[i]);
-                    //System.out.print(" ");
-                    //System.out.println(Symbol.valueOf(partsF[i]));
-                    cornerSymbolsF.put(CardCorners.values()[i], Symbol.valueOf(partsF[i]));
+                Map<CardCorners, Symbol> cornerSymbolsF = new HashMap<>();
+                List<Symbol> centerSymbols = new ArrayList<>();
+                for (int i = 0; i < partsF.length; i++) {
+                    if (i < 4) {
+                        //System.out.print(CardCorners.values()[i]);
+                        //System.out.print(" ");
+                        //System.out.println(Symbol.valueOf(partsF[i]));
+                        cornerSymbolsF.put(CardCorners.values()[i], Symbol.valueOf(partsF[i]));
+                    }
+                    else centerSymbols.add(Symbol.valueOf(partsF[i]));
                 }
-                else centerSymbols.add(Symbol.valueOf(partsF[i]));
-            }
-            
-            StartingFrontFace frontFace = new StartingFrontFace("STARTINGFRONT", cornerSymbolsF, centerSymbols);
-            
-            // La faccia dietro ha solo angoli
-            Map<CardCorners, Symbol> cornerSymbolsB = new HashMap<>();
-            for (int i = 0; i < partsB.length; i++) {
-                cornerSymbolsB.put(CardCorners.values()[i], Symbol.valueOf(partsB[i]));
-            }
 
-            CornerCardFace backFace = new CornerCardFace("STARTINGBACK", cornerSymbolsB);
-            
-            StartingCard card = new StartingCard(frontFace, backFace);
-            startingCards.add(card);
-        }
-    } catch (Exception e) {
+                StartingFrontFace frontFace = new StartingFrontFace(counter + ".jpeg", cornerSymbolsF, centerSymbols);
+
+                // La faccia dietro ha solo angoli
+                Map<CardCorners, Symbol> cornerSymbolsB = new HashMap<>();
+                for (int i = 0; i < partsB.length; i++) {
+                    cornerSymbolsB.put(CardCorners.values()[i], Symbol.valueOf(partsB[i]));
+                }
+
+                CornerCardFace backFace = new CornerCardFace(counter + ".jpeg", cornerSymbolsB);
+
+                StartingCard card = new StartingCard(frontFace, backFace, counter + ".jpeg");
+                startingCards.add(card);
+            }
+        } catch (Exception e) {
             System.out.println("An error occurred while generating starting cards");
             e.printStackTrace();
-    }       
-       Collections.shuffle(startingCards);
+        }
+        Collections.shuffle(startingCards);
     
     }
 

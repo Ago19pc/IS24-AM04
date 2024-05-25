@@ -131,8 +131,10 @@ public class ResourceDeck implements Deckable {
 
             String lineF;
             int cardNumber = 0;
+            int counter = -1;
             while ((lineF = readerFRONT.readLine()) != null) {
                 //System.out.println("generate card " + cardNumber);
+                counter++;
                 String[] partsF = lineF.split(" ");
 
                 String partsB = readerBACK.readLine();
@@ -174,16 +176,16 @@ public class ResourceDeck implements Deckable {
                         kingdom = Symbol.NONE;
                         break;
                 }
-                ResourceFrontFace frontFace = new ResourceFrontFace("RESOURCEFRONT", cornerSymbolsF, point, kingdom);
+                ResourceFrontFace frontFace = new ResourceFrontFace(counter + ".jpeg", cornerSymbolsF, point, kingdom);
             
             
                 List<Symbol> centerSymbolsB = new ArrayList<>();
                 centerSymbolsB.add(Symbol.valueOf(partsB));
             
 
-                RegularBackFace backFace = new RegularBackFace("RESOURCEBACK", centerSymbolsB);
+                RegularBackFace backFace = new RegularBackFace(counter + ".jpeg", centerSymbolsB);
             
-                ResourceCard card = new ResourceCard(frontFace, backFace);
+                ResourceCard card = new ResourceCard(frontFace, backFace, counter + ".jpeg");
                 this.cards.add(card);
                 cardNumber++;
             }
