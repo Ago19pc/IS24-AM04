@@ -51,9 +51,9 @@
             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
-            <Button fx:id="rotateFirstCardButton" mnemonicParsing="false" onMouseClicked="#rotateFirstCard" text="Rotate" GridPane.columnIndex="1" />
-            <Button fx:id="rotateSecondCardButton" mnemonicParsing="false" onMouseClicked="#rotateSecondCard" text="Rotate" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-            <Button fx:id="rotateThirdCardButton" mnemonicParsing="false" onMouseClicked="#rotateThirdCard" text="Rotate" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+            <Button fx:id="rotateFirstCardButton" mnemonicParsing="false" text="Rotate" GridPane.columnIndex="1" />
+            <Button fx:id="rotateSecondCardButton" mnemonicParsing="false" text="Rotate" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+            <Button fx:id="rotateThirdCardButton" mnemonicParsing="false" text="Rotate" GridPane.columnIndex="1" GridPane.rowIndex="2" />
             <ImageView fx:id="firstCardImage" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" />
             <ImageView fx:id="secondCardImage" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" GridPane.rowIndex="1" />
             <ImageView fx:id="thirdCardImage" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" GridPane.rowIndex="2" />
