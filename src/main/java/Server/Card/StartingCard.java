@@ -8,6 +8,8 @@ public class StartingCard implements Card, Serializable {
     private final StartingFrontFace frontFace;
     private final CornerCardFace backFace;
 
+    private final String imageURI;
+
     /**
      * Constructor for the StartingCard
      * @param frontFace the front face
@@ -16,6 +18,7 @@ public class StartingCard implements Card, Serializable {
     public StartingCard(StartingFrontFace frontFace, CornerCardFace backFace) {
         this.frontFace = frontFace;
         this.backFace = backFace;
+        this.imageURI = getImageURI();
     }
 
     /**
@@ -38,6 +41,10 @@ public class StartingCard implements Card, Serializable {
 
     public String toString(){
         return "Carta iniziale: \n Faccia anteriore: " + frontFace.toString() + "\n Faccia posteriore: " + backFace.toString();
+    }
+
+    public String getImageURI() {
+        return imageURI;
     }
 
 }

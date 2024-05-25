@@ -1,9 +1,15 @@
 package Server.Card;
 
 import Server.Enums.Face;
+
+import java.util.Map;
+
 public class AchievementCard implements Card {
     private final AchievementFrontFace frontFace;
     private final EmptyCardFace backFace;
+
+    private final String imageURI;
+
 
     /**
      * Constructor for the AchievementCard
@@ -13,6 +19,7 @@ public class AchievementCard implements Card {
     public AchievementCard(AchievementFrontFace frontFace, EmptyCardFace backFace) {
         this.frontFace = frontFace;
         this.backFace = backFace;
+        this.imageURI = getImageURI();
     }
 
     /**
@@ -37,5 +44,8 @@ public class AchievementCard implements Card {
         return "Puoi ottenere " + frontFace.getScore() + " punti completando i seguenti requisiti: " + frontFace.getScoreRequirements();
     }
 
+    public String getImageURI() {
+        return imageURI;
+    }
 
 }
