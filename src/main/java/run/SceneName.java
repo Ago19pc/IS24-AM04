@@ -5,7 +5,8 @@ public enum SceneName {
     JOIN,
     SETNAME,
     SETCOLOR,
-    WAIT,
+    STARTINGCARDCHOICE,
+    SECRETCARDCHOICE,
     GAME,
     END
 }

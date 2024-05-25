@@ -209,7 +209,6 @@ public class GUI implements UI{
 
     @Override
     public void displayPlayerColors() {
-        System.out.println("displayPlayerColors");
         Platform.runLater(() -> {
             listViewSetUpdate();
 
@@ -235,7 +234,7 @@ public class GUI implements UI{
                 }
             }
             if(i == controller.getPlayers().size() && i > 1) {
-                stage.setScene(getScene(SceneName.GAME));
+                stage.setScene(getScene(SceneName.STARTINGCARDCHOICE));
             }
         });
     }
@@ -251,6 +250,12 @@ public class GUI implements UI{
 
     @Override
     public void chooseSecretAchievement(List<AchievementCard> possibleAchievements) {
+        System.out.println("Choose secret achievement");
+        Platform.runLater( () -> {
+            ((ChooseSecretCardController) sceneControllerMap.get(SceneName.SECRETCARDCHOICE)).setUp(possibleAchievements);
+            stage.setScene(getScene(SceneName.SECRETCARDCHOICE));
+        });
+
 
     }
 
@@ -261,6 +266,9 @@ public class GUI implements UI{
 
     @Override
     public void displayHand() {
+        Platform.runLater(() -> {
+            ((MainBoardSceneController) sceneControllerMap.get(SceneName.GAME)).setHandCards();
+        });
 
     }
 
@@ -300,7 +308,12 @@ public class GUI implements UI{
 
     @Override
     public void secretAchievementChosen(String name) {
+        Platform.runLater(() -> {
+            if (name.equals(controller.getMyName())){
+                stage.setScene(getScene(SceneName.GAME));
+            }
 
+        });
     }
 
     @Override
@@ -325,6 +338,11 @@ public class GUI implements UI{
 
     @Override
     public void chooseStartingCardFace(Card card) {
+        Platform.runLater(() -> {
+            ((ChooseStartingCardController) sceneControllerMap.get(SceneName.STARTINGCARDCHOICE)).setUp(card);
+            stage.setScene(getScene(SceneName.STARTINGCARDCHOICE));
+        });
+
 
     }
 

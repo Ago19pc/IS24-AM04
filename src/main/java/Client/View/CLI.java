@@ -18,7 +18,6 @@ public class CLI extends Thread implements UI {
     private final Scanner in = new Scanner(System.in);
 
     //temp variables
-    private List<AchievementCard> potentialSecretAchievements;
     private Integer chosenHandCard;
 
     public CLI(ClientController controller){
@@ -162,10 +161,10 @@ public class CLI extends Thread implements UI {
                 switch(controller.getGameState()){
                     case CHOOSE_SECRET_ACHIEVEMENT:
                         if(cardNumber < 0 || cardNumber > 1){
-                            printOnNewLine("Numero non valido. Scegli 1 o 2");
+                            printOnNewLine("Numero non valido. Scegli 0 o 1");
                             return;
                         }
-                        controller.chooseSecretAchievement(potentialSecretAchievements.get(cardNumber), cardNumber);
+                        controller.chooseSecretAchievement(cardNumber);
                         break;
                     case PLACE_CARD:
                         chosenHandCard = cardNumber;
@@ -473,13 +472,11 @@ public class CLI extends Thread implements UI {
 
     /**
      * Asks the user to choose the secret achievement
-     * @param possibleAchievements list of possible secret achievements (lis of 2 elements)
+     * @param possibleAchievements list of possible secret achievements (list of 2 elements)
      */
     public void chooseSecretAchievement(List<AchievementCard> possibleAchievements){
         printOnNewLine("Scegli un obiettivo segreto: \n");
-        potentialSecretAchievements = new ArrayList<>();
         for (int i = 0; i < possibleAchievements.size(); i++) {
-            potentialSecretAchievements.add((AchievementCard) possibleAchievements.get(i));
             System.out.println("    " + i + ": " + possibleAchievements.get(i));
         }
         printPromptLine();

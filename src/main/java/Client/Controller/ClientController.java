@@ -47,7 +47,9 @@ public class ClientController {
     //temp stuff
     private String proposedName;
     private Color proposedColor;
-    private AchievementCard proposedSecretAchievement;
+    private int indexofSecretAchievement;
+    private List<AchievementCard> potentialSecretAchievements;
+    private Integer chosenHandCard;
 
     public void main(UI ui) throws RemoteException {
 
@@ -165,8 +167,9 @@ public class ClientController {
             e.printStackTrace();
         }
     }
-    public void chooseSecretAchievement(AchievementCard secretAchievement, int index) {
-        this.proposedSecretAchievement = secretAchievement;
+    public void chooseSecretAchievement(int index) {
+
+        this.indexofSecretAchievement = index;
         SetSecretCardMessage secretAchievementMessage = new SetSecretCardMessage(index, id);
         try {
             clientConnectionHandler.sendMessage(secretAchievementMessage);
@@ -285,6 +288,7 @@ public class ClientController {
     public void giveAchievementCards(List<AchievementCard> secretCards, List<AchievementCard> commonCards) {
         gameState = GameState.CHOOSE_SECRET_ACHIEVEMENT;
         commonAchievements = new ArrayList<>();
+        potentialSecretAchievements = secretCards;
         for (Card c : commonCards){
             commonAchievements.add((AchievementCard) c);
         }
@@ -433,7 +437,7 @@ public class ClientController {
     }
     public void setSecretCard(String name) {
         if (name.equals(myName)){
-            secretAchievement = proposedSecretAchievement;
+            secretAchievement = potentialSecretAchievements.get(indexofSecretAchievement);
         }
         ui.secretAchievementChosen(name);
     }
