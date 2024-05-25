@@ -333,7 +333,15 @@ public class GUI implements UI{
 
     @Override
     public void startingCardChosen(String name) {
-
+        Platform.runLater(() -> {
+            if (name.equals(controller.getMyName())){
+                try {
+                    ((MainBoardSceneController) sceneControllerMap.get(SceneName.GAME)).updateManuscript(controller.getPlayerByName(name).getManuscript().getCardByCoord(0,0),0 ,0);
+                } catch (PlayerNotFoundByNameException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        });
     }
 
     @Override

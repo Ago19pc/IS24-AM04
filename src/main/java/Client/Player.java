@@ -155,4 +155,8 @@ public class Player {
     public void addCardToManuscript(int x, int y, CornerCardFace cardFace, int turn) {
         manuscript.addCard(x, y, cardFace, turn);
     }
+
+    public Manuscript getManuscript() {
+        return manuscript;
+    }
 }

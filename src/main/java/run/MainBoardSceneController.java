@@ -1,10 +1,12 @@
 package run;
 
 import Server.Card.Card;
+import Server.Card.CardFace;
 import Server.Enums.DeckPosition;
 import Server.Enums.Decks;
 import Server.Enums.Face;
 import javafx.fxml.FXML;
+import javafx.scene.Group;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -20,6 +22,8 @@ public class MainBoardSceneController extends SceneController {
     public ImageView resourceOnDeck, resourceOnFloor1, resourceOnFloor2;
     @FXML
     public Button rotateFirstCardButton, rotateSecondCardButton, rotateThirdCardButton;
+    @FXML
+    public Group yourManuscript;
 
     private Face firstFace, secondFace, thirdFace;
 
@@ -43,6 +47,10 @@ public class MainBoardSceneController extends SceneController {
         } else {
             return new Image(getClass().getResourceAsStream("/images/BackFaces/" + card.getImageURI()));
         }
+    }
+
+    private Image getImageFromCard(CardFace cardFace) {
+        return new Image(getClass().getResourceAsStream("/images/BackFaces/" + cardFace.getImageURI()));
     }
 
     public void rotateFirstCard() {
@@ -109,6 +117,18 @@ public class MainBoardSceneController extends SceneController {
             setCardOnFloor(controller.getCommonAchievements().get(0), Decks.ACHIEVEMENT, DeckPosition.FIRST_CARD);
             setCardOnFloor(controller.getCommonAchievements().get(1), Decks.ACHIEVEMENT, DeckPosition.SECOND_CARD);
         }
+    }
+
+    public void updateManuscript(CardFace cardFace, int x, int y) {
+        ImageView imageView = new ImageView(getImageFromCard(cardFace));
+        imageView.setFitWidth(100);
+        imageView.setFitHeight(100);
+        imageView.setLayoutX(x*100);
+        imageView.setLayoutY(y*100);
+        yourManuscript.getChildren().add(imageView);
+
+
+
     }
 
 }
