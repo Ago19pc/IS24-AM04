@@ -11,7 +11,6 @@ import Server.Enums.*;
 import Server.Exception.ClientExecuteNotCallableException;
 import Server.Exception.PlayerNotFoundByNameException;
 import Server.Messages.*;
-import Client.Player;
 
 import java.io.IOException;
 import java.rmi.NotBoundException;
@@ -244,14 +243,11 @@ public class ClientController {
         return leaderboard;
     }
     public int getDeckSize(Decks deck){
-        int size = 0;
-        switch (deck){
-            case GOLD:
-                size = goldDeck.getDeckSize();
-            case RESOURCE:
-                size = resourceDeck.getDeckSize();
-        }
-        return size;
+        return switch (deck) {
+            case GOLD -> goldDeck.getDeckSize();
+            case RESOURCE -> resourceDeck.getDeckSize();
+            default -> 0;
+        };
     }
     public List<Card> getBoardCards(Decks deck){
         List<Card> boardCards = new ArrayList<>();
