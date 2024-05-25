@@ -126,8 +126,8 @@ public class GoldDeck implements Deckable {
         BufferedReader readerBACK;
 
         try {
-            fileFRONT = new File("images/GoldFrontFace.txt");
-            fileBACK = new File("images/GoldBackFace.txt");
+            fileFRONT = new File(getClass().getResource("/images/GoldFrontFace.txt").toURI());
+            fileBACK = new File(getClass().getResource("/images/GoldBackFace.txt").toURI());
             readerFRONT = new BufferedReader(new FileReader(fileFRONT));
             readerBACK = new BufferedReader(new FileReader(fileBACK));
 

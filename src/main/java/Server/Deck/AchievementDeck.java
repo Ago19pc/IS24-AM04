@@ -82,7 +82,7 @@ public class AchievementDeck implements Deckable{
         
 
         try {
-            fileFRONT = new File("images/AchievementFrontFace.txt");
+            fileFRONT = new File(getClass().getResource("/images/AchievementFrontFace.txt").toURI());
             
             readerFRONT = new BufferedReader(new FileReader(fileFRONT));
             

@@ -124,8 +124,8 @@ public class ResourceDeck implements Deckable {
         BufferedReader readerBACK;
 
         try {
-            fileFRONT = new File("images/ResourceFrontFace.txt");
-            fileBACK = new File("images/ResourceBackFace.txt");
+            fileFRONT = new File(getClass().getResource("/images/ResourceFrontFace.txt").toURI());
+            fileBACK = new File(getClass().getResource("/images/ResourceBackFace.txt").toURI());
             readerFRONT = new BufferedReader(new FileReader(fileFRONT));
             readerBACK = new BufferedReader(new FileReader(fileBACK));
 
