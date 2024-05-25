@@ -17,4 +17,5 @@ public interface Card extends Serializable {
 
     public CornerCardFace getCornerFace(Face face) throws UnsupportedOperationException;
 
+    public String getImageURI();
 }
