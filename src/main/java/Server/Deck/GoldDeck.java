@@ -109,6 +109,13 @@ public class GoldDeck implements Deckable {
             boardCards.put(position, (GoldCard) card);
     }
 
+    @Override
+    public Card getTopCardNoPop() {
+        if(cards.isEmpty())
+            return null;
+        return cards.get(0);
+    }
+
     /**
      * @return int the number of cards in the deck
      */

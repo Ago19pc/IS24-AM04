@@ -1,6 +1,8 @@
 package run;
 
 import Server.Card.Card;
+import Server.Enums.DeckPosition;
+import Server.Enums.Decks;
 import Server.Enums.Face;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -10,6 +12,12 @@ import javafx.scene.image.ImageView;
 public class MainBoardSceneController extends SceneController {
     @FXML
     public ImageView firstCardImage, secondCardImage, thirdCardImage, secretCardImage;
+    @FXML
+    public ImageView commonAchievement1, commonAchievement2;
+    @FXML
+    public ImageView goldOnDeck, goldOnFloor1, goldOnFloor2;
+    @FXML
+    public ImageView resourceOnDeck, resourceOnFloor1, resourceOnFloor2;
     @FXML
     public Button rotateFirstCardButton, rotateSecondCardButton, rotateThirdCardButton;
 
@@ -50,6 +58,57 @@ public class MainBoardSceneController extends SceneController {
     public void rotateThirdCard() {
         thirdCardImage.setImage(getImageFromCard(controller.getHand().get(2), thirdFace.getOpposite()));
         thirdFace = thirdFace.getOpposite();
+    }
+
+    public void setCardOnFloor(Card card, Decks deck, DeckPosition position) {
+        if (deck == Decks.GOLD) {
+            switch (position) {
+                case DECK:
+                    goldOnDeck.setImage(getImageFromCard(card, Face.FRONT));
+                    break;
+                case FIRST_CARD:
+                    goldOnFloor1.setImage(getImageFromCard(card, Face.FRONT));
+                    break;
+                case SECOND_CARD:
+                    goldOnFloor2.setImage(getImageFromCard(card, Face.FRONT));
+                    break;
+            }
+        } else if (deck == Decks.RESOURCE) {
+            switch (position) {
+                case DECK:
+                    resourceOnDeck.setImage(getImageFromCard(card, Face.FRONT));
+                    break;
+                case FIRST_CARD:
+                    resourceOnFloor1.setImage(getImageFromCard(card, Face.FRONT));
+                    break;
+                case SECOND_CARD:
+                    resourceOnFloor2.setImage(getImageFromCard(card, Face.FRONT));
+                    break;
+            }
+
+        } else if (deck == Decks.ACHIEVEMENT);
+            switch (position) {
+                case FIRST_CARD:
+                    commonAchievement1.setImage(getImageFromCard(card, Face.FRONT));
+                    break;
+                case SECOND_CARD:
+                    commonAchievement2.setImage(getImageFromCard(card, Face.FRONT));
+                    break;
+            }
+    }
+
+    public void updateAllFloorCards() {
+        setCardOnFloor(controller.getBoardCards(Decks.GOLD).get(0), Decks.GOLD, DeckPosition.DECK);
+        setCardOnFloor(controller.getBoardCards(Decks.GOLD).get(1), Decks.GOLD, DeckPosition.FIRST_CARD);
+        setCardOnFloor(controller.getBoardCards(Decks.GOLD).get(2), Decks.GOLD, DeckPosition.SECOND_CARD);
+        setCardOnFloor(controller.getBoardCards(Decks.RESOURCE).get(0), Decks.RESOURCE, DeckPosition.DECK);
+        setCardOnFloor(controller.getBoardCards(Decks.RESOURCE).get(1), Decks.RESOURCE, DeckPosition.FIRST_CARD);
+        setCardOnFloor(controller.getBoardCards(Decks.RESOURCE).get(2), Decks.RESOURCE, DeckPosition.SECOND_CARD);
+
+
+        setCardOnFloor(controller.getCommonAchievements().get(0), Decks.ACHIEVEMENT, DeckPosition.FIRST_CARD);
+        setCardOnFloor(controller.getCommonAchievements().get(1), Decks.ACHIEVEMENT, DeckPosition.SECOND_CARD);
+
     }
 
 }

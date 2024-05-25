@@ -538,7 +538,7 @@ public class CLI extends Thread implements UI {
      * @param deckFrom the deck from which the card has been drawn
      * @param position the position of the card in the deck
      */
-    public void otherPlayerDraw(String name, Decks deckFrom, DeckPosition position){
+    public void otherPlayerDraw(String name, Decks deckFrom, DeckPosition position, List<Card> newBoardCards){
         printOnNewLine(name + " ha pescato una carta dalla posizione " + position + " del mazzo " + deckFrom);
         printOnNewLine("Ora il mazzo ha " + controller.getDeckSize(deckFrom));
         printOnNewLine("Le carte a terra sono" + controller.getBoardCards(deckFrom));

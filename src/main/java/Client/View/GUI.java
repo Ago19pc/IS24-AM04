@@ -302,9 +302,12 @@ public class GUI implements UI{
 
     }
 
+    // I DONT KNOW WHY
     @Override
-    public void otherPlayerDraw(String name, Decks deckFrom, DeckPosition position) {
-
+    public void otherPlayerDraw(String name, Decks deckFrom, DeckPosition position, List<Card> newBoardCards) {
+        Platform.runLater(() -> {
+            ((MainBoardSceneController) sceneControllerMap.get(SceneName.GAME)).setCardOnFloor(newBoardCards.get(0), deckFrom, position);
+        });
     }
 
     @Override
@@ -345,7 +348,9 @@ public class GUI implements UI{
 
     @Override
     public void displayBoardCards() {
-
+        Platform.runLater(() -> {
+            ((MainBoardSceneController) sceneControllerMap.get(SceneName.GAME)).updateAllFloorCards();
+        });
     }
 
     @Override
@@ -414,7 +419,10 @@ public class GUI implements UI{
 
     @Override
     public void displayCommonAchievements() {
-
+        Platform.runLater( () -> {
+            ((MainBoardSceneController) sceneControllerMap.get(SceneName.GAME)).setCardOnFloor(controller.getCommonAchievements().get(0), Decks.ACHIEVEMENT, DeckPosition.FIRST_CARD);
+            ((MainBoardSceneController) sceneControllerMap.get(SceneName.GAME)).setCardOnFloor(controller.getCommonAchievements().get(1), Decks.ACHIEVEMENT, DeckPosition.SECOND_CARD);
+        });
     }
 
     @Override

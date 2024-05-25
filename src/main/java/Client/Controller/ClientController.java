@@ -257,11 +257,13 @@ public class ClientController {
         List<Card> boardCards = new ArrayList<>();
         switch (deck){
             case GOLD:
-                boardCards.add(goldDeck.getBoardCards().getFirst());
-                boardCards.add(goldDeck.getBoardCards().getLast());
+                for (GoldCard c : goldDeck.getBoardCards()){
+                    boardCards.add(c);
+                }
             case RESOURCE:
-                boardCards.add(resourceDeck.getBoardCards().getFirst());
-                boardCards.add(resourceDeck.getBoardCards().getLast());
+                for (ResourceCard c : resourceDeck.getBoardCards()){
+                    boardCards.add(c);
+                }
         }
         return boardCards;
     }
@@ -396,7 +398,7 @@ public class ClientController {
         }
         try{
         getPlayerByName(name).setHandSize(getPlayerByName(name).getHandSize() + 1);
-        ui.otherPlayerDraw(name, deckFrom, drawPosition);
+        ui.otherPlayerDraw(name, deckFrom, drawPosition, newBoardCards);
         } catch (PlayerNotFoundByNameException e) {
             throw new RuntimeException(e);
         }

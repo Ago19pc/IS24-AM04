@@ -32,6 +32,7 @@ public class Deck<T> {
      * @param boardCards List of Boardcards
      */
     public void setBoardCards(List<Card> boardCards) {
+        System.out.println("In the boardcards arrived # " + boardCards.size() + " cards");
         this.boardCards = new ArrayList<>();
         boardCards.forEach(card -> this.boardCards.add((T) card));
     }
