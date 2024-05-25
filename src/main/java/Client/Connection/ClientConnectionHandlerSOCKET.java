@@ -134,15 +134,7 @@ public class ClientConnectionHandlerSOCKET extends Thread implements ClientConne
     }
 
     public void executeMessage(ToClientMessage message) {
-        try {
-            message.clientExecute(controller);
-        } catch (ClientExecuteNotCallableException e) {
-            System.out.println("The received message should not be executed on the client");
-            System.out.println("Message not executed");
-        } catch (PlayerNotFoundByNameException e) {
-            System.out.println("Player not found by name");
-            System.out.println("Message not executed");
-        }
+        message.clientExecute(controller);
     }
 
 

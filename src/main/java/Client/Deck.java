@@ -14,6 +14,11 @@ public class Deck<T> {
         this.boardCards = boardCards;
     }
 
+    public Deck(int deckSize, List<T> boardCards) {
+        this.deckSize = deckSize;
+        this.boardCards = boardCards;
+    }
+
     /**
      * Get the board cards
      * @return List of Boardcards

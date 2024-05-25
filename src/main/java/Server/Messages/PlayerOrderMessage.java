@@ -14,7 +14,7 @@ public class PlayerOrderMessage implements Serializable, ToClientMessage {
         this.playerNames = playerNames;
     }
     @Override
-    public void clientExecute(ClientController controller) throws ClientExecuteNotCallableException, PlayerNotFoundByNameException {
+    public void clientExecute(ClientController controller){
         controller.updatePlayerOrder(playerNames);
     }
 }

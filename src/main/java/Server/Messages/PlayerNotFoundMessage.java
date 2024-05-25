@@ -1,13 +1,14 @@
 package Server.Messages;
 
 import Client.Controller.ClientController;
-import Server.Exception.ClientExecuteNotCallableException;
 
 import java.io.Serializable;
 
-public class ChatMessageIsEmptyMessage implements ToClientMessage, Serializable {
+public class PlayerNotFoundMessage implements Serializable, ToClientMessage {
+    public PlayerNotFoundMessage() {
+    }
     @Override
     public void clientExecute(ClientController controller){
-        controller.chatMessageIsEmpty();
+        controller.idNotInGame();
     }
 }

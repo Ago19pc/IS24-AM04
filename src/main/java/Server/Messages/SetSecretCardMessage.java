@@ -7,6 +7,7 @@ import Server.Exception.*;
 import Server.Player.Player;
 
 import java.io.Serializable;
+import java.rmi.RemoteException;
 
 public class SetSecretCardMessage implements Serializable, ToClientMessage, ToServerMessage {
     private String name;
@@ -21,12 +22,12 @@ public class SetSecretCardMessage implements Serializable, ToClientMessage, ToSe
     }
 
     @Override
-    public void clientExecute(ClientController controller) throws ClientExecuteNotCallableException {
+    public void clientExecute(ClientController controller){
         controller.setSecretCard(name);
     }
 
     @Override
-    public void serverExecute(Controller controller) throws ServerExecuteNotCallableException {
+    public void serverExecute(Controller controller) {
         String playerName = "";
         try {
             playerName = controller.getConnectionHandler().getPlayerNameByID(this.id);
@@ -37,8 +38,14 @@ public class SetSecretCardMessage implements Serializable, ToClientMessage, ToSe
             }
             controller.setSecretObjectiveCard(player, chosenCard);
         } catch (PlayerNotFoundByNameException e) {
-            NameNotYetSetMessage nameNotYetSetMessage = new NameNotYetSetMessage();
-            //todo: send message to correct client based on ip
+            NameNotYetSetMessage message = new NameNotYetSetMessage();
+            try{
+                controller.getConnectionHandler().getServerConnectionHandler(id).sendMessage(message, id);
+            } catch (PlayerNotInAnyServerConnectionHandlerException exception) {
+                System.out.println("Player not found");
+            } catch (RemoteException exception) {
+                System.out.println("Remote exception");
+            }
         } catch (AlreadySetException e) {
             AlreadyDoneMessage alreadyDoneMessage = new AlreadyDoneMessage(Actions.SECRET_ACHIEVEMENT_CHOICE);
             controller.getConnectionHandler().sendMessage(alreadyDoneMessage, playerName);

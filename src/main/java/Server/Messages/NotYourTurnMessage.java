@@ -9,7 +9,7 @@ public class NotYourTurnMessage implements Serializable, ToClientMessage{
     public NotYourTurnMessage() {
     }
     @Override
-    public void clientExecute(ClientController controller) throws ClientExecuteNotCallableException {
+    public void clientExecute(ClientController controller){
         controller.notYourTurn();
     }
 }

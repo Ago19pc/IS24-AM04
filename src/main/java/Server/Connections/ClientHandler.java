@@ -62,7 +62,7 @@ public class ClientHandler extends Thread {
     public void run() {
         System.out.println("[SOCKET] Nuovo Client connesso: " + this.socket.getInetAddress());
         System.out.println("[SOCKET] Ora i client connessi sono: ");
-        for (ClientHandler c : connectionHandler.getThreads()) {
+        for (ClientHandler c : connectionHandler.getConnectedThreads()) {
             System.out.print(" " + c.socket.getInetAddress() +" -");
         }
         System.out.println();
@@ -84,12 +84,7 @@ public class ClientHandler extends Thread {
      * @param message the message to send
      */
     public void sendMessage(ToClientMessage message)  {
-        try {
-            this.sender.sendMessage(message);
-        } catch (IOException e) {
-            System.out.println("Unable to stringify chat message");
-            throw new RuntimeException(e);
-        }
+        this.sender.sendMessage(message);
     }
 
 

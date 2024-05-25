@@ -14,7 +14,7 @@ import java.util.List;
 
 public interface Controller {
 
-    public void addPlayer(String name, String clientID) throws TooManyPlayersException, IllegalArgumentException;
+    public void addPlayer(String name, String clientID) throws TooManyPlayersException, IllegalArgumentException, AlreadyStartedException;
 
 
     /**
@@ -26,6 +26,8 @@ public interface Controller {
      * @return List<Player> the list of players
      */
     public List<Player> getPlayerList();
+
+    public void setOffline(String id);
 
 
     /**
@@ -139,6 +141,6 @@ public interface Controller {
 
     public void reactToDisconnection(String id) throws AlreadyFinishedException, PlayerNotFoundByNameException;
 
-
+    public void reconnect(String id) throws IllegalArgumentException, AlreadySetException;
 }
 

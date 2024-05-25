@@ -9,7 +9,7 @@ public class GameAlreadyStartedMessage implements Serializable, ToClientMessage 
     public GameAlreadyStartedMessage() {
     }
     @Override
-    public void clientExecute(ClientController controller) throws ClientExecuteNotCallableException {
+    public void clientExecute(ClientController controller){
         controller.gameAlreadyStarted();
     }
 }

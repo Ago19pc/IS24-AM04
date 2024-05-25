@@ -64,13 +64,7 @@ public class ClientConnectionHandlerRMI implements ClientConnectionHandler {
      */
     @Override
     public void executeMessage(ToClientMessage message)  {
-        try {
-            message.clientExecute(controller);
-        } catch (ClientExecuteNotCallableException e) {
-            System.out.println("This message should not be executed by client");
-        } catch (PlayerNotFoundByNameException e) {
-            System.out.println("Player not found by name");
-        }
+        message.clientExecute(controller);
     }
 
     public boolean ping() {
@@ -91,7 +85,6 @@ public class ClientConnectionHandlerRMI implements ClientConnectionHandler {
         } catch (Exception e) {
             System.out.println("[RMI] Error with selected port trying with next one...");
             setRmi_client_port(rmi_client_port + 1);
-
         }
     }
 }

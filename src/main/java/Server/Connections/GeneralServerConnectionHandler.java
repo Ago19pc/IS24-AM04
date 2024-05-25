@@ -1,9 +1,8 @@
 package Server.Connections;
 
 import Server.Controller.Controller;
-import Server.Exception.AlreadyFinishedException;
-import Server.Exception.PlayerNotFoundByNameException;
-import Server.Exception.PlayerNotInAnyServerConnectionHandlerException;
+import Server.Exception.*;
+import Server.Messages.RemovedPlayerMessage;
 import Server.Messages.ToClientMessage;
 
 import java.io.IOException;
@@ -20,11 +19,7 @@ public class GeneralServerConnectionHandler {
      * Map<Id, Name>
      */
     private Map<String, String> playerID = new HashMap<>();
-
-    //List of ids of players to disconnect
-    private List<String> playersToDisconnect = new ArrayList<>();
-    //List of disconnected players' ids
-    private List<String> disconnectedPlayers = new ArrayList<>();
+    private final List<String> disconnectedPlayerIds = new ArrayList<>();
 
     public GeneralServerConnectionHandler() throws IOException {
         serverConnectionHandlerRMI = new ServerConnectionHandlerRMI();
@@ -50,7 +45,19 @@ public class GeneralServerConnectionHandler {
 
     public void removePlayerByName(String name) {
         String id = playerID.entrySet().stream().filter(entry -> entry.getValue().equals(name)).findFirst().get().getKey();
+        try{
+            getServerConnectionHandler(id).killClient(id);
+        } catch (PlayerNotInAnyServerConnectionHandlerException e) {
+            System.out.println("Player not found in any server connection handler, PLAYER NOT REMOVED!");
+            e.printStackTrace();
+        } catch (Exception e){
+            System.out.println("Exception, PLAYER NOT REMOVED!");
+            e.printStackTrace();
+        }
+        disconnectedPlayerIds.remove(id);
         playerID.remove(id);
+        RemovedPlayerMessage message = new RemovedPlayerMessage(name);
+        sendAllMessage(message);
     }
 
     /**
@@ -97,16 +104,20 @@ public class GeneralServerConnectionHandler {
         System.out.println(playerID);
         try {
             String id = playerID.entrySet().stream().filter(entry -> entry.getValue().equals(name)).findFirst().get().getKey();
+            if(disconnectedPlayerIds.contains(id)) {
+                return;
+            }
             getServerConnectionHandler(id).sendMessage(message, id);
         } catch (PlayerNotInAnyServerConnectionHandlerException e) {
             System.out.println("Player not found in any server connection handler, MESSAGE NOT SENT!");
             e.printStackTrace();
         } catch (RemoteException e) {
-            throw new RuntimeException(e);
+            System.out.println("Remote exception, MESSAGE NOT SENT!");
+            e.printStackTrace();
         }
     }
 
-    public void setName(String name, String clientID) throws RemoteException {
+    public void setName(String name, String clientID) throws IllegalArgumentException, TooManyPlayersException, AlreadyStartedException {
          if (serverConnectionHandlerSOCKET.isClientAvailable(clientID)) {
             serverConnectionHandlerSOCKET.setName(name, clientID);
         } else if (serverConnectionHandlerRMI.isClientAvailable(clientID)){
@@ -128,36 +139,20 @@ public class GeneralServerConnectionHandler {
     }
 
     /**
-     *
-     * @return a list of disconnected clients ids
-     */
-    public List<String> getDisconnected(){
-       return disconnectedPlayers;
-    }
-
-    /**
-     * @returns the list of players to disconnecy
-     */
-    public List<String> getPlayersToDisconnect() {
-        return playersToDisconnect;
-    }
-
-    /**
      * Sets a player as offline i.e. adds it to the to disconnect list
      * @param id the player's id
      */
-    public void setOffline(String id) throws PlayerNotInAnyServerConnectionHandlerException, AlreadyFinishedException, RemoteException, PlayerNotFoundByNameException {
-        playersToDisconnect.add(id);
+    public void setOffline(String id) {
+        disconnectedPlayerIds.add(id);
         System.out.println("Player " + getPlayerNameByID(id) + " is now set offline");
-        getServerConnectionHandler(id).killClient(id);
-        System.out.println("Client killed");
     }
 
-    /**
-     * Removes a player from the disconnected list
-     * @param id the player's id
-     */
-    public void removeFromDisconnected(String id){
-        disconnectedPlayers.remove(id);
+    public void setOnline(String id) {
+        disconnectedPlayerIds.remove(id);
+        System.out.println("Player " + getPlayerNameByID(id) + " is now set online");
+    }
+
+    public boolean isInDisconnectedList(String id) {
+        return disconnectedPlayerIds.contains(id);
     }
 }

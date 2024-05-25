@@ -11,6 +11,7 @@ import Server.Enums.*;
 import Server.Exception.ClientExecuteNotCallableException;
 import Server.Exception.PlayerNotFoundByNameException;
 import Server.Messages.*;
+import Client.Player;
 
 import java.io.IOException;
 import java.rmi.NotBoundException;
@@ -33,7 +34,7 @@ public class ClientController {
     //player info
     private String myName;
     private AchievementCard secretAchievement;
-    private List<ResourceCard> hand = new ArrayList<>();
+    private List<Card> hand = new ArrayList<>();
 
     private String id;
 
@@ -73,6 +74,9 @@ public class ClientController {
         }
         return myColor;
     }
+    public String getMyId() {
+        return id;
+    }
     public void setMyColor(Color color) {
         try {
             getPlayerByName(myName).setColor(color);
@@ -85,6 +89,10 @@ public class ClientController {
     }
 
     //ui actions
+    public void reconnect(String newId) {
+        ReconnectionMessage message = new ReconnectionMessage(id, newId);
+        clientConnectionHandler.sendMessage(message);
+    }
     public void joinServer(String ip, int port) {
         try {
             clientConnectionHandler = new GeneralClientConnectionHandler(this, rmiMode);
@@ -217,7 +225,7 @@ public class ClientController {
         }
         return availableColors;
     }
-    public List<ResourceCard> getHand() {
+    public List<Card> getHand() {
         return hand;
     }
     public List<AchievementCard> getCommonAchievements() {
@@ -277,6 +285,7 @@ public class ClientController {
     //methods called by incoming messages
     public void loadLobbyInfo(String id, List<String> playerNames, Map<String, Color> playerColors, Map<String, Boolean> playerReady) {
         setId(id);
+        cli.displayId();
         for (String name : playerNames){
             Player p = new Player(name);
             p.setColor(playerColors.get(name));
@@ -339,7 +348,7 @@ public class ClientController {
     public void invalidCard(Actions cardType) {
         ui.invalidCardForAction(cardType);
     }
-    public void displayLeaderboard(Map<String, Integer> playerPoints) {
+    public void displayLeaderboard(LinkedHashMap<String, Integer> playerPoints) {
         gameState = GameState.LEADERBOARD;
         for (String name : playerPoints.keySet()){
             try {
@@ -348,7 +357,7 @@ public class ClientController {
                 throw new RuntimeException(e);
             }
         }
-        ui.displayLeaderboard();
+        ui.displayLeaderboard(playerPoints);
     }
     public void nameNotYetSet() {
         ui.needName();
@@ -374,7 +383,7 @@ public class ClientController {
             ui.newTurn();
         }
     }
-    public void drawOtherPlayer(String name, Decks deckFrom, DeckPosition drawPosition, List<Card> newBoardCards) throws PlayerNotFoundByNameException {
+    public void drawOtherPlayer(String name, Decks deckFrom, DeckPosition drawPosition, List<Card> newBoardCards){
         switch (deckFrom){
             case GOLD:
                 goldDeck.setBoardCards(newBoardCards);
@@ -385,15 +394,23 @@ public class ClientController {
                 resourceDeck.setDeckSize(resourceDeck.getDeckSize() - 1);
                 break;
         }
+        try{
         getPlayerByName(name).setHandSize(getPlayerByName(name).getHandSize() + 1);
         ui.otherPlayerDraw(name, deckFrom, drawPosition);
+        } catch (PlayerNotFoundByNameException e) {
+            throw new RuntimeException(e);
+        }
     }
-    public void giveOtherPlayerInitialHand(String name) throws PlayerNotFoundByNameException {
-        Player p = getPlayerByName(name);
-        p.setHandSize(3);
-        resourceDeck.setDeckSize(resourceDeck.getDeckSize() - 2);
-        goldDeck.setDeckSize(goldDeck.getDeckSize() - 1);
-        ui.otherPlayerInitialHand(name);
+    public void giveOtherPlayerInitialHand(String name){
+        try {
+            Player p = getPlayerByName(name);
+            p.setHandSize(3);
+            resourceDeck.setDeckSize(resourceDeck.getDeckSize() - 2);
+            goldDeck.setDeckSize(goldDeck.getDeckSize() - 1);
+            ui.otherPlayerInitialHand(name);
+        } catch (PlayerNotFoundByNameException e) {
+            throw new RuntimeException(e);
+        }
     }
     public void setColor(boolean confirmation, Color color){
         if(confirmation){
@@ -441,9 +458,13 @@ public class ClientController {
         }
         ui.secretAchievementChosen(name);
     }
-    public void startingCardChosen(String name, CornerCardFace startingFace) throws PlayerNotFoundByNameException {
-        getPlayerByName(name).initializeManuscript(startingFace);
-        ui.startingCardChosen(name);
+    public void startingCardChosen(String name, CornerCardFace startingFace) {
+        try{
+            getPlayerByName(name).initializeManuscript(startingFace);
+            ui.startingCardChosen(name);
+        } catch (PlayerNotFoundByNameException e) {
+            throw new RuntimeException(e);
+        }
     }
     public void startGame(List<Card> goldBoardCards, List<Card> resourceBoardCards){
         ui.gameStarted();
@@ -451,14 +472,18 @@ public class ClientController {
         resourceDeck = new Deck(resourceBoardCards);
         ui.displayBoardCards();
     }
-    public void updatePlayerOrder(List<String> playerNames) throws PlayerNotFoundByNameException {
+    public void updatePlayerOrder(List<String> playerNames){
         List<Player> newPlayerList = new ArrayList<>();
-        for (String name : playerNames){
-            newPlayerList.add(getPlayerByName(name));
+        try {
+            for (String name : playerNames) {
+                newPlayerList.add(getPlayerByName(name));
+            }
+            players = newPlayerList;
+            gameState = GameState.PLACE_CARD;
+            ui.displayPlayerOrder();
+        } catch (PlayerNotFoundByNameException e) {
+            throw new RuntimeException(e);
         }
-        players = newPlayerList;
-        gameState = GameState.PLACE_CARD;
-        ui.displayPlayerOrder();
     }
     public void giveStartingCard(Card card) {
         gameState = GameState.CHOOSE_STARTING_CARD;
@@ -467,19 +492,22 @@ public class ClientController {
     public void toDoFirst(Actions actionToDo) {
         ui.doFirst(actionToDo);
     }
-    public void placeCard(String playerName, CornerCardFace placedCardFace, int x, int y, int points) throws PlayerNotFoundByNameException {
-        getPlayerByName(playerName).addManuscriptPoints(points);
-        getPlayerByName(playerName).addCardToManuscript(x, y, placedCardFace, turn);
-        getPlayerByName(playerName).setHandSize(getPlayerByName(playerName).getHandSize() - 1);
-        ui.cardPlaced(playerName, x, y);
-        if(points > 0){
-            ui.displayPlayerPoints(playerName);
+    public void placeCard(String playerName, CornerCardFace placedCardFace, int x, int y, int points){
+        try{
+            getPlayerByName(playerName).addManuscriptPoints(points);
+            getPlayerByName(playerName).addCardToManuscript(x, y, placedCardFace, turn);
+            getPlayerByName(playerName).setHandSize(getPlayerByName(playerName).getHandSize() - 1);
+            ui.cardPlaced(playerName, x, y);
+            if(points > 0){
+                ui.displayPlayerPoints(playerName);
+            }
+            gameState = GameState.DRAW_CARD;
+        } catch (PlayerNotFoundByNameException e) {
+            throw new RuntimeException(e);
         }
-        gameState = GameState.DRAW_CARD;
     }
 
     public void playerDisconnected(String playerName) {
-        players.removeIf(p -> p.getName().equals(playerName));
         ui.playerDisconnected(playerName);
     }
 
@@ -488,5 +516,49 @@ public class ClientController {
     }
     public void tooManyPlayers() {
         ui.tooManyPlayers();
+    }
+
+    public void playerRemoved(String name) {
+        players = players.stream().filter(p -> !p.getName().equals(name)).toList();
+        ui.playerRemoved(name);
+    }
+
+    public void otherPlayerReconnected(String name) {
+        ui.otherPlayerReconnected(name);
+    }
+
+    public void idNotInGame(){
+        ui.idNotInGame();
+    }
+
+    public void playerAlreadyPlaying(){
+        ui.playerAlreadyPlaying();
+    }
+
+    public AchievementCard getSecretAchievement() {
+        return secretAchievement;
+    }
+
+    public List<Message> getChat() {
+        return chat.getMessages();
+    }
+
+    public void setGameInfo(String id, List<AchievementCard> commonAchievements, Deck<GoldCard> goldDeck, Deck<ResourceCard> resourceDeck, String name, AchievementCard secretAchievement, List<Card> hand, int turn, List<Player> players, Chat chat, GameState gameState) {
+        this.id = id;
+        this.commonAchievements = commonAchievements;
+        this.goldDeck = goldDeck;
+        this.resourceDeck = resourceDeck;
+        this.myName = name;
+        this.secretAchievement = secretAchievement;
+        this.hand = hand;
+        this.turn = turn;
+        this.players = players;
+        this.chat = chat;
+        this.gameState = gameState;
+        this.unavaiableColors = new ArrayList<>();
+        for (Player p : players){
+            unavaiableColors.add(p.getColor());
+        }
+        ui.displayGameInfo();
     }
 }

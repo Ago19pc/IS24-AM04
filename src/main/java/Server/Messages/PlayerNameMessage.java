@@ -2,6 +2,9 @@ package Server.Messages;
 
 import Client.Controller.ClientController;
 import Server.Controller.Controller;
+import Server.Exception.AlreadyStartedException;
+import Server.Exception.PlayerNotInAnyServerConnectionHandlerException;
+import Server.Exception.TooManyPlayersException;
 
 import java.io.Serializable;
 import java.rmi.RemoteException;
@@ -25,12 +28,37 @@ public class PlayerNameMessage implements ToClientMessage, ToServerMessage, Seri
     public PlayerNameMessage(Boolean confirmation){this.confirmation = confirmation;}
 
     @Override
-    public void serverExecute(Controller controller) {
+    public void serverExecute(Controller controller){
 
         try {
             controller.getConnectionHandler().setName(this.name, this.id);
-        } catch (RemoteException e) {
-            throw new RuntimeException(e);
+        } catch (IllegalArgumentException e) {
+            InvalidNameMessage message = new InvalidNameMessage();
+            try{
+                controller.getConnectionHandler().getServerConnectionHandler(id).sendMessage(message, id);
+            } catch (PlayerNotInAnyServerConnectionHandlerException exception) {
+                System.out.println("Player not found");
+            } catch (RemoteException exception) {
+                System.out.println("Remote exception");
+            }
+        } catch (TooManyPlayersException e) {
+            TooManyPlayersMessage message = new TooManyPlayersMessage();
+            try{
+                controller.getConnectionHandler().getServerConnectionHandler(id).sendMessage(message, id);
+            } catch (PlayerNotInAnyServerConnectionHandlerException exception) {
+                System.out.println("Player not found");
+            } catch (RemoteException exception) {
+                System.out.println("Remote exception");
+            }
+        } catch (AlreadyStartedException e) {
+            GameAlreadyStartedMessage message = new GameAlreadyStartedMessage();
+            try{
+                controller.getConnectionHandler().getServerConnectionHandler(id).sendMessage(message, id);
+            } catch (PlayerNotInAnyServerConnectionHandlerException exception) {
+                System.out.println("Player not found");
+            } catch (RemoteException exception) {
+                System.out.println("Remote exception");
+            }
         }
 
     }

@@ -24,7 +24,7 @@ public class LobbyPlayersMessage implements Serializable, ToClientMessage {
     }
 
     @Override
-    public void clientExecute(ClientController controller) throws ClientExecuteNotCallableException, PlayerNotFoundByNameException {
+    public void clientExecute(ClientController controller){
         controller.loadLobbyInfo(id, playerNames, playerColors, playerReady);
     }
 }

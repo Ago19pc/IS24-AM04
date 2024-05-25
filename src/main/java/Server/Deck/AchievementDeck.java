@@ -64,10 +64,10 @@ public class AchievementDeck implements Deckable{
     /**
      * @return Card the card from the position
      */
-    public Map<DeckPosition, Card> getBoardCard() {
-        Map<DeckPosition, Card> boardCardsToReturn = new HashMap<>();
+    public Map<DeckPosition, AchievementCard> getBoardCard() {
+        Map<DeckPosition, AchievementCard> boardCardsToReturn = new HashMap<>();
         for (DeckPosition position : boardCards.keySet()) {
-            boardCardsToReturn.put(position, (Card) boardCards.get(position));
+            boardCardsToReturn.put(position, boardCards.get(position));
         }
         return boardCardsToReturn;
     }

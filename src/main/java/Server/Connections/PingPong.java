@@ -10,10 +10,6 @@ public class PingPong extends Thread{
     public void run(){
         while(true) {
             connectionHandler.getServerConnectionHandlerRMI().pingAll();
-            connectionHandler.getPlayersToDisconnect().forEach((id) -> {
-                connectionHandler.getDisconnected().add(id);
-            });
-            connectionHandler.getPlayersToDisconnect().clear();
             try {
                 Thread.sleep(5000);
             } catch (InterruptedException e) {

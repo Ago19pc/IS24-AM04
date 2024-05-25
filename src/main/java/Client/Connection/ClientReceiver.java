@@ -32,14 +32,7 @@ public class ClientReceiver extends Thread {
 
             try {
                 packet = (ToClientMessage) in.readObject();
-
-                try {
-                    packet.clientExecute(this.controller);
-                } catch (ClientExecuteNotCallableException e) {
-                    System.out.println("Called client execution when should not be done");
-                } catch (PlayerNotFoundByNameException e) {
-                    System.out.println("ERROR: Player not found by name");
-                }
+                packet.clientExecute(this.controller);
             } catch (IOException | ClassNotFoundException e) {
                 System.out.println("Server Disconnected");
                 throw new RuntimeException("Error reading from socket", e);

@@ -8,10 +8,7 @@ import Server.Chat.Message;
 import Server.Enums.*;
 import Server.Exception.PlayerNotFoundByNameException;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Scanner;
+import java.util.*;
 
 public class CLI extends Thread implements UI {
     private ClientController controller;
@@ -100,6 +97,8 @@ public class CLI extends Thread implements UI {
                 printOnNewLine("  drawCard <mazzo> (opzionale <posizione a terra>): pesca una carta dal mazzo specificato. Se <posizione a terra> è specificata, pesca la carta dalla posizione specificata, altrimenti pesca dal mazzo");
                 printOnNewLine("  I mazzi disponibili sono: GOLD, RESOURCE");
                 printOnNewLine("  Le posizioni a terra disponibili sono: 1, 2");
+                printOnNewLine("");
+                printOnNewLine("  reconnect <id>: si riconnette alla partita in corso come giocatore con l'id specificato");
                 printOnNewLine("");
                 printPromptLine();
                 break;
@@ -220,6 +219,13 @@ public class CLI extends Thread implements UI {
                 Decks deck = Decks.valueOf(args[1].toUpperCase());
                 controller.askDrawCard(deck, position);
                 break;
+            case "reconnect":
+                if(args.length != 2){
+                    printOnNewLine("Utilizzo corretto: reconnect <id>");
+                    return;
+                }
+                controller.reconnect(args[1]);
+                break;
             default:
                 printOnNewLine("Comando non valido. Digita \"help\" per la lista dei comandi");
                 printPromptLine();
@@ -230,10 +236,9 @@ public class CLI extends Thread implements UI {
 
     /**
      * Prints the new name
-     * @param name new name
      */
-    public void nameChanged(String name){
-        printOnNewLine("Sei entrato in partita. Il tuo nome è: " + name);
+    public void nameChanged(){
+        printOnNewLine("Sei entrato in partita. Il tuo nome è: " + controller.getMyName());
         printPromptLine();
     }
     /**
@@ -505,11 +510,12 @@ public class CLI extends Thread implements UI {
     /**
      * Shows the players and their final points
      */
-    public void displayLeaderboard(){
+    public void displayLeaderboard(LinkedHashMap<String, Integer> playerPoints){
         printOnNewLine("Classifica: \n");
-        controller.getLeaderboard().forEach((player, points) -> {
-            System.out.println("    " + player + ": " + points);
-        });
+        int i = 1;
+        for(String player: playerPoints.keySet()){
+            System.out.println("    Il giocatore n." + i++ + "è " + player + ": " + playerPoints.get(player) + " punti");
+        }
         printPromptLine();
     }
 
@@ -667,5 +673,84 @@ public class CLI extends Thread implements UI {
     public void tooManyPlayers() {
         printOnNewLine("E' stato già raggiunto il limite massimo di giocatori, sei uno spettatore");
         printPromptLine();
+    }
+
+    public void playerRemoved(String playerName) {
+        printOnNewLine(playerName + " è stato rimosso dalla partita per inattività");
+        printPromptLine();
+    }
+
+    public void otherPlayerReconnected(String name){
+        printOnNewLine(name + " si è riconnesso");
+        printPromptLine();
+    }
+
+    public void displayId(){
+        printOnNewLine("Il tuo id è: " + controller.getMyId());
+        printPromptLine();
+    }
+
+    public void idNotInGame(){
+        printOnNewLine("L'id specificato non corrisponde a nessun giocatore");
+        printPromptLine();
+    }
+
+    public void playerAlreadyPlaying(){
+        printOnNewLine("Il giocatore specificato è già in partita");
+        printPromptLine();
+    }
+
+    public void displayDeckSizes(){
+        printOnNewLine("Il mazzo oro ha " + controller.getDeckSize(Decks.GOLD) + " carte");
+        printOnNewLine("Il mazzo risorsa ha " + controller.getDeckSize(Decks.RESOURCE) + " carte");
+        printPromptLine();
+    }
+
+    public void displaySecretAchievement(){
+        printOnNewLine("Il tuo obiettivo segreto è: " + controller.getSecretAchievement());
+        printPromptLine();
+    }
+
+    public void displayTurn(){
+        printOnNewLine("E' il turno " + controller.getTurn() + ". Tocca a " + controller.getActivePlayer());
+        printPromptLine();
+    }
+
+    public void displayManuscript(String playerName){
+        printOnNewLine(playerName + "ha un manoscritto");
+    }
+
+    public void displayPlayerInfo(){
+        displayPlayerOrder();
+        displayPlayerColors();
+        for (Player player : controller.getPlayers()) {
+            System.out.println("    " + player.getName() + ": " + player.getPoints() + " punti");
+            displayManuscript(player.getName());
+        }
+    }
+
+    public void displayChat(){
+        for (Message message : controller.getChat()) {
+            System.out.println(message.getName() + ": " + message.getMessage());
+        }
+    }
+
+    public void displayGameState(){
+        printOnNewLine("Stato del gioco: " + controller.getGameState());
+        printPromptLine();
+    }
+
+    public void displayGameInfo(){
+        nameChanged();
+        displayId();
+        displayCommonAchievements();
+        displayDeckSizes();
+        displayBoardCards();
+        displaySecretAchievement();
+        displayHand();
+        displayTurn();
+        displayPlayerInfo();
+        displayChat();
+        displayGameState();
     }
 }

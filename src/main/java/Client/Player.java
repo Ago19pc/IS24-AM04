@@ -24,6 +24,17 @@ public class Player {
         this.ready = false;
     }
 
+    public Player(String name, int points, int handSize, boolean active, Color color, Manuscript manuscript) {
+        this.name = name;
+        this.manuscriptPoints = points;
+        this.achievementPoints = 0;
+        this.handSize = handSize;
+        this.active = active;
+        this.color = color;
+        this.ready = true;
+        this.manuscript = manuscript;
+    }
+
     /**
      * Get the name of the player
      * @return name the name of the player
