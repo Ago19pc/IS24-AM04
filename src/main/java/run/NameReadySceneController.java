@@ -8,9 +8,6 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.Pane;
 
-import java.net.URL;
-import java.util.ResourceBundle;
-
 
 public class NameReadySceneController extends SceneController{
 
@@ -27,15 +24,11 @@ public class NameReadySceneController extends SceneController{
     @FXML
     public  Label label_Username;
     @FXML
-    public  Label name_exist;
     public ListView<String> list_Player;
+    public ListView<String> chat_message;
 
     public void askSetName(ActionEvent actionEvent) {
         controller.askSetName(possible_Name.getText());
-    }
-    @Override
-    public void initialize(URL url, ResourceBundle resourceBundle){
-        name_exist.setOpacity(0);
     }
 
     public void cloneListView(ListView<String> other) {

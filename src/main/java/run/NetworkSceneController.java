@@ -13,6 +13,7 @@ public class NetworkSceneController extends SceneController{
         rmi_radio_button.setSelected(true);
         socket_radio_button.setSelected(false);
         next_button.setDisable(false);
+        next_button.setOpacity(1);
         controller.setRMIMode(true);
     }
 
@@ -21,6 +22,7 @@ public class NetworkSceneController extends SceneController{
         rmi_radio_button.setSelected(false);
         socket_radio_button.setSelected(true);
         next_button.setDisable(false);
+        next_button.setOpacity(1);
         controller.setRMIMode(false);
     }
 
