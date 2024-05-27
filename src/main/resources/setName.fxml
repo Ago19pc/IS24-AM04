@@ -16,9 +16,9 @@
             <Image url="@./images/otherImages/logovuoto.jpg" />
          </image>
       </ImageView>
-      <Label fx:id="label_Username" layoutX="302.0" layoutY="253.0" text="Username" textFill="#203eab">
+      <Label fx:id="label_Username" layoutX="302.0" layoutY="253.0" text="Username">
          <font>
-            <Font name="System Bold" size="32.0" />
+            <Font size="32.0" />
          </font>
       </Label>
       <TextField fx:id="possible_Name" layoutX="200.0" layoutY="340.0" prefHeight="60.0" prefWidth="348.0">
@@ -27,9 +27,9 @@
          </font>
       </TextField>
       <ListView fx:id="list_Player" layoutX="747.0" prefHeight="180.0" prefWidth="277.0" style="-fx-background-color: eae1b8;" />
-      <Button fx:id="confirm_Button" layoutX="294.0" layoutY="451.0" mnemonicParsing="false" onAction="#askSetName" style="-fx-border-width: 3; -fx-border-color: White; -fx-background-color: transparent; -fx-border-radius: 3;" text="Confirm" textFill="#203eab">
+      <Button fx:id="confirm_Button" layoutX="294.0" layoutY="451.0" mnemonicParsing="false" onAction="#askSetName" style="-fx-border-width: 3; -fx-border-color: White; -fx-background-color: transparent; -fx-border-radius: 3;" text="Confirm">
          <font>
-            <Font name="System Bold" size="32.0" />
+            <Font size="32.0" />
          </font>
       </Button>
       <ListView fx:id="chat_message" layoutX="747.0" layoutY="180.0" prefHeight="588.0" prefWidth="277.0" style="-fx-background-color: eae1b8;" />
