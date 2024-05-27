@@ -103,7 +103,9 @@ public class GUI implements UI{
 
     @Override
     public void displayNewCardInHand() {
-
+        Platform.runLater(() -> {
+            ((MainBoardSceneController) sceneControllerMap.get(SceneName.GAME)).setHandCards();
+        });
     }
 
     @Override

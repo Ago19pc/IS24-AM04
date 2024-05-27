@@ -82,8 +82,21 @@ public class ResourceDeck implements Deckable {
             } else {
                 if(boardCards.get(position) == null){
                     throw new AlreadyFinishedException("There is no card in the position " + position);
+                } else {
+                    ResourceCard card = boardCards.get(position);
+                    ResourceCard replacement;
+                    try {
+                        replacement = cards.remove(0);
+                        boardCards.put(position, replacement);
+                    } catch (IndexOutOfBoundsException e) {
+                        boardCards.put(position, null);
+                    }
+
+                    return card;
+
                 }
-                return (ResourceCard) getBoardCard().get(position);
+
+
             }
 
     }

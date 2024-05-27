@@ -137,7 +137,7 @@ public class MainBoardSceneController extends SceneController {
     }
 
     public void updateManuscript(String name, CardFace cardFace, int x, int y) {
-        if (name == controller.getMyName()) {
+        if (name.equals(controller.getMyName())) {
             OnBoardCard card = new OnBoardCard(getImageFromCard(cardFace), x, y, null, this);
             card.place(yourManuscript);
         } else {
@@ -238,21 +238,34 @@ public class MainBoardSceneController extends SceneController {
     }
 
     @FXML
-    public void drawFromGoldDeck() {}
+    public void drawFromGoldDeck() {
+        controller.askDrawCard(Decks.GOLD, DeckPosition.DECK);
+    }
 
     @FXML
-    public void drawFromResourceDeck() {}
+    public void drawFromResourceDeck() {
+        controller.askDrawCard(Decks.RESOURCE, DeckPosition.DECK);
+    }
 
     @FXML
-    public void drawFromGoldFloor1() {}
+    public void drawFromGoldFloor1() {
+        controller.askDrawCard(Decks.GOLD, DeckPosition.FIRST_CARD);
+    }
 
     @FXML
-    public void drawFromGoldFloor2() {}
+    public void drawFromGoldFloor2() {
+        controller.askDrawCard(Decks.GOLD, DeckPosition.SECOND_CARD);
+    }
 
     @FXML
-    public void drawFromResourceFloor1() {}
+    public void drawFromResourceFloor1() {
+        controller.askDrawCard(Decks.RESOURCE, DeckPosition.FIRST_CARD);
+    }
 
     @FXML
-    public void drawFromResourceFloor2() {}
+    public void drawFromResourceFloor2() {
+        controller.askDrawCard(Decks.RESOURCE, DeckPosition.SECOND_CARD);
+    }
+
 
 }
