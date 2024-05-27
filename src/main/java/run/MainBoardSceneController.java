@@ -1,17 +1,25 @@
 package run;
 
+import Client.View.OnBoardCard;
 import Server.Card.Card;
 import Server.Card.CardFace;
+import Server.Card.CornerCardFace;
 import Server.Enums.DeckPosition;
 import Server.Enums.Decks;
 import Server.Enums.Face;
+import Server.Exception.PlayerNotFoundByNameException;
 import javafx.fxml.FXML;
 import javafx.scene.Group;
 import javafx.scene.control.Button;
+import javafx.scene.effect.Glow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
+import java.util.List;
+
 public class MainBoardSceneController extends SceneController {
+
+
     @FXML
     public ImageView firstCardImage, secondCardImage, thirdCardImage, secretCardImage;
     @FXML
@@ -26,9 +34,16 @@ public class MainBoardSceneController extends SceneController {
     public Group yourManuscript;
 
     private Face firstFace, secondFace, thirdFace;
+    private int selctedCardIndex = -1;
+
+    private Glow glow = new Glow(7);
+
+
+
 
 
     public void setHandCards() {
+
         firstCardImage.setImage(getImageFromCard(controller.getHand().get(0), Face.FRONT));
         secondCardImage.setImage(getImageFromCard(controller.getHand().get(1), Face.FRONT));
         thirdCardImage.setImage(getImageFromCard(controller.getHand().get(2), Face.FRONT));
@@ -120,15 +135,99 @@ public class MainBoardSceneController extends SceneController {
     }
 
     public void updateManuscript(CardFace cardFace, int x, int y) {
-        ImageView imageView = new ImageView(getImageFromCard(cardFace));
-        imageView.setFitWidth(130);
-        imageView.setFitHeight(100);
-        imageView.setLayoutX(x*130);
-        imageView.setLayoutY(y*100);
-        yourManuscript.getChildren().add(imageView);
+        OnBoardCard card = new OnBoardCard(getImageFromCard(cardFace), x, y, null);
+        card.place(yourManuscript);
+    }
+
+    public void firstCardSelected() {
+        if (selctedCardIndex == 0) {
+            selctedCardIndex = -1;
+            illuminateHandCard(-1);
+        } else {
+            selctedCardIndex = 0;
+            illuminateHandCard(0);
+        }
+    }
+
+    public void secondCardSelected() {
+        if (selctedCardIndex == 1) {
+            selctedCardIndex = -1;
+            illuminateHandCard(-1);
+        } else {
+            selctedCardIndex = 1;
+            illuminateHandCard(1);
+        }
+    }
+
+    public void thirdCardSelected() {
+        if (selctedCardIndex == 2) {
+            selctedCardIndex = -1;
+            illuminateHandCard(-1);
+        } else {
+            selctedCardIndex = 2;
+            illuminateHandCard(2);
+        }
+    }
+
+    private void illuminateHandCard(int index) {
+        Face selectedFace = null;
+        switch (index) {
+            case 0:
+                firstCardImage.setEffect(glow);
+                secondCardImage.setEffect(null);
+                thirdCardImage.setEffect(null);
+                selectedFace = firstFace;
+                break;
+            case 1:
+                firstCardImage.setEffect(null);
+                secondCardImage.setEffect(glow);
+                thirdCardImage.setEffect(null);
+                selectedFace = secondFace;
+                break;
+            case 2:
+                firstCardImage.setEffect(null);
+                secondCardImage.setEffect(null);
+                thirdCardImage.setEffect(glow);
+                selectedFace = thirdFace;
+                break;
+            default:
+                firstCardImage.setEffect(null);
+                secondCardImage.setEffect(null);
+                thirdCardImage.setEffect(null);
+                selectedFace = null;
+        }
 
 
 
+
+        if (selectedFace != null) {
+            CornerCardFace face = (CornerCardFace) controller.getHand().get(selctedCardIndex).getFace(selectedFace);
+            for (OnBoardCard c : OnBoardCard.onBoardCards) {
+                try {
+                    if(controller.getPlayerByName(controller.getMyName()).getManuscript()
+                            .isPlaceable(c.x - 1, c.y - 1, face)) c.TOP_LEFT.setStyle("-fx-background-color: transparent; -fx-border-width: 2; -fx-border-color: gold;");
+
+                    if(controller.getPlayerByName(controller.getMyName()).getManuscript()
+                            .isPlaceable(c.x + 1, c.y - 1, face)) c.TOP_RIGHT.setStyle("-fx-background-color: transparent; -fx-border-width: 2; -fx-border-color: gold;");
+
+                    if(controller.getPlayerByName(controller.getMyName()).getManuscript()
+                            .isPlaceable(c.x - 1, c.y + 1, face)) c.BOTTOM_LEFT.setStyle("-fx-background-color: transparent; -fx-border-width: 2; -fx-border-color: gold;");
+
+                    if(controller.getPlayerByName(controller.getMyName()).getManuscript()
+                            .isPlaceable(c.x + 1, c.y + 1, face)) c.BOTTOM_RIGHT.setStyle("-fx-background-color: transparent; -fx-border-width: 2; -fx-border-color: gold;");
+                } catch (PlayerNotFoundByNameException e) {
+                    throw new RuntimeException(e);
+                }
+
+            }
+        } else {
+            for (OnBoardCard c : OnBoardCard.onBoardCards) {
+                c.TOP_LEFT.setStyle("-fx-background-color: transparent; -fx-border-width: 0;");
+                c.TOP_RIGHT.setStyle("-fx-background-color: transparent; -fx-border-width: 0;");
+                c.BOTTOM_LEFT.setStyle("-fx-background-color: transparent; -fx-border-width: 0;");
+                c.BOTTOM_RIGHT.setStyle("-fx-background-color: transparent; -fx-border-width: 0;");
+            }
+        }
     }
 
 }
