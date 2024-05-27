@@ -15,17 +15,17 @@
             <Image url="@./images/otherImages/logovuoto.jpg" />
          </image>
       </ImageView>
-      <Label layoutX="240.0" layoutY="300.0" prefHeight="39.0" prefWidth="139.0" text="Server IP" textAlignment="CENTER" textFill="#2dff00">
+      <Label layoutX="240.0" layoutY="300.0" prefHeight="39.0" prefWidth="139.0" text="Server IP" textAlignment="CENTER">
          <font>
             <Font size="32.0" />
          </font>
       </Label>
-      <Label layoutX="240.0" layoutY="409.0" prefHeight="39.0" prefWidth="163.0" text="Server port" textAlignment="CENTER" textFill="#db00ff">
+      <Label layoutX="240.0" layoutY="409.0" prefHeight="39.0" prefWidth="163.0" text="Server port" textAlignment="CENTER">
          <font>
             <Font size="32.0" />
          </font>
       </Label>
-      <Button fx:id="join_Button" layoutX="442.0" layoutY="540.0" mnemonicParsing="false" onAction="#setJoin" prefHeight="65.0" prefWidth="140.0" style="-fx-background-color: transparent; -fx-border-color: white; -fx-border-width: 3; -fx-border-radius: 3;" text="Join" textFill="#f53d00">
+      <Button fx:id="join_Button" layoutX="442.0" layoutY="540.0" mnemonicParsing="false" onAction="#setJoin" prefHeight="65.0" prefWidth="140.0" style="-fx-background-color: transparent; -fx-border-color: white; -fx-border-width: 3; -fx-border-radius: 3;" text="Join">
          <font>
             <Font size="32.0" />
          </font>
