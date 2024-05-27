@@ -6,6 +6,7 @@ import Server.Card.Card;
 import Server.Card.CornerCardFace;
 import Server.Chat.Message;
 import Server.Enums.Actions;
+import Server.Enums.Color;
 import Server.Enums.DeckPosition;
 import Server.Enums.Decks;
 import Server.Exception.PlayerNotFoundByNameException;
@@ -160,8 +161,6 @@ public class GUI implements UI{
             stage.setScene(getScene(SceneName.JOIN));
             stage.show();
         });
-        stage.setScene(getScene(SceneName.JOIN));
-        stage.show();
     }
 
     @Override
@@ -481,18 +480,44 @@ public class GUI implements UI{
             String ready = controller.getPlayers().get(i).isReady() ? "Ready" : "Not Ready";
             ((ColorReadySceneController) sceneControllerMap.get(SceneName.SETCOLOR)).list_Player.getItems().set(i, name + "   " + color + "   " + ready);
             //----------------------------------------------------------q
-            switch (controller.getPlayers().getLast().getColor()) {
+            switch (controller.getPlayers().get(i).getColor()) {
                 case RED:
                     ((ColorReadySceneController) sceneControllerMap.get(SceneName.SETCOLOR)).red_Button.setDisable(true);
+                    ((ColorReadySceneController) sceneControllerMap.get(SceneName.SETCOLOR)).red_Button.setStyle("-fx-background-color: #eae1b8;"+ "-fx-border-color: #000000;" + "-fx-border-radius: 3px;");
+                    if(((ColorReadySceneController) sceneControllerMap.get(SceneName.SETCOLOR)).color == Color.RED)
+                    {
+                        ((ColorReadySceneController) sceneControllerMap.get(SceneName.SETCOLOR)).confirm_Color_Button.setOpacity(0);
+                        ((ColorReadySceneController) sceneControllerMap.get(SceneName.SETCOLOR)).confirm_Color_Button.setDisable(true);
+                    }
                     break;
                 case GREEN:
                     ((ColorReadySceneController) sceneControllerMap.get(SceneName.SETCOLOR)).green_Button.setDisable(true);
+                    ((ColorReadySceneController) sceneControllerMap.get(SceneName.SETCOLOR)).green_Button.setStyle("-fx-background-color: #eae1b8;"+ "-fx-border-color: #000000;" + "-fx-border-radius: 3px;");
+                    if(((ColorReadySceneController) sceneControllerMap.get(SceneName.SETCOLOR)).color == Color.GREEN)
+                    {
+                        ((ColorReadySceneController) sceneControllerMap.get(SceneName.SETCOLOR)).confirm_Color_Button.setOpacity(0);
+                        ((ColorReadySceneController) sceneControllerMap.get(SceneName.SETCOLOR)).confirm_Color_Button.setDisable(true);
+                    }
                     break;
                 case BLUE:
                     ((ColorReadySceneController) sceneControllerMap.get(SceneName.SETCOLOR)).blue_Button.setDisable(true);
+                    ((ColorReadySceneController) sceneControllerMap.get(SceneName.SETCOLOR)).blue_Button.setStyle("-fx-background-color: #eae1b8;"+ "-fx-border-color: #000000;" + "-fx-border-radius: 3px;");
+                    if(((ColorReadySceneController) sceneControllerMap.get(SceneName.SETCOLOR)).color == Color.BLUE)
+                    {
+                        ((ColorReadySceneController) sceneControllerMap.get(SceneName.SETCOLOR)).confirm_Color_Button.setOpacity(0);
+                        ((ColorReadySceneController) sceneControllerMap.get(SceneName.SETCOLOR)).confirm_Color_Button.setDisable(true);
+                    }
                     break;
                 case YELLOW:
                     ((ColorReadySceneController) sceneControllerMap.get(SceneName.SETCOLOR)).yellow_Button.setDisable(true);
+                    ((ColorReadySceneController) sceneControllerMap.get(SceneName.SETCOLOR)).yellow_Button.setStyle("-fx-background-color: #eae1b8;"+ "-fx-border-color: #000000;" + "-fx-border-radius: 3px;");
+                    if(((ColorReadySceneController) sceneControllerMap.get(SceneName.SETCOLOR)).color == Color.YELLOW)
+                    {
+                        ((ColorReadySceneController) sceneControllerMap.get(SceneName.SETCOLOR)).confirm_Color_Button.setOpacity(0);
+                        ((ColorReadySceneController) sceneControllerMap.get(SceneName.SETCOLOR)).confirm_Color_Button.setDisable(true);
+                    }
+                    break;
+                case null:
                     break;
             }
         }

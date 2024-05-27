@@ -14,8 +14,9 @@ public class ChooseSecretCardController extends SceneController {
     public Button confirmButton;
     @FXML
     public ImageView firstCard, secondCard;
-    @FXML
-    Text waitText;
+    public Text firstCardText;
+    public Text secondCardText;
+
 
     private int index = 0;
 
@@ -25,29 +26,27 @@ public class ChooseSecretCardController extends SceneController {
         confirmButton.setDisable(false);
         firstCard.setStyle("-fx-opacity: 1;");
         secondCard.setStyle("-fx-opacity: 0.5;");
+        confirmButton.setOpacity(1);
+        confirmButton.setOpacity(1);
     }
 
     public void chooseSecondCard() {
         index = 1;
         confirmButton.setDisable(false);
-
-
+        confirmButton.setOpacity(1);
         secondCard.setStyle("-fx-opacity: 1;");
         firstCard.setStyle("-fx-opacity: 0.5;");
-
+        confirmButton.setOpacity(1);
     }
 
     public void confirmation() {
         controller.chooseSecretAchievement(index);
-        waitText.setVisible(true);
-        confirmButton.setVisible(false);
-        confirmButton.setDisable(true);
     }
 
     public void setUp(List<AchievementCard> cards) {
         confirmButton.setDisable(true);
+        confirmButton.setOpacity(0);
         firstCard.setImage(new Image(getClass().getResource("/images/FrontFaces/" + cards.get(0).getImageURI()).toExternalForm()));
         secondCard.setImage(new Image(getClass().getResource("/images/FrontFaces/" + cards.get(1).getImageURI()).toExternalForm()));
-        waitText.setVisible(false);
     }
 }

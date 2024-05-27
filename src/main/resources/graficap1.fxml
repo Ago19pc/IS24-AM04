@@ -25,9 +25,9 @@
             <Font size="32.0" />
          </font>
       </Label>
-      <Button fx:id="join_Button" layoutX="442.0" layoutY="540.0" mnemonicParsing="false" onAction="#setJoin" prefHeight="65.0" prefWidth="140.0" style="-fx-background-color: transparent; -fx-border-color: white; -fx-border-width: 3; -fx-border-radius: 3;" text="JOIN" textFill="#f53d00">
+      <Button fx:id="join_Button" layoutX="442.0" layoutY="540.0" mnemonicParsing="false" onAction="#setJoin" prefHeight="65.0" prefWidth="140.0" style="-fx-background-color: transparent; -fx-border-color: white; -fx-border-width: 3; -fx-border-radius: 3;" text="Join" textFill="#f53d00">
          <font>
-            <Font name="System Bold" size="32.0" />
+            <Font size="32.0" />
          </font>
       </Button>
       <TextField fx:id="text_ip" layoutX="396.0" layoutY="289.0" prefHeight="60.0" prefWidth="348.0">
