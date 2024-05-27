@@ -46,18 +46,16 @@ public class ResourceDeck implements Deckable {
     /**
      * @param where_to the position to add the card to
      */
-    public void moveCardToBoard(DeckPosition where_to) throws IncorrectDeckPositionException {
-        if (where_to == DECK)
-            throw new IncorrectDeckPositionException("Cannot add card to the deck, only to FIST_CARD or SECOND_CARD.");
-
-
-        Card cardToMove;
-        try{
-            cardToMove = popCard(DECK);
-        } catch (AlreadyFinishedException e) {
-            cardToMove = null;
+    public void moveCardToBoard(DeckPosition where_to) {
+        if (where_to != DECK) {
+            Card cardToMove;
+            try {
+                cardToMove = popCard(DECK);
+            } catch (AlreadyFinishedException e) {
+                cardToMove = null;
+            }
+            addCard(cardToMove, where_to);
         }
-        addCard(cardToMove, where_to);
     }
 
     /**
@@ -65,9 +63,10 @@ public class ResourceDeck implements Deckable {
      */
     public Map<DeckPosition, ResourceCard> getBoardCard() {
         Map<DeckPosition, ResourceCard> boardCardsToReturn = new HashMap<>();
-        for (DeckPosition position : boardCards.keySet()) {
-            boardCardsToReturn.put(position, boardCards.get(position));
-        }
+        boardCardsToReturn.put(DECK, (ResourceCard) getTopCardNoPop());
+        boardCardsToReturn.put(FIRST_CARD, boardCards.get(FIRST_CARD));
+        boardCardsToReturn.put(SECOND_CARD, boardCards.get(SECOND_CARD));
+
         return boardCardsToReturn;
     }
 
@@ -80,23 +79,18 @@ public class ResourceDeck implements Deckable {
             if (position == DECK) {
                 return (ResourceCard) cards.remove(0);
             } else {
+                // LA POSIZIONE NON E' DECK
+
                 if(boardCards.get(position) == null){
                     throw new AlreadyFinishedException("There is no card in the position " + position);
-                } else {
-                    ResourceCard card = boardCards.get(position);
-                    ResourceCard replacement;
-                    try {
-                        replacement = cards.remove(0);
-                        boardCards.put(position, replacement);
-                    } catch (IndexOutOfBoundsException e) {
-                        boardCards.put(position, null);
-                    }
-
-                    return card;
-
                 }
+                // STIAMO PESCANDO DA FIRST O SECOND
 
+                // RITORNA LA CARTA E LA RIMUOVE DALLA POSIZIONE E RIMPIAZZALA
+                ResourceCard toReturn = boardCards.get(position);
+                moveCardToBoard(position);
 
+                return toReturn;
             }
 
     }
@@ -113,10 +107,8 @@ public class ResourceDeck implements Deckable {
      * @param card card to add
      * @param position position to add the card to
      */
-    public void addCard(Card card, DeckPosition position) throws IncorrectDeckPositionException {
-        if (position == DECK)
-            throw new IncorrectDeckPositionException("Cannot add card to the deck, only to FIST_CARD or SECOND_CARD.");
-        else
+    public void addCard(Card card, DeckPosition position) {
+        if (position != DECK)
             boardCards.put(position, (ResourceCard) card);
     }
 

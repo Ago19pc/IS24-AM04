@@ -66,8 +66,12 @@ public class MainBoardSceneController extends SceneController {
         }
     }
 
-    private Image getImageFromCard(CardFace cardFace) {
-        return new Image(getClass().getResourceAsStream("/images/BackFaces/" + cardFace.getImageURI()));
+    private Image getImageFromCard(CardFace cardFace, Face face) {
+        if (face == Face.FRONT) {
+            return new Image(getClass().getResourceAsStream("/images/FrontFaces/" + cardFace.getImageURI()));
+        } else {
+            return new Image(getClass().getResourceAsStream("/images/BackFaces/" + cardFace.getImageURI()));
+        }
     }
 
     public void rotateFirstCard() {
@@ -138,7 +142,7 @@ public class MainBoardSceneController extends SceneController {
 
     public void updateManuscript(String name, CardFace cardFace, int x, int y) {
         if (name.equals(controller.getMyName())) {
-            OnBoardCard card = new OnBoardCard(getImageFromCard(cardFace), x, y, null, this);
+            OnBoardCard card = new OnBoardCard(getImageFromCard(cardFace, selectedFace), x, y, null, this);
             card.place(yourManuscript);
         } else {
             // piazza la carta nel manoscritto di un altro
@@ -267,5 +271,18 @@ public class MainBoardSceneController extends SceneController {
         controller.askDrawCard(Decks.RESOURCE, DeckPosition.SECOND_CARD);
     }
 
+    public void removeCardFromHand() {
+        switch (selctedCardIndex) {
+            case 0:
+                firstCardImage.setImage(null);
+                break;
+            case 1:
+                secondCardImage.setImage(null);
+                break;
+            case 2:
+                thirdCardImage.setImage(null);
+                break;
+        }
+    }
 
 }

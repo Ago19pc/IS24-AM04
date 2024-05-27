@@ -310,7 +310,12 @@ public class GUI implements UI{
     @Override
     public void otherPlayerDraw(String name, Decks deckFrom, DeckPosition position, List<Card> newBoardCards) {
         Platform.runLater(() -> {
-            ((MainBoardSceneController) sceneControllerMap.get(SceneName.GAME)).setCardOnFloor(newBoardCards.get(0), deckFrom, position);
+            Card c = switch (position) {
+                case DECK -> newBoardCards.get(0);
+                case FIRST_CARD -> newBoardCards.get(1);
+                case SECOND_CARD -> newBoardCards.get(2);
+            };
+            ((MainBoardSceneController) sceneControllerMap.get(SceneName.GAME)).setCardOnFloor(c, deckFrom, position);
         });
     }
 
@@ -421,6 +426,7 @@ public class GUI implements UI{
     public void cardPlaced(String playerName, CornerCardFace cornerCardFace, int x, int y) {
         Platform.runLater(() -> {
             ((MainBoardSceneController) sceneControllerMap.get(SceneName.GAME)).updateManuscript(playerName, cornerCardFace, x, y);
+            ((MainBoardSceneController) sceneControllerMap.get(SceneName.GAME)).removeCardFromHand();
         });
     }
 

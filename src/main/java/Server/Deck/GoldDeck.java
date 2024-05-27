@@ -1,9 +1,6 @@
 package Server.Deck;
 
-import Server.Card.Card;
-import Server.Card.GoldCard;
-import Server.Card.GoldFrontFace;
-import Server.Card.RegularBackFace;
+import Server.Card.*;
 import Server.Enums.CardCorners;
 import Server.Enums.DeckPosition;
 import Server.Enums.Symbol;
@@ -46,18 +43,16 @@ public class GoldDeck implements Deckable {
     /**
      * @param where_to the position to add the card to
      */
-    public void moveCardToBoard(DeckPosition where_to) throws IncorrectDeckPositionException {
-        if (where_to == DECK)
-            throw new IncorrectDeckPositionException("Cannot add card to the deck, only to FIST_CARD or SECOND_CARD.");
-
-
-        Card cardToMove;
-        try{
-            cardToMove = popCard(DECK);
-        } catch (AlreadyFinishedException e) {
-            cardToMove = null;
+    public void moveCardToBoard(DeckPosition where_to) {
+        if (where_to != DECK) {
+            Card cardToMove;
+            try {
+                cardToMove = popCard(DECK);
+            } catch (AlreadyFinishedException e) {
+                cardToMove = null;
+            }
+            addCard(cardToMove, where_to);
         }
-        addCard(cardToMove, where_to);
     }
 
     /**
@@ -65,9 +60,10 @@ public class GoldDeck implements Deckable {
      */
     public Map<DeckPosition, GoldCard> getBoardCard() {
         Map<DeckPosition, GoldCard> boardCardsToReturn = new HashMap<>();
-        for (DeckPosition position : boardCards.keySet()) {
-            boardCardsToReturn.put(position, boardCards.get(position));
-        }
+        boardCardsToReturn.put(DECK, getTopCardNoPop());
+        boardCardsToReturn.put(FIRST_CARD, boardCards.get(FIRST_CARD));
+        boardCardsToReturn.put(SECOND_CARD, boardCards.get(SECOND_CARD));
+
         return boardCardsToReturn;
     }
 
@@ -76,17 +72,22 @@ public class GoldDeck implements Deckable {
      * @return Card the popped card
      */
     public GoldCard popCard(DeckPosition position) throws AlreadyFinishedException{
+        if (position == DECK) {
+            return (GoldCard) cards.remove(0);
+        } else {
+            // LA POSIZIONE NON E' DECK
 
-            if (position == DECK) {
-                if(cards.isEmpty())
-                    throw new AlreadyFinishedException("The GoldDeck is empty");
-                return (GoldCard) cards.remove(0);
-            } else {
-                if(boardCards.get(position) == null){
-                    throw new AlreadyFinishedException("No card in the position");
-                }
-                return (GoldCard) getBoardCard().get(position);
+            if(boardCards.get(position) == null){
+                throw new AlreadyFinishedException("There is no card in the position " + position);
             }
+            // STIAMO PESCANDO DA FIRST O SECOND
+
+            // RITORNA LA CARTA E LA RIMUOVE DALLA POSIZIONE E RIMPIAZZALA
+            GoldCard toReturn = boardCards.get(position);
+            moveCardToBoard(position);
+
+            return toReturn;
+        }
 
     }
 
@@ -102,15 +103,13 @@ public class GoldDeck implements Deckable {
      * @param card card to add
      * @param position position to add the card to
      */
-    public void addCard(Card card, DeckPosition position) throws IncorrectDeckPositionException {
-        if (position == DECK)
-            throw new IncorrectDeckPositionException("Cannot add card to the deck, only to FIST_CARD or SECOND_CARD.");
-        else
+    public void addCard(Card card, DeckPosition position) {
+        if (position != DECK)
             boardCards.put(position, (GoldCard) card);
     }
 
     @Override
-    public Card getTopCardNoPop() {
+    public GoldCard getTopCardNoPop() {
         if(cards.isEmpty())
             return null;
         return cards.get(0);

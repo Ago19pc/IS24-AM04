@@ -495,6 +495,12 @@ public class ClientController {
             getPlayerByName(playerName).addManuscriptPoints(points);
             getPlayerByName(playerName).addCardToManuscript(x, y, placedCardFace, turn);
             getPlayerByName(playerName).setHandSize(getPlayerByName(playerName).getHandSize() - 1);
+            // RIMUOVI LA CARTA DALLA MANO SE IL PLAYER SONO IO
+            if (playerName.equals(myName)) {
+                hand.remove(
+                        hand.stream().filter(c -> c.getFace(Face.FRONT).equals(placedCardFace) || c.getFace(Face.BACK).equals(placedCardFace)).findFirst().get()
+                );
+            }
             ui.cardPlaced(playerName, placedCardFace, x, y);
             if(points > 0){
                 ui.displayPlayerPoints(playerName);
