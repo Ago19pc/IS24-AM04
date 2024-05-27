@@ -39,16 +39,16 @@
           <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
-            <ImageView fx:id="goldOnDeck" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" />
-            <ImageView fx:id="goldOnFloor1" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1" />
-            <ImageView fx:id="goldOnFloor2" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="2" />
+            <ImageView fx:id="goldOnDeck" fitHeight="150.0" fitWidth="200.0" onMouseClicked="#drawFromGoldDeck" pickOnBounds="true" preserveRatio="true" />
+            <ImageView fx:id="goldOnFloor1" fitHeight="150.0" fitWidth="200.0" onMouseClicked="#drawFromGoldFloor1" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1" />
+            <ImageView fx:id="goldOnFloor2" fitHeight="150.0" fitWidth="200.0" onMouseClicked="#drawFromGoldFloor2" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="2" />
             <ImageView fx:id="commonAchievement1" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="3" />
-            <ImageView fx:id="resourceOnDeck" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" GridPane.rowIndex="1">
+            <ImageView fx:id="resourceOnDeck" fitHeight="150.0" fitWidth="200.0" onMouseClicked="#drawFromResourceDeck" pickOnBounds="true" preserveRatio="true" GridPane.rowIndex="1">
                <viewport>
                   <Rectangle2D />
                </viewport></ImageView>
-            <ImageView fx:id="resourceOnFloor1" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-            <ImageView fx:id="resourceOnFloor2" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+            <ImageView fx:id="resourceOnFloor1" fitHeight="150.0" fitWidth="200.0" onMouseClicked="#drawFromResourceFloor1" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+            <ImageView fx:id="resourceOnFloor2" fitHeight="150.0" fitWidth="200.0" onMouseClicked="#drawFromResourceFloor2" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="2" GridPane.rowIndex="1" />
             <ImageView fx:id="commonAchievement2" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="3" GridPane.rowIndex="1" />
          </children>
       </GridPane>

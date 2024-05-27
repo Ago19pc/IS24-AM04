@@ -495,7 +495,7 @@ public class ClientController {
             getPlayerByName(playerName).addManuscriptPoints(points);
             getPlayerByName(playerName).addCardToManuscript(x, y, placedCardFace, turn);
             getPlayerByName(playerName).setHandSize(getPlayerByName(playerName).getHandSize() - 1);
-            ui.cardPlaced(playerName, x, y);
+            ui.cardPlaced(playerName, placedCardFace, x, y);
             if(points > 0){
                 ui.displayPlayerPoints(playerName);
             }

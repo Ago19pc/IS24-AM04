@@ -3,6 +3,7 @@ package Client.View;
 import Client.Controller.ClientController;
 import Server.Card.AchievementCard;
 import Server.Card.Card;
+import Server.Card.CornerCardFace;
 import Server.Chat.Message;
 import Server.Enums.Actions;
 import Server.Enums.Color;
@@ -31,6 +32,8 @@ public class GUI implements UI{
     public GUI(ClientController controller) {
         this.controller = controller;
     }
+
+
     public void generateScene(String fxmlPath, SceneName sceneName, Stage stage) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(MainGUI.class.getResource(fxmlPath));
         Scene scene = new Scene(fxmlLoader.load());
@@ -172,7 +175,7 @@ public class GUI implements UI{
 
     @Override
     public void cardNotPlaceable() {
-
+        System.out.println("Card not placeable");
     }
 
     @Override
@@ -197,17 +200,17 @@ public class GUI implements UI{
 
     @Override
     public void invalidCardForAction(Actions cardType) {
-
+        System.out.println("Invalid card for action");
     }
 
     @Override
     public void notYetGivenCard(Actions cardType) {
-
+        System.out.println("Not yet given card");
     }
 
     @Override
     public void notYourTurn() {
-
+        System.out.println("Not your turn");
     }
 
     @Override
@@ -311,7 +314,7 @@ public class GUI implements UI{
 
     @Override
     public void newTurn() {
-
+        System.out.println("New turn");
     }
 
     @Override
@@ -333,12 +336,10 @@ public class GUI implements UI{
     @Override
     public void startingCardChosen(String name) {
         Platform.runLater(() -> {
-            if (name.equals(controller.getMyName())){
-                try {
-                    ((MainBoardSceneController) sceneControllerMap.get(SceneName.GAME)).updateManuscript(controller.getPlayerByName(name).getManuscript().getCardByCoord(0,0),0 ,0);
-                } catch (PlayerNotFoundByNameException e) {
-                    throw new RuntimeException(e);
-                }
+            try {
+                ((MainBoardSceneController) sceneControllerMap.get(SceneName.GAME)).updateManuscript(name, controller.getPlayerByName(name).getManuscript().getCardByCoord(0,0),0 ,0);
+            } catch (PlayerNotFoundByNameException e) {
+                throw new RuntimeException(e);
             }
         });
     }
@@ -415,8 +416,10 @@ public class GUI implements UI{
     }
 
     @Override
-    public void cardPlaced(String playerName, int x, int y) {
-
+    public void cardPlaced(String playerName, CornerCardFace cornerCardFace, int x, int y) {
+        Platform.runLater(() -> {
+            ((MainBoardSceneController) sceneControllerMap.get(SceneName.GAME)).updateManuscript(playerName, cornerCardFace, x, y);
+        });
     }
 
     @Override
