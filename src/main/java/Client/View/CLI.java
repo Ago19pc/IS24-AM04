@@ -4,6 +4,7 @@ import Client.Controller.ClientController;
 import Client.Player;
 import Server.Card.AchievementCard;
 import Server.Card.Card;
+import Server.Card.CornerCardFace;
 import Server.Chat.Message;
 import Server.Enums.*;
 import Server.Exception.PlayerNotFoundByNameException;
@@ -665,7 +666,7 @@ public class CLI extends Thread implements UI {
      * @param x
      * @param y
      */
-    public void cardPlaced(String playerName, int x, int y) {
+    public void cardPlaced(String playerName, CornerCardFace cornerCardFace, int x, int y) {
         printOnNewLine(playerName + " ha piazzato una carta in posizione " + x + ", " + y);
         printPromptLine();
     }

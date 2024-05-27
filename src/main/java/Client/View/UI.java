@@ -2,6 +2,7 @@ package Client.View;
 
 import Server.Card.AchievementCard;
 import Server.Card.Card;
+import Server.Card.CornerCardFace;
 import Server.Chat.Message;
 import Server.Enums.Actions;
 import Server.Enums.DeckPosition;
@@ -92,7 +93,7 @@ public interface UI {
     void doFirst(Actions action);
     void displayLobby();
     void displayPlayerPoints(String playerName) throws PlayerNotFoundByNameException;
-    void cardPlaced(String playerName, int x, int y);
+    void cardPlaced(String playerName, CornerCardFace cornerCardFace, int x, int y);
     void playerDisconnected(String playerName);
     void displayCommonAchievements();
     void tooManyPlayers();

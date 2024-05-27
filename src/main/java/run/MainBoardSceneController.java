@@ -38,6 +38,8 @@ public class MainBoardSceneController extends SceneController {
 
     private Glow glow = new Glow(7);
 
+    private Face selectedFace = null;
+
 
 
 
@@ -134,9 +136,14 @@ public class MainBoardSceneController extends SceneController {
         }
     }
 
-    public void updateManuscript(CardFace cardFace, int x, int y) {
-        OnBoardCard card = new OnBoardCard(getImageFromCard(cardFace), x, y, null);
-        card.place(yourManuscript);
+    public void updateManuscript(String name, CardFace cardFace, int x, int y) {
+        if (name == controller.getMyName()) {
+            OnBoardCard card = new OnBoardCard(getImageFromCard(cardFace), x, y, null, this);
+            card.place(yourManuscript);
+        } else {
+            // piazza la carta nel manoscritto di un altro
+        }
+
     }
 
     public void firstCardSelected() {
@@ -170,7 +177,6 @@ public class MainBoardSceneController extends SceneController {
     }
 
     private void illuminateHandCard(int index) {
-        Face selectedFace = null;
         switch (index) {
             case 0:
                 firstCardImage.setEffect(glow);
@@ -196,9 +202,6 @@ public class MainBoardSceneController extends SceneController {
                 thirdCardImage.setEffect(null);
                 selectedFace = null;
         }
-
-
-
 
         if (selectedFace != null) {
             CornerCardFace face = (CornerCardFace) controller.getHand().get(selctedCardIndex).getFace(selectedFace);
@@ -229,5 +232,27 @@ public class MainBoardSceneController extends SceneController {
             }
         }
     }
+
+    public void placeCard(int x, int y) {
+        controller.askPlayCard(selctedCardIndex, selectedFace, x, y);
+    }
+
+    @FXML
+    public void drawFromGoldDeck() {}
+
+    @FXML
+    public void drawFromResourceDeck() {}
+
+    @FXML
+    public void drawFromGoldFloor1() {}
+
+    @FXML
+    public void drawFromGoldFloor2() {}
+
+    @FXML
+    public void drawFromResourceFloor1() {}
+
+    @FXML
+    public void drawFromResourceFloor2() {}
 
 }
