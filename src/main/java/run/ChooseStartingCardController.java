@@ -8,6 +8,9 @@ import javafx.scene.image.ImageView;
 import javafx.scene.text.Text;
 import Server.Enums.Face;
 
+import static Server.Enums.Face.BACK;
+import static Server.Enums.Face.FRONT;
+
 public class ChooseStartingCardController extends SceneController {
     @FXML
     public Button confirmButton;
@@ -24,7 +27,7 @@ public class ChooseStartingCardController extends SceneController {
 
 
     public void chooseFirstCard() {
-        chosenFace = Face.FRONT;
+        chosenFace = FRONT;
         confirmButton.setDisable(false);
         firstCard.setStyle("-fx-opacity: 1;");
         secondCard.setStyle("-fx-opacity: 0.5;");
@@ -34,7 +37,7 @@ public class ChooseStartingCardController extends SceneController {
     }
 
     public void chooseSecondCard() {
-        chosenFace = Face.BACK;
+        chosenFace = BACK;
         confirmButton.setDisable(false);
         secondCard.setStyle("-fx-opacity: 1;");
         firstCard.setStyle("-fx-opacity: 0.5;");
@@ -63,8 +66,8 @@ public class ChooseStartingCardController extends SceneController {
     public void setUp(Card card) {
         confirmButton.setDisable(true);
         confirmButton.setOpacity(0);
-        firstCard.setImage(new Image(getClass().getResource("/images/FrontFaces/"+ card.getImageURI()).toExternalForm()));
-        secondCard.setImage(new Image(getClass().getResource("/images/BackFaces/"+ card.getImageURI()).toExternalForm()));
+        firstCard.setImage(new Image(getClass().getResource("/images/Faces/"+ card.getFace(FRONT).getImageURI()).toExternalForm()));
+        secondCard.setImage(new Image(getClass().getResource("/images/Faces/"+ card.getFace(BACK).getImageURI()).toExternalForm()));
         waitText.setVisible(false);
         chosenCardText.setOpacity(0);
         chosenCard.setOpacity(0);

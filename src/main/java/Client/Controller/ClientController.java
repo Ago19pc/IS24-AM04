@@ -7,6 +7,7 @@ import Client.View.UI;
 import Server.Card.*;
 import Server.Chat.Chat;
 import Server.Chat.Message;
+import Server.Deck.GoldDeck;
 import Server.Enums.*;
 import Server.Exception.ClientExecuteNotCallableException;
 import Server.Exception.PlayerNotFoundByNameException;
@@ -55,6 +56,14 @@ public class ClientController {
 
         this.ui = ui;
         this.gameState = GameState.LOBBY;
+    }
+
+    public void setChosenHandCard(Integer chosenHandCard) {
+        this.chosenHandCard = chosenHandCard;
+    }
+
+    public Integer getChosenHandCard() {
+        return chosenHandCard;
     }
 
     //helper methods
@@ -185,6 +194,7 @@ public class ClientController {
         }
     }
     public void askPlayCard(int cardNumber, Face face, int x, int y) {
+        chosenHandCard = cardNumber;
         PlayCardMessage placeCardMessage = new PlayCardMessage(id, cardNumber, face, x, y);
         try {
             clientConnectionHandler.sendMessage(placeCardMessage);
@@ -393,8 +403,8 @@ public class ClientController {
                 break;
         }
         try{
-        getPlayerByName(name).setHandSize(getPlayerByName(name).getHandSize() + 1);
-        ui.otherPlayerDraw(name, deckFrom, drawPosition, newBoardCards);
+            getPlayerByName(name).setHandSize(getPlayerByName(name).getHandSize() + 1);
+            ui.otherPlayerDraw(name, deckFrom, drawPosition);
         } catch (PlayerNotFoundByNameException e) {
             throw new RuntimeException(e);
         }
@@ -459,6 +469,8 @@ public class ClientController {
     public void startingCardChosen(String name, CornerCardFace startingFace) {
         try{
             getPlayerByName(name).initializeManuscript(startingFace);
+            goldDeck = new Deck();
+            resourceDeck = new Deck();
             ui.startingCardChosen(name);
         } catch (PlayerNotFoundByNameException e) {
             throw new RuntimeException(e);
@@ -466,8 +478,8 @@ public class ClientController {
     }
     public void startGame(List<Card> goldBoardCards, List<Card> resourceBoardCards){
         ui.gameStarted();
-        goldDeck = new Deck(goldBoardCards);
-        resourceDeck = new Deck(resourceBoardCards);
+        goldDeck.setBoardCards(goldBoardCards);
+        resourceDeck.setBoardCards(resourceBoardCards);
         ui.displayBoardCards();
     }
     public void updatePlayerOrder(List<String> playerNames){
@@ -497,10 +509,9 @@ public class ClientController {
             getPlayerByName(playerName).setHandSize(getPlayerByName(playerName).getHandSize() - 1);
             // RIMUOVI LA CARTA DALLA MANO SE IL PLAYER SONO IO
             if (playerName.equals(myName)) {
-                hand.remove(
-                        hand.stream().filter(c -> c.getFace(Face.FRONT).equals(placedCardFace) || c.getFace(Face.BACK).equals(placedCardFace)).findFirst().get()
-                );
+                hand.remove(chosenHandCard.intValue());
             }
+            setChosenHandCard(null);
             ui.cardPlaced(playerName, placedCardFace, x, y);
             if(points > 0){
                 ui.displayPlayerPoints(playerName);

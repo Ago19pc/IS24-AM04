@@ -130,6 +130,7 @@ public class ControllerInstance implements Controller{
         }
         createDecks();
         giveStartingCards();
+        /*
         StartGameMessage startGameMessage = new StartGameMessage(
                 List.of(
                         gameModel.getGoldDeck().getTopCardNoPop(),
@@ -143,6 +144,8 @@ public class ControllerInstance implements Controller{
                 )
         );
         connectionHandler.sendAllMessage(startGameMessage);
+
+         */
     }
 
     /**
@@ -243,6 +246,20 @@ public class ControllerInstance implements Controller{
         if(allSet){
             try {
                 giveInitialHand();
+                StartGameMessage startGameMessage = new StartGameMessage(
+                        List.of(
+                                gameModel.getGoldDeck().getTopCardNoPop(),
+                                gameModel.getGoldDeck().getBoardCard().get(DeckPosition.FIRST_CARD),
+                                gameModel.getGoldDeck().getBoardCard().get(DeckPosition.SECOND_CARD)
+                        ),
+                        List.of(
+                                gameModel.getResourceDeck().getTopCardNoPop(),
+                                gameModel.getResourceDeck().getBoardCard().get(DeckPosition.FIRST_CARD),
+                                gameModel.getResourceDeck().getBoardCard().get(DeckPosition.SECOND_CARD)
+                        )
+                );
+                connectionHandler.sendAllMessage(startGameMessage);
+
             } catch (AlreadySetException | AlreadyFinishedException e) {
                 //do nothing as it's normal that it's already set
             }

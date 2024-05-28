@@ -188,14 +188,14 @@ public class ResourceDeck implements Deckable {
                         kingdom = Symbol.NONE;
                         break;
                 }
-                ResourceFrontFace frontFace = new ResourceFrontFace(counter + ".jpeg", cornerSymbolsF, point, kingdom);
+                ResourceFrontFace frontFace = new ResourceFrontFace("front-" + counter + ".jpeg", cornerSymbolsF, point, kingdom);
             
             
                 List<Symbol> centerSymbolsB = new ArrayList<>();
                 centerSymbolsB.add(Symbol.valueOf(partsB));
             
 
-                RegularBackFace backFace = new RegularBackFace(counter + ".jpeg", centerSymbolsB);
+                RegularBackFace backFace = new RegularBackFace("back-" + counter + ".jpeg", centerSymbolsB);
             
                 ResourceCard card = new ResourceCard(frontFace, backFace, counter + ".jpeg");
                 this.cards.add(card);

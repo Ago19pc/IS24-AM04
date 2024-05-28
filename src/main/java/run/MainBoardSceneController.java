@@ -14,6 +14,7 @@ import javafx.scene.control.Button;
 import javafx.scene.effect.Glow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.text.Text;
 
 import java.util.List;
 
@@ -32,6 +33,8 @@ public class MainBoardSceneController extends SceneController {
     public Button rotateFirstCardButton, rotateSecondCardButton, rotateThirdCardButton;
     @FXML
     public Group yourManuscript;
+    @FXML
+    public Text yourTurnText;
 
     private Face firstFace, secondFace, thirdFace;
     private int selctedCardIndex = -1;
@@ -59,19 +62,11 @@ public class MainBoardSceneController extends SceneController {
     }
 
     private Image getImageFromCard(Card card, Face face) {
-        if (face == Face.FRONT) {
-            return new Image(getClass().getResourceAsStream("/images/FrontFaces/" + card.getImageURI()));
-        } else {
-            return new Image(getClass().getResourceAsStream("/images/BackFaces/" + card.getImageURI()));
-        }
+        return new Image(getClass().getResourceAsStream("/images/Faces/" + card.getFace(face).getImageURI()));
     }
 
-    private Image getImageFromCard(CardFace cardFace, Face face) {
-        if (face == Face.FRONT) {
-            return new Image(getClass().getResourceAsStream("/images/FrontFaces/" + cardFace.getImageURI()));
-        } else {
-            return new Image(getClass().getResourceAsStream("/images/BackFaces/" + cardFace.getImageURI()));
-        }
+    private Image getImageFromCard(CardFace cardFace) {
+        return new Image(getClass().getResourceAsStream("/images/Faces/" + cardFace.getImageURI()));
     }
 
     public void rotateFirstCard() {
@@ -87,6 +82,23 @@ public class MainBoardSceneController extends SceneController {
     public void rotateThirdCard() {
         thirdCardImage.setImage(getImageFromCard(controller.getHand().get(2), thirdFace.getOpposite()));
         thirdFace = thirdFace.getOpposite();
+    }
+
+    public void setBoardCards(Decks deck) {
+        if (deck == Decks.GOLD) {
+
+            goldOnDeck.setImage(getImageFromCard(controller.getBoardCards(Decks.GOLD).get(0), Face.FRONT));
+            goldOnFloor1.setImage(getImageFromCard(controller.getBoardCards(Decks.GOLD).get(1), Face.FRONT));
+            goldOnFloor2.setImage(getImageFromCard(controller.getBoardCards(Decks.GOLD).get(2), Face.FRONT));
+        } else if (deck == Decks.RESOURCE) {
+            resourceOnDeck.setImage(getImageFromCard(controller.getBoardCards(Decks.RESOURCE).get(0), Face.FRONT));
+            resourceOnFloor1.setImage(getImageFromCard(controller.getBoardCards(Decks.RESOURCE).get(1), Face.FRONT));
+            resourceOnFloor2.setImage(getImageFromCard(controller.getBoardCards(Decks.RESOURCE).get(2), Face.FRONT));
+        } else if (deck == Decks.ACHIEVEMENT) {
+
+            commonAchievement1.setImage(getImageFromCard(controller.getCommonAchievements().get(0), Face.FRONT));
+            commonAchievement2.setImage(getImageFromCard(controller.getCommonAchievements().get(1), Face.FRONT));
+        }
     }
 
     public void setCardOnFloor(Card card, Decks deck, DeckPosition position) {
@@ -142,7 +154,7 @@ public class MainBoardSceneController extends SceneController {
 
     public void updateManuscript(String name, CardFace cardFace, int x, int y) {
         if (name.equals(controller.getMyName())) {
-            OnBoardCard card = new OnBoardCard(getImageFromCard(cardFace, selectedFace), x, y, null, this);
+            OnBoardCard card = new OnBoardCard(getImageFromCard(cardFace), x, y, null, this);
             card.place(yourManuscript);
         } else {
             // piazza la carta nel manoscritto di un altro
@@ -271,17 +283,19 @@ public class MainBoardSceneController extends SceneController {
         controller.askDrawCard(Decks.RESOURCE, DeckPosition.SECOND_CARD);
     }
 
-    public void removeCardFromHand() {
-        switch (selctedCardIndex) {
-            case 0:
-                firstCardImage.setImage(null);
-                break;
-            case 1:
-                secondCardImage.setImage(null);
-                break;
-            case 2:
-                thirdCardImage.setImage(null);
-                break;
+    public void removeCardFromHand(String playerName) {
+        if (controller.getMyName().equals(playerName)) {
+            switch (selctedCardIndex) {
+                case 0:
+                    firstCardImage.setImage(null);
+                    break;
+                case 1:
+                    secondCardImage.setImage(null);
+                    break;
+                case 2:
+                    thirdCardImage.setImage(null);
+                    break;
+            }
         }
     }
 

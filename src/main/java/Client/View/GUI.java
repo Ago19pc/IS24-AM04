@@ -308,20 +308,22 @@ public class GUI implements UI{
 
     // I DONT KNOW WHY
     @Override
-    public void otherPlayerDraw(String name, Decks deckFrom, DeckPosition position, List<Card> newBoardCards) {
+    public void otherPlayerDraw(String name, Decks deckFrom, DeckPosition position) {
         Platform.runLater(() -> {
-            Card c = switch (position) {
-                case DECK -> newBoardCards.get(0);
-                case FIRST_CARD -> newBoardCards.get(1);
-                case SECOND_CARD -> newBoardCards.get(2);
-            };
-            ((MainBoardSceneController) sceneControllerMap.get(SceneName.GAME)).setCardOnFloor(c, deckFrom, position);
+            ((MainBoardSceneController) sceneControllerMap.get(SceneName.GAME)).setBoardCards(deckFrom);
         });
     }
 
     @Override
     public void newTurn() {
-        System.out.println("New turn");
+        Platform.runLater(() -> {
+        if (controller.getActivePlayer().getName().equals(controller.getMyName())) {
+            ((MainBoardSceneController) sceneControllerMap.get(SceneName.GAME)).yourTurnText.setVisible(true);
+        } else {
+            ((MainBoardSceneController) sceneControllerMap.get(SceneName.GAME)).yourTurnText.setVisible(false);
+        }
+        });
+
     }
 
     @Override
@@ -426,7 +428,7 @@ public class GUI implements UI{
     public void cardPlaced(String playerName, CornerCardFace cornerCardFace, int x, int y) {
         Platform.runLater(() -> {
             ((MainBoardSceneController) sceneControllerMap.get(SceneName.GAME)).updateManuscript(playerName, cornerCardFace, x, y);
-            ((MainBoardSceneController) sceneControllerMap.get(SceneName.GAME)).removeCardFromHand();
+            ((MainBoardSceneController) sceneControllerMap.get(SceneName.GAME)).removeCardFromHand(playerName);
         });
     }
 

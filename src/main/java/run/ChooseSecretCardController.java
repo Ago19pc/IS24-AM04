@@ -1,6 +1,7 @@
 package run;
 
 import Server.Card.AchievementCard;
+import Server.Enums.Face;
 import javafx.scene.text.Text;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -46,7 +47,7 @@ public class ChooseSecretCardController extends SceneController {
     public void setUp(List<AchievementCard> cards) {
         confirmButton.setDisable(true);
         confirmButton.setOpacity(0);
-        firstCard.setImage(new Image(getClass().getResource("/images/FrontFaces/" + cards.get(0).getImageURI()).toExternalForm()));
-        secondCard.setImage(new Image(getClass().getResource("/images/FrontFaces/" + cards.get(1).getImageURI()).toExternalForm()));
+        firstCard.setImage(new Image(getClass().getResource("/images/Faces/" + cards.get(0).getFace(Face.FRONT).getImageURI()).toExternalForm()));
+        secondCard.setImage(new Image(getClass().getResource("/images/Faces/" + cards.get(1).getFace(Face.FRONT).getImageURI()).toExternalForm()));
     }
 }

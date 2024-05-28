@@ -79,7 +79,7 @@ public interface UI {
 
     void displayNewPlayer();
 
-    void otherPlayerDraw(String name, Decks deckFrom, DeckPosition position, List<Card> newBoardCards);
+    void otherPlayerDraw(String name, Decks deckFrom, DeckPosition position);
 
     void newTurn();
 

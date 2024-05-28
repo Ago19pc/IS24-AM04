@@ -112,9 +112,9 @@ public class AchievementDeck implements Deckable{
                     }
                 }
             
-                AchievementFrontFace frontFace = new AchievementFrontFace(counter + ".jpeg", scoreRequirements, score);
+                AchievementFrontFace frontFace = new AchievementFrontFace("front-" + counter + ".jpeg", scoreRequirements, score);
             
-                EmptyCardFace backFace = new EmptyCardFace(counter + ".jpeg");
+                EmptyCardFace backFace = new EmptyCardFace("back-" + counter + ".jpeg");
             
                 AchievementCard card = new AchievementCard(frontFace, backFace, counter + ".jpeg");
                 this.cards.add(card);

@@ -15,8 +15,6 @@ public class CLI extends Thread implements UI {
     private ClientController controller;
     private final Scanner in = new Scanner(System.in);
 
-    //temp variables
-    private Integer chosenHandCard;
 
     public CLI(ClientController controller){
         System.out.println("Avvio gioco...");
@@ -172,7 +170,7 @@ public class CLI extends Thread implements UI {
                         controller.chooseSecretAchievement(cardNumber);
                         break;
                     case PLACE_CARD:
-                        chosenHandCard = cardNumber;
+                        controller.setChosenHandCard(cardNumber);
                         printOnNewLine("Carta selezionata: " + controller.getHand().get(cardNumber));
                         break;
                     default:
@@ -187,7 +185,7 @@ public class CLI extends Thread implements UI {
                     printOnNewLine("Utilizzo corretto: placeCard <faccia> <x> <y>");
                     return;
                 }
-                if(chosenHandCard == null){
+                if(controller.getChosenHandCard() == null){
                     printOnNewLine("Devi selezionare una carta della tua mano");
                     printPromptLine();
                     return;
@@ -199,8 +197,7 @@ public class CLI extends Thread implements UI {
                 int x = Integer.parseInt(args[2]);
                 int y = Integer.parseInt(args[3]);
                 Face face = Face.valueOf(args[1].toUpperCase());
-                controller.askPlayCard(chosenHandCard, face, x, y);
-                chosenHandCard = null;
+                controller.askPlayCard(controller.getChosenHandCard(), face, x, y);
                 break;
             case "drawCard":
                 if(args.length < 2 || args.length > 3){
@@ -539,7 +536,7 @@ public class CLI extends Thread implements UI {
      * @param deckFrom the deck from which the card has been drawn
      * @param position the position of the card in the deck
      */
-    public void otherPlayerDraw(String name, Decks deckFrom, DeckPosition position, List<Card> newBoardCards){
+    public void otherPlayerDraw(String name, Decks deckFrom, DeckPosition position){
         printOnNewLine(name + " ha pescato una carta dalla posizione " + position + " del mazzo " + deckFrom);
         printOnNewLine("Ora il mazzo ha " + controller.getDeckSize(deckFrom));
         printOnNewLine("Le carte a terra sono" + controller.getBoardCards(deckFrom));

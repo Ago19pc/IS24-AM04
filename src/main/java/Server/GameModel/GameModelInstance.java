@@ -79,7 +79,7 @@ public class GameModelInstance implements GameModel{
                     else centerSymbols.add(Symbol.valueOf(partsF[i]));
                 }
 
-                StartingFrontFace frontFace = new StartingFrontFace(counter + ".jpeg", cornerSymbolsF, centerSymbols);
+                StartingFrontFace frontFace = new StartingFrontFace("front-" + counter + ".jpeg", cornerSymbolsF, centerSymbols);
 
                 // La faccia dietro ha solo angoli
                 Map<CardCorners, Symbol> cornerSymbolsB = new HashMap<>();
@@ -87,7 +87,7 @@ public class GameModelInstance implements GameModel{
                     cornerSymbolsB.put(CardCorners.values()[i], Symbol.valueOf(partsB[i]));
                 }
 
-                CornerCardFace backFace = new CornerCardFace(counter + ".jpeg", cornerSymbolsB);
+                CornerCardFace backFace = new CornerCardFace("back-" + counter + ".jpeg", cornerSymbolsB);
 
                 StartingCard card = new StartingCard(frontFace, backFace, counter + ".jpeg");
                 startingCards.add(card);
