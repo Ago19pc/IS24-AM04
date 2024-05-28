@@ -1,6 +1,5 @@
 package Client.View;
 
-import Client.Controller.ClientController;
 import Server.Enums.CardCorners;
 import javafx.fxml.FXML;
 import javafx.scene.Group;
