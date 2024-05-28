@@ -469,17 +469,15 @@ public class ClientController {
     public void startingCardChosen(String name, CornerCardFace startingFace) {
         try{
             getPlayerByName(name).initializeManuscript(startingFace);
-            goldDeck = new Deck();
-            resourceDeck = new Deck();
             ui.startingCardChosen(name);
         } catch (PlayerNotFoundByNameException e) {
             throw new RuntimeException(e);
         }
     }
-    public void startGame(List<Card> goldBoardCards, List<Card> resourceBoardCards){
+    public void startGame(List<GoldCard> goldBoardCards, List<ResourceCard> resourceBoardCards){
         ui.gameStarted();
-        goldDeck.setBoardCards(goldBoardCards);
-        resourceDeck.setBoardCards(resourceBoardCards);
+        goldDeck = new Deck<>(goldBoardCards);
+        resourceDeck = new Deck<>(resourceBoardCards);
         ui.displayBoardCards();
     }
     public void updatePlayerOrder(List<String> playerNames){
@@ -578,6 +576,6 @@ public class ClientController {
     }
 
     public void gameAlreadyFinished() {
-        cli.gameAlreadyFinished();
+        ui.gameAlreadyFinished();
     }
 }

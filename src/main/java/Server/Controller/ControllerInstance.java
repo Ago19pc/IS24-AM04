@@ -130,7 +130,6 @@ public class ControllerInstance implements Controller{
         }
         createDecks();
         giveStartingCards();
-        /*
         StartGameMessage startGameMessage = new StartGameMessage(
                 List.of(
                         gameModel.getGoldDeck().getTopCardNoPop(),
@@ -138,14 +137,12 @@ public class ControllerInstance implements Controller{
                         gameModel.getGoldDeck().getBoardCard().get(DeckPosition.SECOND_CARD)
                 ),
                 List.of(
-                        gameModel.getResourceDeck().getTopCardNoPop(),
-                        gameModel.getResourceDeck().getBoardCard().get(DeckPosition.FIRST_CARD),
-                        gameModel.getResourceDeck().getBoardCard().get(DeckPosition.SECOND_CARD)
+                        (ResourceCard) gameModel.getResourceDeck().getTopCardNoPop(),
+                        (ResourceCard) gameModel.getResourceDeck().getBoardCard().get(DeckPosition.FIRST_CARD),
+                        (ResourceCard) gameModel.getResourceDeck().getBoardCard().get(DeckPosition.SECOND_CARD)
                 )
         );
         connectionHandler.sendAllMessage(startGameMessage);
-
-         */
     }
 
     /**
@@ -253,9 +250,9 @@ public class ControllerInstance implements Controller{
                                 gameModel.getGoldDeck().getBoardCard().get(DeckPosition.SECOND_CARD)
                         ),
                         List.of(
-                                gameModel.getResourceDeck().getTopCardNoPop(),
-                                gameModel.getResourceDeck().getBoardCard().get(DeckPosition.FIRST_CARD),
-                                gameModel.getResourceDeck().getBoardCard().get(DeckPosition.SECOND_CARD)
+                                (ResourceCard) gameModel.getResourceDeck().getTopCardNoPop(),
+                                (ResourceCard) gameModel.getResourceDeck().getBoardCard().get(DeckPosition.FIRST_CARD),
+                                (ResourceCard) gameModel.getResourceDeck().getBoardCard().get(DeckPosition.SECOND_CARD)
                         )
                 );
                 connectionHandler.sendAllMessage(startGameMessage);
@@ -750,10 +747,12 @@ public class ControllerInstance implements Controller{
                 connectionHandler.changePlayerId(playerName, oldId);
                 StartGameMessage startMessage = new StartGameMessage(
                         List.of(
+                                gameModel.getGoldDeck().getTopCardNoPop(),
                                 gameModel.getGoldDeck().getBoardCard().get(DeckPosition.FIRST_CARD),
                                 gameModel.getGoldDeck().getBoardCard().get(DeckPosition.SECOND_CARD)
                         ),
                         List.of(
+                                (ResourceCard) gameModel.getResourceDeck().getTopCardNoPop(),
                                 gameModel.getResourceDeck().getBoardCard().get(DeckPosition.FIRST_CARD),
                                 gameModel.getResourceDeck().getBoardCard().get(DeckPosition.SECOND_CARD)
                         )
