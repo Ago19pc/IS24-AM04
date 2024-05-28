@@ -250,7 +250,8 @@ public class MainBoardSceneController extends SceneController {
     }
 
     public void placeCard(int x, int y) {
-        controller.askPlayCard(selectedCardIndex, selectedFace, x, y);
+        if (selectedCardIndex >= 0 && selectedCardIndex <= 2)
+            controller.askPlayCard(selectedCardIndex, selectedFace, x, y);
     }
 
     @FXML
