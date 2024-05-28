@@ -27,6 +27,8 @@ public interface Controller {
      */
     public List<Player> getPlayerList();
 
+    public void setOffline(String id);
+
 
     /**
      * set the player color
@@ -139,6 +141,6 @@ public interface Controller {
 
     public void reactToDisconnection(String id) throws AlreadyFinishedException, PlayerNotFoundByNameException;
 
-
+    public void reconnect(String newId, String oldId) throws IllegalArgumentException, AlreadySetException, NotYetStartedException, AlreadyFinishedException;
 }
 

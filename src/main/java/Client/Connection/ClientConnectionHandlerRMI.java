@@ -27,8 +27,8 @@ public class ClientConnectionHandlerRMI implements ClientConnectionHandler {
     private ClientController controller;
     int rmi_client_port;
 
-    public ClientConnectionHandlerRMI() throws RemoteException {
-
+    public ClientConnectionHandlerRMI(int rmi_port) throws RemoteException {
+        this.rmi_client_port = rmi_port;
     }
 
     public void setServer(String server_rmi_host) throws RemoteException {
@@ -54,9 +54,16 @@ public class ClientConnectionHandlerRMI implements ClientConnectionHandler {
 
     @Override
     public void sendMessage(ToServerMessage message) throws IOException {
-        server.executeMessage(message);
+        if (server == null) {
+            System.err.println("Server connection is not initialized!");
+            return;
+        }
+        try {
+            server.executeMessage(message);
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
     }
-
     /**
      * Execute a message
      *
@@ -65,6 +72,10 @@ public class ClientConnectionHandlerRMI implements ClientConnectionHandler {
     @Override
     public void executeMessage(ToClientMessage message)  {
         message.clientExecute(controller);
+    }
+
+    public void setServer(ServerConnectionHandler server) {
+        this.server = server;
     }
 
     public boolean ping() {

@@ -4,19 +4,17 @@ import Client.Controller.ClientController;
 import Client.Player;
 import Server.Card.AchievementCard;
 import Server.Card.Card;
+import Server.Card.CornerCardFace;
 import Server.Chat.Message;
 import Server.Enums.*;
 import Server.Exception.PlayerNotFoundByNameException;
 
 import java.util.*;
 
-public class CLI extends Thread{
+public class CLI extends Thread implements UI {
     private ClientController controller;
     private final Scanner in = new Scanner(System.in);
 
-    //temp variables
-    private List<AchievementCard> potentialSecretAchievements;
-    private Integer chosenHandCard;
 
     public CLI(ClientController controller){
         System.out.println("Avvio gioco...");
@@ -35,6 +33,7 @@ public class CLI extends Thread{
      * Runs CLI thread: reads input from the console and calls the decoding method
      */
     public void run(){
+        askConnectionMode();
         printOnNewLine("> Digita \"help\" per la lista dei comandi");
         printPromptLine();
         while(true){
@@ -59,6 +58,11 @@ public class CLI extends Thread{
             askConnectionMode();
         }
         printPromptLine();
+    }
+
+    @Override
+    public void nameChanged(String name) {
+
     }
 
     /**
@@ -97,6 +101,8 @@ public class CLI extends Thread{
                 printOnNewLine("  drawCard <mazzo> (opzionale <posizione a terra>): pesca una carta dal mazzo specificato. Se <posizione a terra> è specificata, pesca la carta dalla posizione specificata, altrimenti pesca dal mazzo");
                 printOnNewLine("  I mazzi disponibili sono: GOLD, RESOURCE");
                 printOnNewLine("  Le posizioni a terra disponibili sono: 1, 2");
+                printOnNewLine("");
+                printOnNewLine("  reconnect <id>: si riconnette alla partita in corso come giocatore con l'id specificato");
                 printOnNewLine("");
                 printPromptLine();
                 break;
@@ -158,13 +164,13 @@ public class CLI extends Thread{
                 switch(controller.getGameState()){
                     case CHOOSE_SECRET_ACHIEVEMENT:
                         if(cardNumber < 0 || cardNumber > 1){
-                            printOnNewLine("Numero non valido. Scegli 1 o 2");
+                            printOnNewLine("Numero non valido. Scegli 0 o 1");
                             return;
                         }
-                        controller.chooseSecretAchievement(potentialSecretAchievements.get(cardNumber), cardNumber);
+                        controller.chooseSecretAchievement(cardNumber);
                         break;
                     case PLACE_CARD:
-                        chosenHandCard = cardNumber;
+                        controller.setChosenHandCard(cardNumber);
                         printOnNewLine("Carta selezionata: " + controller.getHand().get(cardNumber));
                         break;
                     default:
@@ -179,7 +185,7 @@ public class CLI extends Thread{
                     printOnNewLine("Utilizzo corretto: placeCard <faccia> <x> <y>");
                     return;
                 }
-                if(chosenHandCard == null){
+                if(controller.getChosenHandCard() == null){
                     printOnNewLine("Devi selezionare una carta della tua mano");
                     printPromptLine();
                     return;
@@ -191,8 +197,7 @@ public class CLI extends Thread{
                 int x = Integer.parseInt(args[2]);
                 int y = Integer.parseInt(args[3]);
                 Face face = Face.valueOf(args[1].toUpperCase());
-                controller.askPlayCard(chosenHandCard, face, x, y);
-                chosenHandCard = null;
+                controller.askPlayCard(controller.getChosenHandCard(), face, x, y);
                 break;
             case "drawCard":
                 if(args.length < 2 || args.length > 3){
@@ -217,6 +222,13 @@ public class CLI extends Thread{
                 Decks deck = Decks.valueOf(args[1].toUpperCase());
                 controller.askDrawCard(deck, position);
                 break;
+            case "reconnect":
+                if(args.length != 2){
+                    printOnNewLine("Utilizzo corretto: reconnect <id>");
+                    return;
+                }
+                controller.reconnect(args[1]);
+                break;
             default:
                 printOnNewLine("Comando non valido. Digita \"help\" per la lista dei comandi");
                 printPromptLine();
@@ -227,10 +239,9 @@ public class CLI extends Thread{
 
     /**
      * Prints the new name
-     * @param name new name
      */
-    public void nameChanged(String name){
-        printOnNewLine("Sei entrato in partita. Il tuo nome è: " + name);
+    public void nameChanged(){
+        printOnNewLine("Sei entrato in partita. Il tuo nome è: " + controller.getMyName());
         printPromptLine();
     }
     /**
@@ -452,6 +463,10 @@ public class CLI extends Thread{
         printOnNewLine(message.getName() + ": " + message.getMessage());
         printPromptLine();
     }
+
+
+
+
     /**
      * Tells the users which are the common achievements
      */
@@ -465,13 +480,11 @@ public class CLI extends Thread{
 
     /**
      * Asks the user to choose the secret achievement
-     * @param possibleAchievements list of possible secret achievements (lis of 2 elements)
+     * @param possibleAchievements list of possible secret achievements (list of 2 elements)
      */
     public void chooseSecretAchievement(List<AchievementCard> possibleAchievements){
         printOnNewLine("Scegli un obiettivo segreto: \n");
-        potentialSecretAchievements = new ArrayList<>();
         for (int i = 0; i < possibleAchievements.size(); i++) {
-            potentialSecretAchievements.add((AchievementCard) possibleAchievements.get(i));
             System.out.println("    " + i + ": " + possibleAchievements.get(i));
         }
         printPromptLine();
@@ -650,7 +663,7 @@ public class CLI extends Thread{
      * @param x
      * @param y
      */
-    public void cardPlaced(String playerName, int x, int y) {
+    public void cardPlaced(String playerName, CornerCardFace cornerCardFace, int x, int y) {
         printOnNewLine(playerName + " ha piazzato una carta in posizione " + x + ", " + y);
         printPromptLine();
     }
@@ -662,6 +675,90 @@ public class CLI extends Thread{
 
     public void tooManyPlayers() {
         printOnNewLine("E' stato già raggiunto il limite massimo di giocatori, sei uno spettatore");
+        printPromptLine();
+    }
+
+    public void playerRemoved(String playerName) {
+        printOnNewLine(playerName + " è stato rimosso dalla partita per inattività");
+        printPromptLine();
+    }
+
+    public void otherPlayerReconnected(String name){
+        printOnNewLine(name + " si è riconnesso");
+        printPromptLine();
+    }
+
+    public void displayId(){
+        printOnNewLine("Il tuo id è: " + controller.getMyId());
+        printPromptLine();
+    }
+
+    public void idNotInGame(){
+        printOnNewLine("L'id specificato non corrisponde a nessun giocatore");
+        printPromptLine();
+    }
+
+    public void playerAlreadyPlaying(){
+        printOnNewLine("Il giocatore specificato è già in partita");
+        printPromptLine();
+    }
+
+    public void displayDeckSizes(){
+        printOnNewLine("Il mazzo oro ha " + controller.getDeckSize(Decks.GOLD) + " carte");
+        printOnNewLine("Il mazzo risorsa ha " + controller.getDeckSize(Decks.RESOURCE) + " carte");
+        printPromptLine();
+    }
+
+    public void displaySecretAchievement(){
+        printOnNewLine("Il tuo obiettivo segreto è: " + controller.getSecretAchievement());
+        printPromptLine();
+    }
+
+    public void displayTurn(){
+        printOnNewLine("E' il turno " + controller.getTurn() + ". Tocca a " + controller.getActivePlayer());
+        printPromptLine();
+    }
+
+    public void displayManuscript(String playerName){
+        printOnNewLine(playerName + "ha un manoscritto");
+    }
+
+    public void displayPlayerInfo(){
+        displayPlayerOrder();
+        displayPlayerColors();
+        for (Player player : controller.getPlayers()) {
+            System.out.println("    " + player.getName() + ": " + player.getPoints() + " punti");
+            displayManuscript(player.getName());
+        }
+    }
+
+    public void displayChat(){
+        for (Message message : controller.getChat()) {
+            System.out.println(message.getName() + ": " + message.getMessage());
+        }
+    }
+
+    public void displayGameState(){
+        printOnNewLine("Stato del gioco: " + controller.getGameState());
+        printPromptLine();
+    }
+
+    public void displayGameInfo(){
+        nameChanged();
+        displayId();
+        displayCommonAchievements();
+        displayDeckSizes();
+        displayBoardCards();
+        displaySecretAchievement();
+        displayHand();
+        displayTurn();
+        displayPlayerInfo();
+        displayChat();
+        displayGameState();
+    }
+
+    public void gameAlreadyFinished() {
+        printOnNewLine("La partita è già finita");
         printPromptLine();
     }
 }

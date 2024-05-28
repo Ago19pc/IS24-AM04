@@ -62,7 +62,7 @@ public class ClientHandler extends Thread {
     public void run() {
         System.out.println("[SOCKET] Nuovo Client connesso: " + this.socket.getInetAddress());
         System.out.println("[SOCKET] Ora i client connessi sono: ");
-        for (ClientHandler c : connectionHandler.getThreads()) {
+        for (ClientHandler c : connectionHandler.getConnectedThreads()) {
             System.out.print(" " + c.socket.getInetAddress() +" -");
         }
         System.out.println();
@@ -116,5 +116,6 @@ public class ClientHandler extends Thread {
 
 
     public boolean isOnline() {return this.socket.isConnected();}
+    public boolean isClosed() {return this.socket.isClosed();}
     }
 

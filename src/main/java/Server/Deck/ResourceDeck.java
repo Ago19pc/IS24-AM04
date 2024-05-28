@@ -46,28 +46,27 @@ public class ResourceDeck implements Deckable {
     /**
      * @param where_to the position to add the card to
      */
-    public void moveCardToBoard(DeckPosition where_to) throws IncorrectDeckPositionException {
-        if (where_to == DECK)
-            throw new IncorrectDeckPositionException("Cannot add card to the deck, only to FIST_CARD or SECOND_CARD.");
-
-
-        Card cardToMove;
-        try{
-            cardToMove = popCard(DECK);
-        } catch (AlreadyFinishedException e) {
-            cardToMove = null;
+    public void moveCardToBoard(DeckPosition where_to) {
+        if (where_to != DECK) {
+            Card cardToMove;
+            try {
+                cardToMove = popCard(DECK);
+            } catch (AlreadyFinishedException e) {
+                cardToMove = null;
+            }
+            addCard(cardToMove, where_to);
         }
-        addCard(cardToMove, where_to);
     }
 
     /**
      * @return Card the card from the position
      */
-    public Map<DeckPosition, Card> getBoardCard() {
-        Map<DeckPosition, Card> boardCardsToReturn = new HashMap<>();
-        for (DeckPosition position : boardCards.keySet()) {
-            boardCardsToReturn.put(position, (Card) boardCards.get(position));
-        }
+    public Map<DeckPosition, ResourceCard> getBoardCard() {
+        Map<DeckPosition, ResourceCard> boardCardsToReturn = new HashMap<>();
+        boardCardsToReturn.put(DECK, (ResourceCard) getTopCardNoPop());
+        boardCardsToReturn.put(FIRST_CARD, boardCards.get(FIRST_CARD));
+        boardCardsToReturn.put(SECOND_CARD, boardCards.get(SECOND_CARD));
+
         return boardCardsToReturn;
     }
 
@@ -80,19 +79,27 @@ public class ResourceDeck implements Deckable {
             if (position == DECK) {
                 return (ResourceCard) cards.remove(0);
             } else {
+                // LA POSIZIONE NON E' DECK
+
                 if(boardCards.get(position) == null){
                     throw new AlreadyFinishedException("There is no card in the position " + position);
                 }
-                return (ResourceCard) getBoardCard().get(position);
+                // STIAMO PESCANDO DA FIRST O SECOND
+
+                // RITORNA LA CARTA E LA RIMUOVE DALLA POSIZIONE E RIMPIAZZALA
+                ResourceCard toReturn = boardCards.get(position);
+                moveCardToBoard(position);
+
+                return toReturn;
             }
 
     }
 
     /**
-     * @return boolean true if the deck is empty
+     * @return boolean true if the deck is empty (and there are no board cards)
      */
     public boolean isEmpty() {
-        return cards.isEmpty();
+        return cards.isEmpty() && boardCards.get(FIRST_CARD) == null && boardCards.get(SECOND_CARD) == null;
     }
 
     /**
@@ -100,11 +107,16 @@ public class ResourceDeck implements Deckable {
      * @param card card to add
      * @param position position to add the card to
      */
-    public void addCard(Card card, DeckPosition position) throws IncorrectDeckPositionException {
-        if (position == DECK)
-            throw new IncorrectDeckPositionException("Cannot add card to the deck, only to FIST_CARD or SECOND_CARD.");
-        else
+    public void addCard(Card card, DeckPosition position) {
+        if (position != DECK)
             boardCards.put(position, (ResourceCard) card);
+    }
+
+    @Override
+    public Card getTopCardNoPop() {
+        if(cards.isEmpty())
+            return null;
+        return cards.get(0);
     }
 
     /**
@@ -124,15 +136,17 @@ public class ResourceDeck implements Deckable {
         BufferedReader readerBACK;
 
         try {
-            fileFRONT = new File("images/ResourceFrontFace.txt");
-            fileBACK = new File("images/ResourceBackFace.txt");
+            fileFRONT = new File(getClass().getResource("/images/ResourceFrontFace.txt").toURI());
+            fileBACK = new File(getClass().getResource("/images/ResourceBackFace.txt").toURI());
             readerFRONT = new BufferedReader(new FileReader(fileFRONT));
             readerBACK = new BufferedReader(new FileReader(fileBACK));
 
             String lineF;
             int cardNumber = 0;
+            int counter = -1;
             while ((lineF = readerFRONT.readLine()) != null) {
                 //System.out.println("generate card " + cardNumber);
+                counter++;
                 String[] partsF = lineF.split(" ");
 
                 String partsB = readerBACK.readLine();
@@ -174,16 +188,16 @@ public class ResourceDeck implements Deckable {
                         kingdom = Symbol.NONE;
                         break;
                 }
-                ResourceFrontFace frontFace = new ResourceFrontFace("RESOURCEFRONT", cornerSymbolsF, point, kingdom);
+                ResourceFrontFace frontFace = new ResourceFrontFace("front-" + counter + ".jpeg", cornerSymbolsF, point, kingdom);
             
             
                 List<Symbol> centerSymbolsB = new ArrayList<>();
                 centerSymbolsB.add(Symbol.valueOf(partsB));
             
 
-                RegularBackFace backFace = new RegularBackFace("RESOURCEBACK", centerSymbolsB);
+                RegularBackFace backFace = new RegularBackFace("back-" + counter + ".jpeg", centerSymbolsB);
             
-                ResourceCard card = new ResourceCard(frontFace, backFace);
+                ResourceCard card = new ResourceCard(frontFace, backFace, counter + ".jpeg");
                 this.cards.add(card);
                 cardNumber++;
             }

@@ -64,10 +64,10 @@ public class AchievementDeck implements Deckable{
     /**
      * @return Card the card from the position
      */
-    public Map<DeckPosition, Card> getBoardCard() {
-        Map<DeckPosition, Card> boardCardsToReturn = new HashMap<>();
+    public Map<DeckPosition, AchievementCard> getBoardCard() {
+        Map<DeckPosition, AchievementCard> boardCardsToReturn = new HashMap<>();
         for (DeckPosition position : boardCards.keySet()) {
-            boardCardsToReturn.put(position, (Card) boardCards.get(position));
+            boardCardsToReturn.put(position, boardCards.get(position));
         }
         return boardCardsToReturn;
     }
@@ -82,7 +82,7 @@ public class AchievementDeck implements Deckable{
         
 
         try {
-            fileFRONT = new File("images/AchievementFrontFace.txt");
+            fileFRONT = new File(getClass().getResource("/images/AchievementFrontFace.txt").toURI());
             
             readerFRONT = new BufferedReader(new FileReader(fileFRONT));
             
@@ -90,7 +90,9 @@ public class AchievementDeck implements Deckable{
         
 
             String lineF;
+            int counter = 85;
             while ((lineF = readerFRONT.readLine()) != null) {
+                counter++;
 
                 String[] partsF = lineF.split(" ");
 
@@ -110,11 +112,11 @@ public class AchievementDeck implements Deckable{
                     }
                 }
             
-                AchievementFrontFace frontFace = new AchievementFrontFace("ACHIEVEMENTFRONT", scoreRequirements, score);
+                AchievementFrontFace frontFace = new AchievementFrontFace("front-" + counter + ".jpeg", scoreRequirements, score);
             
-                EmptyCardFace backFace = new EmptyCardFace("ACHIEVEMENTBACK");
+                EmptyCardFace backFace = new EmptyCardFace("back-" + counter + ".jpeg");
             
-                AchievementCard card = new AchievementCard(frontFace, backFace);
+                AchievementCard card = new AchievementCard(frontFace, backFace, counter + ".jpeg");
                 this.cards.add(card);
             }
         } catch (Exception e) {
@@ -156,6 +158,13 @@ public class AchievementDeck implements Deckable{
             throw new IncorrectDeckPositionException("Cannot add card to the deck, only to FIST_CARD or SECOND_CARD.");
         else
             boardCards.put(position, (AchievementCard) card);
+    }
+
+    @Override
+    public Card getTopCardNoPop() {
+        if(cards.isEmpty())
+            return null;
+        return cards.get(0);
     }
 
     /**

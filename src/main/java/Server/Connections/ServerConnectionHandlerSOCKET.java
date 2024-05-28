@@ -107,8 +107,14 @@ public class ServerConnectionHandlerSOCKET extends Thread implements ServerConne
      * Get the client threads list
      * @return this.threads the list of all client thread
      */
-    public List<ClientHandler> getThreads() {
-        return this.clients.keySet().stream().toList();
+    public List<ClientHandler> getConnectedThreads() {
+        List<ClientHandler> connected = new ArrayList<>();
+        for (ClientHandler c : clients.keySet()) {
+            if(!controller.getConnectionHandler().isInDisconnectedList(clients.get(c))){
+                connected.add(c);
+            }
+        }
+        return connected;
     }
 
     public String getThreadName(ClientHandler clientHandler) {
@@ -138,14 +144,11 @@ public class ServerConnectionHandlerSOCKET extends Thread implements ServerConne
      * @param id the name of the client thread to kill
      */
     public void killClient(String id) throws PlayerNotFoundByNameException, AlreadyFinishedException {
-        PlayerDisconnectedMessage message = new PlayerDisconnectedMessage(controller.getConnectionHandler().getPlayerNameByID(id));
         ClientHandler target = clients.entrySet().stream()
                 .filter(entry -> entry.getValue().equals(id))
                 .toList().getFirst().getKey();
         clients.remove(target);
-        controller.reactToDisconnection(id);
         target.interrupt();
-        controller.getConnectionHandler().sendAllMessage(message);
     }
 
     public List<String> getAllIds(){
@@ -165,7 +168,8 @@ public class ServerConnectionHandlerSOCKET extends Thread implements ServerConne
      */
     public void sendAllMessage(ToClientMessage message) {
         for (ClientHandler c : clients.keySet()) {
-            System.out.println("Sending message to " + c.getSocketAddress());
+            if(c.isClosed()) continue;
+            System.out.println("Sending message to " + c.getSocketAddress() + " - id " + clients.get(c));
             c.sendMessage(message);
         }
     }
@@ -210,5 +214,11 @@ public class ServerConnectionHandlerSOCKET extends Thread implements ServerConne
         return null;
     }
 
+    public void changeId(String oldId, String newId) {
+        ClientHandler target = clients.entrySet().stream()
+                .filter(entry -> Objects.equals(entry.getValue(), oldId))
+                .toList().getFirst().getKey();
+        clients.remove(target);
+    }
 }
 

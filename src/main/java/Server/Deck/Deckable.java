@@ -11,7 +11,6 @@ public interface Deckable {
     /**
      * @return Map<DeckPosition, Card> the cards on the board
      */
-    public Map<DeckPosition, Card> getBoardCard();
 
 
     /**
@@ -32,4 +31,5 @@ public interface Deckable {
      */
      public void addCard(Card card, DeckPosition position) throws IncorrectDeckPositionException;
 
+     public Card getTopCardNoPop();
 }

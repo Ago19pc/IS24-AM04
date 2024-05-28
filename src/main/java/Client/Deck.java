@@ -14,6 +14,16 @@ public class Deck<T> {
         this.boardCards = boardCards;
     }
 
+    public Deck(int deckSize, List<T> boardCards) {
+        this.deckSize = deckSize;
+        this.boardCards = boardCards;
+    }
+
+    public Deck() {
+        this.deckSize = 38;
+        this.boardCards = new ArrayList<>();
+    }
+
     /**
      * Get the board cards
      * @return List of Boardcards
@@ -28,7 +38,9 @@ public class Deck<T> {
      */
     public void setBoardCards(List<Card> boardCards) {
         this.boardCards = new ArrayList<>();
-        boardCards.forEach(card -> this.boardCards.add((T) card));
+        for (Card boardCard : boardCards) {
+            this.boardCards.add((T) boardCard);
+        }
     }
 
     /**

@@ -70,6 +70,7 @@ public class ClientConnectionHandlerSOCKET extends Thread implements ClientConne
                 @Override
                 public void uncaughtException(Thread th, Throwable ex) {
                     System.out.println("Uncaught exception: " + ex);
+                    ex.printStackTrace();
                     try {
                         clientSocket.close();
 

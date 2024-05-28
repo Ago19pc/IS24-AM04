@@ -5,15 +5,17 @@ import Server.Enums.Face;
 public class ResourceCard implements Card {
     protected final ResourceFrontFace frontFace;
     protected final RegularBackFace backFace;
+    private final String imageURI;
 
     /**
      * Constructor for the ResourceCard
      * @param frontFace the front face
      * @param backFace the back face
      */
-    public ResourceCard(ResourceFrontFace frontFace, RegularBackFace backFace) {
+    public ResourceCard(ResourceFrontFace frontFace, RegularBackFace backFace, String imageURI) {
         this.frontFace = frontFace;
         this.backFace = backFace;
+        this.imageURI = imageURI;
     }
 
     /**
@@ -36,6 +38,10 @@ public class ResourceCard implements Card {
 
     public String toString(){
         return "Carta risorsa. Faccia anteriore: \n" + frontFace.toString() + "\nFaccia posteriore: \n" + backFace.toString();
+    }
+
+    public String getImageURI() {
+        return imageURI;
     }
 
 }

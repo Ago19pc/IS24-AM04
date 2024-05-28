@@ -12,6 +12,7 @@ module it.am04.demo1 {
     exports Client;
     exports Server.Connections to java.rmi;
     exports Client.Connection to java.rmi;
+    exports run to javafx.graphics;
 
     opens Server.GameModel to com.google.gson;
     opens Server.Deck to com.google.gson;
@@ -20,6 +21,6 @@ module it.am04.demo1 {
     opens Server.Card to com.google.gson;
     opens Server.Chat to com.google.gson;
     opens Server.Manuscript to com.google.gson;
-    exports Client.SceneController;
-    opens Client.SceneController to javafx.fxml;
+    opens run to javafx.fxml;
+
 }

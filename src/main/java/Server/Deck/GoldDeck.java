@@ -1,9 +1,6 @@
 package Server.Deck;
 
-import Server.Card.Card;
-import Server.Card.GoldCard;
-import Server.Card.GoldFrontFace;
-import Server.Card.RegularBackFace;
+import Server.Card.*;
 import Server.Enums.CardCorners;
 import Server.Enums.DeckPosition;
 import Server.Enums.Symbol;
@@ -46,28 +43,27 @@ public class GoldDeck implements Deckable {
     /**
      * @param where_to the position to add the card to
      */
-    public void moveCardToBoard(DeckPosition where_to) throws IncorrectDeckPositionException {
-        if (where_to == DECK)
-            throw new IncorrectDeckPositionException("Cannot add card to the deck, only to FIST_CARD or SECOND_CARD.");
-
-
-        Card cardToMove;
-        try{
-            cardToMove = popCard(DECK);
-        } catch (AlreadyFinishedException e) {
-            cardToMove = null;
+    public void moveCardToBoard(DeckPosition where_to) {
+        if (where_to != DECK) {
+            Card cardToMove;
+            try {
+                cardToMove = popCard(DECK);
+            } catch (AlreadyFinishedException e) {
+                cardToMove = null;
+            }
+            addCard(cardToMove, where_to);
         }
-        addCard(cardToMove, where_to);
     }
 
     /**
      * @return Card the card from the position
      */
-    public Map<DeckPosition, Card> getBoardCard() {
-        Map<DeckPosition, Card> boardCardsToReturn = new HashMap<>();
-        for (DeckPosition position : boardCards.keySet()) {
-            boardCardsToReturn.put(position, (Card) boardCards.get(position));
-        }
+    public Map<DeckPosition, GoldCard> getBoardCard() {
+        Map<DeckPosition, GoldCard> boardCardsToReturn = new HashMap<>();
+        boardCardsToReturn.put(DECK, getTopCardNoPop());
+        boardCardsToReturn.put(FIRST_CARD, boardCards.get(FIRST_CARD));
+        boardCardsToReturn.put(SECOND_CARD, boardCards.get(SECOND_CARD));
+
         return boardCardsToReturn;
     }
 
@@ -76,25 +72,30 @@ public class GoldDeck implements Deckable {
      * @return Card the popped card
      */
     public GoldCard popCard(DeckPosition position) throws AlreadyFinishedException{
+        if (position == DECK) {
+            return (GoldCard) cards.remove(0);
+        } else {
+            // LA POSIZIONE NON E' DECK
 
-            if (position == DECK) {
-                if(cards.isEmpty())
-                    throw new AlreadyFinishedException("The GoldDeck is empty");
-                return (GoldCard) cards.remove(0);
-            } else {
-                if(boardCards.get(position) == null){
-                    throw new AlreadyFinishedException("No card in the position");
-                }
-                return (GoldCard) getBoardCard().get(position);
+            if(boardCards.get(position) == null){
+                throw new AlreadyFinishedException("There is no card in the position " + position);
             }
+            // STIAMO PESCANDO DA FIRST O SECOND
+
+            // RITORNA LA CARTA E LA RIMUOVE DALLA POSIZIONE E RIMPIAZZALA
+            GoldCard toReturn = boardCards.get(position);
+            moveCardToBoard(position);
+
+            return toReturn;
+        }
 
     }
 
     /**
-     * @return boolean true if the deck is empty
+     * @return boolean true if the deck is empty and there are no board cards
      */
     public boolean isEmpty() {
-        return cards.isEmpty();
+        return cards.isEmpty() && boardCards.get(FIRST_CARD) == null && boardCards.get(SECOND_CARD) == null;
     }
 
     /**
@@ -102,11 +103,16 @@ public class GoldDeck implements Deckable {
      * @param card card to add
      * @param position position to add the card to
      */
-    public void addCard(Card card, DeckPosition position) throws IncorrectDeckPositionException {
-        if (position == DECK)
-            throw new IncorrectDeckPositionException("Cannot add card to the deck, only to FIST_CARD or SECOND_CARD.");
-        else
+    public void addCard(Card card, DeckPosition position) {
+        if (position != DECK)
             boardCards.put(position, (GoldCard) card);
+    }
+
+    @Override
+    public GoldCard getTopCardNoPop() {
+        if(cards.isEmpty())
+            return null;
+        return cards.get(0);
     }
 
     /**
@@ -126,8 +132,8 @@ public class GoldDeck implements Deckable {
         BufferedReader readerBACK;
 
         try {
-            fileFRONT = new File("images/GoldFrontFace.txt");
-            fileBACK = new File("images/GoldBackFace.txt");
+            fileFRONT = new File(getClass().getResource("/images/GoldFrontFace.txt").toURI());
+            fileBACK = new File(getClass().getResource("/images/GoldBackFace.txt").toURI());
             readerFRONT = new BufferedReader(new FileReader(fileFRONT));
             readerBACK = new BufferedReader(new FileReader(fileBACK));
 
@@ -135,7 +141,9 @@ public class GoldDeck implements Deckable {
 
             String lineF;
             int cardNumber = 0;
+            int counter = 39;
             while ((lineF = readerFRONT.readLine()) != null) {
+                counter++;
 
                 String[] partsF = lineF.split(" ");
                 //System.out.println(lineF);
@@ -202,16 +210,16 @@ public class GoldDeck implements Deckable {
                     System.out.println("corner: " + CardCorners.values()[j] + " symbol: " + cornerSymbolsF.get(CardCorners.values()[j]) + " Kingdom: "+kingdom );
                 }*/
 
-                GoldFrontFace frontFace = new GoldFrontFace("GOLDFRONT", cornerSymbolsF, point, placementRequirementsF, scoreRequirementsF, kingdom);
+                GoldFrontFace frontFace = new GoldFrontFace("front-" + counter + ".jpeg", cornerSymbolsF, point, placementRequirementsF, scoreRequirementsF, kingdom);
 
                 // DA QUI E DA VEDERE
                 List<Symbol> centerSymbolsB = new ArrayList<>();
                 centerSymbolsB.add(Symbol.valueOf(partsB));
 
 
-                RegularBackFace backFace = new RegularBackFace("GOLDBACK", centerSymbolsB);
+                RegularBackFace backFace = new RegularBackFace("back-" + counter + ".jpeg", centerSymbolsB);
 
-                GoldCard card = new GoldCard(frontFace, backFace);
+                GoldCard card = new GoldCard(frontFace, backFace,counter + ".jpeg");
                 this.cards.add(card);
                 cardNumber++;
             }

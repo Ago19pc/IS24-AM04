@@ -37,9 +37,9 @@ public interface ServerConnectionHandler extends Remote {
 
     /**
      * Kill a client
-     * @param name the name of the client to kill
+     * @param id the name id the client to kill
      */
-    public void killClient(String name) throws RemoteException, PlayerNotFoundByNameException, AlreadyFinishedException;
+    public void killClient(String id) throws RemoteException, PlayerNotFoundByNameException, AlreadyFinishedException;
 
     public void setName(String name, String clientID) throws RemoteException, IllegalArgumentException, TooManyPlayersException, AlreadyStartedException;
 
@@ -58,4 +58,6 @@ public interface ServerConnectionHandler extends Remote {
     public void setController(Controller controller) throws RemoteException;
 
     public LobbyPlayersMessage join(int rmi_port) throws RemoteException, NotBoundException;
+
+    public void changeId(String oldId, String newId) throws RemoteException;
 }
