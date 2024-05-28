@@ -477,18 +477,18 @@ public class GUI implements UI{
         Platform.runLater(() -> {
             switch (controller.getGameState()) {
                 case LOBBY:
-                    break;
+                    throw new RuntimeException("Unexpected game state");
                 case CHOOSE_STARTING_CARD:
                     stage.setScene(getScene(SceneName.STARTINGCARDCHOICE));
-                    stage.show();
+                    //stage.show();
                     break;
                 case CHOOSE_SECRET_ACHIEVEMENT:
                     stage.setScene(getScene(SceneName.SECRETCARDCHOICE));
-                    stage.show();
+                    //stage.show();
                     break;
                 default:
                     stage.setScene(getScene(SceneName.GAME));
-                    stage.show();
+                    //stage.show();
                     break;
         }
         });
