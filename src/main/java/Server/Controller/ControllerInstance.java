@@ -130,17 +130,22 @@ public class ControllerInstance implements Controller{
         }
         createDecks();
         giveStartingCards();
+        /*
         StartGameMessage startGameMessage = new StartGameMessage(
                 List.of(
+                        gameModel.getGoldDeck().getTopCardNoPop(),
                         gameModel.getGoldDeck().getBoardCard().get(DeckPosition.FIRST_CARD),
                         gameModel.getGoldDeck().getBoardCard().get(DeckPosition.SECOND_CARD)
                 ),
                 List.of(
+                        gameModel.getResourceDeck().getTopCardNoPop(),
                         gameModel.getResourceDeck().getBoardCard().get(DeckPosition.FIRST_CARD),
                         gameModel.getResourceDeck().getBoardCard().get(DeckPosition.SECOND_CARD)
                 )
         );
         connectionHandler.sendAllMessage(startGameMessage);
+
+         */
     }
 
     /**
@@ -241,6 +246,20 @@ public class ControllerInstance implements Controller{
         if(allSet){
             try {
                 giveInitialHand();
+                StartGameMessage startGameMessage = new StartGameMessage(
+                        List.of(
+                                gameModel.getGoldDeck().getTopCardNoPop(),
+                                gameModel.getGoldDeck().getBoardCard().get(DeckPosition.FIRST_CARD),
+                                gameModel.getGoldDeck().getBoardCard().get(DeckPosition.SECOND_CARD)
+                        ),
+                        List.of(
+                                gameModel.getResourceDeck().getTopCardNoPop(),
+                                gameModel.getResourceDeck().getBoardCard().get(DeckPosition.FIRST_CARD),
+                                gameModel.getResourceDeck().getBoardCard().get(DeckPosition.SECOND_CARD)
+                        )
+                );
+                connectionHandler.sendAllMessage(startGameMessage);
+
             } catch (AlreadySetException | AlreadyFinishedException e) {
                 //do nothing as it's normal that it's already set
             }
@@ -430,8 +449,8 @@ public class ControllerInstance implements Controller{
                 deckPosition,
                 switch (deck) {
                     //todo: aggiungere un metodo ai deck che ritorni le boardcards in una lista per evitare sto macello
-                    case RESOURCE -> List.of(gameModel.getResourceDeck().getBoardCard().get(DeckPosition.FIRST_CARD), gameModel.getResourceDeck().getBoardCard().get(DeckPosition.SECOND_CARD));
-                    case GOLD -> List.of(gameModel.getGoldDeck().getBoardCard().get(DeckPosition.FIRST_CARD), gameModel.getGoldDeck().getBoardCard().get(DeckPosition.SECOND_CARD));
+                    case RESOURCE -> List.of(gameModel.getResourceDeck().getBoardCard().get(DeckPosition.DECK),  gameModel.getResourceDeck().getBoardCard().get(DeckPosition.FIRST_CARD), gameModel.getResourceDeck().getBoardCard().get(DeckPosition.SECOND_CARD));
+                    case GOLD -> List.of(gameModel.getGoldDeck().getBoardCard().get(DeckPosition.DECK), gameModel.getGoldDeck().getBoardCard().get(DeckPosition.FIRST_CARD), gameModel.getGoldDeck().getBoardCard().get(DeckPosition.SECOND_CARD));
                     default -> null;
                 }
         );

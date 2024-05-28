@@ -16,10 +16,10 @@ public class AchievementCard implements Card {
      * @param frontFace the front face
      * @param backFace the back face
      */
-    public AchievementCard(AchievementFrontFace frontFace, EmptyCardFace backFace) {
+    public AchievementCard(AchievementFrontFace frontFace, EmptyCardFace backFace, String imageURI) {
         this.frontFace = frontFace;
         this.backFace = backFace;
-        this.imageURI = getImageURI();
+        this.imageURI = imageURI;
     }
 
     /**

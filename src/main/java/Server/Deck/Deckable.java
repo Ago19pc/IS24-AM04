@@ -31,4 +31,5 @@ public interface Deckable {
      */
      public void addCard(Card card, DeckPosition position) throws IncorrectDeckPositionException;
 
+     public Card getTopCardNoPop();
 }

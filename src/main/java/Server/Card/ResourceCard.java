@@ -12,10 +12,10 @@ public class ResourceCard implements Card {
      * @param frontFace the front face
      * @param backFace the back face
      */
-    public ResourceCard(ResourceFrontFace frontFace, RegularBackFace backFace) {
+    public ResourceCard(ResourceFrontFace frontFace, RegularBackFace backFace, String imageURI) {
         this.frontFace = frontFace;
         this.backFace = backFace;
-        this.imageURI = getImageURI();
+        this.imageURI = imageURI;
     }
 
     /**

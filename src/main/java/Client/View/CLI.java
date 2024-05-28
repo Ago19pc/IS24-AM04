@@ -4,19 +4,17 @@ import Client.Controller.ClientController;
 import Client.Player;
 import Server.Card.AchievementCard;
 import Server.Card.Card;
+import Server.Card.CornerCardFace;
 import Server.Chat.Message;
 import Server.Enums.*;
 import Server.Exception.PlayerNotFoundByNameException;
 
 import java.util.*;
 
-public class CLI extends Thread{
+public class CLI extends Thread implements UI {
     private ClientController controller;
     private final Scanner in = new Scanner(System.in);
 
-    //temp variables
-    private List<AchievementCard> potentialSecretAchievements;
-    private Integer chosenHandCard;
 
     public CLI(ClientController controller){
         System.out.println("Avvio gioco...");
@@ -35,6 +33,7 @@ public class CLI extends Thread{
      * Runs CLI thread: reads input from the console and calls the decoding method
      */
     public void run(){
+        askConnectionMode();
         printOnNewLine("> Digita \"help\" per la lista dei comandi");
         printPromptLine();
         while(true){
@@ -59,6 +58,11 @@ public class CLI extends Thread{
             askConnectionMode();
         }
         printPromptLine();
+    }
+
+    @Override
+    public void nameChanged(String name) {
+
     }
 
     /**
@@ -160,13 +164,13 @@ public class CLI extends Thread{
                 switch(controller.getGameState()){
                     case CHOOSE_SECRET_ACHIEVEMENT:
                         if(cardNumber < 0 || cardNumber > 1){
-                            printOnNewLine("Numero non valido. Scegli 1 o 2");
+                            printOnNewLine("Numero non valido. Scegli 0 o 1");
                             return;
                         }
-                        controller.chooseSecretAchievement(potentialSecretAchievements.get(cardNumber), cardNumber);
+                        controller.chooseSecretAchievement(cardNumber);
                         break;
                     case PLACE_CARD:
-                        chosenHandCard = cardNumber;
+                        controller.setChosenHandCard(cardNumber);
                         printOnNewLine("Carta selezionata: " + controller.getHand().get(cardNumber));
                         break;
                     default:
@@ -181,7 +185,7 @@ public class CLI extends Thread{
                     printOnNewLine("Utilizzo corretto: placeCard <faccia> <x> <y>");
                     return;
                 }
-                if(chosenHandCard == null){
+                if(controller.getChosenHandCard() == null){
                     printOnNewLine("Devi selezionare una carta della tua mano");
                     printPromptLine();
                     return;
@@ -193,8 +197,7 @@ public class CLI extends Thread{
                 int x = Integer.parseInt(args[2]);
                 int y = Integer.parseInt(args[3]);
                 Face face = Face.valueOf(args[1].toUpperCase());
-                controller.askPlayCard(chosenHandCard, face, x, y);
-                chosenHandCard = null;
+                controller.askPlayCard(controller.getChosenHandCard(), face, x, y);
                 break;
             case "drawCard":
                 if(args.length < 2 || args.length > 3){
@@ -460,6 +463,10 @@ public class CLI extends Thread{
         printOnNewLine(message.getName() + ": " + message.getMessage());
         printPromptLine();
     }
+
+
+
+
     /**
      * Tells the users which are the common achievements
      */
@@ -473,13 +480,11 @@ public class CLI extends Thread{
 
     /**
      * Asks the user to choose the secret achievement
-     * @param possibleAchievements list of possible secret achievements (lis of 2 elements)
+     * @param possibleAchievements list of possible secret achievements (list of 2 elements)
      */
     public void chooseSecretAchievement(List<AchievementCard> possibleAchievements){
         printOnNewLine("Scegli un obiettivo segreto: \n");
-        potentialSecretAchievements = new ArrayList<>();
         for (int i = 0; i < possibleAchievements.size(); i++) {
-            potentialSecretAchievements.add((AchievementCard) possibleAchievements.get(i));
             System.out.println("    " + i + ": " + possibleAchievements.get(i));
         }
         printPromptLine();
@@ -658,7 +663,7 @@ public class CLI extends Thread{
      * @param x
      * @param y
      */
-    public void cardPlaced(String playerName, int x, int y) {
+    public void cardPlaced(String playerName, CornerCardFace cornerCardFace, int x, int y) {
         printOnNewLine(playerName + " ha piazzato una carta in posizione " + x + ", " + y);
         printPromptLine();
     }

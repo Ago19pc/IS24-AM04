@@ -40,6 +40,7 @@ public class GeneralServerConnectionHandler {
      */
     public void addPlayerByID(String name, String clientID) {
         playerID.put(clientID, name);
+        System.out.println(playerID);
     }
 
     public void removePlayerByName(String name) {
@@ -100,6 +101,7 @@ public class GeneralServerConnectionHandler {
     }
 
     public void sendMessage(ToClientMessage message, String name) {
+        System.out.println(playerID);
         try {
             String id = playerID.entrySet().stream().filter(entry -> entry.getValue().equals(name)).findFirst().get().getKey();
             if(disconnectedPlayerIds.contains(id)) {

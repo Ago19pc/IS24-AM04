@@ -2,15 +2,16 @@ package Client.Controller;
 
 import Client.Connection.GeneralClientConnectionHandler;
 import Client.Deck;
-import Client.View.CLI;
+import Client.Player;
+import Client.View.UI;
 import Server.Card.*;
 import Server.Chat.Chat;
 import Server.Chat.Message;
+import Server.Deck.GoldDeck;
 import Server.Enums.*;
 import Server.Exception.ClientExecuteNotCallableException;
 import Server.Exception.PlayerNotFoundByNameException;
 import Server.Messages.*;
-import Client.Player;
 
 import java.io.IOException;
 import java.rmi.NotBoundException;
@@ -22,7 +23,7 @@ import java.util.Map;
 
 public class ClientController {
     private GeneralClientConnectionHandler clientConnectionHandler;
-    private CLI cli ;
+    private UI ui;
     private boolean rmiMode = false;
 
     //cards not owned by player info
@@ -47,13 +48,22 @@ public class ClientController {
     //temp stuff
     private String proposedName;
     private Color proposedColor;
-    private AchievementCard proposedSecretAchievement;
+    private int indexofSecretAchievement;
+    private List<AchievementCard> potentialSecretAchievements;
+    private Integer chosenHandCard;
 
-    public void main(CLI cli) throws RemoteException {
-        cli.askConnectionMode();
-        clientConnectionHandler = new GeneralClientConnectionHandler(this, rmiMode);
-        this.cli = cli;
+    public void main(UI ui) throws RemoteException {
+
+        this.ui = ui;
         this.gameState = GameState.LOBBY;
+    }
+
+    public void setChosenHandCard(Integer chosenHandCard) {
+        this.chosenHandCard = chosenHandCard;
+    }
+
+    public Integer getChosenHandCard() {
+        return chosenHandCard;
     }
 
     //helper methods
@@ -92,13 +102,17 @@ public class ClientController {
         clientConnectionHandler.sendMessage(message);
     }
     public void joinServer(String ip, int port) {
+        try {
+            clientConnectionHandler = new GeneralClientConnectionHandler(this, rmiMode);
+        } catch (RemoteException e) {
+            throw new RuntimeException(e);
+        }
         System.out.println("Joining server");
         try{
             clientConnectionHandler.setSocket(ip, port);
-            cli.successfulConnection();
+            ui.successfulConnection();
         } catch (IOException | NotBoundException e){
-            e.printStackTrace();
-            cli.connectionFailed();
+            ui.connectionFailed();
         } catch (ClientExecuteNotCallableException e) {
             throw new RuntimeException(e);
         } catch (PlayerNotFoundByNameException e) {
@@ -107,7 +121,7 @@ public class ClientController {
     }
     public void setReady() {
         if (myName == null || getMyColor() == null) {
-            cli.needNameOrColor();
+            ui.needNameOrColor();
             return;
         }
         ReadyStatusMessage readyStatusMessage = new ReadyStatusMessage(true, id);
@@ -119,18 +133,18 @@ public class ClientController {
     }
     public void askSetColor(String color) {
         if (this.myName == null) {
-            cli.needName();
+            ui.needName();
             return;
         }
         Color castedColor;
         try {
             castedColor = Color.valueOf(color.toUpperCase());
             if (unavaiableColors.contains(castedColor)){
-                cli.unavailableColor();
+                ui.unavailableColor();
                 return;
             }
         } catch (IllegalArgumentException e) {
-            cli.invalidColor();
+            ui.invalidColor();
             return;
         }
         proposedColor = castedColor;
@@ -143,7 +157,7 @@ public class ClientController {
     }
     public void sendChatMessage (String message){
         if (myName == null) {
-            cli.needName();
+            ui.needName();
             return;
         }
         ChatMessage chatMessage = new ChatMessage(message, id);
@@ -155,7 +169,7 @@ public class ClientController {
         try {
             clientConnectionHandler.sendMessage(playerNameMessage);
         } catch (Exception e) {
-            cli.nameChangeFailed();
+            ui.nameChangeFailed();
         }
     }
     public void setRMIMode(boolean rmi) {
@@ -169,8 +183,9 @@ public class ClientController {
             e.printStackTrace();
         }
     }
-    public void chooseSecretAchievement(AchievementCard secretAchievement, int index) {
-        this.proposedSecretAchievement = secretAchievement;
+    public void chooseSecretAchievement(int index) {
+
+        this.indexofSecretAchievement = index;
         SetSecretCardMessage secretAchievementMessage = new SetSecretCardMessage(index, id);
         try {
             clientConnectionHandler.sendMessage(secretAchievementMessage);
@@ -179,6 +194,7 @@ public class ClientController {
         }
     }
     public void askPlayCard(int cardNumber, Face face, int x, int y) {
+        chosenHandCard = cardNumber;
         PlayCardMessage placeCardMessage = new PlayCardMessage(id, cardNumber, face, x, y);
         try {
             clientConnectionHandler.sendMessage(placeCardMessage);
@@ -237,24 +253,23 @@ public class ClientController {
         return leaderboard;
     }
     public int getDeckSize(Decks deck){
-        int size = 0;
-        switch (deck){
-            case GOLD:
-                size = goldDeck.getDeckSize();
-            case RESOURCE:
-                size = resourceDeck.getDeckSize();
-        }
-        return size;
+        return switch (deck) {
+            case GOLD -> goldDeck.getDeckSize();
+            case RESOURCE -> resourceDeck.getDeckSize();
+            default -> 0;
+        };
     }
     public List<Card> getBoardCards(Decks deck){
         List<Card> boardCards = new ArrayList<>();
         switch (deck){
             case GOLD:
-                boardCards.add(goldDeck.getBoardCards().getFirst());
-                boardCards.add(goldDeck.getBoardCards().getLast());
+                for (GoldCard c : goldDeck.getBoardCards()){
+                    boardCards.add(c);
+                }
             case RESOURCE:
-                boardCards.add(resourceDeck.getBoardCards().getFirst());
-                boardCards.add(resourceDeck.getBoardCards().getLast());
+                for (ResourceCard c : resourceDeck.getBoardCards()){
+                    boardCards.add(c);
+                }
         }
         return boardCards;
     }
@@ -278,67 +293,68 @@ public class ClientController {
     //methods called by incoming messages
     public void loadLobbyInfo(String id, List<String> playerNames, Map<String, Color> playerColors, Map<String, Boolean> playerReady) {
         setId(id);
-        cli.displayId();
+        ui.displayId();
         for (String name : playerNames){
             Player p = new Player(name);
             p.setColor(playerColors.get(name));
             p.setReady(playerReady.get(name));
             players.add(p);
         }
-        cli.displayLobby();
+        ui.displayLobby();
     }
     public void giveAchievementCards(List<AchievementCard> secretCards, List<AchievementCard> commonCards) {
         gameState = GameState.CHOOSE_SECRET_ACHIEVEMENT;
         commonAchievements = new ArrayList<>();
+        potentialSecretAchievements = secretCards;
         for (Card c : commonCards){
             commonAchievements.add((AchievementCard) c);
         }
-        cli.displayCommonAchievements();
-        cli.chooseSecretAchievement(secretCards);
+        ui.displayCommonAchievements();
+        ui.chooseSecretAchievement(secretCards);
     }
     public void achievementDeckDrawInvalid() {
-        cli.cantDrawAchievementCards();
+        ui.cantDrawAchievementCards();
     }
     public void alreadyDone(Actions action) {
-        cli.alreadyDone(action);
+        ui.alreadyDone(action);
     }
     public void cardNotPlaceable() {
-        cli.cardNotPlaceable();
+        ui.cardNotPlaceable();
     }
     public void addChatMessage(Message message){
         chat.addMessage(message);
-        cli.chat(message);
+        ui.chat(message);
     }
     public void chatMessageIsEmpty() {
-        cli.chatMessageIsEmpty();
+        ui.chatMessageIsEmpty();
     }
     public void colorNotYetSet() {
-        cli.needColor();
+        ui.needColor();
     }
     public void giveDrawnCard(Card drawnCard) {
         hand.add((ResourceCard) drawnCard);
-        cli.displayNewCardInHand();
+        ui.displayNewCardInHand();
     }
     public void emptyDeck() {
-        cli.deckIsEmpty();
+        ui.deckIsEmpty();
     }
     public void setEndGame() {
-        cli.endGameStarted();
+        ui.endGameStarted();
     }
     public void gameAlreadyStarted() {
-        cli.gameAlreadyStarted();
+        ui.gameAlreadyStarted();
     }
     public void gameNotYetStarted() {
-        cli.gameNotYetStarted();
+        ui.gameNotYetStarted();
     }
     public void giveInitialHand(List<Card> hand) {
         for (Card c : hand){
             this.hand.add((ResourceCard) c);
         }
-        cli.displayHand();
+        ui.displayHand();
     }
     public void invalidCard(Actions cardType) {
-        cli.invalidCardForAction(cardType);
+        ui.invalidCardForAction(cardType);
     }
     public void displayLeaderboard(LinkedHashMap<String, Integer> playerPoints) {
         gameState = GameState.LEADERBOARD;
@@ -349,21 +365,21 @@ public class ClientController {
                 throw new RuntimeException(e);
             }
         }
-        cli.displayLeaderboard(playerPoints);
+        ui.displayLeaderboard(playerPoints);
     }
     public void nameNotYetSet() {
-        cli.needName();
+        ui.needName();
     }
     public void newPlayer(List<String> playerNames) {
         Player newPlayer = new Player(playerNames.getLast());
         players.add(newPlayer);
-        cli.displayNewPlayer();
+        ui.displayNewPlayer();
     }
     public void notYetGivenCard(Actions type) {
-        cli.notYetGivenCard(type);
+        ui.notYetGivenCard(type);
     }
     public void notYourTurn() {
-        cli.notYourTurn();
+        ui.notYourTurn();
     }
     public void newTurn(String activePlayerName, int turnNumber) {
         if(!gameState.equals(GameState.LEADERBOARD)) {
@@ -372,7 +388,7 @@ public class ClientController {
             for (Player p : players) {
                 p.setActive(p.getName().equals(activePlayerName));
             }
-            cli.newTurn();
+            ui.newTurn();
         }
     }
     public void drawOtherPlayer(String name, Decks deckFrom, DeckPosition drawPosition, List<Card> newBoardCards){
@@ -387,8 +403,8 @@ public class ClientController {
                 break;
         }
         try{
-        getPlayerByName(name).setHandSize(getPlayerByName(name).getHandSize() + 1);
-        cli.otherPlayerDraw(name, deckFrom, drawPosition);
+            getPlayerByName(name).setHandSize(getPlayerByName(name).getHandSize() + 1);
+            ui.otherPlayerDraw(name, deckFrom, drawPosition);
         } catch (PlayerNotFoundByNameException e) {
             throw new RuntimeException(e);
         }
@@ -399,7 +415,7 @@ public class ClientController {
             p.setHandSize(3);
             resourceDeck.setDeckSize(resourceDeck.getDeckSize() - 2);
             goldDeck.setDeckSize(goldDeck.getDeckSize() - 1);
-            cli.otherPlayerInitialHand(name);
+            ui.otherPlayerInitialHand(name);
         } catch (PlayerNotFoundByNameException e) {
             throw new RuntimeException(e);
         }
@@ -407,9 +423,9 @@ public class ClientController {
     public void setColor(boolean confirmation, Color color){
         if(confirmation){
             setMyColor(color);
-            cli.colorChanged();
+            ui.colorChanged();
         } else {
-            cli.colorChangeFailed();
+            ui.colorChangeFailed();
         }
     }
     /**
@@ -418,7 +434,7 @@ public class ClientController {
     public void updatePlayerColors(Color color, String name) {
         try {
             getPlayerByName(name).setColor(color);
-            cli.displayPlayerColors();
+            ui.displayPlayerColors();
         } catch (PlayerNotFoundByNameException e) {
             throw new RuntimeException(e);
         }
@@ -426,9 +442,9 @@ public class ClientController {
     public void setName(Boolean confirmation){
         if(confirmation){
             this.myName = this.proposedName;
-            cli.nameChanged();
+            ui.nameChanged(myName);
         } else {
-            cli.nameChangeFailed();
+            ui.nameChangeFailed();
         }
     }
     /**
@@ -439,30 +455,32 @@ public class ClientController {
     public void updatePlayerReady(boolean ready, String name) {
         try {
             getPlayerByName(name).setReady(ready);
-            cli.updateReady(name, ready);
+            ui.updateReady(name, ready);
         } catch (PlayerNotFoundByNameException e) {
             throw new RuntimeException(e);
         }
     }
     public void setSecretCard(String name) {
         if (name.equals(myName)){
-            secretAchievement = proposedSecretAchievement;
+            secretAchievement = potentialSecretAchievements.get(indexofSecretAchievement);
         }
-        cli.secretAchievementChosen(name);
+        ui.secretAchievementChosen(name);
     }
     public void startingCardChosen(String name, CornerCardFace startingFace) {
         try{
             getPlayerByName(name).initializeManuscript(startingFace);
-            cli.startingCardChosen(name);
+            goldDeck = new Deck();
+            resourceDeck = new Deck();
+            ui.startingCardChosen(name);
         } catch (PlayerNotFoundByNameException e) {
             throw new RuntimeException(e);
         }
     }
     public void startGame(List<Card> goldBoardCards, List<Card> resourceBoardCards){
-        cli.gameStarted();
-        goldDeck = new Deck(goldBoardCards);
-        resourceDeck = new Deck(resourceBoardCards);
-        cli.displayBoardCards();
+        ui.gameStarted();
+        goldDeck.setBoardCards(goldBoardCards);
+        resourceDeck.setBoardCards(resourceBoardCards);
+        ui.displayBoardCards();
     }
     public void updatePlayerOrder(List<String> playerNames){
         List<Player> newPlayerList = new ArrayList<>();
@@ -472,26 +490,31 @@ public class ClientController {
             }
             players = newPlayerList;
             gameState = GameState.PLACE_CARD;
-            cli.displayPlayerOrder();
+            ui.displayPlayerOrder();
         } catch (PlayerNotFoundByNameException e) {
             throw new RuntimeException(e);
         }
     }
     public void giveStartingCard(Card card) {
         gameState = GameState.CHOOSE_STARTING_CARD;
-        cli.chooseStartingCardFace(card);
+        ui.chooseStartingCardFace(card);
     }
     public void toDoFirst(Actions actionToDo) {
-        cli.doFirst(actionToDo);
+        ui.doFirst(actionToDo);
     }
     public void placeCard(String playerName, CornerCardFace placedCardFace, int x, int y, int points){
         try{
             getPlayerByName(playerName).addManuscriptPoints(points);
             getPlayerByName(playerName).addCardToManuscript(x, y, placedCardFace, turn);
             getPlayerByName(playerName).setHandSize(getPlayerByName(playerName).getHandSize() - 1);
-            cli.cardPlaced(playerName, x, y);
+            // RIMUOVI LA CARTA DALLA MANO SE IL PLAYER SONO IO
+            if (playerName.equals(myName)) {
+                hand.remove(chosenHandCard.intValue());
+            }
+            setChosenHandCard(null);
+            ui.cardPlaced(playerName, placedCardFace, x, y);
             if(points > 0){
-                cli.displayPlayerPoints(playerName);
+                ui.displayPlayerPoints(playerName);
             }
             gameState = GameState.DRAW_CARD;
         } catch (PlayerNotFoundByNameException e) {
@@ -500,31 +523,31 @@ public class ClientController {
     }
 
     public void playerDisconnected(String playerName) {
-        cli.playerDisconnected(playerName);
+        ui.playerDisconnected(playerName);
     }
 
     public void invalidName() {
-        cli.nameChangeFailed();
+        ui.nameChangeFailed();
     }
     public void tooManyPlayers() {
-        cli.tooManyPlayers();
+        ui.tooManyPlayers();
     }
 
     public void playerRemoved(String name) {
         players = players.stream().filter(p -> !p.getName().equals(name)).toList();
-        cli.playerRemoved(name);
+        ui.playerRemoved(name);
     }
 
     public void otherPlayerReconnected(String name) {
-        cli.otherPlayerReconnected(name);
+        ui.otherPlayerReconnected(name);
     }
 
     public void idNotInGame(){
-        cli.idNotInGame();
+        ui.idNotInGame();
     }
 
     public void playerAlreadyPlaying(){
-        cli.playerAlreadyPlaying();
+        ui.playerAlreadyPlaying();
     }
 
     public AchievementCard getSecretAchievement() {
@@ -551,7 +574,7 @@ public class ClientController {
         for (Player p : players){
             unavaiableColors.add(p.getColor());
         }
-        cli.displayGameInfo();
+        ui.displayGameInfo();
     }
 
     public void gameAlreadyFinished() {

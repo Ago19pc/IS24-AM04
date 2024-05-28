@@ -15,10 +15,10 @@ public class StartingCard implements Card, Serializable {
      * @param frontFace the front face
      * @param backFace the back face
      */
-    public StartingCard(StartingFrontFace frontFace, CornerCardFace backFace) {
+    public StartingCard(StartingFrontFace frontFace, CornerCardFace backFace, String imageURI) {
         this.frontFace = frontFace;
         this.backFace = backFace;
-        this.imageURI = getImageURI();
+        this.imageURI = imageURI;
     }
 
     /**
