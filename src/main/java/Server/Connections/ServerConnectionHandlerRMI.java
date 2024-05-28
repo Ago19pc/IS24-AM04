@@ -173,6 +173,7 @@ public class ServerConnectionHandlerRMI implements ServerConnectionHandler, Remo
     @Override
     public void executeMessage(ToServerMessage message) {
         synchronized (controller) {
+            System.out.println("Executing message");
             message.serverExecute(controller);
             controller.notifyAll();
         }

@@ -8,7 +8,6 @@ import Server.Enums.CardCorners;
 import Server.Enums.DeckPosition;
 import Server.Enums.Symbol;
 import Server.Exception.AlreadyFinishedException;
-import Server.Exception.IncorrectDeckPositionException;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -113,7 +112,7 @@ public class ResourceDeck implements Deckable {
     }
 
     @Override
-    public Card getTopCardNoPop() {
+    public ResourceCard getTopCardNoPop() {
         if(cards.isEmpty())
             return null;
         return cards.get(0);

@@ -340,4 +340,8 @@ public class Manuscript implements Serializable {
         }
         return true;
     }
+
+    public List<CornerCardFace> getAllCards() {
+        return graph.getAllCards();
+    }
 }

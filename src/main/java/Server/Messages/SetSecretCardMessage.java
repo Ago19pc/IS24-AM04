@@ -39,6 +39,7 @@ public class SetSecretCardMessage implements Serializable, ToClientMessage, ToSe
             controller.setSecretObjectiveCard(player, chosenCard);
         } catch (PlayerNotFoundByNameException e) {
             NameNotYetSetMessage message = new NameNotYetSetMessage();
+            e.printStackTrace();
             try{
                 controller.getConnectionHandler().getServerConnectionHandler(id).sendMessage(message, id);
             } catch (PlayerNotInAnyServerConnectionHandlerException exception) {
