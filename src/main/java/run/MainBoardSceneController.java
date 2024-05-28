@@ -1,6 +1,8 @@
 package run;
 
+import Client.Player;
 import Client.View.OnBoardCard;
+import Client.View.OtherPlayerTab;
 import Server.Card.Card;
 import Server.Card.CardFace;
 import Server.Card.CornerCardFace;
@@ -16,6 +18,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.text.Text;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class MainBoardSceneController extends SceneController {
@@ -35,6 +38,8 @@ public class MainBoardSceneController extends SceneController {
     public Group yourManuscript;
     @FXML
     public Text yourTurnText;
+    @FXML
+    public List<OtherPlayerTab> otherPlayerTabs = new ArrayList<>();
 
     private Face firstFace, secondFace, thirdFace;
     private int selectedCardIndex = -1;
@@ -299,6 +304,16 @@ public class MainBoardSceneController extends SceneController {
             }
             selectedCardIndex = -1;
             illuminateHandCard(-1);
+        }
+    }
+
+    public void setup()
+    {
+        for(Player p : controller.getPlayers()) {
+            if(!p.getName().equals(controller.getMyName())) {
+                OtherPlayerTab tab = new OtherPlayerTab(p.getName());
+                otherPlayerTabs.add(tab);
+            }
         }
     }
 

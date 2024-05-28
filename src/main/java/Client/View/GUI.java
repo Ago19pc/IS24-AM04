@@ -5,10 +5,7 @@ import Server.Card.AchievementCard;
 import Server.Card.Card;
 import Server.Card.CornerCardFace;
 import Server.Chat.Message;
-import Server.Enums.Actions;
-import Server.Enums.Color;
-import Server.Enums.DeckPosition;
-import Server.Enums.Decks;
+import Server.Enums.*;
 import Server.Exception.PlayerNotFoundByNameException;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
@@ -452,7 +449,7 @@ public class GUI implements UI{
 
     @Override
     public void displayId() {
-        
+        ((NameReadySceneController) sceneControllerMap.get(SceneName.SETNAME)).setup();
     }
 
     @Override
@@ -477,7 +474,24 @@ public class GUI implements UI{
 
     @Override
     public void displayGameInfo() {
-
+        Platform.runLater(() -> {
+            switch (controller.getGameState()) {
+                case LOBBY:
+                    break;
+                case CHOOSE_STARTING_CARD:
+                    stage.setScene(getScene(SceneName.STARTINGCARDCHOICE));
+                    stage.show();
+                    break;
+                case CHOOSE_SECRET_ACHIEVEMENT:
+                    stage.setScene(getScene(SceneName.SECRETCARDCHOICE));
+                    stage.show();
+                    break;
+                default:
+                    stage.setScene(getScene(SceneName.GAME));
+                    stage.show();
+                    break;
+        }
+        });
     }
 
 

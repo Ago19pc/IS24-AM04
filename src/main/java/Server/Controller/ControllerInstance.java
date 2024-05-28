@@ -5,7 +5,6 @@ import Server.Card.*;
 import Server.Chat.Message;
 import Server.Connections.GeneralServerConnectionHandler;
 import Server.Deck.AchievementDeck;
-import Server.Deck.ResourceDeck;
 import Server.Enums.*;
 import Server.Exception.*;
 import Server.GameModel.GameModel;
@@ -320,7 +319,7 @@ public class ControllerInstance implements Controller{
             }
         } else {
             //sets end game if necessary
-            if (activePlayerIndex != -1 && getPlayerList().get(activePlayerIndex).getPoints() >= 0) {
+            if (activePlayerIndex != -1 && getPlayerList().get(activePlayerIndex).getPoints() >= 20) {
                 try {
                     endGame();
                 } catch (AlreadySetException e) {
@@ -393,6 +392,7 @@ public class ControllerInstance implements Controller{
                         .filter(entry -> entry.getValue() == requiredSymbol).collect(Collectors.toList()).size();
                 actualQuantity += quantityOnCard;
             }
+            System.out.println("RequiredSymbols " + requiredSymbol + " ScoreRequirements" + scoreRequirements);
             obtainedPoints = actualQuantity / requiredQuantity * cardPoints;
             player.addPoints(obtainedPoints);
         } else {
