@@ -10,7 +10,9 @@ import Server.Card.ResourceCard;
 import Server.Chat.Chat;
 import Server.Controller.Controller;
 import Server.Enums.GameState;
+import Server.Exception.AlreadyFinishedException;
 import Server.Exception.AlreadySetException;
+import Server.Exception.NotYetStartedException;
 
 import java.io.Serializable;
 import java.util.List;
@@ -61,6 +63,12 @@ public class ReconnectionMessage implements Serializable, ToClientMessage, ToSer
             controller.getConnectionHandler().sendMessage(message, id);
         } catch (AlreadySetException e) {
             PlayerAlreadyPlayingMessage message = new PlayerAlreadyPlayingMessage();
+            controller.getConnectionHandler().sendMessage(message, id);
+        } catch (NotYetStartedException e) {
+            GameNotYetStartedMessage message = new GameNotYetStartedMessage();
+            controller.getConnectionHandler().sendMessage(message, id);
+        } catch (AlreadyFinishedException e) {
+            GameAlreadyFinishedMessage message = new GameAlreadyFinishedMessage();
             controller.getConnectionHandler().sendMessage(message, id);
         }
     }

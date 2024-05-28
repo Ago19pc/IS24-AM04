@@ -27,8 +27,8 @@ public class ClientConnectionHandlerRMI implements ClientConnectionHandler {
     private ClientController controller;
     int rmi_client_port;
 
-    public ClientConnectionHandlerRMI() throws RemoteException {
-
+    public ClientConnectionHandlerRMI(int rmi_port) throws RemoteException {
+        this.rmi_client_port = rmi_port;
     }
 
     public void setServer(String server_rmi_host) throws RemoteException {

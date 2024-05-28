@@ -22,8 +22,8 @@ public class GeneralClientConnectionHandler {
         if(!trueifRMI){
             clientConnectionHandlerSOCKET = new ClientConnectionHandlerSOCKET(controller);
         } else {
-            clientConnectionHandlerRMI = new ClientConnectionHandlerRMI();
-            clientConnectionHandlerRMI.setRmi_client_port(2000);
+            clientConnectionHandlerRMI = new ClientConnectionHandlerRMI(1100);
+            clientConnectionHandlerRMI.setRmi_client_port(1100);
         }
     }
 

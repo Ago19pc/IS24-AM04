@@ -553,4 +553,8 @@ public class ClientController {
         }
         cli.displayGameInfo();
     }
+
+    public void gameAlreadyFinished() {
+        cli.gameAlreadyFinished();
+    }
 }
