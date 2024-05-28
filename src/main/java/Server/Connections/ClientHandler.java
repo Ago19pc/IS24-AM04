@@ -116,5 +116,6 @@ public class ClientHandler extends Thread {
 
 
     public boolean isOnline() {return this.socket.isConnected();}
+    public boolean isClosed() {return this.socket.isClosed();}
     }
 

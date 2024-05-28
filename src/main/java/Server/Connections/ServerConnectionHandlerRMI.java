@@ -238,6 +238,7 @@ public class ServerConnectionHandlerRMI implements ServerConnectionHandler, Remo
            clients.get(id).ping();
         } catch (RemoteException e) {
             System.out.println("ClientIDs are " + clients.keySet());
+            System.out.println("Failed to ping " + id + ". Setting offline");
             controller.setOffline(id);
         }
     }
@@ -261,5 +262,9 @@ public class ServerConnectionHandlerRMI implements ServerConnectionHandler, Remo
      */
     public boolean isClientAvailable(String id) {
         return clients.containsKey(id);
+    }
+
+    public void changeId(String oldId, String newId) {
+        clients.remove(oldId);
     }
 }

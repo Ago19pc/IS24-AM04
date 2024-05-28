@@ -685,11 +685,13 @@ public class ControllerInstance implements Controller{
                 break;
         }
     }
-    public void reconnect(String id) throws IllegalArgumentException, AlreadySetException, NotYetStartedException, AlreadyFinishedException {
-        if(!connectionHandler.isInDisconnectedList(id)){
+    public void reconnect(String oldId, String newId) throws IllegalArgumentException, AlreadySetException, NotYetStartedException, AlreadyFinishedException {
+        System.out.println("Reconnecting player" + oldId + " with new id (id of previous player) " + newId);
+        System.out.println(connectionHandler.getDisconnectedList());
+        if(!connectionHandler.isInDisconnectedList(newId)){
             throw new AlreadySetException("Player not disconnected");
         }
-        String playerName = connectionHandler.getPlayerNameByID(id);
+        String playerName = connectionHandler.getPlayerNameByID(newId);
         Player player = getPlayerByName(playerName);
         if(playerName == null){
             throw new IllegalArgumentException("Player not found");
@@ -701,7 +703,9 @@ public class ControllerInstance implements Controller{
             case LEADERBOARD:
                 throw  new AlreadyFinishedException("Game already finished");
             case CHOOSE_STARTING_CARD:
-                connectionHandler.setOnline(id);
+                connectionHandler.setOnline(newId);
+                connectionHandler.changePlayerId(playerName, oldId);
+                System.out.println("Player " + playerName + " has now id " + oldId + "=" + connectionHandler.getIdByName(playerName));
                 StartingCardsMessage startingCardsMessage = new StartingCardsMessage(givenStartingCards.get(player));
                 connectionHandler.sendMessage(startingCardsMessage, playerName);
                 StartGameMessage startGameMessage = new StartGameMessage(
@@ -723,7 +727,8 @@ public class ControllerInstance implements Controller{
                 }
                 break;
             case CHOOSE_SECRET_ACHIEVEMENT:
-                connectionHandler.setOnline(id);
+                connectionHandler.setOnline(newId);
+                connectionHandler.changePlayerId(playerName, oldId);
                 StartGameMessage startMessage = new StartGameMessage(
                         List.of(
                                 gameModel.getGoldDeck().getBoardCard().get(DeckPosition.FIRST_CARD),
@@ -740,7 +745,7 @@ public class ControllerInstance implements Controller{
                     connectionHandler.sendMessage(startingMessage, playerName);
                 }
                 InitialHandMessage initialHandMessage = new InitialHandMessage(player.getHand());
-                connectionHandler.sendMessage(initialHandMessage, player.getName());
+                connectionHandler.sendMessage(initialHandMessage, playerName);
                 for(Player p: getPlayerList()){
                     OtherPlayerInitialHandMessage otherPlayerInitialHandMessage = new OtherPlayerInitialHandMessage(p.getName());
                     connectionHandler.sendMessage(otherPlayerInitialHandMessage, playerName);
@@ -757,7 +762,8 @@ public class ControllerInstance implements Controller{
                 }
                 break;
             default:
-                connectionHandler.setOnline(id);
+                connectionHandler.setOnline(newId);
+                connectionHandler.changePlayerId(playerName, oldId);
                 List<AchievementCard> commonAchievementCards = new ArrayList<>();
                 commonAchievementCards.add(gameModel.getAchievementDeck().getBoardCard().get(DeckPosition.FIRST_CARD));
                 commonAchievementCards.add(gameModel.getAchievementDeck().getBoardCard().get(DeckPosition.SECOND_CARD));
@@ -781,7 +787,7 @@ public class ControllerInstance implements Controller{
                     ));
                 }
                 ReconnectionMessage reconnectionMessage = new ReconnectionMessage(
-                        id,
+                        newId,
                         commonAchievementCards,
                         goldDeck,
                         resourceDeck,
@@ -796,7 +802,7 @@ public class ControllerInstance implements Controller{
                 connectionHandler.sendMessage(reconnectionMessage, playerName);
                 break;
         }
-        OtherPlayerReconnectionMessage message = new OtherPlayerReconnectionMessage(connectionHandler.getPlayerNameByID(id));
+        OtherPlayerReconnectionMessage message = new OtherPlayerReconnectionMessage(playerName);
         connectionHandler.sendAllMessage(message);
     }
 }

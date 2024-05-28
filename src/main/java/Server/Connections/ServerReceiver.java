@@ -47,6 +47,7 @@ public class ServerReceiver extends Thread {
                     System.out.println("Client disconnesso ");
                     System.out.println("Ora i client connessi sono: ");
                     for (ClientHandler c : serverConnectionHandler.getConnectedThreads()) {
+                        if(c.isClosed()) continue;
                         System.out.print(" " + c.getSocketAddress() + " -");
                     }
                     System.out.println();
