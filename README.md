@@ -34,6 +34,6 @@
 | Handle disconnection kick timeout                                        | -------                                                                                                               | Done   |
 | Differentiate between a player's disconnection and the player's deletion | --------                                                                                                              | Done   |
 | CLI reconnection command                                                 | -------                                                                                                               | Done   |
-| Messages sent on reconnection                                            | client does not receive gameinfo message when he reconnects while choosing either secret achievement or starting face | Doing  |
+| Messages sent on reconnection                                            | client does not receive gameinfo message when he reconnects while choosing either secret achievement or starting face | Done   |
 | Don't send messages to disconnected players                              | -------                                                                                                               | Done   |
-| Test | ------- | Doing |
+| Test | ------- | Doing  |
