@@ -37,7 +37,7 @@ public class MainBoardSceneController extends SceneController {
     public Text yourTurnText;
 
     private Face firstFace, secondFace, thirdFace;
-    private int selctedCardIndex = -1;
+    private int selectedCardIndex = -1;
 
     private Glow glow = new Glow(7);
 
@@ -163,31 +163,31 @@ public class MainBoardSceneController extends SceneController {
     }
 
     public void firstCardSelected() {
-        if (selctedCardIndex == 0) {
-            selctedCardIndex = -1;
+        if (selectedCardIndex == 0) {
+            selectedCardIndex = -1;
             illuminateHandCard(-1);
         } else {
-            selctedCardIndex = 0;
+            selectedCardIndex = 0;
             illuminateHandCard(0);
         }
     }
 
     public void secondCardSelected() {
-        if (selctedCardIndex == 1) {
-            selctedCardIndex = -1;
+        if (selectedCardIndex == 1) {
+            selectedCardIndex = -1;
             illuminateHandCard(-1);
         } else {
-            selctedCardIndex = 1;
+            selectedCardIndex = 1;
             illuminateHandCard(1);
         }
     }
 
     public void thirdCardSelected() {
-        if (selctedCardIndex == 2) {
-            selctedCardIndex = -1;
+        if (selectedCardIndex == 2) {
+            selectedCardIndex = -1;
             illuminateHandCard(-1);
         } else {
-            selctedCardIndex = 2;
+            selectedCardIndex = 2;
             illuminateHandCard(2);
         }
     }
@@ -220,7 +220,7 @@ public class MainBoardSceneController extends SceneController {
         }
 
         if (selectedFace != null) {
-            CornerCardFace face = (CornerCardFace) controller.getHand().get(selctedCardIndex).getFace(selectedFace);
+            CornerCardFace face = (CornerCardFace) controller.getHand().get(selectedCardIndex).getFace(selectedFace);
             for (OnBoardCard c : OnBoardCard.onBoardCards) {
                 try {
                     if(controller.getPlayerByName(controller.getMyName()).getManuscript()
@@ -250,7 +250,7 @@ public class MainBoardSceneController extends SceneController {
     }
 
     public void placeCard(int x, int y) {
-        controller.askPlayCard(selctedCardIndex, selectedFace, x, y);
+        controller.askPlayCard(selectedCardIndex, selectedFace, x, y);
     }
 
     @FXML
@@ -285,7 +285,7 @@ public class MainBoardSceneController extends SceneController {
 
     public void removeCardFromHand(String playerName) {
         if (controller.getMyName().equals(playerName)) {
-            switch (selctedCardIndex) {
+            switch (selectedCardIndex) {
                 case 0:
                     firstCardImage.setImage(null);
                     break;
@@ -296,6 +296,8 @@ public class MainBoardSceneController extends SceneController {
                     thirdCardImage.setImage(null);
                     break;
             }
+            selectedCardIndex = -1;
+            illuminateHandCard(-1);
         }
     }
 
