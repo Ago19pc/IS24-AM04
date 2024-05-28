@@ -103,5 +103,6 @@ public interface UI {
     void idNotInGame();
     void playerAlreadyPlaying();
     void displayGameInfo();
+    void gameAlreadyFinished();
 
 }

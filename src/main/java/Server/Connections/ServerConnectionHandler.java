@@ -58,4 +58,6 @@ public interface ServerConnectionHandler extends Remote {
     public void setController(Controller controller) throws RemoteException;
 
     public LobbyPlayersMessage join(int rmi_port) throws RemoteException, NotBoundException;
+
+    public void changeId(String oldId, String newId) throws RemoteException;
 }

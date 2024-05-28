@@ -548,4 +548,7 @@ public class GUI implements UI{
         ((NameReadySceneController) sceneControllerMap.get(SceneName.SETNAME)).cloneListView(((ColorReadySceneController) sceneControllerMap.get(SceneName.SETCOLOR)).list_Player);
     }
 
+    public void gameAlreadyFinished() { // todo: implement this
+         }
+
 }

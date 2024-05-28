@@ -152,7 +152,26 @@ public class GeneralServerConnectionHandler {
         System.out.println("Player " + getPlayerNameByID(id) + " is now set online");
     }
 
+    public void changePlayerId(String name, String id) {
+        String idToRemove = playerID.entrySet().stream().filter(entry -> entry.getValue().equals(name)).findFirst().get().getKey();
+        playerID.remove(idToRemove);
+        playerID.put(id, name);
+        try{
+            getServerConnectionHandler(idToRemove).changeId(idToRemove, id);
+        } catch (PlayerNotInAnyServerConnectionHandlerException e) {
+            System.out.println("Player not found in any server connection handler, ID NOT CHANGED!");
+            e.printStackTrace();
+        } catch (RemoteException e) {
+            System.out.println("Remote exception, ID NOT CHANGED!");
+            e.printStackTrace();
+        }
+    }
+
     public boolean isInDisconnectedList(String id) {
         return disconnectedPlayerIds.contains(id);
+    }
+
+    public List<String> getDisconnectedList() {
+        return disconnectedPlayerIds;
     }
 }

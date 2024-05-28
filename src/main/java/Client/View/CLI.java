@@ -756,4 +756,9 @@ public class CLI extends Thread implements UI {
         displayChat();
         displayGameState();
     }
+
+    public void gameAlreadyFinished() {
+        printOnNewLine("La partita è già finita");
+        printPromptLine();
+    }
 }

@@ -228,17 +228,14 @@ public class MainBoardSceneController extends SceneController {
             CornerCardFace face = (CornerCardFace) controller.getHand().get(selectedCardIndex).getFace(selectedFace);
             for (OnBoardCard c : OnBoardCard.onBoardCards) {
                 try {
-                    if(controller.getPlayerByName(controller.getMyName()).getManuscript()
-                            .isPlaceable(c.x - 1, c.y - 1, face)) c.TOP_LEFT.setStyle("-fx-background-color: transparent; -fx-border-width: 2; -fx-border-color: gold;");
-
-                    if(controller.getPlayerByName(controller.getMyName()).getManuscript()
-                            .isPlaceable(c.x + 1, c.y - 1, face)) c.TOP_RIGHT.setStyle("-fx-background-color: transparent; -fx-border-width: 2; -fx-border-color: gold;");
-
-                    if(controller.getPlayerByName(controller.getMyName()).getManuscript()
-                            .isPlaceable(c.x - 1, c.y + 1, face)) c.BOTTOM_LEFT.setStyle("-fx-background-color: transparent; -fx-border-width: 2; -fx-border-color: gold;");
-
-                    if(controller.getPlayerByName(controller.getMyName()).getManuscript()
-                            .isPlaceable(c.x + 1, c.y + 1, face)) c.BOTTOM_RIGHT.setStyle("-fx-background-color: transparent; -fx-border-width: 2; -fx-border-color: gold;");
+                    if(controller.getPlayerByName(controller.getMyName()).getManuscript().isPlaceable(c.x - 1, c.y - 1, face)) c.TOP_LEFT.setStyle("-fx-background-color: transparent; -fx-border-width: 2; -fx-border-color: gold;");
+                    else c.TOP_LEFT.setStyle("-fx-background-color: transparent; -fx-border-width: 0;");
+                    if(controller.getPlayerByName(controller.getMyName()).getManuscript().isPlaceable(c.x + 1, c.y - 1, face)) c.TOP_RIGHT.setStyle("-fx-background-color: transparent; -fx-border-width: 2; -fx-border-color: gold;");
+                    else c.TOP_RIGHT.setStyle("-fx-background-color: transparent; -fx-border-width: 0;");
+                    if(controller.getPlayerByName(controller.getMyName()).getManuscript().isPlaceable(c.x - 1, c.y + 1, face)) c.BOTTOM_LEFT.setStyle("-fx-background-color: transparent; -fx-border-width: 2; -fx-border-color: gold;");
+                    else c.BOTTOM_LEFT.setStyle("-fx-background-color: transparent; -fx-border-width: 0;");
+                    if(controller.getPlayerByName(controller.getMyName()).getManuscript().isPlaceable(c.x + 1, c.y + 1, face)) c.BOTTOM_RIGHT.setStyle("-fx-background-color: transparent; -fx-border-width: 2; -fx-border-color: gold;");
+                    else c.BOTTOM_RIGHT.setStyle("-fx-background-color: transparent; -fx-border-width: 0;");
                 } catch (PlayerNotFoundByNameException e) {
                     throw new RuntimeException(e);
                 }

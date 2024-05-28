@@ -10,9 +10,13 @@ import Server.Card.ResourceCard;
 import Server.Chat.Chat;
 import Server.Controller.Controller;
 import Server.Enums.GameState;
+import Server.Exception.AlreadyFinishedException;
 import Server.Exception.AlreadySetException;
+import Server.Exception.NotYetStartedException;
+import Server.Exception.PlayerNotInAnyServerConnectionHandlerException;
 
 import java.io.Serializable;
+import java.rmi.RemoteException;
 import java.util.List;
 
 public class ReconnectionMessage implements Serializable, ToClientMessage, ToServerMessage {
@@ -55,13 +59,35 @@ public class ReconnectionMessage implements Serializable, ToClientMessage, ToSer
     @Override
     public void serverExecute(Controller controller) {
         try {
-            controller.reconnect(newId);
+            controller.reconnect(id, newId);
         } catch (IllegalArgumentException e) {
             PlayerNotFoundMessage message = new PlayerNotFoundMessage();
-            controller.getConnectionHandler().sendMessage(message, id);
+            try {
+                controller.getConnectionHandler().getServerConnectionHandler(id).sendMessage(message, id);
+            } catch (PlayerNotInAnyServerConnectionHandlerException | RemoteException playerNotInAnyServerConnectionHandlerException) {
+                playerNotInAnyServerConnectionHandlerException.printStackTrace();
+            }
         } catch (AlreadySetException e) {
             PlayerAlreadyPlayingMessage message = new PlayerAlreadyPlayingMessage();
-            controller.getConnectionHandler().sendMessage(message, id);
+            try {
+                controller.getConnectionHandler().getServerConnectionHandler(id).sendMessage(message, id);
+            } catch (PlayerNotInAnyServerConnectionHandlerException | RemoteException playerNotInAnyServerConnectionHandlerException) {
+                playerNotInAnyServerConnectionHandlerException.printStackTrace();
+            }
+        } catch (NotYetStartedException e) {
+            GameNotYetStartedMessage message = new GameNotYetStartedMessage();
+            try {
+                controller.getConnectionHandler().getServerConnectionHandler(id).sendMessage(message, id);
+            } catch (PlayerNotInAnyServerConnectionHandlerException | RemoteException playerNotInAnyServerConnectionHandlerException) {
+                playerNotInAnyServerConnectionHandlerException.printStackTrace();
+            }
+        } catch (AlreadyFinishedException e) {
+            GameAlreadyFinishedMessage message = new GameAlreadyFinishedMessage();
+            try {
+                controller.getConnectionHandler().getServerConnectionHandler(id).sendMessage(message, id);
+            } catch (PlayerNotInAnyServerConnectionHandlerException | RemoteException playerNotInAnyServerConnectionHandlerException) {
+                playerNotInAnyServerConnectionHandlerException.printStackTrace();
+            }
         }
     }
 }

@@ -141,6 +141,6 @@ public interface Controller {
 
     public void reactToDisconnection(String id) throws AlreadyFinishedException, PlayerNotFoundByNameException;
 
-    public void reconnect(String id) throws IllegalArgumentException, AlreadySetException;
+    public void reconnect(String newId, String oldId) throws IllegalArgumentException, AlreadySetException, NotYetStartedException, AlreadyFinishedException;
 }
 

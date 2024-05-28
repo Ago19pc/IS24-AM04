@@ -129,7 +129,6 @@ public class ControllerInstance implements Controller{
         }
         createDecks();
         giveStartingCards();
-        /*
         StartGameMessage startGameMessage = new StartGameMessage(
                 List.of(
                         gameModel.getGoldDeck().getTopCardNoPop(),
@@ -137,14 +136,12 @@ public class ControllerInstance implements Controller{
                         gameModel.getGoldDeck().getBoardCard().get(DeckPosition.SECOND_CARD)
                 ),
                 List.of(
-                        gameModel.getResourceDeck().getTopCardNoPop(),
-                        gameModel.getResourceDeck().getBoardCard().get(DeckPosition.FIRST_CARD),
-                        gameModel.getResourceDeck().getBoardCard().get(DeckPosition.SECOND_CARD)
+                        (ResourceCard) gameModel.getResourceDeck().getTopCardNoPop(),
+                        (ResourceCard) gameModel.getResourceDeck().getBoardCard().get(DeckPosition.FIRST_CARD),
+                        (ResourceCard) gameModel.getResourceDeck().getBoardCard().get(DeckPosition.SECOND_CARD)
                 )
         );
         connectionHandler.sendAllMessage(startGameMessage);
-
-         */
     }
 
     /**
@@ -252,9 +249,9 @@ public class ControllerInstance implements Controller{
                                 gameModel.getGoldDeck().getBoardCard().get(DeckPosition.SECOND_CARD)
                         ),
                         List.of(
-                                gameModel.getResourceDeck().getTopCardNoPop(),
-                                gameModel.getResourceDeck().getBoardCard().get(DeckPosition.FIRST_CARD),
-                                gameModel.getResourceDeck().getBoardCard().get(DeckPosition.SECOND_CARD)
+                                (ResourceCard) gameModel.getResourceDeck().getTopCardNoPop(),
+                                (ResourceCard) gameModel.getResourceDeck().getBoardCard().get(DeckPosition.FIRST_CARD),
+                                (ResourceCard) gameModel.getResourceDeck().getBoardCard().get(DeckPosition.SECOND_CARD)
                         )
                 );
                 connectionHandler.sendAllMessage(startGameMessage);
@@ -704,54 +701,127 @@ public class ControllerInstance implements Controller{
                 break;
         }
     }
-    public void reconnect(String id) throws IllegalArgumentException, AlreadySetException{
-        if(!connectionHandler.isInDisconnectedList(id)){
+    public void reconnect(String oldId, String newId) throws IllegalArgumentException, AlreadySetException, NotYetStartedException, AlreadyFinishedException {
+        System.out.println("Reconnecting player" + oldId + " with new id (id of previous player) " + newId);
+        System.out.println(connectionHandler.getDisconnectedList());
+        if(!connectionHandler.isInDisconnectedList(newId)){
             throw new AlreadySetException("Player not disconnected");
         }
-        String playerName = connectionHandler.getPlayerNameByID(id);
+        String playerName = connectionHandler.getPlayerNameByID(newId);
         Player player = getPlayerByName(playerName);
         if(playerName == null){
             throw new IllegalArgumentException("Player not found");
         }
-        connectionHandler.setOnline(id);
-        OtherPlayerReconnectionMessage message = new OtherPlayerReconnectionMessage(connectionHandler.getPlayerNameByID(id));
-        connectionHandler.sendAllMessage(message);
-        List<AchievementCard> commonAchievements = new ArrayList<>();
-        commonAchievements.add(gameModel.getAchievementDeck().getBoardCard().get(DeckPosition.FIRST_CARD));
-        commonAchievements.add(gameModel.getAchievementDeck().getBoardCard().get(DeckPosition.SECOND_CARD));
-        Deck<GoldCard> goldDeck = new Deck<GoldCard>(
-                gameModel.getGoldDeck().getNumberOfCards(),
-                new ArrayList<>(List.of(gameModel.getGoldDeck().getBoardCard().get(DeckPosition.FIRST_CARD), gameModel.getGoldDeck().getBoardCard().get(DeckPosition.SECOND_CARD)))
-        );
-        Deck<ResourceCard> resourceDeck = new Deck<ResourceCard>(
-                gameModel.getResourceDeck().getNumberOfCards(),
-                new ArrayList<>(List.of(gameModel.getResourceDeck().getBoardCard().get(DeckPosition.FIRST_CARD), gameModel.getResourceDeck().getBoardCard().get(DeckPosition.SECOND_CARD)))
-        );
-        List<Client.Player> playerList = new ArrayList<>();
-        for (Player p : gameModel.getPlayerList()){
-            playerList.add(new Client.Player(
-                    p.getName(),
-                    p.getPoints(),
-                    p.getHand().size(),
-                    activePlayerIndex == getPlayerList().indexOf(p),
-                    p.getColor(),
-                    p.getManuscript()
-            ));
+
+        switch (gameState){
+            case LOBBY:
+                throw new NotYetStartedException ("Game not started");
+            case LEADERBOARD:
+                throw  new AlreadyFinishedException("Game already finished");
+            case CHOOSE_STARTING_CARD:
+                connectionHandler.setOnline(newId);
+                connectionHandler.changePlayerId(playerName, oldId);
+                System.out.println("Player " + playerName + " has now id " + oldId + "=" + connectionHandler.getIdByName(playerName));
+                StartingCardsMessage startingCardsMessage = new StartingCardsMessage(givenStartingCards.get(player));
+                connectionHandler.sendMessage(startingCardsMessage, playerName);
+                StartGameMessage startGameMessage = new StartGameMessage(
+                        List.of(
+                                gameModel.getGoldDeck().getBoardCard().get(DeckPosition.FIRST_CARD),
+                                gameModel.getGoldDeck().getBoardCard().get(DeckPosition.SECOND_CARD)
+                        ),
+                        List.of(
+                                gameModel.getResourceDeck().getBoardCard().get(DeckPosition.FIRST_CARD),
+                                gameModel.getResourceDeck().getBoardCard().get(DeckPosition.SECOND_CARD)
+                        )
+                );
+                connectionHandler.sendMessage(startGameMessage, playerName);
+                for(Player p : getPlayerList()){
+                    if(p.getManuscript() != null){
+                        SetStartingCardMessage setStartingCardMessage = new SetStartingCardMessage(p.getName(), p.getManuscript().getCardByCoord(0, 0));
+                        connectionHandler.sendMessage(setStartingCardMessage, playerName);
+                    }
+                }
+                break;
+            case CHOOSE_SECRET_ACHIEVEMENT:
+                connectionHandler.setOnline(newId);
+                connectionHandler.changePlayerId(playerName, oldId);
+                StartGameMessage startMessage = new StartGameMessage(
+                        List.of(
+                                gameModel.getGoldDeck().getTopCardNoPop(),
+                                gameModel.getGoldDeck().getBoardCard().get(DeckPosition.FIRST_CARD),
+                                gameModel.getGoldDeck().getBoardCard().get(DeckPosition.SECOND_CARD)
+                        ),
+                        List.of(
+                                (ResourceCard) gameModel.getResourceDeck().getTopCardNoPop(),
+                                gameModel.getResourceDeck().getBoardCard().get(DeckPosition.FIRST_CARD),
+                                gameModel.getResourceDeck().getBoardCard().get(DeckPosition.SECOND_CARD)
+                        )
+                );
+                connectionHandler.sendMessage(startMessage, playerName);
+                for(Player p: getPlayerList()){
+                    SetStartingCardMessage startingMessage = new SetStartingCardMessage(p.getName(), p.getManuscript().getCardByCoord(0, 0));
+                    connectionHandler.sendMessage(startingMessage, playerName);
+                }
+                InitialHandMessage initialHandMessage = new InitialHandMessage(player.getHand());
+                connectionHandler.sendMessage(initialHandMessage, playerName);
+                for(Player p: getPlayerList()){
+                    OtherPlayerInitialHandMessage otherPlayerInitialHandMessage = new OtherPlayerInitialHandMessage(p.getName());
+                    connectionHandler.sendMessage(otherPlayerInitialHandMessage, playerName);
+                }
+                List<AchievementCard> secretObjectiveCards = givenSecretObjectiveCards.get(player);
+                List<AchievementCard> commonAchievements = new ArrayList<>();
+                commonAchievements.add(gameModel.getAchievementDeck().getBoardCard().get(DeckPosition.FIRST_CARD));
+                commonAchievements.add(gameModel.getAchievementDeck().getBoardCard().get(DeckPosition.SECOND_CARD));
+                AchievementCardsMessage achievementCardsMessage = new AchievementCardsMessage(secretObjectiveCards, commonAchievements);
+                connectionHandler.sendMessage(achievementCardsMessage, playerName);
+                for(Player p: getPlayerList()){
+                    SetSecretCardMessage setSecretCardMessage = new SetSecretCardMessage(p.getName());
+                    connectionHandler.sendMessage(setSecretCardMessage, playerName);
+                }
+                break;
+            default:
+                connectionHandler.setOnline(newId);
+                connectionHandler.changePlayerId(playerName, oldId);
+                List<AchievementCard> commonAchievementCards = new ArrayList<>();
+                commonAchievementCards.add(gameModel.getAchievementDeck().getBoardCard().get(DeckPosition.FIRST_CARD));
+                commonAchievementCards.add(gameModel.getAchievementDeck().getBoardCard().get(DeckPosition.SECOND_CARD));
+                Deck<GoldCard> goldDeck = new Deck<GoldCard>(
+                        gameModel.getGoldDeck().getNumberOfCards(),
+                        new ArrayList<>(List.of(gameModel.getGoldDeck().getBoardCard().get(DeckPosition.FIRST_CARD), gameModel.getGoldDeck().getBoardCard().get(DeckPosition.SECOND_CARD)))
+                );
+                Deck<ResourceCard> resourceDeck = new Deck<ResourceCard>(
+                        gameModel.getResourceDeck().getNumberOfCards(),
+                        new ArrayList<>(List.of(gameModel.getResourceDeck().getBoardCard().get(DeckPosition.FIRST_CARD), gameModel.getResourceDeck().getBoardCard().get(DeckPosition.SECOND_CARD)))
+                );
+                List<Client.Player> playerList = new ArrayList<>();
+                for (Player p : gameModel.getPlayerList()){
+                    playerList.add(new Client.Player(
+                            p.getName(),
+                            p.getPoints(),
+                            p.getHand().size(),
+                            activePlayerIndex == getPlayerList().indexOf(p),
+                            p.getColor(),
+                            p.getManuscript()
+                    ));
+                }
+                ReconnectionMessage reconnectionMessage = new ReconnectionMessage(
+                        newId,
+                        commonAchievementCards,
+                        goldDeck,
+                        resourceDeck,
+                        playerName,
+                        player.getSecretObjective(),
+                        player.getHand(),
+                        gameModel.getTurn(),
+                        playerList,
+                        gameModel.getChat(),
+                        gameState
+                );
+                connectionHandler.sendMessage(reconnectionMessage, playerName);
+                break;
         }
-        ReconnectionMessage reconnectionMessage = new ReconnectionMessage(
-                id,
-                commonAchievements,
-                goldDeck,
-                resourceDeck,
-                playerName,
-                player.getSecretObjective(),
-                player.getHand(),
-                gameModel.getTurn(),
-                playerList,
-                gameModel.getChat(),
-                gameState
-        );
-        connectionHandler.sendMessage(reconnectionMessage, playerName);
+        OtherPlayerReconnectionMessage message = new OtherPlayerReconnectionMessage(playerName);
+        connectionHandler.sendAllMessage(message);
     }
 }
 

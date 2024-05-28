@@ -25,6 +25,7 @@ public class ServerSender {
             out.writeObject(message);
         } catch (IOException e) {
             System.out.println("Error sending message to client");
+            e.printStackTrace();
         }
     }
 }

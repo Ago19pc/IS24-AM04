@@ -168,7 +168,8 @@ public class ServerConnectionHandlerSOCKET extends Thread implements ServerConne
      */
     public void sendAllMessage(ToClientMessage message) {
         for (ClientHandler c : clients.keySet()) {
-            System.out.println("Sending message to " + c.getSocketAddress());
+            if(c.isClosed()) continue;
+            System.out.println("Sending message to " + c.getSocketAddress() + " - id " + clients.get(c));
             c.sendMessage(message);
         }
     }
@@ -213,5 +214,11 @@ public class ServerConnectionHandlerSOCKET extends Thread implements ServerConne
         return null;
     }
 
+    public void changeId(String oldId, String newId) {
+        ClientHandler target = clients.entrySet().stream()
+                .filter(entry -> Objects.equals(entry.getValue(), oldId))
+                .toList().getFirst().getKey();
+        clients.remove(target);
+    }
 }
 
