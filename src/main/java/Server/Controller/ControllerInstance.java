@@ -16,6 +16,7 @@ import Server.Player.Player;
 import Server.Player.PlayerInstance;
 import com.google.gson.Gson;
 
+import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -335,6 +336,11 @@ public class ControllerInstance implements Controller{
             gameState = GameState.PLACE_CARD;
         } while (!isOnline(getPlayerList().get(activePlayerIndex)));//if the player is not online skips to the next one
         gameModel.nextTurn();
+        try{
+            saveGame();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         NewTurnMessage newTurnMessage = new NewTurnMessage(getPlayerList().get(activePlayerIndex).getName(), gameModel.getTurn());
         connectionHandler.sendAllMessage(newTurnMessage);
     }
@@ -573,15 +579,20 @@ public class ControllerInstance implements Controller{
     }
 
     public void saveGame() throws IOException {
-        Gson gson = new Gson();
-        FileWriter fileWriter = new FileWriter("saves/game.json");
-        gson.toJson(gameModel, fileWriter);
-        fileWriter.close();
+        try {
+            Gson gson = new Gson();
+            File file = new File(getClass().getResource("/saves/game.json").toURI());
+            FileWriter fileWriter = new FileWriter(file);
+            gson.toJson(gameModel, fileWriter);
+            fileWriter.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public void loadGame() throws IOException {
         Gson gson = new Gson();
-        FileReader fileReader = new FileReader("saves/game.json");
+        FileReader fileReader = new FileReader("/saves/game.json");
         gameModel = gson.fromJson(fileReader, GameModelInstance.class);
         fileReader.close();
     }

@@ -13,14 +13,16 @@ import java.util.stream.Collectors;
 
 public class Graph {
     private final CornerCardFace root;
-    private final Map<CornerCardFace, Map<CardCorners, CornerCardFace>> neighbors;
+    private List<CornerCardFace> containedCards;
+    private List<Map<CardCorners, CornerCardFace>> cardNeighbors;
     /**
      * Constructor for the Graph. Sets the root, creates the card map, and adds the starting card
      * @param startingCardFace the starting card face
      */
     public Graph(CornerCardFace startingCardFace){
         this.root = startingCardFace;
-        this.neighbors = new HashMap<>();
+        this.containedCards = new ArrayList<>();
+        this.cardNeighbors = new ArrayList<>();
         addNode(root);
     }
     /**
@@ -37,10 +39,10 @@ public class Graph {
      * @return Map<CardCorners, CornerCardFace> the neighbors of the node
      */
     public Map<CardCorners, CornerCardFace> getNeighbors(CornerCardFace node) throws IllegalArgumentException{
-        if(!this.neighbors.containsKey(node)){
+        if(!this.containedCards.contains(node)){
             throw new IllegalArgumentException("Node not in graph");
         }
-        return this.neighbors.get(node);
+        return this.cardNeighbors.get(this.containedCards.indexOf(node));
     }
     /**
      * Returns the neighbors of a node that were placed after the node
@@ -72,7 +74,7 @@ public class Graph {
      * @param node the node to add
      */
     private void addNode(CornerCardFace node) throws IllegalArgumentException{
-        if(this.neighbors.containsKey(node)){
+        if(this.containedCards.contains(node)){
             throw new IllegalArgumentException("Node already in graph");
         }
         Map<CardCorners, CornerCardFace> corners = new HashMap<>();
@@ -80,7 +82,8 @@ public class Graph {
         corners.put(CardCorners.TOP_RIGHT, null);
         corners.put(CardCorners.BOTTOM_LEFT, null);
         corners.put(CardCorners.BOTTOM_RIGHT, null);
-        this.neighbors.put(node, corners);
+        this.containedCards.add(node);
+        this.cardNeighbors.add(corners);
     }
 
     /**
@@ -90,11 +93,11 @@ public class Graph {
      * @param secondCard the second card
      */
     private void addEdge(CornerCardFace firstCard, CardCorners corner, CornerCardFace secondCard) throws IllegalArgumentException{
-        if(!this.neighbors.containsKey(firstCard) || !this.neighbors.containsKey(secondCard)){
+        if(!this.containedCards.contains(firstCard) || !this.containedCards.contains(secondCard)){
             throw new IllegalArgumentException("At least one of the nodes is not in graph");
         }
-        this.neighbors.get(firstCard).put(corner, secondCard);
-        this.neighbors.get(secondCard).put(corner.getOppositeCorner(), firstCard);
+        this.cardNeighbors.get(this.containedCards.indexOf(firstCard)).put(corner, secondCard);
+        this.cardNeighbors.get(this.containedCards.indexOf(secondCard)).put(corner.getOppositeCorner(), firstCard);
     }
 
     /**
@@ -104,11 +107,11 @@ public class Graph {
      * @param turnPlaced the turn when the card gets placed
      */
     public void addCard(CornerCardFace card, Map<CardCorners, CornerCardFace> positions, int turnPlaced) throws IllegalArgumentException{
-        if(this.neighbors.containsKey(card)) {
+        if(this.containedCards.contains(card)) {
             throw new IllegalArgumentException("Node already in graph");
         }
         for (CornerCardFace neighbor : positions.values()) {
-            if (positions.get(neighbor) != null && !this.neighbors.containsKey(positions.get(neighbor))) {
+            if (positions.get(neighbor) != null && !this.containedCards.contains(positions.get(neighbor))) {
                 throw new IllegalArgumentException("At least one of the nodes is not in graph");
             }
         }
@@ -126,13 +129,13 @@ public class Graph {
      * Get all cards in a list, a copy of the original list
      */
     public List<CornerCardFace> getAllCardsCopy(){
-        return new ArrayList<>(this.neighbors.keySet());
+        return new ArrayList<>(this.containedCards);
     }
 
     /**
      * Get all cards in a list, the original list
      */
     public List<CornerCardFace> getAllCards() {
-        return this.neighbors.keySet().stream().collect(Collectors.toList());
+        return this.containedCards;
     }
 }
