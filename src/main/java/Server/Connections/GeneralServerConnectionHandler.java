@@ -73,6 +73,10 @@ public class GeneralServerConnectionHandler {
         return playerID.entrySet().stream().filter(entry -> entry.getValue().equals(name)).findFirst().get().getKey();
     }
 
+    public Boolean isNameConnectedToId(String name) {
+        return playerID.containsValue(name);
+    }
+
     public ServerConnectionHandler getServerConnectionHandler() {
         return serverConnectionHandlerSOCKET;
     }

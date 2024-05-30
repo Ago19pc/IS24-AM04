@@ -104,5 +104,4 @@ public interface UI {
     void playerAlreadyPlaying();
     void displayGameInfo();
     void gameAlreadyFinished();
-
 }

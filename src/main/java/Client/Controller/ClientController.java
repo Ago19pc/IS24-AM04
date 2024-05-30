@@ -101,6 +101,10 @@ public class ClientController {
         ReconnectionMessage message = new ReconnectionMessage(id, newId);
         clientConnectionHandler.sendMessage(message);
     }
+    public void joinSavedGame(String name) {
+        SavedGameMessage savedGameMessage = new SavedGameMessage(id, name);
+        clientConnectionHandler.sendMessage(savedGameMessage);
+    }
     public void joinServer(String ip, int port) {
         try {
             clientConnectionHandler = new GeneralClientConnectionHandler(this, rmiMode);

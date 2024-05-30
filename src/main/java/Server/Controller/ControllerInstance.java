@@ -35,6 +35,21 @@ public class ControllerInstance implements Controller{
     public ControllerInstance(GeneralServerConnectionHandler connectionHandler) {
         this.connectionHandler = connectionHandler;
         this.gameModel = new GameModelInstance();
+        Scanner inputReader = new Scanner(System.in);
+        System.out.println("Vuoi iniziare una nuova partita (n) o caricare una partita salvata (l)?");
+        String input = inputReader.nextLine();
+        if(input.equals("l")){
+            try {
+                loadGame();
+                gameState = GameState.LOAD_GAME_LOBBY;
+                System.out.println("Partita caricata. I giocatori sono:");
+                for (Player p : gameModel.getPlayerList()){
+                    System.out.println(p.getName());
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
     @Override
     public void addPlayer(String name, String clientID) throws TooManyPlayersException, AlreadyStartedException, IllegalArgumentException {
@@ -52,6 +67,34 @@ public class ControllerInstance implements Controller{
             connectionHandler.sendAllMessage(playerMessage);
         } else {
             throw new TooManyPlayersException("Too many players");
+        }
+    }
+    @Override
+    public void addSavedPlayer(String clientId, String name) throws AlreadyStartedException, IllegalArgumentException, PlayerNotFoundByNameException {
+        if(gameState != GameState.LOAD_GAME_LOBBY) throw new AlreadyStartedException("Game already started");
+        if(connectionHandler.isNameConnectedToId(name)) throw new IllegalArgumentException("Player has already connected");
+        Player player = null;
+        for (Player p : gameModel.getPlayerList()){
+            if (p.getName().equals(name)){
+                player = p;
+            }
+        }
+        if(player == null) throw new PlayerNotFoundByNameException("Player not found");
+        connectionHandler.addPlayerByID(name, clientId);
+        PlayerNameMessage playerNameMessage = new PlayerNameMessage(name, true);
+        connectionHandler.sendMessage(playerNameMessage, name);
+        NewPlayerMessage playerMessage = new NewPlayerMessage(gameModel.getPlayerList());
+        connectionHandler.sendAllMessage(playerMessage);
+        Boolean allSet = true;
+        for (Player p : gameModel.getPlayerList()){
+            if (!connectionHandler.isNameConnectedToId(p.getName())){
+                allSet = false;
+                break;
+            }
+        }
+        if (allSet) {
+            //todo: send message to all players with game info
+            gameState = GameState.PLACE_CARD;
         }
     }
     @Override
@@ -591,10 +634,15 @@ public class ControllerInstance implements Controller{
     }
 
     public void loadGame() throws IOException {
-        Gson gson = new Gson();
-        FileReader fileReader = new FileReader("/saves/game.json");
-        gameModel = gson.fromJson(fileReader, GameModelInstance.class);
-        fileReader.close();
+        try {
+            Gson gson = new Gson();
+            File file = new File(getClass().getResource("/saves/game.json").toURI());
+            FileReader fileReader = new FileReader(file);
+            gameModel = gson.fromJson(fileReader, GameModelInstance.class);
+            fileReader.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override

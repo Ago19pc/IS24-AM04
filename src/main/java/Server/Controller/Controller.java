@@ -142,5 +142,7 @@ public interface Controller {
     public void reactToDisconnection(String id) throws AlreadyFinishedException, PlayerNotFoundByNameException;
 
     public void reconnect(String newId, String oldId) throws IllegalArgumentException, AlreadySetException, NotYetStartedException, AlreadyFinishedException;
+
+    public void addSavedPlayer(String id, String name) throws AlreadyStartedException, IllegalArgumentException, PlayerNotFoundByNameException;
 }
 
