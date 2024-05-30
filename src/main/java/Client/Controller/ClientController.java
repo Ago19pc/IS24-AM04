@@ -579,6 +579,24 @@ public class ClientController {
         ui.displayGameInfo();
     }
 
+    public void loadGame(List<AchievementCard> commonAchievements, Deck<GoldCard> goldDeck, Deck<ResourceCard> resourceDeck, AchievementCard secretAchievement, List<Card> hand, int turn, List<Player> players, Chat chat, GameState gameState, String name) {
+        this.commonAchievements = commonAchievements;
+        this.goldDeck = goldDeck;
+        this.resourceDeck = resourceDeck;
+        this.secretAchievement = secretAchievement;
+        this.hand = hand;
+        this.turn = turn;
+        this.players = players;
+        this.chat = chat;
+        this.gameState = gameState;
+        this.myName = name;
+        this.unavaiableColors = new ArrayList<>();
+        for (Player p : players){
+            unavaiableColors.add(p.getColor());
+        }
+        ui.displayGameInfo();
+    }
+
     public void gameAlreadyFinished() {
         ui.gameAlreadyFinished();
     }

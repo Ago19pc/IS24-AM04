@@ -93,8 +93,44 @@ public class ControllerInstance implements Controller{
             }
         }
         if (allSet) {
-            //todo: send message to all players with game info
             gameState = GameState.PLACE_CARD;
+            List<AchievementCard> commonAchievementCards = new ArrayList<>();
+            commonAchievementCards.add(gameModel.getAchievementDeck().getBoardCard().get(DeckPosition.FIRST_CARD));
+            commonAchievementCards.add(gameModel.getAchievementDeck().getBoardCard().get(DeckPosition.SECOND_CARD));
+            Deck<GoldCard> goldDeck = new Deck<GoldCard>(
+                    gameModel.getGoldDeck().getNumberOfCards(),
+                    new ArrayList<>(List.of(gameModel.getGoldDeck().getBoardCard().get(DeckPosition.FIRST_CARD), gameModel.getGoldDeck().getBoardCard().get(DeckPosition.SECOND_CARD)))
+            );
+            Deck<ResourceCard> resourceDeck = new Deck<ResourceCard>(
+                    gameModel.getResourceDeck().getNumberOfCards(),
+                    new ArrayList<>(List.of(gameModel.getResourceDeck().getBoardCard().get(DeckPosition.FIRST_CARD), gameModel.getResourceDeck().getBoardCard().get(DeckPosition.SECOND_CARD)))
+            );
+            List<Client.Player> playerList = new ArrayList<>();
+            for (Player p : gameModel.getPlayerList()){
+                playerList.add(new Client.Player(
+                        p.getName(),
+                        p.getPoints(),
+                        p.getHand().size(),
+                        activePlayerIndex == getPlayerList().indexOf(p),
+                        p.getColor(),
+                        p.getManuscript()
+                ));
+            }
+            for(Player p : gameModel.getPlayerList()){
+                SavedGameMessage message = new SavedGameMessage(
+                        p.getName(),
+                        commonAchievementCards,
+                        goldDeck,
+                        resourceDeck,
+                        p.getSecretObjective(),
+                        p.getHand(),
+                        gameModel.getTurn(),
+                        playerList,
+                        gameModel.getChat(),
+                        gameState
+                );
+                connectionHandler.sendMessage(message, p.getName());
+            }
         }
     }
     @Override

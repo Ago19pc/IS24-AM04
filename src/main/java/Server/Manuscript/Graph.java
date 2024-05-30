@@ -5,13 +5,14 @@ package Server.Manuscript;
 import Server.Card.CornerCardFace;
 import Server.Enums.CardCorners;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-public class Graph {
+public class Graph implements Serializable {
     private final CornerCardFace root;
     private List<CornerCardFace> containedCards;
     private List<Map<CardCorners, CornerCardFace>> cardNeighbors;
