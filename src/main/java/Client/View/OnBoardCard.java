@@ -47,7 +47,7 @@ public class OnBoardCard {
         this.image.setFitWidth(143);
         this.image.setLayoutX(x * 143 - x * 35);
         this.image.setLayoutY(y * 100 - y * 41);
-
+        //La prossima volta guarda qui
         if (occupied == CardCorners.TOP_LEFT) {
             TOP_LEFT.setDisable(true);
         } else if (occupied == CardCorners.TOP_RIGHT) {
@@ -95,13 +95,13 @@ public class OnBoardCard {
 
         onBoardCards.stream().filter(c -> (c.x == x - 1 || c.x == x + 1) && (c.y == y - 1 || c.y == y + 1)).forEach(c -> {
             if (c.x == x - 1 && c.y == y - 1) {
-                c.BOTTOM_RIGHT.setDisable(true);
-            } else if (c.x == x + 1 && c.y == y - 1) {
-                c.BOTTOM_LEFT.setDisable(true);
-            } else if (c.x == x - 1 && c.y == y + 1) {
                 c.TOP_RIGHT.setDisable(true);
-            } else if (c.x == x + 1 && c.y == y + 1) {
+            } else if (c.x == x + 1 && c.y == y - 1) {
                 c.TOP_LEFT.setDisable(true);
+            } else if (c.x == x - 1 && c.y == y + 1) {
+                c.BOTTOM_RIGHT.setDisable(true);
+            } else if (c.x == x + 1 && c.y == y + 1) {
+                c.BOTTOM_LEFT.setDisable(true);
             }
         });
 
