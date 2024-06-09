@@ -466,9 +466,22 @@ public class ControllerInstance implements Controller{
             if (e.getMessage() == "Regular cards do not have score requirements") ;
             scoreRequirements = null;
         }
+        System.out.println("ScoreRequirements " + scoreRequirements + "Player " + player.getName() + " CardPoints " + cardPoints);
         if (scoreRequirements != null) {
+            Map<Symbol, Integer> finalScoreRequirements = scoreRequirements;
+            scoreRequirements.keySet().stream().forEach(symbol -> {
+                if (finalScoreRequirements.get(symbol) == 0) {
+                    finalScoreRequirements.remove(symbol);
+                }
+            });
+            System.out.println("///////////////////////////");
+            System.out.println("ScoreRequirements " + finalScoreRequirements + "Player " + player.getName() + " CardPoints " + cardPoints);
             Symbol requiredSymbol = (Symbol) scoreRequirements.keySet().toArray()[0];
+            System.out.println("///////////////////////////");
+            System.out.println("RequiredSymbol " + requiredSymbol);
+            System.out.println("///////////////////////////");
             int requiredQuantity = scoreRequirements.get(requiredSymbol);
+            System.out.println("RequiredQuantity " + requiredQuantity);
             int actualQuantity;
             if (requiredSymbol == Symbol.COVERED_CORNER) {
                 actualQuantity = player.getManuscript().getCardsUnder(cardFace).size();
@@ -478,7 +491,7 @@ public class ControllerInstance implements Controller{
                         .filter(entry -> entry.getValue() == requiredSymbol).collect(Collectors.toList()).size();
                 actualQuantity += quantityOnCard;
             }
-            System.out.println("RequiredSymbols " + requiredSymbol + " ScoreRequirements" + scoreRequirements);
+            //System.out.println("RequiredSymbols " + requiredSymbol + " ScoreRequirements" + scoreRequirements);
             obtainedPoints = actualQuantity / requiredQuantity * cardPoints;
             player.addPoints(obtainedPoints);
         } else {
