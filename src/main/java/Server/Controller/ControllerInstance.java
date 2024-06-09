@@ -725,6 +725,10 @@ public class ControllerInstance implements Controller{
         }
         playerName = connectionHandler.getPlayerNameByID(id);
         switch(gameState){
+            case LOAD_GAME_LOBBY:
+                connectionHandler.removePlayerByName(playerName);
+                PlayerDisconnectedMessage message = new PlayerDisconnectedMessage(playerName);
+                connectionHandler.sendAllMessage(message);
             case LOBBY: //if lobby, just remove the player
                 removePlayer(getPlayerByName(playerName));
                 if (getPlayerList().stream().allMatch(Player::isReady) && getPlayerList().size() > 1){
