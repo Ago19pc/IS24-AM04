@@ -1,6 +1,8 @@
 package run;
 
+import Client.Player;
 import Client.View.OnBoardCard;
+import Client.View.OtherPlayerTab;
 import Server.Card.Card;
 import Server.Card.CardFace;
 import Server.Card.CornerCardFace;
@@ -16,6 +18,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.text.Text;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class MainBoardSceneController extends SceneController {
@@ -35,6 +38,8 @@ public class MainBoardSceneController extends SceneController {
     public Group yourManuscript;
     @FXML
     public Text yourTurnText;
+    @FXML
+    public List<OtherPlayerTab> otherPlayerTabs = new ArrayList<>();
 
     private Face firstFace, secondFace, thirdFace;
     private int selectedCardIndex = -1;
@@ -223,17 +228,14 @@ public class MainBoardSceneController extends SceneController {
             CornerCardFace face = (CornerCardFace) controller.getHand().get(selectedCardIndex).getFace(selectedFace);
             for (OnBoardCard c : OnBoardCard.onBoardCards) {
                 try {
-                    if(controller.getPlayerByName(controller.getMyName()).getManuscript()
-                            .isPlaceable(c.x - 1, c.y - 1, face)) c.TOP_LEFT.setStyle("-fx-background-color: transparent; -fx-border-width: 2; -fx-border-color: gold;");
-
-                    if(controller.getPlayerByName(controller.getMyName()).getManuscript()
-                            .isPlaceable(c.x + 1, c.y - 1, face)) c.TOP_RIGHT.setStyle("-fx-background-color: transparent; -fx-border-width: 2; -fx-border-color: gold;");
-
-                    if(controller.getPlayerByName(controller.getMyName()).getManuscript()
-                            .isPlaceable(c.x - 1, c.y + 1, face)) c.BOTTOM_LEFT.setStyle("-fx-background-color: transparent; -fx-border-width: 2; -fx-border-color: gold;");
-
-                    if(controller.getPlayerByName(controller.getMyName()).getManuscript()
-                            .isPlaceable(c.x + 1, c.y + 1, face)) c.BOTTOM_RIGHT.setStyle("-fx-background-color: transparent; -fx-border-width: 2; -fx-border-color: gold;");
+                    if(controller.getPlayerByName(controller.getMyName()).getManuscript().isPlaceable(c.x - 1, c.y - 1, face)) c.BOTTOM_LEFT.setStyle("-fx-background-color: transparent; -fx-border-width: 2; -fx-border-color: gold;");
+                    else c.BOTTOM_LEFT.setStyle("-fx-background-color: transparent; -fx-border-width: 0;");
+                    if(controller.getPlayerByName(controller.getMyName()).getManuscript().isPlaceable(c.x + 1, c.y - 1, face)) c.BOTTOM_RIGHT.setStyle("-fx-background-color: transparent; -fx-border-width: 2; -fx-border-color: gold;");
+                    else c.BOTTOM_RIGHT.setStyle("-fx-background-color: transparent; -fx-border-width: 0;");
+                    if(controller.getPlayerByName(controller.getMyName()).getManuscript().isPlaceable(c.x - 1, c.y + 1, face)) c.TOP_LEFT.setStyle("-fx-background-color: transparent; -fx-border-width: 2; -fx-border-color: gold;");
+                    else c.TOP_LEFT.setStyle("-fx-background-color: transparent; -fx-border-width: 0;");
+                    if(controller.getPlayerByName(controller.getMyName()).getManuscript().isPlaceable(c.x + 1, c.y + 1, face)) c.TOP_RIGHT.setStyle("-fx-background-color: transparent; -fx-border-width: 2; -fx-border-color: gold;");
+                    else c.TOP_RIGHT.setStyle("-fx-background-color: transparent; -fx-border-width: 0;");
                 } catch (PlayerNotFoundByNameException e) {
                     throw new RuntimeException(e);
                 }
@@ -299,6 +301,16 @@ public class MainBoardSceneController extends SceneController {
             }
             selectedCardIndex = -1;
             illuminateHandCard(-1);
+        }
+    }
+
+    public void setup()
+    {
+        for(Player p : controller.getPlayers()) {
+            if(!p.getName().equals(controller.getMyName())) {
+                OtherPlayerTab tab = new OtherPlayerTab(p.getName());
+                otherPlayerTabs.add(tab);
+            }
         }
     }
 

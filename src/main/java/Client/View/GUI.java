@@ -61,9 +61,14 @@ public class GUI implements UI{
     @Override
     public void nameChanged(String name) {
         Platform.runLater(() -> {
-            ((ColorReadySceneController) sceneControllerMap.get(SceneName.SETCOLOR)).messageToSend.setPromptText("Scrivi un messaggio!");
-            stage.setScene(getScene(SceneName.SETCOLOR));
-            stage.show();
+            if (controller.isSavedGame()) {
+                //todo: implement graphically with another scene
+                System.out.println("WAITING FOR OTHERS, TODO");
+            } else {
+                ((ColorReadySceneController) sceneControllerMap.get(SceneName.SETCOLOR)).messageToSend.setPromptText("Scrivi un messaggio!");
+                stage.setScene(getScene(SceneName.SETCOLOR));
+                stage.show();
+            }
         });
     }
 
@@ -120,36 +125,41 @@ public class GUI implements UI{
 
     @Override
     public void needName() {
-
+        System.out.println("Need name");
     }
 
     @Override
     public void needColor() {
-
+        System.out.println("Need color");
     }
 
     @Override
     public void needNameOrColor() {
+        System.out.println("Need name or color");
         //maybe useless here
     }
 
     @Override
     public void unavailableColor() {
+        System.out.println("Unavailable color");
         //maybe useless here
     }
 
     @Override
     public void colorChangeFailed() {
+        System.out.println("Color change failed");
         //maybe useless here
     }
 
     @Override
     public void invalidColor() {
+        System.out.println("Invalid color");
         //maybe useless here
     }
 
     @Override
     public void needConnection() {
+        System.out.println("Need connection");
         //maybe useless here
     }
 
@@ -167,12 +177,12 @@ public class GUI implements UI{
 
     @Override
     public void cantDrawAchievementCards() {
-
+        System.out.println("Can't draw achievement cards");
     }
 
     @Override
     public void alreadyDone(Actions action) {
-
+        System.out.println("Already done");
     }
 
     @Override
@@ -182,22 +192,22 @@ public class GUI implements UI{
 
     @Override
     public void chatMessageIsEmpty() {
-
+        System.out.println("Chat message is empty");
     }
 
     @Override
     public void deckIsEmpty() {
-
+        System.out.println("Deck is empty");
     }
 
     @Override
     public void gameAlreadyStarted() {
-
+        System.out.println("Game already started");
     }
 
     @Override
     public void gameNotYetStarted() {
-
+        System.out.println("Game not yet started");
     }
 
     @Override
@@ -217,7 +227,7 @@ public class GUI implements UI{
 
     @Override
     public void playerListChanged() {
-
+        System.out.println("Player list changed");
     }
 
     @Override
@@ -240,14 +250,6 @@ public class GUI implements UI{
                 ((ColorReadySceneController) sceneControllerMap.get(SceneName.SETCOLOR)).list_Player.getItems().set(i, name1 + "   " + color + "   " + ready1);
                 //------------------------------------------------------------------
                 ((NameReadySceneController) sceneControllerMap.get(SceneName.SETNAME)).cloneListView(((ColorReadySceneController) sceneControllerMap.get(SceneName.SETCOLOR)).list_Player);
-            }
-            for (i = 0; i < controller.getPlayers().size(); i++) {
-                if(!controller.getPlayers().get(i).isReady()) {
-                    break;
-                }
-            }
-            if(i == controller.getPlayers().size() && i > 1) {
-                stage.setScene(getScene(SceneName.STARTINGCARDCHOICE));
             }
         });
     }
@@ -276,7 +278,7 @@ public class GUI implements UI{
 
     @Override
     public void endGameStarted() {
-
+        System.out.println("End game started");
     }
 
     @Override
@@ -289,7 +291,7 @@ public class GUI implements UI{
 
     @Override
     public void displayLeaderboard(LinkedHashMap<String, Integer> playerPoints) {
-
+        System.out.println("Leaderboard displayed");
     }
 
     @Override
@@ -328,12 +330,14 @@ public class GUI implements UI{
 
     @Override
     public void otherPlayerInitialHand(String name) {
-
+        System.out.println("Other player initial hand");
     }
 
     @Override
     public void secretAchievementChosen(String name) {
         Platform.runLater(() -> {
+            System.out.println("Secret achievement chosen name : "+ name);
+            System.out.println("Secret achievement chosen achievement : "+ controller.getSecretAchievement());
             if (name.equals(controller.getMyName())){
                 ((MainBoardSceneController) sceneControllerMap.get(SceneName.GAME)).setSecretCard(controller.getSecretAchievement());
                 stage.setScene(getScene(SceneName.GAME));
@@ -355,12 +359,12 @@ public class GUI implements UI{
 
     @Override
     public void gameStarted() {
-
+        System.out.println("Game started");
     }
 
     @Override
     public void displayPlayerOrder() {
-
+        System.out.println("Player order displayed");
     }
 
     @Override
@@ -382,7 +386,7 @@ public class GUI implements UI{
 
     @Override
     public void doFirst(Actions action) {
-
+        System.out.println("Do first");
     }
 
     @Override
@@ -421,7 +425,7 @@ public class GUI implements UI{
 
     @Override
     public void displayPlayerPoints(String playerName) throws PlayerNotFoundByNameException {
-
+        System.out.println("Player points displayed");
     }
 
     @Override
@@ -434,7 +438,7 @@ public class GUI implements UI{
 
     @Override
     public void playerDisconnected(String playerName) {
-
+        System.out.println("Player disconnected");
     }
 
     @Override
@@ -447,37 +451,67 @@ public class GUI implements UI{
 
     @Override
     public void tooManyPlayers() {
-
+        System.out.println("Too many players");
     }
 
     @Override
     public void displayId() {
-        
+        Platform.runLater(() -> {
+            ((NameReadySceneController) sceneControllerMap.get(SceneName.SETNAME)).setup();
+        });
+
     }
 
     @Override
     public void playerRemoved(String name) {
-
+        System.out.println("Player removed");
     }
 
     @Override
     public void otherPlayerReconnected(String name) {
-
+        System.out.println("Other player reconnected");
     }
 
     @Override
     public void idNotInGame() {
-
+        System.out.println("ID not in game");
     }
 
     @Override
     public void playerAlreadyPlaying() {
-
+        System.out.println("Player already playing");
     }
 
     @Override
     public void displayGameInfo() {
-
+        System.out.println("Game info displayed before platform runlater");
+        Platform.runLater(() -> {
+            System.out.println("Game info displayed");
+            switch (controller.getGameState()) {
+                case LOBBY:
+                    System.out.println("Lobby");
+                    throw new RuntimeException("Unexpected game state");
+                case CHOOSE_STARTING_CARD:
+                    System.out.println("Choose starting card");
+                    stage.setScene(getScene(SceneName.STARTINGCARDCHOICE));
+                    stage.show();
+                    break;
+                case CHOOSE_SECRET_ACHIEVEMENT:
+                    chooseSecretAchievement(controller.getPotentialSecretAchievements());
+                    break;
+                default:
+                    System.out.println("Game started! reconnection  19");
+                    displayHand();
+                    displayBoardCards();
+                    displayCommonAchievements();
+                    regenerateManuscript();
+                    secretAchievementChosen(controller.getMyName());
+                    stage.setScene(getScene(SceneName.GAME));
+                    stage.show();
+                    break;
+        }
+        System.out.println("Game info displayed 19");
+        });
     }
 
 
@@ -534,7 +568,19 @@ public class GUI implements UI{
         ((NameReadySceneController) sceneControllerMap.get(SceneName.SETNAME)).cloneListView(((ColorReadySceneController) sceneControllerMap.get(SceneName.SETCOLOR)).list_Player);
     }
 
-    public void gameAlreadyFinished() { // todo: implement this
+    public void gameAlreadyFinished() {
+        System.out.println("Game already finished");
+        // todo: implement this
          }
-
+    private void regenerateManuscript()
+    {
+        try {
+            for(CornerCardFace c : controller.getPlayerByName(controller.getMyName()).getManuscript().getAllCards())
+            {
+                ((MainBoardSceneController) sceneControllerMap.get(SceneName.GAME)).updateManuscript(controller.getMyName(), c, c.getXCoord(), c.getYCoord());
+            }
+        } catch (PlayerNotFoundByNameException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }

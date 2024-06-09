@@ -26,9 +26,16 @@ public class NameReadySceneController extends SceneController{
     @FXML
     public ListView<String> list_Player;
     public ListView<String> chat_message;
+    public Label labelReconnectionId;
+    public TextField reconnection_idField;
+    public Button confirm_ButtonId;
 
     public void askSetName(ActionEvent actionEvent) {
-        controller.askSetName(possible_Name.getText());
+        System.out.println("Name Field: " + possible_Name.getText());
+        stage.setTitle("Codex Naturalis - " + possible_Name.getText());
+        if (controller.isSavedGame()) {
+            controller.joinSavedGame(possible_Name.getText());
+        } else controller.askSetName(possible_Name.getText());
     }
 
     public void cloneListView(ListView<String> other) {
@@ -36,5 +43,15 @@ public class NameReadySceneController extends SceneController{
         for (String item : other.getItems()) {
             list_Player.getItems().add(item);
         }
+    }
+    public void setup(){
+        labelReconnectionId.setText("New reconnection ID: " + controller.getMyId() + " save it for reconnection");
+        reconnection_idField.setPromptText("Enter the old reconnection ID");
+        possible_Name.setPromptText("Choose a name");
+    }
+
+    public void idLogin(ActionEvent actionEvent) {
+        System.out.println("Id Field: "+reconnection_idField.getText());
+        controller.reconnect(reconnection_idField.getText());
     }
 }
