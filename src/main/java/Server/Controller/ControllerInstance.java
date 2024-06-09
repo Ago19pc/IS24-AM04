@@ -861,6 +861,10 @@ public class ControllerInstance implements Controller{
                 connectionHandler.sendMessage(reconnectionNameMessage, playerName);
                 StartingCardsMessage startingCardsMessage = new StartingCardsMessage(givenStartingCards.get(player));
                 connectionHandler.sendMessage(startingCardsMessage, playerName);
+                if(player.getManuscript() != null){
+                    SetStartingCardMessage setStartingCardMessage = new SetStartingCardMessage(playerName, player.getManuscript().getCardByCoord(0, 0));
+                    connectionHandler.sendMessage(setStartingCardMessage, playerName);
+                }
                 StartGameMessage startGameMessage = new StartGameMessage(
                         List.of(
                                 gameModel.getGoldDeck().getTopCardNoPop(),
@@ -915,6 +919,10 @@ public class ControllerInstance implements Controller{
                 commonAchievements.add(gameModel.getAchievementDeck().getBoardCard().get(DeckPosition.SECOND_CARD));
                 AchievementCardsMessage achievementCardsMessage = new AchievementCardsMessage(secretObjectiveCards, commonAchievements);
                 connectionHandler.sendMessage(achievementCardsMessage, playerName);
+                if(player.getSecretObjective() != null){
+                    SetSecretCardMessage setSecretCardMessage = new SetSecretCardMessage(player.getName());
+                    connectionHandler.sendMessage(setSecretCardMessage, playerName);
+                }
                 for(Player p: getPlayerList()){
                     SetSecretCardMessage setSecretCardMessage = new SetSecretCardMessage(p.getName());
                     connectionHandler.sendMessage(setSecretCardMessage, playerName);

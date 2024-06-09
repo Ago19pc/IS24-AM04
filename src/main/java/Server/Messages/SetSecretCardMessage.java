@@ -11,7 +11,7 @@ import java.rmi.RemoteException;
 
 public class SetSecretCardMessage implements Serializable, ToClientMessage, ToServerMessage {
     private String name;
-    private int chosenCard;
+    private Integer chosenCard;
     private String id;
     public SetSecretCardMessage(int chosenCard, String id){
         this.chosenCard = chosenCard;
@@ -19,11 +19,16 @@ public class SetSecretCardMessage implements Serializable, ToClientMessage, ToSe
     }
     public SetSecretCardMessage(String player){
         this.name = player;
+        this.chosenCard = null;
     }
 
     @Override
     public void clientExecute(ClientController controller){
-        controller.setSecretCard(name);
+        if(chosenCard == null){
+            controller.setSecretCard(name);
+        } else {
+            controller.setSecretCard(name, chosenCard);
+        }
     }
 
     @Override
