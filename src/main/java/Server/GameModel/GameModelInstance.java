@@ -27,7 +27,8 @@ public class GameModelInstance implements GameModel{
     private int turn;
     private boolean isEndGamePhase;
     private final Chat chat;
-
+    private int activePlayerIndex = -1;
+    private boolean lastRound = false;
     private final List<PlayerInstance> playerList;
 
 
@@ -36,6 +37,22 @@ public class GameModelInstance implements GameModel{
         isEndGamePhase = false;
         turn = 0;
         playerList = new ArrayList<>();
+    }
+
+    public int getActivePlayerIndex() {
+        return activePlayerIndex;
+    }
+
+    public boolean isLastRound() {
+        return lastRound;
+    }
+
+    public void setLastRound(boolean lastRound) {
+        this.lastRound = lastRound;
+    }
+
+    public void setActivePlayerIndex(int activePlayerIndex) {
+        this.activePlayerIndex = activePlayerIndex;
     }
 
 

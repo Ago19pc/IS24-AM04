@@ -97,4 +97,11 @@ public interface GameModel {
      */
     public void createAchievementDeck() throws AlreadySetException;
 
+    public int getActivePlayerIndex();
+
+    public boolean isLastRound();
+
+    public void setLastRound(boolean lastRound);
+    public void setActivePlayerIndex(int activePlayerIndex);
+
 }

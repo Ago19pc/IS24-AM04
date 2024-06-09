@@ -5,6 +5,7 @@ import Server.Card.*;
 import Server.Chat.Message;
 import Server.Connections.GeneralServerConnectionHandler;
 import Server.Deck.AchievementDeck;
+import Server.Deck.ResourceDeck;
 import Server.Enums.*;
 import Server.Exception.*;
 import Server.GameModel.GameModel;
@@ -25,8 +26,6 @@ import java.util.stream.Collectors;
 public class ControllerInstance implements Controller{
     private GameModel gameModel;
     private final GeneralServerConnectionHandler connectionHandler;
-    private int activePlayerIndex = -1;
-    private boolean lastRound = false;
     private Map<Player, StartingCard> givenStartingCards = new HashMap<>();
     private Map<Player, List<AchievementCard>> givenSecretObjectiveCards = new HashMap<>();
     private GameState gameState = GameState.LOBBY;
@@ -98,19 +97,21 @@ public class ControllerInstance implements Controller{
             commonAchievementCards.add(gameModel.getAchievementDeck().getBoardCard().get(DeckPosition.SECOND_CARD));
             Deck<GoldCard> goldDeck = new Deck<GoldCard>(
                     gameModel.getGoldDeck().getNumberOfCards(),
-                    new ArrayList<>(List.of(gameModel.getGoldDeck().getBoardCard().get(DeckPosition.FIRST_CARD), gameModel.getGoldDeck().getBoardCard().get(DeckPosition.SECOND_CARD)))
+                    new ArrayList<>(List.of(gameModel.getGoldDeck().getTopCardNoPop(), gameModel.getGoldDeck().getBoardCard().get(DeckPosition.FIRST_CARD), gameModel.getGoldDeck().getBoardCard().get(DeckPosition.SECOND_CARD)))
             );
             Deck<ResourceCard> resourceDeck = new Deck<ResourceCard>(
                     gameModel.getResourceDeck().getNumberOfCards(),
-                    new ArrayList<>(List.of(gameModel.getResourceDeck().getBoardCard().get(DeckPosition.FIRST_CARD), gameModel.getResourceDeck().getBoardCard().get(DeckPosition.SECOND_CARD)))
+                    new ArrayList<>(List.of(gameModel.getResourceDeck().getTopCardNoPop(), gameModel.getResourceDeck().getBoardCard().get(DeckPosition.FIRST_CARD), gameModel.getResourceDeck().getBoardCard().get(DeckPosition.SECOND_CARD)))
             );
             List<Client.Player> playerList = new ArrayList<>();
+            System.out.println("Il giocatore attivo è il giocatore numero " + gameModel.getActivePlayerIndex());
+            System.out.println("E' il turno di " + gameModel.getPlayerList().get(gameModel.getActivePlayerIndex()).getName());
             for (Player p : gameModel.getPlayerList()){
                 playerList.add(new Client.Player(
                         p.getName(),
                         p.getPoints(),
                         p.getHand().size(),
-                        activePlayerIndex == getPlayerList().indexOf(p),
+                        gameModel.getActivePlayerIndex() == getPlayerList().indexOf(p),
                         p.getColor(),
                         p.getManuscript()
                 ));
@@ -213,7 +214,7 @@ public class ControllerInstance implements Controller{
         }
         createDecks();
         giveStartingCards();
-        /*StartGameMessage startGameMessage = new StartGameMessage(
+        StartGameMessage startGameMessage = new StartGameMessage(
                 List.of(
                         gameModel.getGoldDeck().getTopCardNoPop(),
                         gameModel.getGoldDeck().getBoardCard().get(DeckPosition.FIRST_CARD),
@@ -225,7 +226,7 @@ public class ControllerInstance implements Controller{
                         (ResourceCard) gameModel.getResourceDeck().getBoardCard().get(DeckPosition.SECOND_CARD)
                 )
         );
-        connectionHandler.sendAllMessage(startGameMessage);*/
+        connectionHandler.sendAllMessage(startGameMessage);
     }
 
     /**
@@ -380,15 +381,15 @@ public class ControllerInstance implements Controller{
      * Sets the next turn
      */
     private void nextTurn(){
-        if(activePlayerIndex == -1){ //sets active player as the first player. If it's not the first turn this is not valid
+        if(gameModel.getActivePlayerIndex() == -1){ //sets active player as the first player. If it's not the first turn this is not valid
             if(gameModel.getTurn() != 0){
                 System.out.println("Active player not set");
                 return;
             }
         }
         //if it is end game and all players have played also an extra round, calculate leaderboard
-        if(gameModel.isEndGamePhase() && activePlayerIndex == getPlayerList().size() - 1 ){
-            if(lastRound){
+        if(gameModel.isEndGamePhase() && gameModel.getActivePlayerIndex() == getPlayerList().size() - 1 ){
+            if(gameModel.isLastRound()){
                 try{
                     computeLeaderboard();
                     return;
@@ -396,11 +397,11 @@ public class ControllerInstance implements Controller{
                     e.printStackTrace();
                 }
             } else {
-                lastRound = true;
+                gameModel.setLastRound(true);
             }
         } else {
             //sets end game if necessary
-            if (activePlayerIndex != -1 && getPlayerList().get(activePlayerIndex).getPoints() >= 20) {
+            if (gameModel.getActivePlayerIndex() != -1 && getPlayerList().get(gameModel.getActivePlayerIndex()).getPoints() >= 20) {
                 try {
                     endGame();
                 } catch (AlreadySetException e) {
@@ -410,20 +411,20 @@ public class ControllerInstance implements Controller{
         }
         //sets new active player
         do {
-            if (activePlayerIndex == gameModel.getPlayerList().size() - 1) {
-                activePlayerIndex = 0;
+            if (gameModel.getActivePlayerIndex() == gameModel.getPlayerList().size() - 1) {
+                gameModel.setActivePlayerIndex(0);
             } else {
-                activePlayerIndex++;
+                gameModel.setActivePlayerIndex(gameModel.getActivePlayerIndex() + 1);
             }
             gameState = GameState.PLACE_CARD;
-        } while (!isOnline(getPlayerList().get(activePlayerIndex)));//if the player is not online skips to the next one
+        } while (!isOnline(getPlayerList().get(gameModel.getActivePlayerIndex())));//if the player is not online skips to the next one
         gameModel.nextTurn();
         try{
             saveGame();
         } catch (IOException e) {
             e.printStackTrace();
         }
-        NewTurnMessage newTurnMessage = new NewTurnMessage(getPlayerList().get(activePlayerIndex).getName(), gameModel.getTurn());
+        NewTurnMessage newTurnMessage = new NewTurnMessage(getPlayerList().get(gameModel.getActivePlayerIndex()).getName(), gameModel.getTurn());
         connectionHandler.sendAllMessage(newTurnMessage);
     }
     public int getTurn() {
@@ -437,7 +438,7 @@ public class ControllerInstance implements Controller{
 
     public void playCard(Player player, int position, int xCoord, int yCoord, Face face) throws TooFewElementsException, InvalidMoveException {
         //if it's not the player's turn, throw exception
-        if(getPlayerList().indexOf(player) != activePlayerIndex){
+        if(getPlayerList().indexOf(player) != gameModel.getActivePlayerIndex()){
             System.out.println("Not player's turn");
             throw new InvalidMoveException("Not player's turn");
         }
@@ -516,7 +517,7 @@ public class ControllerInstance implements Controller{
         if(gameModel.getTurn() < 1) {
             throw new NotYetStartedException("Game not started");
         }
-        if(getPlayerList().indexOf(player) != activePlayerIndex){
+        if(getPlayerList().indexOf(player) != gameModel.getActivePlayerIndex()){
             throw new InvalidMoveException("Not player's turn");
         }
         if(!gameState.equals(GameState.DRAW_CARD)){
@@ -568,8 +569,8 @@ public class ControllerInstance implements Controller{
     private void endGame() throws AlreadySetException {
         gameModel.setEndGamePhase();
         //if it's the last player to play, the extra round starts immediately
-        if(activePlayerIndex == getPlayerList().size() - 1){
-            lastRound = true;
+        if(gameModel.getActivePlayerIndex() == getPlayerList().size() - 1){
+            gameModel.setLastRound(true);
         }
         EndGamePhaseMessage endGamePhaseMessage = new EndGamePhaseMessage();
         connectionHandler.sendAllMessage(endGamePhaseMessage);
@@ -625,8 +626,6 @@ public class ControllerInstance implements Controller{
 
     private void clear() {
         gameModel = new GameModelInstance();
-        activePlayerIndex = -1;
-        lastRound = false;
         givenStartingCards = new HashMap<>();
         givenSecretObjectiveCards = new HashMap<>();
     }
@@ -729,82 +728,17 @@ public class ControllerInstance implements Controller{
     public void reactToDisconnection(String id){
         String playerName = "";
         try {
-            Player p = getPlayerByName(connectionHandler.getPlayerNameByID(id));
-            playerName = connectionHandler.getPlayerNameByID(id);
-            switch(gameState){
-                case LOBBY: //if lobby, just remove the player
-                    removePlayer(getPlayerByName(playerName));
-                    if (getPlayerList().stream().allMatch(Player::isReady) && getPlayerList().size() > 1){
-                        try {
-                            start();
-                        } catch (TooFewElementsException | AlreadySetException e) {
-                            //do nothing as it's normal that it's already set
-                        }
-                    }
-                    break;
-                case LEADERBOARD: //if leaderboard, do nothing as the game has already ended
-                    break;
-                default: //here we could be at secret or starting cardd choice or in game: we wait a minute to see if the player reconnects and after that we remove the player
-                    switch (gameState) {
-                        case CHOOSE_SECRET_ACHIEVEMENT:
-                            new DisconnectionTimer(this, connectionHandler, id, 60);
-                            break;
-                        case CHOOSE_STARTING_CARD:
-                            new DisconnectionTimer(this, connectionHandler, id, 60);
-                            break;
-                        case PLACE_CARD, DRAW_CARD:
-                            String activePlayerName = getPlayerList().get(activePlayerIndex).getName();
-                            if(activePlayerName.equals(playerName)){
-                                if(gameState.equals(GameState.DRAW_CARD)){
-                                    if(!gameModel.getResourceDeck().isEmpty()){
-                                        if(gameModel.getResourceDeck().getNumberOfCards() >= 1){
-                                            try {
-                                                drawCard(getPlayerByName(playerName), DeckPosition.DECK, Decks.RESOURCE);
-                                            } catch (TooManyElementsException | InvalidMoveException | AlreadyFinishedException | NotYetStartedException e) {
-                                                e.printStackTrace();
-                                            }
-                                        } else if (gameModel.getResourceDeck().getBoardCard().get(DeckPosition.FIRST_CARD) != null){
-                                            try {
-                                                drawCard(getPlayerByName(playerName), DeckPosition.FIRST_CARD, Decks.RESOURCE);
-                                            } catch (TooManyElementsException | InvalidMoveException | AlreadyFinishedException | NotYetStartedException e) {
-                                                e.printStackTrace();
-                                            }
-                                        } else{
-                                            try {
-                                                drawCard(getPlayerByName(playerName), DeckPosition.SECOND_CARD, Decks.RESOURCE);
-                                            } catch (TooManyElementsException | InvalidMoveException | AlreadyFinishedException | NotYetStartedException e) {
-                                                e.printStackTrace();
-                                            }
-                                        }
-                                    } else if(!gameModel.getGoldDeck().isEmpty()){
-                                        if(gameModel.getGoldDeck().getNumberOfCards() >= 1){
-                                            try {
-                                                drawCard(getPlayerByName(playerName), DeckPosition.DECK, Decks.GOLD);
-                                            } catch (TooManyElementsException | InvalidMoveException | AlreadyFinishedException | NotYetStartedException e) {
-                                                e.printStackTrace();
-                                            }
-                                        } else if (gameModel.getGoldDeck().getBoardCard().get(DeckPosition.FIRST_CARD) != null){
-                                            try {
-                                                drawCard(getPlayerByName(playerName), DeckPosition.FIRST_CARD, Decks.GOLD);
-                                            } catch (TooManyElementsException | InvalidMoveException | AlreadyFinishedException | NotYetStartedException e) {
-                                                e.printStackTrace();
-                                            }
-                                        } else{
-                                            try {
-                                                drawCard(getPlayerByName(playerName), DeckPosition.SECOND_CARD, Decks.GOLD);
-                                            } catch (TooManyElementsException | InvalidMoveException | AlreadyFinishedException | NotYetStartedException e) {
-                                                e.printStackTrace();
-                                            }
-                                        }
-                                    } else {
-                                        nextTurn();
-                                    }
-                                }
-                            }
-                            new DisconnectionTimer(this, connectionHandler, id, 180);
-                            break;
-                    }
-                    break;
+            if(getPlayerByName(connectionHandler.getPlayerNameByID(id)) == null){ //this means the client is not a player
+                try {
+                    connectionHandler.getServerConnectionHandler(id).killClient(id);
+                } catch (PlayerNotInAnyServerConnectionHandlerException e) {
+                    System.out.println("Player not found in any server connection handler, PLAYER NOT REMOVED!");
+                    e.printStackTrace();
+                } catch (Exception e){
+                    System.out.println("Exception, PLAYER NOT REMOVED!");
+                    e.printStackTrace();
+                }
+                return;
             }
         } catch (PlayerNotFoundByNameException e) {
             try {
@@ -818,10 +752,103 @@ public class ControllerInstance implements Controller{
             }
             return;
         }
+        playerName = connectionHandler.getPlayerNameByID(id);
+        switch(gameState){
+            case LOAD_GAME_LOBBY:
+                connectionHandler.removePlayerByName(playerName);
+                break;
+            case LOBBY: //if lobby, just remove the player
+                try {
+                    removePlayer(getPlayerByName(playerName));
+                } catch (PlayerNotFoundByNameException e) {
+                    throw new RuntimeException(e);
+                }
+                if (getPlayerList().stream().allMatch(Player::isReady) && getPlayerList().size() > 1){
+                    try {
+                        start();
+                    } catch (TooFewElementsException | AlreadySetException e) {
+                        //do nothing as it's normal that it's already set
+                    }
+                }
+                break;
+            case LEADERBOARD: //if leaderboard, do nothing as the game has already ended
+                break;
+            default: //here we could be at secret or starting cardd choice or in game: we wait a minute to see if the player reconnects and after that we remove the player
+                switch (gameState) {
+                    case CHOOSE_SECRET_ACHIEVEMENT:
+                        new DisconnectionTimer(this, connectionHandler, id, 60);
+                        break;
+                    case CHOOSE_STARTING_CARD:
+                        new DisconnectionTimer(this, connectionHandler, id, 60);
+                        break;
+                    case PLACE_CARD, DRAW_CARD:
+                        String activePlayerName = getPlayerList().get(gameModel.getActivePlayerIndex()).getName();
+                        if(activePlayerName.equals(playerName)){
+                            if(gameState.equals(GameState.DRAW_CARD)){
+                                if(!gameModel.getResourceDeck().isEmpty()){
+                                    if(gameModel.getResourceDeck().getNumberOfCards() >= 1){
+                                        try {
+                                            drawCard(getPlayerByName(playerName), DeckPosition.DECK, Decks.RESOURCE);
+                                        } catch (TooManyElementsException | InvalidMoveException | AlreadyFinishedException | NotYetStartedException e) {
+                                            e.printStackTrace();
+                                        } catch (PlayerNotFoundByNameException e) {
+                                            throw new RuntimeException(e);
+                                        }
+                                    } else if (gameModel.getResourceDeck().getBoardCard().get(DeckPosition.FIRST_CARD) != null){
+                                        try {
+                                            drawCard(getPlayerByName(playerName), DeckPosition.FIRST_CARD, Decks.RESOURCE);
+                                        } catch (TooManyElementsException | InvalidMoveException | AlreadyFinishedException | NotYetStartedException e) {
+                                            e.printStackTrace();
+                                        } catch (PlayerNotFoundByNameException e) {
+                                            throw new RuntimeException(e);
+                                        }
+                                    } else{
+                                        try {
+                                            drawCard(getPlayerByName(playerName), DeckPosition.SECOND_CARD, Decks.RESOURCE);
+                                        } catch (TooManyElementsException | InvalidMoveException |
+                                                 AlreadyFinishedException | NotYetStartedException |
+                                                 PlayerNotFoundByNameException e) {
+                                            e.printStackTrace();
+                                        }
+                                    }
+                                } else if(!gameModel.getGoldDeck().isEmpty()){
+                                    if(gameModel.getGoldDeck().getNumberOfCards() >= 1){
+                                        try {
+                                            drawCard(getPlayerByName(playerName), DeckPosition.DECK, Decks.GOLD);
+                                        } catch (TooManyElementsException | InvalidMoveException |
+                                                 AlreadyFinishedException | NotYetStartedException |
+                                                 PlayerNotFoundByNameException e) {
+                                            e.printStackTrace();
+                                        }
+                                    } else if (gameModel.getGoldDeck().getBoardCard().get(DeckPosition.FIRST_CARD) != null){
+                                        try {
+                                            drawCard(getPlayerByName(playerName), DeckPosition.FIRST_CARD, Decks.GOLD);
+                                        } catch (TooManyElementsException | InvalidMoveException |
+                                                 AlreadyFinishedException | NotYetStartedException |
+                                                 PlayerNotFoundByNameException e) {
+                                            e.printStackTrace();
+                                        }
+                                    } else{
+                                        try {
+                                            drawCard(getPlayerByName(playerName), DeckPosition.SECOND_CARD, Decks.GOLD);
+                                        } catch (TooManyElementsException | InvalidMoveException |
+                                                 AlreadyFinishedException | NotYetStartedException |
+                                                 PlayerNotFoundByNameException e) {
+                                            e.printStackTrace();
+                                        }
+                                    }
+                                } else {
+                                    nextTurn();
+                                }
+                            }
+                        }
+                        new DisconnectionTimer(this, connectionHandler, id, 180);
+                        break;
+        }
 
 
-    }
-    public void reconnect(String oldId, String newId) throws IllegalArgumentException, AlreadySetException, NotYetStartedException, AlreadyFinishedException {
+    }}
+        public void reconnect(String oldId, String newId) throws IllegalArgumentException, AlreadySetException, NotYetStartedException, AlreadyFinishedException {
         System.out.println("Reconnecting player" + oldId + " with new id (id of previous player) " + newId);
         System.out.println(connectionHandler.getDisconnectedList());
         if(!connectionHandler.isInDisconnectedList(newId)){
@@ -838,7 +865,7 @@ public class ControllerInstance implements Controller{
         }
 
         switch (gameState){
-            case LOBBY:
+            case LOBBY, LOAD_GAME_LOBBY:
                 throw new NotYetStartedException ("Game not started");
             case LEADERBOARD:
                 throw  new AlreadyFinishedException("Game already finished");
@@ -847,21 +874,27 @@ public class ControllerInstance implements Controller{
                 connectionHandler.setOnline(newId);
                 connectionHandler.changePlayerId(playerName, oldId);
                 System.out.println("Player " + playerName + " has now id " + oldId + "=" + connectionHandler.getIdByName(playerName));
+                ReconnectionNameMessage reconnectionNameMessage = new ReconnectionNameMessage(playerName);
+                connectionHandler.sendMessage(reconnectionNameMessage, playerName);
                 StartingCardsMessage startingCardsMessage = new StartingCardsMessage(givenStartingCards.get(player));
                 connectionHandler.sendMessage(startingCardsMessage, playerName);
-                /*StartGameMessage startGameMessage = new StartGameMessage(
+                if(player.getManuscript() != null){
+                    SetStartingCardMessage setStartingCardMessage = new SetStartingCardMessage(playerName, player.getManuscript().getCardByCoord(0, 0));
+                    connectionHandler.sendMessage(setStartingCardMessage, playerName);
+                }
+                StartGameMessage startGameMessage = new StartGameMessage(
                         List.of(
                                 gameModel.getGoldDeck().getTopCardNoPop(),
                                 gameModel.getGoldDeck().getBoardCard().get(DeckPosition.FIRST_CARD),
                                 gameModel.getGoldDeck().getBoardCard().get(DeckPosition.SECOND_CARD)
                         ),
                         List.of(
-                                gameModel.getResourceDeck().getTopCardNoPop(),
+                                (ResourceCard)gameModel.getResourceDeck().getTopCardNoPop(),
                                 gameModel.getResourceDeck().getBoardCard().get(DeckPosition.FIRST_CARD),
                                 gameModel.getResourceDeck().getBoardCard().get(DeckPosition.SECOND_CARD)
                         )
                 );
-                connectionHandler.sendMessage(startGameMessage, playerName);*/
+                connectionHandler.sendMessage(startGameMessage, playerName);
                 for(Player p : getPlayerList()){
                     if(p.getManuscript() != null){
                         SetStartingCardMessage setStartingCardMessage = new SetStartingCardMessage(p.getName(), p.getManuscript().getCardByCoord(0, 0));
@@ -872,7 +905,9 @@ public class ControllerInstance implements Controller{
             case CHOOSE_SECRET_ACHIEVEMENT:
                 connectionHandler.setOnline(newId);
                 connectionHandler.changePlayerId(playerName, oldId);
-                /*StartGameMessage startMessage = new StartGameMessage(
+                reconnectionNameMessage = new ReconnectionNameMessage(playerName);
+                connectionHandler.sendMessage(reconnectionNameMessage, playerName);
+                StartGameMessage startMessage = new StartGameMessage(
                         List.of(
                                 gameModel.getGoldDeck().getTopCardNoPop(),
                                 gameModel.getGoldDeck().getBoardCard().get(DeckPosition.FIRST_CARD),
@@ -884,7 +919,7 @@ public class ControllerInstance implements Controller{
                                 gameModel.getResourceDeck().getBoardCard().get(DeckPosition.SECOND_CARD)
                         )
                 );
-                connectionHandler.sendMessage(startMessage, playerName);*/
+                connectionHandler.sendMessage(startMessage, playerName);
                 for(Player p: getPlayerList()){
                     SetStartingCardMessage startingMessage = new SetStartingCardMessage(p.getName(), p.getManuscript().getCardByCoord(0, 0));
                     connectionHandler.sendMessage(startingMessage, playerName);
@@ -901,6 +936,10 @@ public class ControllerInstance implements Controller{
                 commonAchievements.add(gameModel.getAchievementDeck().getBoardCard().get(DeckPosition.SECOND_CARD));
                 AchievementCardsMessage achievementCardsMessage = new AchievementCardsMessage(secretObjectiveCards, commonAchievements);
                 connectionHandler.sendMessage(achievementCardsMessage, playerName);
+                if(player.getSecretObjective() != null){
+                    SetSecretCardMessage setSecretCardMessage = new SetSecretCardMessage(player.getName());
+                    connectionHandler.sendMessage(setSecretCardMessage, playerName);
+                }
                 for(Player p: getPlayerList()){
                     SetSecretCardMessage setSecretCardMessage = new SetSecretCardMessage(p.getName());
                     connectionHandler.sendMessage(setSecretCardMessage, playerName);
@@ -919,7 +958,7 @@ public class ControllerInstance implements Controller{
                 );
                 Deck<ResourceCard> resourceDeck = new Deck<ResourceCard>(
                         gameModel.getResourceDeck().getNumberOfCards(),
-                        new ArrayList<>(List.of(gameModel.getResourceDeck().getTopCardNoPop() ,gameModel.getResourceDeck().getBoardCard().get(DeckPosition.FIRST_CARD), gameModel.getResourceDeck().getBoardCard().get(DeckPosition.SECOND_CARD)))
+                        new ArrayList<>(List.of((ResourceCard) gameModel.getResourceDeck().getTopCardNoPop() ,gameModel.getResourceDeck().getBoardCard().get(DeckPosition.FIRST_CARD), gameModel.getResourceDeck().getBoardCard().get(DeckPosition.SECOND_CARD)))
                 );
                 List<Client.Player> playerList = new ArrayList<>();
                 for (Player p : gameModel.getPlayerList()){
@@ -927,7 +966,7 @@ public class ControllerInstance implements Controller{
                             p.getName(),
                             p.getPoints(),
                             p.getHand().size(),
-                            activePlayerIndex == getPlayerList().indexOf(p),
+                            gameModel.getActivePlayerIndex() == getPlayerList().indexOf(p),
                             p.getColor(),
                             p.getManuscript()
                     ));

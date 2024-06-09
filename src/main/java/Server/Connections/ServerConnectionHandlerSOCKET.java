@@ -172,8 +172,11 @@ public class ServerConnectionHandlerSOCKET extends Thread implements ServerConne
     public void sendAllMessage(ToClientMessage message) {
         for (ClientHandler c : clients.keySet()) {
             if(c.isClosed()) continue;
-            System.out.println("Sending message to " + c.getSocketAddress() + " - id " + clients.get(c));
-            c.sendMessage(message);
+            String clientId = clients.get(c);
+            if(!controller.getConnectionHandler().isInDisconnectedList(clientId)){
+                System.out.println("Sending message to " + c.getSocketAddress() + " - id " + clients.get(c));
+                c.sendMessage(message);
+            }
         }
     }
 

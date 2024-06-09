@@ -13,6 +13,7 @@ import Server.Exception.PlayerNotFoundByNameException;
 import javafx.fxml.FXML;
 import javafx.scene.Group;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.effect.Glow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -40,6 +41,8 @@ public class MainBoardSceneController extends SceneController {
     public Text yourTurnText;
     @FXML
     public List<OtherPlayerTab> otherPlayerTabs = new ArrayList<>();
+    @FXML
+    public Label Player1, Player2, Player3, Player4;
 
     private Face firstFace, secondFace, thirdFace;
     private int selectedCardIndex = -1;
@@ -344,6 +347,24 @@ public class MainBoardSceneController extends SceneController {
                 otherPlayerTabs.add(tab);
             }
         }
+    }
+
+    public void updateLeaderBoard() {
+        List<Player> sorted = new ArrayList<Player>(controller.getPlayers());
+        sorted.sort((p1, p2) -> p2.getPoints() - p1.getPoints());
+        if (sorted.size() > 0) {
+            Player1.setText(sorted.get(0).getName() + " " + sorted.get(0).getPoints());
+        }
+        if (sorted.size() > 1) {
+            Player2.setText(sorted.get(1).getName() + " " + sorted.get(1).getPoints());
+        }
+        if (sorted.size() > 2) {
+            Player3.setText(sorted.get(2).getName() + " " + sorted.get(2).getPoints());
+        }
+        if (sorted.size() > 3) {
+            Player4.setText(sorted.get(3).getName() + " " + sorted.get(3).getPoints());
+        }
+
     }
 
 }
