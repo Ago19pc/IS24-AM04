@@ -50,6 +50,7 @@ public class ClientController {
     private int indexofSecretAchievement;
     private List<AchievementCard> potentialSecretAchievements;
     private Integer chosenHandCard;
+    private Boolean isSavedGame;
 
     public void main(UI ui) throws RemoteException {
 
@@ -107,6 +108,10 @@ public class ClientController {
         ReconnectionMessage message = new ReconnectionMessage(id, newId);
         System.out.println("Sending message");
         clientConnectionHandler.sendMessage(message);
+    }
+    public void joinSavedGame(String name) {
+        SavedGameMessage savedGameMessage = new SavedGameMessage(id, name);
+        clientConnectionHandler.sendMessage(savedGameMessage);
     }
     public void joinServer(String ip, int port) {
         try {
@@ -298,7 +303,8 @@ public class ClientController {
     }
 
     //methods called by incoming messages
-    public void loadLobbyInfo(String id, List<String> playerNames, Map<String, Color> playerColors, Map<String, Boolean> playerReady) {
+    public void loadLobbyInfo(String id, List<String> playerNames, Map<String, Color> playerColors, Map<String, Boolean> playerReady, Boolean isSavedGame) {
+        this.isSavedGame = isSavedGame;
         setId(id);
         ui.displayId();
         for (String name : playerNames){
@@ -590,6 +596,24 @@ public class ClientController {
             unavaiableColors.add(p.getColor());
         }
         System.out.println("Game info set");
+        ui.displayGameInfo();
+    }
+
+    public void loadGame(List<AchievementCard> commonAchievements, Deck<GoldCard> goldDeck, Deck<ResourceCard> resourceDeck, AchievementCard secretAchievement, List<Card> hand, int turn, List<Player> players, Chat chat, GameState gameState, String name) {
+        this.commonAchievements = commonAchievements;
+        this.goldDeck = goldDeck;
+        this.resourceDeck = resourceDeck;
+        this.secretAchievement = secretAchievement;
+        this.hand = hand;
+        this.turn = turn;
+        this.players = players;
+        this.chat = chat;
+        this.gameState = gameState;
+        this.myName = name;
+        this.unavaiableColors = new ArrayList<>();
+        for (Player p : players){
+            unavaiableColors.add(p.getColor());
+        }
         ui.displayGameInfo();
     }
 

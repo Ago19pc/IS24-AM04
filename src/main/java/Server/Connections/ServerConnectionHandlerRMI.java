@@ -7,6 +7,8 @@ import Server.Exception.AlreadyFinishedException;
 import Server.Exception.AlreadyStartedException;
 import Server.Exception.PlayerNotFoundByNameException;
 import Server.Exception.TooManyPlayersException;
+import Server.Enums.GameState;
+import Server.Exception.*;
 import Server.Messages.LobbyPlayersMessage;
 import Server.Messages.ToClientMessage;
 import Server.Messages.ToServerMessage;
@@ -221,11 +223,13 @@ public class ServerConnectionHandlerRMI implements ServerConnectionHandler, Remo
         });
         Map<String, Boolean> playerReady = new HashMap<>();
         controller.getPlayerList().forEach(p -> playerReady.put(p.getName(), p.isReady()));
+        Boolean isSavedGame = controller.getGameState().equals(GameState.LOAD_GAME_LOBBY);
         LobbyPlayersMessage message = new LobbyPlayersMessage(
                 controller.getPlayerList().stream().map(p -> p.getName()).toList(),
                 playerColors,
                 playerReady,
-                id
+                id,
+                isSavedGame
         );
         return message;
     }
