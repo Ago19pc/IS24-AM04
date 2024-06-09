@@ -76,7 +76,6 @@ public class ColorReadySceneController extends  SceneController{
 
     public void setColorConfirm(ActionEvent actionEvent) {
         controller.askSetColor(color.toString());
-        readyButton.setDisable(false);
     }
 
     public void sendMessages(ActionEvent actionEvent) {

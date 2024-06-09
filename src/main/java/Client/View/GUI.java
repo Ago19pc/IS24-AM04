@@ -75,11 +75,11 @@ public class GUI implements UI{
     @Override
     public void colorChanged() {
         Platform.runLater(() -> {
-            ((ColorReadySceneController) sceneControllerMap.get(SceneName.SETCOLOR)).confirm_Color_Button.setDisable(false);
-            ((ColorReadySceneController) sceneControllerMap.get(SceneName.SETCOLOR)).green_Button.setDisable(false);
-            ((ColorReadySceneController) sceneControllerMap.get(SceneName.SETCOLOR)).blue_Button.setDisable(false);
-            ((ColorReadySceneController) sceneControllerMap.get(SceneName.SETCOLOR)).yellow_Button.setDisable(false);
-            ((ColorReadySceneController) sceneControllerMap.get(SceneName.SETCOLOR)).red_Button.setDisable(false);
+            ((ColorReadySceneController) sceneControllerMap.get(SceneName.SETCOLOR)).confirm_Color_Button.setDisable(true);
+            ((ColorReadySceneController) sceneControllerMap.get(SceneName.SETCOLOR)).green_Button.setDisable(true);
+            ((ColorReadySceneController) sceneControllerMap.get(SceneName.SETCOLOR)).blue_Button.setDisable(true);
+            ((ColorReadySceneController) sceneControllerMap.get(SceneName.SETCOLOR)).yellow_Button.setDisable(true);
+            ((ColorReadySceneController) sceneControllerMap.get(SceneName.SETCOLOR)).red_Button.setDisable(true);
             ((ColorReadySceneController) sceneControllerMap.get(SceneName.SETCOLOR)).label_color.setOpacity(0);
             ((ColorReadySceneController) sceneControllerMap.get(SceneName.SETCOLOR)).confirm_Color_Button.setOpacity(0);
             ((ColorReadySceneController) sceneControllerMap.get(SceneName.SETCOLOR)).green_Button.setOpacity(0);
@@ -87,9 +87,8 @@ public class GUI implements UI{
             ((ColorReadySceneController) sceneControllerMap.get(SceneName.SETCOLOR)).yellow_Button.setOpacity(0);
             ((ColorReadySceneController) sceneControllerMap.get(SceneName.SETCOLOR)).red_Button.setOpacity(0);
             ((ColorReadySceneController) sceneControllerMap.get(SceneName.SETCOLOR)).readyButton.setOpacity(1);
+            ((ColorReadySceneController) sceneControllerMap.get(SceneName.SETCOLOR)).readyButton.setDisable(false);
             listViewSetUpdate();
-
-
         });
     }
     @Override
@@ -339,6 +338,7 @@ public class GUI implements UI{
             System.out.println("Secret achievement chosen name : "+ name);
             System.out.println("Secret achievement chosen achievement : "+ controller.getSecretAchievement());
             if (name.equals(controller.getMyName())){
+                ((ChooseSecretCardController) sceneControllerMap.get(SceneName.SECRETCARDCHOICE)).confirmation();
                 ((MainBoardSceneController) sceneControllerMap.get(SceneName.GAME)).setSecretCard(controller.getSecretAchievement());
                 stage.setScene(getScene(SceneName.GAME));
             }
@@ -350,6 +350,9 @@ public class GUI implements UI{
     public void startingCardChosen(String name) {
         Platform.runLater(() -> {
             try {
+                if (controller.getMyName().equals(name)) {
+                    ((ChooseStartingCardController) sceneControllerMap.get(SceneName.STARTINGCARDCHOICE)).confirmation();
+                }
                 ((MainBoardSceneController) sceneControllerMap.get(SceneName.GAME)).updateManuscript(name, controller.getPlayerByName(name).getManuscript().getCardByCoord(0,0),0 ,0);
             } catch (PlayerNotFoundByNameException e) {
                 throw new RuntimeException(e);
@@ -426,10 +429,12 @@ public class GUI implements UI{
     @Override
     public void displayPlayerPoints(String playerName) throws PlayerNotFoundByNameException {
         System.out.println("Player points displayed");
+        ((MainBoardSceneController) sceneControllerMap.get(SceneName.GAME)).updateLeaderBoard();
     }
 
     @Override
     public void cardPlaced(String playerName, CornerCardFace cornerCardFace, int x, int y) {
+        System.out.println("Card placed in x: " + x + " y: " + y + " by " + playerName);
         Platform.runLater(() -> {
             ((MainBoardSceneController) sceneControllerMap.get(SceneName.GAME)).updateManuscript(playerName, cornerCardFace, x, y);
             ((MainBoardSceneController) sceneControllerMap.get(SceneName.GAME)).removeCardFromHand(playerName);
@@ -505,7 +510,15 @@ public class GUI implements UI{
                     displayBoardCards();
                     displayCommonAchievements();
                     regenerateManuscript();
+
+                    if (controller.getActivePlayer().getName().equals(controller.getMyName())) {
+                        ((MainBoardSceneController) sceneControllerMap.get(SceneName.GAME)).yourTurnText.setVisible(true);
+                    } else {
+                        ((MainBoardSceneController) sceneControllerMap.get(SceneName.GAME)).yourTurnText.setVisible(false);
+                    }
+
                     secretAchievementChosen(controller.getMyName());
+
                     stage.setScene(getScene(SceneName.GAME));
                     stage.show();
                     break;

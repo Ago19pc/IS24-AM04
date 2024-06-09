@@ -10,7 +10,7 @@ import java.io.IOException;
 public class MainGUI extends Application {
     private static ClientController controller;
     private static GUI gui;
-    public static void main(String[] args)  {
+    public static void main()  {
         controller = new ClientController();
         gui = new GUI(controller);
         launch();

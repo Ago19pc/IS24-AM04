@@ -14,5 +14,8 @@ public class OtherPlayerTab {
         group = new Group();
         tab.setContent(scrollPane);
     }
-    //public void otherUpdateManuscript()
+    public void otherUpdateManuscript() {
+        //TODO
+
+    }
 }
