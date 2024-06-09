@@ -352,6 +352,18 @@ public class MainBoardSceneController extends SceneController {
     public void updateLeaderBoard() {
         List<Player> sorted = new ArrayList<Player>(controller.getPlayers());
         sorted.sort((p1, p2) -> p2.getPoints() - p1.getPoints());
+        if (sorted.size() > 0) {
+            Player1.setText(sorted.get(0).getName() + " " + sorted.get(0).getPoints());
+        }
+        if (sorted.size() > 1) {
+            Player2.setText(sorted.get(1).getName() + " " + sorted.get(1).getPoints());
+        }
+        if (sorted.size() > 2) {
+            Player3.setText(sorted.get(2).getName() + " " + sorted.get(2).getPoints());
+        }
+        if (sorted.size() > 3) {
+            Player4.setText(sorted.get(3).getName() + " " + sorted.get(3).getPoints());
+        }
 
     }
 

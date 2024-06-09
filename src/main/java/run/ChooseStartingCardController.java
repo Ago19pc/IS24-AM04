@@ -46,8 +46,13 @@ public class ChooseStartingCardController extends SceneController {
         chosenCard.setImage(secondCard.getImage());
     }
 
-    public void confirmation() {
+
+    public void confirmationButtonPressed() {
         controller.chooseStartingCardFace(chosenFace);
+
+    }
+
+    public void confirmation() {
         waitText.setVisible(true);
         firstCard.setOpacity(0);
         firstCard.setDisable(true);
@@ -61,6 +66,7 @@ public class ChooseStartingCardController extends SceneController {
         chosenCard.setLayoutX(414);
         chosenCard.setLayoutY(264);
         chosenCard.setOpacity(1);
+
     }
 
     public void setUp(Card card) {

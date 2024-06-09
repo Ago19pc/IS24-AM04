@@ -349,6 +349,7 @@ public class GUI implements UI{
     public void startingCardChosen(String name) {
         Platform.runLater(() -> {
             try {
+                ((ChooseStartingCardController) sceneControllerMap.get(SceneName.STARTINGCARDCHOICE)).confirmation();
                 ((MainBoardSceneController) sceneControllerMap.get(SceneName.GAME)).updateManuscript(name, controller.getPlayerByName(name).getManuscript().getCardByCoord(0,0),0 ,0);
             } catch (PlayerNotFoundByNameException e) {
                 throw new RuntimeException(e);
@@ -425,6 +426,7 @@ public class GUI implements UI{
     @Override
     public void displayPlayerPoints(String playerName) throws PlayerNotFoundByNameException {
         System.out.println("Player points displayed");
+        ((MainBoardSceneController) sceneControllerMap.get(SceneName.GAME)).updateLeaderBoard();
     }
 
     @Override
@@ -513,6 +515,7 @@ public class GUI implements UI{
                     }
 
                     secretAchievementChosen(controller.getMyName());
+
                     stage.setScene(getScene(SceneName.GAME));
                     stage.show();
                     break;

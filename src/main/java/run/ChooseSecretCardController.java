@@ -41,6 +41,11 @@ public class ChooseSecretCardController extends SceneController {
     }
 
     public void confirmation() {
+        confirmButton.setDisable(true);
+        confirmButton.setOpacity(0);
+    }
+
+    public void confirmationButtonPressed() {
         controller.chooseSecretAchievement(index);
     }
 
