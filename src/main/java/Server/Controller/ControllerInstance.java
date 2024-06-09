@@ -26,8 +26,6 @@ import java.util.stream.Collectors;
 public class ControllerInstance implements Controller{
     private GameModel gameModel;
     private final GeneralServerConnectionHandler connectionHandler;
-    private int activePlayerIndex = -1;
-    private boolean lastRound = false;
     private Map<Player, StartingCard> givenStartingCards = new HashMap<>();
     private Map<Player, List<AchievementCard>> givenSecretObjectiveCards = new HashMap<>();
     private GameState gameState = GameState.LOBBY;
@@ -99,19 +97,21 @@ public class ControllerInstance implements Controller{
             commonAchievementCards.add(gameModel.getAchievementDeck().getBoardCard().get(DeckPosition.SECOND_CARD));
             Deck<GoldCard> goldDeck = new Deck<GoldCard>(
                     gameModel.getGoldDeck().getNumberOfCards(),
-                    new ArrayList<>(List.of(gameModel.getGoldDeck().getBoardCard().get(DeckPosition.FIRST_CARD), gameModel.getGoldDeck().getBoardCard().get(DeckPosition.SECOND_CARD)))
+                    new ArrayList<>(List.of(gameModel.getGoldDeck().getTopCardNoPop(), gameModel.getGoldDeck().getBoardCard().get(DeckPosition.FIRST_CARD), gameModel.getGoldDeck().getBoardCard().get(DeckPosition.SECOND_CARD)))
             );
             Deck<ResourceCard> resourceDeck = new Deck<ResourceCard>(
                     gameModel.getResourceDeck().getNumberOfCards(),
-                    new ArrayList<>(List.of(gameModel.getResourceDeck().getBoardCard().get(DeckPosition.FIRST_CARD), gameModel.getResourceDeck().getBoardCard().get(DeckPosition.SECOND_CARD)))
+                    new ArrayList<>(List.of(gameModel.getResourceDeck().getTopCardNoPop(), gameModel.getResourceDeck().getBoardCard().get(DeckPosition.FIRST_CARD), gameModel.getResourceDeck().getBoardCard().get(DeckPosition.SECOND_CARD)))
             );
             List<Client.Player> playerList = new ArrayList<>();
+            System.out.println("Il giocatore attivo è il giocatore numero " + gameModel.getActivePlayerIndex());
+            System.out.println("E' il turno di " + gameModel.getPlayerList().get(gameModel.getActivePlayerIndex()).getName());
             for (Player p : gameModel.getPlayerList()){
                 playerList.add(new Client.Player(
                         p.getName(),
                         p.getPoints(),
                         p.getHand().size(),
-                        activePlayerIndex == getPlayerList().indexOf(p),
+                        gameModel.getActivePlayerIndex() == getPlayerList().indexOf(p),
                         p.getColor(),
                         p.getManuscript()
                 ));
@@ -381,15 +381,15 @@ public class ControllerInstance implements Controller{
      * Sets the next turn
      */
     private void nextTurn(){
-        if(activePlayerIndex == -1){ //sets active player as the first player. If it's not the first turn this is not valid
+        if(gameModel.getActivePlayerIndex() == -1){ //sets active player as the first player. If it's not the first turn this is not valid
             if(gameModel.getTurn() != 0){
                 System.out.println("Active player not set");
                 return;
             }
         }
         //if it is end game and all players have played also an extra round, calculate leaderboard
-        if(gameModel.isEndGamePhase() && activePlayerIndex == getPlayerList().size() - 1 ){
-            if(lastRound){
+        if(gameModel.isEndGamePhase() && gameModel.getActivePlayerIndex() == getPlayerList().size() - 1 ){
+            if(gameModel.isLastRound()){
                 try{
                     computeLeaderboard();
                     return;
@@ -397,11 +397,11 @@ public class ControllerInstance implements Controller{
                     e.printStackTrace();
                 }
             } else {
-                lastRound = true;
+                gameModel.setLastRound(true);
             }
         } else {
             //sets end game if necessary
-            if (activePlayerIndex != -1 && getPlayerList().get(activePlayerIndex).getPoints() >= 20) {
+            if (gameModel.getActivePlayerIndex() != -1 && getPlayerList().get(gameModel.getActivePlayerIndex()).getPoints() >= 20) {
                 try {
                     endGame();
                 } catch (AlreadySetException e) {
@@ -411,20 +411,20 @@ public class ControllerInstance implements Controller{
         }
         //sets new active player
         do {
-            if (activePlayerIndex == gameModel.getPlayerList().size() - 1) {
-                activePlayerIndex = 0;
+            if (gameModel.getActivePlayerIndex() == gameModel.getPlayerList().size() - 1) {
+                gameModel.setActivePlayerIndex(0);
             } else {
-                activePlayerIndex++;
+                gameModel.setActivePlayerIndex(gameModel.getActivePlayerIndex() + 1);
             }
             gameState = GameState.PLACE_CARD;
-        } while (!isOnline(getPlayerList().get(activePlayerIndex)));//if the player is not online skips to the next one
+        } while (!isOnline(getPlayerList().get(gameModel.getActivePlayerIndex())));//if the player is not online skips to the next one
         gameModel.nextTurn();
         try{
             saveGame();
         } catch (IOException e) {
             e.printStackTrace();
         }
-        NewTurnMessage newTurnMessage = new NewTurnMessage(getPlayerList().get(activePlayerIndex).getName(), gameModel.getTurn());
+        NewTurnMessage newTurnMessage = new NewTurnMessage(getPlayerList().get(gameModel.getActivePlayerIndex()).getName(), gameModel.getTurn());
         connectionHandler.sendAllMessage(newTurnMessage);
     }
     public int getTurn() {
@@ -438,7 +438,7 @@ public class ControllerInstance implements Controller{
 
     public void playCard(Player player, int position, int xCoord, int yCoord, Face face) throws TooFewElementsException, InvalidMoveException {
         //if it's not the player's turn, throw exception
-        if(getPlayerList().indexOf(player) != activePlayerIndex){
+        if(getPlayerList().indexOf(player) != gameModel.getActivePlayerIndex()){
             System.out.println("Not player's turn");
             throw new InvalidMoveException("Not player's turn");
         }
@@ -500,7 +500,7 @@ public class ControllerInstance implements Controller{
         if(gameModel.getTurn() < 1) {
             throw new NotYetStartedException("Game not started");
         }
-        if(getPlayerList().indexOf(player) != activePlayerIndex){
+        if(getPlayerList().indexOf(player) != gameModel.getActivePlayerIndex()){
             throw new InvalidMoveException("Not player's turn");
         }
         if(!gameState.equals(GameState.DRAW_CARD)){
@@ -552,8 +552,8 @@ public class ControllerInstance implements Controller{
     private void endGame() throws AlreadySetException {
         gameModel.setEndGamePhase();
         //if it's the last player to play, the extra round starts immediately
-        if(activePlayerIndex == getPlayerList().size() - 1){
-            lastRound = true;
+        if(gameModel.getActivePlayerIndex() == getPlayerList().size() - 1){
+            gameModel.setLastRound(true);
         }
         EndGamePhaseMessage endGamePhaseMessage = new EndGamePhaseMessage();
         connectionHandler.sendAllMessage(endGamePhaseMessage);
@@ -609,8 +609,6 @@ public class ControllerInstance implements Controller{
 
     private void clear() {
         gameModel = new GameModelInstance();
-        activePlayerIndex = -1;
-        lastRound = false;
         givenStartingCards = new HashMap<>();
         givenSecretObjectiveCards = new HashMap<>();
     }
@@ -769,7 +767,7 @@ public class ControllerInstance implements Controller{
                         new DisconnectionTimer(this, connectionHandler, id, 60);
                         break;
                     case PLACE_CARD, DRAW_CARD:
-                        String activePlayerName = getPlayerList().get(activePlayerIndex).getName();
+                        String activePlayerName = getPlayerList().get(gameModel.getActivePlayerIndex()).getName();
                         if(activePlayerName.equals(playerName)){
                             if(gameState.equals(GameState.DRAW_CARD)){
                                 if(!gameModel.getResourceDeck().isEmpty()){
@@ -941,7 +939,7 @@ public class ControllerInstance implements Controller{
                             p.getName(),
                             p.getPoints(),
                             p.getHand().size(),
-                            activePlayerIndex == getPlayerList().indexOf(p),
+                            gameModel.getActivePlayerIndex() == getPlayerList().indexOf(p),
                             p.getColor(),
                             p.getManuscript()
                     ));
