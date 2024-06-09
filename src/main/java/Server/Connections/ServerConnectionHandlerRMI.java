@@ -10,11 +10,13 @@ import Server.Exception.TooManyPlayersException;
 import Server.Enums.GameState;
 import Server.Exception.*;
 import Server.Messages.LobbyPlayersMessage;
+import Server.Messages.PlayerDisconnectedMessage;
 import Server.Messages.ToClientMessage;
 import Server.Messages.ToServerMessage;
 
 import java.net.InetAddress;
 import java.net.NetworkInterface;
+import java.net.UnknownHostException;
 import java.rmi.NotBoundException;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
@@ -149,6 +151,7 @@ public class ServerConnectionHandlerRMI implements ServerConnectionHandler, Remo
                 client.executeMessage(message);
             } catch (RemoteException e) {
                 System.out.println(" Send All Message : Client disconnected");
+                e.printStackTrace();
             }
         }
     }
@@ -164,6 +167,7 @@ public class ServerConnectionHandlerRMI implements ServerConnectionHandler, Remo
             clients.get(id).executeMessage(message);
         } catch (RemoteException e) {
             System.out.println("Send message : Client disconnected");
+            e.printStackTrace();
         }
     }
 
