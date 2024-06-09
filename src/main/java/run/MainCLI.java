@@ -9,7 +9,7 @@ import java.rmi.RemoteException;
 public class MainCLI {
     private static ClientController controller;
     private static CLI cli;
-    public static void main(String[] args) throws RemoteException {
+    public static void main() throws RemoteException {
         controller = new ClientController();
         cli = new CLI(controller);
         cli.start();
