@@ -491,6 +491,15 @@ public class ClientController {
         System.out.println("Secret achievement chosen in ClientController");
         ui.secretAchievementChosen(name);
     }
+    public void setSecretCard(String name, int chosenCard){
+        if (name.equals(myName)){
+            secretAchievement = potentialSecretAchievements.get(chosenCard);
+        }
+        potentialSecretAchievements.stream().forEach(System.out::println);
+        System.out.println(indexofSecretAchievement + " index " + secretAchievement + " secret");
+        System.out.println("Secret achievement chosen in ClientController");
+        ui.secretAchievementChosen(name);
+    }
     public void startingCardChosen(String name, CornerCardFace startingFace) {
         try{
             getPlayerByName(name).initializeManuscript(startingFace);
