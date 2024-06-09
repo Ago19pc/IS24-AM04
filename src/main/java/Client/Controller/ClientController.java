@@ -493,12 +493,9 @@ public class ClientController {
     }
     public void setSecretCard(String name, int chosenCard){
         if (name.equals(myName)){
-            secretAchievement = potentialSecretAchievements.get(chosenCard);
+            indexofSecretAchievement = chosenCard;
+            setSecretCard(name);
         }
-        potentialSecretAchievements.stream().forEach(System.out::println);
-        System.out.println(indexofSecretAchievement + " index " + secretAchievement + " secret");
-        System.out.println("Secret achievement chosen in ClientController");
-        ui.secretAchievementChosen(name);
     }
     public void startingCardChosen(String name, CornerCardFace startingFace) {
         try{
