@@ -58,6 +58,10 @@ public class ClientController {
         this.gameState = GameState.LOBBY;
     }
 
+    public boolean isSavedGame() {
+        return isSavedGame;
+    }
+
     public void setName(String name) {
         this.myName = name;
     }

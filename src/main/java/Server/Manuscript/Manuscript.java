@@ -7,10 +7,7 @@ import Server.Enums.Face;
 import Server.Enums.Symbol;
 
 import java.io.Serializable;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static java.lang.Math.abs;
 
@@ -333,7 +330,7 @@ public class Manuscript implements Serializable {
 
         // NEW:
         // If is all null then is misplaced!
-        if (neighbors.values().stream().allMatch(null)) return false;
+        if (neighbors.values().stream().allMatch(Objects::isNull)) return false;
 
         for(CardCorners corner : neighbors.keySet()){
 

@@ -33,7 +33,9 @@ public class NameReadySceneController extends SceneController{
     public void askSetName(ActionEvent actionEvent) {
         System.out.println("Name Field: " + possible_Name.getText());
         stage.setTitle("Codex Naturalis - " + possible_Name.getText());
-        controller.askSetName(possible_Name.getText());
+        if (controller.isSavedGame()) {
+            controller.joinSavedGame(possible_Name.getText());
+        } else controller.askSetName(possible_Name.getText());
     }
 
     public void cloneListView(ListView<String> other) {
