@@ -147,6 +147,7 @@ public class ServerConnectionHandlerRMI implements ServerConnectionHandler, Remo
                 client.executeMessage(message);
             } catch (RemoteException e) {
                 System.out.println("Client disconnected");
+                e.printStackTrace();
             }
         }
     }
@@ -162,6 +163,7 @@ public class ServerConnectionHandlerRMI implements ServerConnectionHandler, Remo
             clients.get(id).executeMessage(message);
         } catch (RemoteException e) {
             System.out.println("Client disconnected");
+            e.printStackTrace();
         }
     }
 
