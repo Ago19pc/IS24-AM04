@@ -162,6 +162,7 @@ public class MainBoardSceneController extends SceneController {
 
     public void updateManuscript(String name, CardFace cardFace, int x, int y) {
         if (name.equals(controller.getMyName())) {
+            System.out.println("Placing card in your manuscript");
             OnBoardCard card = new OnBoardCard(getImageFromCard(cardFace), x, y, null, this);
             card.place(yourManuscript);
         } else {

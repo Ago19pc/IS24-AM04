@@ -295,6 +295,15 @@ public class Manuscript implements Serializable {
         return this.graph.getCardsUnder(cardFace);
     }
 
+    public Map<CardCorners, CornerCardFace> getNeighbors(int x, int y){
+        Map<CardCorners, CornerCardFace> neighbors = new HashMap<>();
+        neighbors.put(CardCorners.TOP_LEFT, getCardByCoord(x-1, y+1));
+        neighbors.put(CardCorners.TOP_RIGHT, getCardByCoord(x+1, y+1));
+        neighbors.put(CardCorners.BOTTOM_LEFT, getCardByCoord(x-1, y-1));
+        neighbors.put(CardCorners.BOTTOM_RIGHT, getCardByCoord(x+1, y-1));
+        return neighbors;
+    }
+
     /**
      * Checks whether a card is placeable in a certain position
      * @param x the x coordinate

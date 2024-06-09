@@ -484,7 +484,7 @@ public class ControllerInstance implements Controller{
             System.out.println("RequiredQuantity " + requiredQuantity);
             int actualQuantity;
             if (requiredSymbol == Symbol.COVERED_CORNER) {
-                actualQuantity = player.getManuscript().getCardsUnder(cardFace).size();
+                actualQuantity = player.getManuscript().getNeighbors(xCoord, yCoord).size();
             } else {
                 actualQuantity = player.getManuscript().getSymbolCount(requiredSymbol);
                 Symbol finalRequiredSymbol = requiredSymbol;
@@ -878,10 +878,6 @@ public class ControllerInstance implements Controller{
                 connectionHandler.sendMessage(reconnectionNameMessage, playerName);
                 StartingCardsMessage startingCardsMessage = new StartingCardsMessage(givenStartingCards.get(player));
                 connectionHandler.sendMessage(startingCardsMessage, playerName);
-                if(player.getManuscript() != null){
-                    SetStartingCardMessage setStartingCardMessage = new SetStartingCardMessage(playerName, player.getManuscript().getCardByCoord(0, 0));
-                    connectionHandler.sendMessage(setStartingCardMessage, playerName);
-                }
                 StartGameMessage startGameMessage = new StartGameMessage(
                         List.of(
                                 gameModel.getGoldDeck().getTopCardNoPop(),
@@ -936,13 +932,17 @@ public class ControllerInstance implements Controller{
                 commonAchievements.add(gameModel.getAchievementDeck().getBoardCard().get(DeckPosition.SECOND_CARD));
                 AchievementCardsMessage achievementCardsMessage = new AchievementCardsMessage(secretObjectiveCards, commonAchievements);
                 connectionHandler.sendMessage(achievementCardsMessage, playerName);
-                if(player.getSecretObjective() != null){
-                    SetSecretCardMessage setSecretCardMessage = new SetSecretCardMessage(player.getName());
-                    connectionHandler.sendMessage(setSecretCardMessage, playerName);
-                }
                 for(Player p: getPlayerList()){
-                    SetSecretCardMessage setSecretCardMessage = new SetSecretCardMessage(p.getName());
-                    connectionHandler.sendMessage(setSecretCardMessage, playerName);
+                    if(p.getSecretObjective() != null) {
+                        SetSecretCardMessage setSecretCardMessage;
+                        if(p.getName() == playerName){
+                            int chosenCardIndex = givenSecretObjectiveCards.get(p).indexOf(p.getSecretObjective());
+                            setSecretCardMessage = new SetSecretCardMessage(chosenCardIndex, p.getName());
+                        } else {
+                            setSecretCardMessage = new SetSecretCardMessage(p.getName());
+                        }
+                        connectionHandler.sendMessage(setSecretCardMessage, playerName);
+                    }
                 }
                 break;
             default:
