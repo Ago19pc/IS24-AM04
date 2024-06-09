@@ -46,9 +46,9 @@ public class OnBoardCard {
         this.image.setFitHeight(100);
         this.image.setFitWidth(143);
         this.image.setLayoutX(x * 143 - x * 35);
-        this.image.setLayoutY(y * 100 - y * 41);
+        this.image.setLayoutY(y * 100 - y * 159);
         //La prossima volta guarda qui
-        if (occupied == CardCorners.TOP_LEFT) {
+        /*if (occupied == CardCorners.TOP_LEFT) {
             TOP_LEFT.setDisable(true);
         } else if (occupied == CardCorners.TOP_RIGHT) {
             TOP_RIGHT.setDisable(true);
@@ -56,7 +56,7 @@ public class OnBoardCard {
             BOTTOM_LEFT.setDisable(true);
         } else if (occupied == CardCorners.BOTTOM_RIGHT) {
             BOTTOM_RIGHT.setDisable(true);
-        }
+        }*/
 
         TOP_LEFT.setPrefHeight(41);
         TOP_LEFT.setPrefWidth(35);
@@ -73,15 +73,19 @@ public class OnBoardCard {
 
         TOP_LEFT.setLayoutX(this.image.getLayoutX());
         TOP_LEFT.setLayoutY(this.image.getLayoutY());
+        TOP_LEFT.setDisable(true);
 
         TOP_RIGHT.setLayoutX(this.image.getLayoutX() + 108);
         TOP_RIGHT.setLayoutY(this.image.getLayoutY());
+        TOP_RIGHT.setDisable(true);
 
         BOTTOM_LEFT.setLayoutX(this.image.getLayoutX());
         BOTTOM_LEFT.setLayoutY(this.image.getLayoutY() + 59);
+        BOTTOM_LEFT.setDisable(true);
 
         BOTTOM_RIGHT.setLayoutX(this.image.getLayoutX() + 108);
         BOTTOM_RIGHT.setLayoutY(this.image.getLayoutY() + 59);
+        BOTTOM_RIGHT.setDisable(true);
 
     }
 
@@ -92,25 +96,6 @@ public class OnBoardCard {
         yourManuscript.getChildren().add(BOTTOM_LEFT);
         yourManuscript.getChildren().add(BOTTOM_RIGHT);
         onBoardCards.add(this);
-
-        onBoardCards.stream().filter(c -> (c.x == x - 1 || c.x == x + 1) && (c.y == y - 1 || c.y == y + 1)).forEach(c -> {
-            if (c.x == x - 1 && c.y == y - 1) {
-                c.TOP_RIGHT.setDisable(true);
-            } else if (c.x == x + 1 && c.y == y - 1) {
-                c.TOP_LEFT.setDisable(true);
-            } else if (c.x == x - 1 && c.y == y + 1) {
-                c.BOTTOM_RIGHT.setDisable(true);
-            } else if (c.x == x + 1 && c.y == y + 1) {
-                c.BOTTOM_LEFT.setDisable(true);
-            }
-        });
-
-        for (OnBoardCard c : OnBoardCard.onBoardCards) {
-            c.TOP_LEFT.setStyle("-fx-background-color: transparent; -fx-border-width: 0;");
-            c.TOP_RIGHT.setStyle("-fx-background-color: transparent; -fx-border-width: 0;");
-            c.BOTTOM_LEFT.setStyle("-fx-background-color: transparent; -fx-border-width: 0;");
-            c.BOTTOM_RIGHT.setStyle("-fx-background-color: transparent; -fx-border-width: 0;");
-        }
 
     }
 
@@ -144,19 +129,19 @@ public class OnBoardCard {
     }
 
     void playCardTopLeft() {
-        sceneController.placeCard(x - 1, y - 1);
-    }
-
-    void playCardTopRight() {
-        sceneController.placeCard(x + 1, y - 1);
-    }
-
-    void playCardBottomLeft() {
         sceneController.placeCard(x - 1, y + 1);
     }
 
-    void playCardBottomRight() {
+    void playCardTopRight() {
         sceneController.placeCard(x + 1, y + 1);
+    }
+
+    void playCardBottomLeft() {
+        sceneController.placeCard(x - 1, y - 1);
+    }
+
+    void playCardBottomRight() {
+        sceneController.placeCard(x + 1, y - 1);
     }
 
 
