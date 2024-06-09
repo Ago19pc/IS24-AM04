@@ -4,7 +4,9 @@ import Server.Card.CornerCardFace;
 import Server.Enums.Color;
 import Server.Manuscript.Manuscript;
 
-public class Player {
+import java.io.Serializable;
+
+public class Player implements Serializable {
     private final String name;
     private int manuscriptPoints;
     private int achievementPoints;

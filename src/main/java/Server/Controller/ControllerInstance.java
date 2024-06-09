@@ -16,6 +16,7 @@ import Server.Player.Player;
 import Server.Player.PlayerInstance;
 import com.google.gson.Gson;
 
+import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -34,6 +35,21 @@ public class ControllerInstance implements Controller{
     public ControllerInstance(GeneralServerConnectionHandler connectionHandler) {
         this.connectionHandler = connectionHandler;
         this.gameModel = new GameModelInstance();
+        Scanner inputReader = new Scanner(System.in);
+        System.out.println("Vuoi iniziare una nuova partita (n) o caricare una partita salvata (l)?");
+        String input = inputReader.nextLine();
+        if(input.equals("l")){
+            try {
+                loadGame();
+                gameState = GameState.LOAD_GAME_LOBBY;
+                System.out.println("Partita caricata. I giocatori sono:");
+                for (Player p : gameModel.getPlayerList()){
+                    System.out.println(p.getName());
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
     @Override
     public void addPlayer(String name, String clientID) throws TooManyPlayersException, AlreadyStartedException, IllegalArgumentException {
@@ -51,6 +67,70 @@ public class ControllerInstance implements Controller{
             connectionHandler.sendAllMessage(playerMessage);
         } else {
             throw new TooManyPlayersException("Too many players");
+        }
+    }
+    @Override
+    public void addSavedPlayer(String clientId, String name) throws AlreadyStartedException, IllegalArgumentException, PlayerNotFoundByNameException {
+        if(gameState != GameState.LOAD_GAME_LOBBY) throw new AlreadyStartedException("Game already started");
+        if(connectionHandler.isNameConnectedToId(name)) throw new IllegalArgumentException("Player has already connected");
+        Player player = null;
+        for (Player p : gameModel.getPlayerList()){
+            if (p.getName().equals(name)){
+                player = p;
+            }
+        }
+        if(player == null) throw new PlayerNotFoundByNameException("Player not found");
+        connectionHandler.addPlayerByID(name, clientId);
+        PlayerNameMessage playerNameMessage = new PlayerNameMessage(name, true);
+        connectionHandler.sendMessage(playerNameMessage, name);
+        NewPlayerMessage playerMessage = new NewPlayerMessage(gameModel.getPlayerList());
+        connectionHandler.sendAllMessage(playerMessage);
+        Boolean allSet = true;
+        for (Player p : gameModel.getPlayerList()){
+            if (!connectionHandler.isNameConnectedToId(p.getName())){
+                allSet = false;
+                break;
+            }
+        }
+        if (allSet) {
+            gameState = GameState.PLACE_CARD;
+            List<AchievementCard> commonAchievementCards = new ArrayList<>();
+            commonAchievementCards.add(gameModel.getAchievementDeck().getBoardCard().get(DeckPosition.FIRST_CARD));
+            commonAchievementCards.add(gameModel.getAchievementDeck().getBoardCard().get(DeckPosition.SECOND_CARD));
+            Deck<GoldCard> goldDeck = new Deck<GoldCard>(
+                    gameModel.getGoldDeck().getNumberOfCards(),
+                    new ArrayList<>(List.of(gameModel.getGoldDeck().getBoardCard().get(DeckPosition.FIRST_CARD), gameModel.getGoldDeck().getBoardCard().get(DeckPosition.SECOND_CARD)))
+            );
+            Deck<ResourceCard> resourceDeck = new Deck<ResourceCard>(
+                    gameModel.getResourceDeck().getNumberOfCards(),
+                    new ArrayList<>(List.of(gameModel.getResourceDeck().getBoardCard().get(DeckPosition.FIRST_CARD), gameModel.getResourceDeck().getBoardCard().get(DeckPosition.SECOND_CARD)))
+            );
+            List<Client.Player> playerList = new ArrayList<>();
+            for (Player p : gameModel.getPlayerList()){
+                playerList.add(new Client.Player(
+                        p.getName(),
+                        p.getPoints(),
+                        p.getHand().size(),
+                        activePlayerIndex == getPlayerList().indexOf(p),
+                        p.getColor(),
+                        p.getManuscript()
+                ));
+            }
+            for(Player p : gameModel.getPlayerList()){
+                SavedGameMessage message = new SavedGameMessage(
+                        p.getName(),
+                        commonAchievementCards,
+                        goldDeck,
+                        resourceDeck,
+                        p.getSecretObjective(),
+                        p.getHand(),
+                        gameModel.getTurn(),
+                        playerList,
+                        gameModel.getChat(),
+                        gameState
+                );
+                connectionHandler.sendMessage(message, p.getName());
+            }
         }
     }
     @Override
@@ -103,6 +183,10 @@ public class ControllerInstance implements Controller{
 
     public List<Player> getPlayerList() {
         return gameModel.getPlayerList();
+    }
+
+    public GameState getGameState() {
+        return gameState;
     }
 
     /**
@@ -335,6 +419,11 @@ public class ControllerInstance implements Controller{
             gameState = GameState.PLACE_CARD;
         } while (!isOnline(getPlayerList().get(activePlayerIndex)));//if the player is not online skips to the next one
         gameModel.nextTurn();
+        try{
+            saveGame();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         NewTurnMessage newTurnMessage = new NewTurnMessage(getPlayerList().get(activePlayerIndex).getName(), gameModel.getTurn());
         connectionHandler.sendAllMessage(newTurnMessage);
     }
@@ -573,17 +662,27 @@ public class ControllerInstance implements Controller{
     }
 
     public void saveGame() throws IOException {
-        Gson gson = new Gson();
-        FileWriter fileWriter = new FileWriter("saves/game.json");
-        gson.toJson(gameModel, fileWriter);
-        fileWriter.close();
+        try {
+            Gson gson = new Gson();
+            File file = new File(getClass().getResource("/saves/game.json").toURI());
+            FileWriter fileWriter = new FileWriter(file);
+            gson.toJson(gameModel, fileWriter);
+            fileWriter.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public void loadGame() throws IOException {
-        Gson gson = new Gson();
-        FileReader fileReader = new FileReader("saves/game.json");
-        gameModel = gson.fromJson(fileReader, GameModelInstance.class);
-        fileReader.close();
+        try {
+            Gson gson = new Gson();
+            File file = new File(getClass().getResource("/saves/game.json").toURI());
+            FileReader fileReader = new FileReader(file);
+            gameModel = gson.fromJson(fileReader, GameModelInstance.class);
+            fileReader.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override

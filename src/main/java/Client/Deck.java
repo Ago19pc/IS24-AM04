@@ -2,10 +2,11 @@ package Client;
 
 import Server.Card.Card;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Deck<T> {
+public class Deck<T> implements Serializable {
     private int deckSize;
     private List<T> boardCards;
 

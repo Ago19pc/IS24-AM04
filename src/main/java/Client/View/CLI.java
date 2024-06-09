@@ -104,6 +104,8 @@ public class CLI extends Thread implements UI {
                 printOnNewLine("");
                 printOnNewLine("  reconnect <id>: si riconnette alla partita in corso come giocatore con l'id specificato");
                 printOnNewLine("");
+                printOnNewLine("  connect <name>: si riconnette alla partita salvata come giocatore con il nome specificato");
+                printOnNewLine("");
                 printPromptLine();
                 break;
             case "join":
@@ -228,6 +230,13 @@ public class CLI extends Thread implements UI {
                     return;
                 }
                 controller.reconnect(args[1]);
+                break;
+            case "connect":
+                if(args.length != 2){
+                    printOnNewLine("Utilizzo corretto: connect <name>");
+                    return;
+                }
+                controller.joinSavedGame(args[1]);
                 break;
             default:
                 printOnNewLine("Comando non valido. Digita \"help\" per la lista dei comandi");
