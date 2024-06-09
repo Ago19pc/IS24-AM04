@@ -144,19 +144,19 @@ public class OnBoardCard {
     }
 
     void playCardTopLeft() {
-        sceneController.placeCard(x - 1, y - 1);
-    }
-
-    void playCardTopRight() {
-        sceneController.placeCard(x + 1, y - 1);
-    }
-
-    void playCardBottomLeft() {
         sceneController.placeCard(x - 1, y + 1);
     }
 
-    void playCardBottomRight() {
+    void playCardTopRight() {
         sceneController.placeCard(x + 1, y + 1);
+    }
+
+    void playCardBottomLeft() {
+        sceneController.placeCard(x - 1, y - 1);
+    }
+
+    void playCardBottomRight() {
+        sceneController.placeCard(x + 1, y - 1);
     }
 
 

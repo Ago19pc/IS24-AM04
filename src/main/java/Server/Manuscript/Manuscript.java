@@ -330,7 +330,14 @@ public class Manuscript implements Serializable {
         neighbors.put(CardCorners.BOTTOM_RIGHT, getCardByCoord(x+1, y-1));*/
         //l'errore è da qualche parte nel for loop, bisogna fare il nullpointerexception per getCardByCoord
         System.out.println(neighbors.keySet());
+
+        // NEW:
+        // If is all null then is misplaced!
+        if (neighbors.values().stream().allMatch(null)) return false;
+
         for(CardCorners corner : neighbors.keySet()){
+
+
             //if(neighbors.get(corner) != null){
             if(neighbors.get(corner).getCornerSymbols().get(corner.getOppositeCorner()) == Symbol.NONE){
                 System.out.println(neighbors.get(corner).getCornerSymbols() + " Return false in isPlaceble with corner" + corner + " and oppositeCorner " + corner.getOppositeCorner() );
