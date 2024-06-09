@@ -350,7 +350,9 @@ public class GUI implements UI{
     public void startingCardChosen(String name) {
         Platform.runLater(() -> {
             try {
-                ((ChooseStartingCardController) sceneControllerMap.get(SceneName.STARTINGCARDCHOICE)).confirmation();
+                if (controller.getMyName().equals(name)) {
+                    ((ChooseStartingCardController) sceneControllerMap.get(SceneName.STARTINGCARDCHOICE)).confirmation();
+                }
                 ((MainBoardSceneController) sceneControllerMap.get(SceneName.GAME)).updateManuscript(name, controller.getPlayerByName(name).getManuscript().getCardByCoord(0,0),0 ,0);
             } catch (PlayerNotFoundByNameException e) {
                 throw new RuntimeException(e);
