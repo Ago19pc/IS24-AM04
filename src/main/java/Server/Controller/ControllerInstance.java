@@ -469,18 +469,17 @@ public class ControllerInstance implements Controller{
         }
         System.out.println("ScoreRequirements " + scoreRequirements + "Player " + player.getName() + " CardPoints " + cardPoints);
         if (scoreRequirements != null) {
-            Map<Symbol, Integer> finalScoreRequirements = scoreRequirements;
-            scoreRequirements.keySet().stream().forEach(symbol -> {
-                if (finalScoreRequirements.get(symbol) == 0) {
-                    finalScoreRequirements.remove(symbol);
-                }
-            });
-            System.out.println("///////////////////////////");
-            System.out.println("ScoreRequirements " + finalScoreRequirements + "Player " + player.getName() + " CardPoints " + cardPoints);
             Symbol requiredSymbol = (Symbol) scoreRequirements.keySet().toArray()[0];
-            System.out.println("///////////////////////////");
+            int i = 0;
+            for (Symbol symbol : scoreRequirements.keySet()) {
+                if (scoreRequirements.get(symbol) != 0) {
+                    requiredSymbol = (Symbol) scoreRequirements.keySet().toArray()[i];
+                }
+                i++;
+            }
+            /*System.out.println("///////////////////////////");
             System.out.println("RequiredSymbol " + requiredSymbol);
-            System.out.println("///////////////////////////");
+            System.out.println("///////////////////////////");*/
             int requiredQuantity = scoreRequirements.get(requiredSymbol);
             System.out.println("RequiredQuantity " + requiredQuantity);
             int actualQuantity;
@@ -488,13 +487,18 @@ public class ControllerInstance implements Controller{
                 actualQuantity = player.getManuscript().getCardsUnder(cardFace).size();
             } else {
                 actualQuantity = player.getManuscript().getSymbolCount(requiredSymbol);
+                Symbol finalRequiredSymbol = requiredSymbol;
                 int quantityOnCard = cardFace.getCornerSymbols().entrySet().stream()
-                        .filter(entry -> entry.getValue() == requiredSymbol).collect(Collectors.toList()).size();
+                        .filter(entry -> entry.getValue() == finalRequiredSymbol).collect(Collectors.toList()).size();
                 actualQuantity += quantityOnCard;
             }
             //System.out.println("RequiredSymbols " + requiredSymbol + " ScoreRequirements" + scoreRequirements);
-            obtainedPoints = actualQuantity / requiredQuantity * cardPoints;
-            player.addPoints(obtainedPoints);
+            if(requiredQuantity != 0){
+                obtainedPoints = actualQuantity / requiredQuantity * cardPoints;
+                player.addPoints(obtainedPoints);
+            } else {
+                player.addPoints(cardPoints);
+            }
         } else {
             player.addPoints(cardPoints);
         }
