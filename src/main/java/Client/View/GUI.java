@@ -61,9 +61,14 @@ public class GUI implements UI{
     @Override
     public void nameChanged(String name) {
         Platform.runLater(() -> {
-            ((ColorReadySceneController) sceneControllerMap.get(SceneName.SETCOLOR)).messageToSend.setPromptText("Scrivi un messaggio!");
-            stage.setScene(getScene(SceneName.SETCOLOR));
-            stage.show();
+            if (controller.isSavedGame()) {
+                //todo: implement graphically with another scene
+                System.out.println("WAITING FOR OTHERS, TODO");
+            } else {
+                ((ColorReadySceneController) sceneControllerMap.get(SceneName.SETCOLOR)).messageToSend.setPromptText("Scrivi un messaggio!");
+                stage.setScene(getScene(SceneName.SETCOLOR));
+                stage.show();
+            }
         });
     }
 

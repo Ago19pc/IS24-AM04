@@ -3,6 +3,7 @@ package Server.Connections;
 
 import Server.Controller.Controller;
 import Server.Enums.Color;
+import Server.Enums.GameState;
 import Server.Exception.*;
 import Server.Messages.*;
 
@@ -89,11 +90,13 @@ public class ServerConnectionHandlerSOCKET extends Thread implements ServerConne
                 controller.getPlayerList().forEach(p -> playerColors.put(p.getName(), p.getColor()));
                 Map<String, Boolean> playerReady = new HashMap<>();
                 controller.getPlayerList().forEach(p -> playerReady.put(p.getName(), p.isReady()));
+                Boolean isSavedGame = controller.getGameState().equals(GameState.LOAD_GAME_LOBBY);
                 LobbyPlayersMessage message = new LobbyPlayersMessage(
                         controller.getPlayerList().stream().map(p -> p.getName()).toList(),
                         playerColors,
                         playerReady,
-                        id
+                        id,
+                        isSavedGame
                 );
                 t.sendMessage(message);
             }

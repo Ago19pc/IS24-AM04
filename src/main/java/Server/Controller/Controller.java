@@ -2,10 +2,7 @@ package Server.Controller;
 
 import Server.Chat.Message;
 import Server.Connections.GeneralServerConnectionHandler;
-import Server.Enums.Color;
-import Server.Enums.DeckPosition;
-import Server.Enums.Decks;
-import Server.Enums.Face;
+import Server.Enums.*;
 import Server.Exception.*;
 import Server.Player.Player;
 
@@ -29,6 +26,7 @@ public interface Controller {
 
     public void setOffline(String id);
 
+    public GameState getGameState();
 
     /**
      * set the player color
@@ -142,5 +140,7 @@ public interface Controller {
     public void reactToDisconnection(String id) throws AlreadyFinishedException, PlayerNotFoundByNameException;
 
     public void reconnect(String newId, String oldId) throws IllegalArgumentException, AlreadySetException, NotYetStartedException, AlreadyFinishedException;
+
+    public void addSavedPlayer(String id, String name) throws AlreadyStartedException, IllegalArgumentException, PlayerNotFoundByNameException;
 }
 
