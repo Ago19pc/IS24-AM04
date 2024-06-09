@@ -505,6 +505,13 @@ public class GUI implements UI{
                     displayBoardCards();
                     displayCommonAchievements();
                     regenerateManuscript();
+
+                    if (controller.getActivePlayer().getName().equals(controller.getMyName())) {
+                        ((MainBoardSceneController) sceneControllerMap.get(SceneName.GAME)).yourTurnText.setVisible(true);
+                    } else {
+                        ((MainBoardSceneController) sceneControllerMap.get(SceneName.GAME)).yourTurnText.setVisible(false);
+                    }
+
                     secretAchievementChosen(controller.getMyName());
                     stage.setScene(getScene(SceneName.GAME));
                     stage.show();
