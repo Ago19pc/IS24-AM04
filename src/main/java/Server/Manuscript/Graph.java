@@ -1,7 +1,6 @@
 package Server.Manuscript;
 
 
-
 import Server.Card.CornerCardFace;
 import Server.Enums.CardCorners;
 

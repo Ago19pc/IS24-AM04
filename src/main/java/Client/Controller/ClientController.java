@@ -7,7 +7,6 @@ import Client.View.UI;
 import Server.Card.*;
 import Server.Chat.Chat;
 import Server.Chat.Message;
-import Server.Deck.GoldDeck;
 import Server.Enums.*;
 import Server.Exception.ClientExecuteNotCallableException;
 import Server.Exception.PlayerNotFoundByNameException;
@@ -59,6 +58,16 @@ public class ClientController {
         this.gameState = GameState.LOBBY;
     }
 
+    public boolean isSavedGame() {
+        return isSavedGame;
+    }
+
+    public void setName(String name) {
+        this.myName = name;
+    }
+    public List<AchievementCard> getPotentialSecretAchievements() {
+        return potentialSecretAchievements;
+    }
     public void setChosenHandCard(Integer chosenHandCard) {
         this.chosenHandCard = chosenHandCard;
     }
@@ -99,7 +108,9 @@ public class ClientController {
 
     //ui actions
     public void reconnect(String newId) {
+        System.out.println("Reconnecting");
         ReconnectionMessage message = new ReconnectionMessage(id, newId);
+        System.out.println("Sending message");
         clientConnectionHandler.sendMessage(message);
     }
     public void joinSavedGame(String name) {
@@ -419,6 +430,10 @@ public class ClientController {
         try {
             Player p = getPlayerByName(name);
             p.setHandSize(3);
+            if (resourceDeck == null || goldDeck == null){
+                resourceDeck = new Deck<ResourceCard>();
+                goldDeck = new Deck<GoldCard>();
+            }
             resourceDeck.setDeckSize(resourceDeck.getDeckSize() - 2);
             goldDeck.setDeckSize(goldDeck.getDeckSize() - 1);
             ui.otherPlayerInitialHand(name);
@@ -467,9 +482,13 @@ public class ClientController {
         }
     }
     public void setSecretCard(String name) {
+        System.out.println("myname " + myName);
         if (name.equals(myName)){
             secretAchievement = potentialSecretAchievements.get(indexofSecretAchievement);
         }
+        potentialSecretAchievements.stream().forEach(System.out::println);
+        System.out.println(indexofSecretAchievement + " index " + secretAchievement + " secret");
+        System.out.println("Secret achievement chosen in ClientController");
         ui.secretAchievementChosen(name);
     }
     public void startingCardChosen(String name, CornerCardFace startingFace) {
@@ -563,6 +582,8 @@ public class ClientController {
     }
 
     public void setGameInfo(String id, List<AchievementCard> commonAchievements, Deck<GoldCard> goldDeck, Deck<ResourceCard> resourceDeck, String name, AchievementCard secretAchievement, List<Card> hand, int turn, List<Player> players, Chat chat, GameState gameState) {
+
+
         this.id = id;
         this.commonAchievements = commonAchievements;
         this.goldDeck = goldDeck;
@@ -578,6 +599,7 @@ public class ClientController {
         for (Player p : players){
             unavaiableColors.add(p.getColor());
         }
+        System.out.println("Game info set");
         ui.displayGameInfo();
     }
 

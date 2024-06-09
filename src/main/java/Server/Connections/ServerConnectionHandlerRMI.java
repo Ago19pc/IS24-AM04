@@ -3,16 +3,18 @@ package Server.Connections;
 import Client.Connection.ClientConnectionHandler;
 import Server.Controller.Controller;
 import Server.Enums.Color;
+import Server.Exception.AlreadyFinishedException;
+import Server.Exception.AlreadyStartedException;
+import Server.Exception.PlayerNotFoundByNameException;
+import Server.Exception.TooManyPlayersException;
 import Server.Enums.GameState;
 import Server.Exception.*;
 import Server.Messages.LobbyPlayersMessage;
-import Server.Messages.PlayerDisconnectedMessage;
 import Server.Messages.ToClientMessage;
 import Server.Messages.ToServerMessage;
 
 import java.net.InetAddress;
 import java.net.NetworkInterface;
-import java.net.UnknownHostException;
 import java.rmi.NotBoundException;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
@@ -146,7 +148,7 @@ public class ServerConnectionHandlerRMI implements ServerConnectionHandler, Remo
             try {
                 client.executeMessage(message);
             } catch (RemoteException e) {
-                System.out.println("Client disconnected");
+                System.out.println(" Send All Message : Client disconnected");
             }
         }
     }
@@ -161,7 +163,7 @@ public class ServerConnectionHandlerRMI implements ServerConnectionHandler, Remo
         try{
             clients.get(id).executeMessage(message);
         } catch (RemoteException e) {
-            System.out.println("Client disconnected");
+            System.out.println("Send message : Client disconnected");
         }
     }
 
@@ -173,6 +175,7 @@ public class ServerConnectionHandlerRMI implements ServerConnectionHandler, Remo
     @Override
     public void executeMessage(ToServerMessage message) {
         synchronized (controller) {
+            System.out.println("Executing message");
             message.serverExecute(controller);
             controller.notifyAll();
         }

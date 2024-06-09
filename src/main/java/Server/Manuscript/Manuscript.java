@@ -7,10 +7,9 @@ import Server.Enums.Face;
 import Server.Enums.Symbol;
 
 import java.io.Serializable;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+
+import static java.lang.Math.abs;
 
 public class Manuscript implements Serializable {
     private final Graph graph;
@@ -305,7 +304,7 @@ public class Manuscript implements Serializable {
      */
     public boolean isPlaceable(int x, int y, CornerCardFace cardFace){
         //The coordinates must be valid: both even or both odd. This solves the problem where a card is adjacient to another one on more than one corner
-        if((x % 2 == 0 && y % 2 != 0) || (x % 2 != 0 && y % 2 == 0)){
+        if(/*(x % 2 == 0 && y % 2 != 0) || (x % 2 != 0 && y % 2 == 0)*/(abs(x)+abs(y)) % 2 != 0){
             return false;
         }
         //A card cannot be placed over another card
@@ -314,17 +313,37 @@ public class Manuscript implements Serializable {
         }
         //A card cannot be placed over a "NONE" symbol
         Map<CardCorners, CornerCardFace> neighbors = new HashMap<>();
-        neighbors.put(CardCorners.TOP_LEFT, getCardByCoord(x-1, y+1));
+        if(getCardByCoord(x-1, y+1) != null)
+            neighbors.put(CardCorners.TOP_LEFT, getCardByCoord(x-1, y+1));
+        if(getCardByCoord(x+1, y+1) != null)
+            neighbors.put(CardCorners.TOP_RIGHT, getCardByCoord(x+1, y+1));
+        if(getCardByCoord(x-1, y-1) != null)
+            neighbors.put(CardCorners.BOTTOM_LEFT, getCardByCoord(x-1, y-1));
+        if(getCardByCoord(x+1, y-1) != null)
+            neighbors.put(CardCorners.BOTTOM_RIGHT, getCardByCoord(x+1, y-1));
+        /*neighbors.put(CardCorners.TOP_LEFT, getCardByCoord(x-1, y+1));
         neighbors.put(CardCorners.TOP_RIGHT, getCardByCoord(x+1, y+1));
         neighbors.put(CardCorners.BOTTOM_LEFT, getCardByCoord(x-1, y-1));
-        neighbors.put(CardCorners.BOTTOM_RIGHT, getCardByCoord(x+1, y-1));
+        neighbors.put(CardCorners.BOTTOM_RIGHT, getCardByCoord(x+1, y-1));*/
+        //l'errore è da qualche parte nel for loop, bisogna fare il nullpointerexception per getCardByCoord
+        System.out.println(neighbors.keySet());
+
+        // NEW:
+        // If is all null then is misplaced!
+        if (neighbors.values().stream().allMatch(Objects::isNull)) return false;
+
         for(CardCorners corner : neighbors.keySet()){
-            if(neighbors.get(corner) != null){
-                if(neighbors.get(corner).getCornerSymbols().get(corner.getOppositeCorner()) == Symbol.NONE){
-                    return false;
-                }
+
+
+            //if(neighbors.get(corner) != null){
+            if(neighbors.get(corner).getCornerSymbols().get(corner.getOppositeCorner()) == Symbol.NONE){
+                System.out.println(neighbors.get(corner).getCornerSymbols() + " Return false in isPlaceble with corner" + corner + " and oppositeCorner " + corner.getOppositeCorner() );
+                return false;
             }
+            //}
+            System.out.println("End a Cycle");
         }
+        System.out.println("End");
         //If the face has placement requirements, they need to be met
         try{
             Map<Symbol, Integer> placementRequirements = cardFace.getPlacementRequirements();
@@ -339,5 +358,9 @@ public class Manuscript implements Serializable {
             //do nothing
         }
         return true;
+    }
+
+    public List<CornerCardFace> getAllCards() {
+        return graph.getAllCards();
     }
 }

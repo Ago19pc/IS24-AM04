@@ -46,7 +46,7 @@
             <Font size="32.0" />
          </font>
       </Label>
-      <Button fx:id="readyButton" layoutX="299.0" layoutY="319.0" mnemonicParsing="false" onAction="#askSetReady" opacity="0.0" prefHeight="60.0" prefWidth="144.0" style="-fx-background-color: transparent; -fx-background-radius: 3; -fx-border-color: black;" text="Ready">
+      <Button fx:id="readyButton" disable="true" layoutX="299.0" layoutY="319.0" mnemonicParsing="false" onAction="#askSetReady" opacity="0.0" prefHeight="60.0" prefWidth="144.0" style="-fx-background-color: transparent; -fx-background-radius: 3; -fx-border-color: black;" text="Ready">
          <font>
             <Font size="32.0" />
          </font>
