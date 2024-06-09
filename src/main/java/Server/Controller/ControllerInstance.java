@@ -848,7 +848,7 @@ public class ControllerInstance implements Controller{
         }
 
         switch (gameState){
-            case LOBBY:
+            case LOBBY, LOAD_GAME_LOBBY:
                 throw new NotYetStartedException ("Game not started");
             case LEADERBOARD:
                 throw  new AlreadyFinishedException("Game already finished");
@@ -857,6 +857,8 @@ public class ControllerInstance implements Controller{
                 connectionHandler.setOnline(newId);
                 connectionHandler.changePlayerId(playerName, oldId);
                 System.out.println("Player " + playerName + " has now id " + oldId + "=" + connectionHandler.getIdByName(playerName));
+                ReconnectionNameMessage reconnectionNameMessage = new ReconnectionNameMessage(playerName);
+                connectionHandler.sendMessage(reconnectionNameMessage, playerName);
                 StartingCardsMessage startingCardsMessage = new StartingCardsMessage(givenStartingCards.get(player));
                 connectionHandler.sendMessage(startingCardsMessage, playerName);
                 StartGameMessage startGameMessage = new StartGameMessage(
@@ -882,6 +884,8 @@ public class ControllerInstance implements Controller{
             case CHOOSE_SECRET_ACHIEVEMENT:
                 connectionHandler.setOnline(newId);
                 connectionHandler.changePlayerId(playerName, oldId);
+                reconnectionNameMessage = new ReconnectionNameMessage(playerName);
+                connectionHandler.sendMessage(reconnectionNameMessage, playerName);
                 StartGameMessage startMessage = new StartGameMessage(
                         List.of(
                                 gameModel.getGoldDeck().getTopCardNoPop(),
