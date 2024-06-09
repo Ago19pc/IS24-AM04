@@ -24,7 +24,7 @@
                      <children>
                         <Label fx:id="Player1" layoutX="68.0" layoutY="66.0" prefHeight="69.0" prefWidth="500.0" textAlignment="CENTER" />
                         <Label fx:id="Player2" layoutX="68.0" layoutY="153.0" prefHeight="69.0" prefWidth="500.0" textAlignment="CENTER" />
-                        <Label fx:id="Player13" layoutX="68.0" layoutY="240.0" prefHeight="69.0" prefWidth="500.0" textAlignment="CENTER" />
+                        <Label fx:id="Player3" layoutX="68.0" layoutY="240.0" prefHeight="69.0" prefWidth="500.0" textAlignment="CENTER" />
                         <Label fx:id="Player4" layoutX="68.0" layoutY="327.0" prefHeight="69.0" prefWidth="500.0" textAlignment="CENTER" />
                      </children>
                   </AnchorPane>
