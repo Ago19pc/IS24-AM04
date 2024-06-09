@@ -51,6 +51,7 @@ public class ClientController {
     private int indexofSecretAchievement;
     private List<AchievementCard> potentialSecretAchievements;
     private Integer chosenHandCard;
+    private Boolean isSavedGame;
 
     public void main(UI ui) throws RemoteException {
 
@@ -295,7 +296,8 @@ public class ClientController {
     }
 
     //methods called by incoming messages
-    public void loadLobbyInfo(String id, List<String> playerNames, Map<String, Color> playerColors, Map<String, Boolean> playerReady) {
+    public void loadLobbyInfo(String id, List<String> playerNames, Map<String, Color> playerColors, Map<String, Boolean> playerReady, Boolean isSavedGame) {
+        this.isSavedGame = isSavedGame;
         setId(id);
         ui.displayId();
         for (String name : playerNames){

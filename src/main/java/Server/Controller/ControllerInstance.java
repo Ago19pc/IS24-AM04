@@ -185,6 +185,10 @@ public class ControllerInstance implements Controller{
         return gameModel.getPlayerList();
     }
 
+    public GameState getGameState() {
+        return gameState;
+    }
+
     /**
      * Shuffles the player list and sends the new order to all players
      */
