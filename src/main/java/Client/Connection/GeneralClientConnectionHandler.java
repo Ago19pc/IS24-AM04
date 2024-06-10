@@ -69,7 +69,6 @@ public class GeneralClientConnectionHandler {
     public void sendMessage(ToServerMessage message){
         if(trueifRMI) {
             try {
-                System.out.println("Sending message to server");
                 clientConnectionHandlerRMI.sendMessage(message);
             } catch (IOException e) {
                 e.printStackTrace();

@@ -309,42 +309,34 @@ public class MainBoardSceneController extends SceneController {
                     if(controller.getPlayerByName(controller.getMyName()).getManuscript().isPlaceable(c.x - 1, c.y - 1, face)) {
                         c.BOTTOM_LEFT.setStyle("-fx-background-color: transparent; -fx-border-width: 2; -fx-border-color: gold;");
                         c.BOTTOM_LEFT.setDisable(false);
-                        System.out.println("CornerCardFace: " + face + "botton Bottom_Left enabled");
                     }
                     else {
                         c.BOTTOM_LEFT.setStyle("-fx-background-color: transparent; -fx-border-width: 0;");
                         c.BOTTOM_LEFT.setDisable(true);
-                        System.out.println("CornerCardFace: " + face + "botton Bottom_Left disabled");
                     }
                     if(controller.getPlayerByName(controller.getMyName()).getManuscript().isPlaceable(c.x + 1, c.y - 1, face)){
                         c.BOTTOM_RIGHT.setStyle("-fx-background-color: transparent; -fx-border-width: 2; -fx-border-color: gold;");
                         c.BOTTOM_RIGHT.setDisable(false);
-                        System.out.println("CornerCardFace: " + face + "botton Bottom_Right enabled");
                     }
                     else {
                         c.BOTTOM_RIGHT.setStyle("-fx-background-color: transparent; -fx-border-width: 0;");
                         c.BOTTOM_RIGHT.setDisable(true);
-                        System.out.println("CornerCardFace: " + face + "botton Bottom_right disabled");
                     }
                     if(controller.getPlayerByName(controller.getMyName()).getManuscript().isPlaceable(c.x - 1, c.y + 1, face)){
                         c.TOP_LEFT.setStyle("-fx-background-color: transparent; -fx-border-width: 2; -fx-border-color: gold;");
                         c.TOP_LEFT.setDisable(false);
-                        System.out.println("CornerCardFace: " + face + "botton Top_Left enabled");
                     }
                     else {
                         c.TOP_LEFT.setStyle("-fx-background-color: transparent; -fx-border-width: 0;");
                         c.TOP_LEFT.setDisable(true);
-                        System.out.println("CornerCardFace: " + face + "botton Top_Left disabled");
                     }
                     if(controller.getPlayerByName(controller.getMyName()).getManuscript().isPlaceable(c.x + 1, c.y + 1, face)){
                         c.TOP_RIGHT.setStyle("-fx-background-color: transparent; -fx-border-width: 2; -fx-border-color: gold;");
                         c.TOP_RIGHT.setDisable(false);
-                        System.out.println("CornerCardFace: " + face + "botton Top_Right enabled");
                     }
                     else {
                         c.TOP_RIGHT.setStyle("-fx-background-color: transparent; -fx-border-width: 0;");
                         c.TOP_RIGHT.setDisable(true);
-                        System.out.println("CornerCardFace: " + face + "botton Top_Right disabled");
                     }
                 } catch (PlayerNotFoundByNameException e) {
                     throw new RuntimeException(e);
@@ -462,6 +454,7 @@ public class MainBoardSceneController extends SceneController {
      * Updates the player order in the leaderboard tab
      */
     public void updateLeaderBoard() {
+        System.out.println("Leaderboard updated");
         List<Player> sorted = new ArrayList<Player>(controller.getPlayers());
         sorted.sort((p1, p2) -> p2.getPoints() - p1.getPoints());
         if (sorted.size() > 0) {

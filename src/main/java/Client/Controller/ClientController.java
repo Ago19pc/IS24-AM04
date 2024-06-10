@@ -108,9 +108,7 @@ public class ClientController {
 
     //ui actions
     public void reconnect(String newId) {
-        System.out.println("Reconnecting");
         ReconnectionMessage message = new ReconnectionMessage(id, newId);
-        System.out.println("Sending message");
         clientConnectionHandler.sendMessage(message);
     }
     public void joinSavedGame(String name) {
@@ -123,7 +121,6 @@ public class ClientController {
         } catch (RemoteException e) {
             throw new RuntimeException(e);
         }
-        System.out.println("Joining server");
         try{
             clientConnectionHandler.setSocket(ip, port);
             ui.successfulConnection();
@@ -489,9 +486,6 @@ public class ClientController {
         if (name.equals(myName)){
             secretAchievement = potentialSecretAchievements.get(indexofSecretAchievement);
         }
-        potentialSecretAchievements.stream().forEach(System.out::println);
-        System.out.println(indexofSecretAchievement + " index " + secretAchievement + " secret");
-        System.out.println("Secret achievement chosen in ClientController");
         ui.secretAchievementChosen(name);
     }
     public void setSecretCard(String name, int chosenCard){
@@ -608,7 +602,6 @@ public class ClientController {
         for (Player p : players){
             unavaiableColors.add(p.getColor());
         }
-        System.out.println("Game info set");
         ui.displayGameInfo();
     }
 

@@ -57,7 +57,6 @@ public class ClientConnectionHandlerRMI implements ClientConnectionHandler {
             return;
         }
         try {
-            System.out.println("Sending message to server 2");
             server.executeMessage(message);
         } catch (RemoteException e) {
             e.printStackTrace();

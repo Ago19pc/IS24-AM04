@@ -65,7 +65,6 @@ public class ChooseStartingCardController extends SceneController {
      * This is called when the server confirms the chosen card
      */
     public void confirmation() {
-        System.out.println("Card chosen correctly");
         waitText.setVisible(true);
         firstCard.setOpacity(0);
         firstCard.setDisable(true);
@@ -93,7 +92,6 @@ public class ChooseStartingCardController extends SceneController {
      * @param card the card to be displayed
      */
     public void setUp(Card card) {
-        System.out.println("Setting up scene");
         confirmButton.setDisable(true);
         confirmButton.setOpacity(0);
         firstCard.setImage(new Image(getClass().getResource("/images/Faces/"+ card.getFace(FRONT).getImageURI()).toExternalForm()));

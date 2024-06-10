@@ -18,18 +18,6 @@
    <children>
       <TabPane fx:id="tabPane" layoutX="300.0" prefHeight="500.0" prefWidth="724.0" style="-fx-background-color: green;" tabClosingPolicy="UNAVAILABLE" AnchorPane.leftAnchor="300.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
         <tabs>
-            <Tab text="LeaderBoard">
-              <content>
-                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
-                     <children>
-                        <Label fx:id="Player1" layoutX="68.0" layoutY="66.0" prefHeight="69.0" prefWidth="500.0" textAlignment="CENTER" />
-                        <Label fx:id="Player2" layoutX="68.0" layoutY="153.0" prefHeight="69.0" prefWidth="500.0" textAlignment="CENTER" />
-                        <Label fx:id="Player3" layoutX="68.0" layoutY="240.0" prefHeight="69.0" prefWidth="500.0" textAlignment="CENTER" />
-                        <Label fx:id="Player4" layoutX="68.0" layoutY="327.0" prefHeight="69.0" prefWidth="500.0" textAlignment="CENTER" />
-                     </children>
-                  </AnchorPane>
-              </content>
-            </Tab>
           <Tab text="You">
                <content>
                   <ScrollPane prefHeight="200.0" prefWidth="200.0">
@@ -39,6 +27,18 @@
                   </ScrollPane>
                </content>
           </Tab>
+            <Tab text="LeaderBoard">
+              <content>
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                     <children>
+                        <Label fx:id="Player1" layoutX="68.0" layoutY="66.0" prefHeight="69.0" prefWidth="500.0" text="Player1" textAlignment="CENTER" />
+                        <Label fx:id="Player2" layoutX="68.0" layoutY="153.0" prefHeight="69.0" prefWidth="500.0" text="Player2" textAlignment="CENTER" />
+                        <Label fx:id="Player3" layoutX="68.0" layoutY="240.0" prefHeight="69.0" prefWidth="500.0" text="Player3" textAlignment="CENTER" />
+                        <Label fx:id="Player4" layoutX="68.0" layoutY="327.0" prefHeight="69.0" prefWidth="500.0" text="Player4" textAlignment="CENTER" />
+                     </children>
+                  </AnchorPane>
+              </content>
+            </Tab>
         </tabs>
       </TabPane>
       <GridPane layoutX="300.0" layoutY="500.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="268.0" prefWidth="724.0" style="-fx-background-color: blue;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="300.0" AnchorPane.rightAnchor="0.0">
