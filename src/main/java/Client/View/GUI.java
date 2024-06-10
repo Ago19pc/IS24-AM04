@@ -340,7 +340,7 @@ public class GUI implements UI{
             if (name.equals(controller.getMyName())){
                 ((ChooseSecretCardController) sceneControllerMap.get(SceneName.SECRETCARDCHOICE)).confirmation();
                 ((MainBoardSceneController) sceneControllerMap.get(SceneName.GAME)).setSecretCard(controller.getSecretAchievement());
-                ((MainBoardSceneController) sceneControllerMap.get(SceneName.GAME)).setup();
+                sceneControllerMap.get(SceneName.GAME).setup();
                 stage.setScene(getScene(SceneName.GAME));
             }
 
@@ -521,7 +521,7 @@ public class GUI implements UI{
                     }
 
                     secretAchievementChosen(controller.getMyName());
-                    ((MainBoardSceneController) sceneControllerMap.get(SceneName.GAME)).setup();
+                    sceneControllerMap.get(SceneName.GAME).setup();
 
                     stage.setScene(getScene(SceneName.GAME));
                     stage.show();

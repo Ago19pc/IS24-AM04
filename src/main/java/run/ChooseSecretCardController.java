@@ -21,7 +21,9 @@ public class ChooseSecretCardController extends SceneController {
 
     private int index = 0;
 
-
+    /**
+     * This method is called when the first card is chosen
+     */
     public void chooseFirstCard() {
         index = 0;
         confirmButton.setDisable(false);
@@ -31,6 +33,9 @@ public class ChooseSecretCardController extends SceneController {
         confirmButton.setOpacity(1);
     }
 
+    /**
+     * This method is called when the second card is chosen
+     */
     public void chooseSecondCard() {
         index = 1;
         confirmButton.setDisable(false);
@@ -40,16 +45,27 @@ public class ChooseSecretCardController extends SceneController {
         confirmButton.setOpacity(1);
     }
 
+    /**
+     * This method is called when the server confirms the choice, and now you have to wait the other players
+     */
     public void confirmation() {
         confirmButton.setDisable(true);
         confirmButton.setOpacity(0);
         index = controller.getIndexofSecretAchievement();
     }
 
+    /**
+     * This method is called when the confirmation button is pressed
+     */
     public void confirmationButtonPressed() {
         controller.chooseSecretAchievement(index);
     }
 
+
+    /**
+     * This method is called when the scene is loaded
+     * @param cards the list of cards to be displayed
+     */
     public void setUp(List<AchievementCard> cards) {
         confirmButton.setDisable(true);
         confirmButton.setOpacity(0);

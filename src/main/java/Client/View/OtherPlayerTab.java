@@ -21,6 +21,10 @@ public class OtherPlayerTab {
         tab.setContent(scrollPane);
     }
 
+    /**
+     * This method should be called when you want to place a card on the manuscript of another player
+     * @param onBoardCard
+     */
     public void placeCard(OnBoardCard onBoardCard){
         onBoardCardList.add(onBoardCard);
         group.getChildren().add(onBoardCard.image);

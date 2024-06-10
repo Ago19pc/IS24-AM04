@@ -11,7 +11,10 @@ import run.MainBoardSceneController;
 import java.util.ArrayList;
 import java.util.List;
 
-
+/**
+ * This class is responsible for the visualization of the card on the screen.
+ * It's just a simpler way to handle images and buttons all together.
+ */
 public class OnBoardCard {
     @FXML
     public ImageView image;
@@ -80,6 +83,11 @@ public class OnBoardCard {
 
     }
 
+    /**
+     * This method places the card on the board.
+     * This is to be used only to place on the board of the player who is running the application.
+     * @param yourManuscript the group where the card will be placed
+     */
     public void place(Group yourManuscript) {
         yourManuscript.getChildren().add(image);
         yourManuscript.getChildren().add(TOP_LEFT);
@@ -90,18 +98,30 @@ public class OnBoardCard {
 
     }
 
+    /**
+     * Places the selected card on the topleft corner of this cards
+     */
     void playCardTopLeft() {
         sceneController.placeCard(x - 1, y + 1);
     }
 
+    /**
+     * Places the selected card on the topright corner of this cards
+     */
     void playCardTopRight() {
         sceneController.placeCard(x + 1, y + 1);
     }
 
+    /**
+     * Places the selected card on the bottomleft corner of this cards
+     */
     void playCardBottomLeft() {
         sceneController.placeCard(x - 1, y - 1);
     }
 
+    /**
+     * Places the selected card on the bottomright corner of this cards
+     */
     void playCardBottomRight() {
         sceneController.placeCard(x + 1, y - 1);
     }

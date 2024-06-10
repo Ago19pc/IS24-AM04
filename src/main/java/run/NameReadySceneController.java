@@ -30,6 +30,10 @@ public class NameReadySceneController extends SceneController{
     public TextField reconnection_idField;
     public Button confirm_ButtonId;
 
+    /**
+     * This method is called when the users inserts their name, but still need confirmation from server
+     * @param actionEvent
+     */
     public void askSetName(ActionEvent actionEvent) {
         System.out.println("Name Field: " + possible_Name.getText());
         stage.setTitle("Codex Naturalis - " + possible_Name.getText());
@@ -38,18 +42,30 @@ public class NameReadySceneController extends SceneController{
         } else controller.askSetName(possible_Name.getText());
     }
 
+    /**
+     * This method ic called to clone the list of players from the other scene
+     * @param other, the list of players
+     */
     public void cloneListView(ListView<String> other) {
         list_Player.getItems().clear();
         for (String item : other.getItems()) {
             list_Player.getItems().add(item);
         }
     }
+
+    /**
+     * This method setups the scene
+     */
     public void setup(){
         labelReconnectionId.setText("New reconnection ID: " + controller.getMyId() + " save it for reconnection");
         reconnection_idField.setPromptText("Enter the old reconnection ID");
         possible_Name.setPromptText("Choose a name");
     }
 
+    /**
+     * This method is called when the user wants to reconnect to a game
+     * @param actionEvent
+     */
     public void idLogin(ActionEvent actionEvent) {
         System.out.println("Id Field: "+reconnection_idField.getText());
         controller.reconnect(reconnection_idField.getText());

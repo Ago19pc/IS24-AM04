@@ -27,7 +27,9 @@ public class ChooseStartingCardController extends SceneController {
     private Face chosenFace;
 
 
-
+    /**
+     * Method to choose the first card face
+     */
     public void chooseFirstCard() {
         chosenFace = FRONT;
         confirmButton.setDisable(false);
@@ -38,6 +40,9 @@ public class ChooseStartingCardController extends SceneController {
         chosenCard.setImage(firstCard.getImage());
     }
 
+    /**
+     * Method to choose the second card face
+     */
     public void chooseSecondCard() {
         chosenFace = BACK;
         confirmButton.setDisable(false);
@@ -49,10 +54,16 @@ public class ChooseStartingCardController extends SceneController {
     }
 
 
+    /**
+     * Method to confirm the chosen card face
+     */
     public void confirmationButtonPressed() {
         controller.chooseStartingCardFace(chosenFace);
     }
 
+    /**
+     * This is called when the server confirms the chosen card
+     */
     public void confirmation() {
         System.out.println("Card chosen correctly");
         waitText.setVisible(true);
@@ -77,6 +88,10 @@ public class ChooseStartingCardController extends SceneController {
         }
     }
 
+    /**
+     * Method to set up the scene
+     * @param card the card to be displayed
+     */
     public void setUp(Card card) {
         System.out.println("Setting up scene");
         confirmButton.setDisable(true);

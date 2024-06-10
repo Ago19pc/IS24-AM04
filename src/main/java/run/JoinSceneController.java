@@ -11,6 +11,10 @@ public class JoinSceneController extends SceneController{
     public TextField text_Port;
     public Button join_Button;
 
+    /**
+     * LITERALLY THE JOIN BUTTON TO CONNECT TO THE SERVER, WHAT DID YOU EXPECT?
+     * @param actionEvent
+     */
     public void setJoin(ActionEvent actionEvent) {
         if(Objects.equals(text_ip.getText(), "")) {
             controller.joinServer("localhost", 1234);

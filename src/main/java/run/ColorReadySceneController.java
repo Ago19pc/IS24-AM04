@@ -25,7 +25,10 @@ public class ColorReadySceneController extends  SceneController{
     public TextField messageToSend;
 
 
-
+    /**
+     * This method is called when the players whants to choose the green color
+     * @param actionEvent
+     */
     public void askColorGreen(ActionEvent actionEvent) {
         green_Button.setStyle("-fx-background-color: #00FF00;" + "-fx-border-color: #000000;" + "-fx-border-radius: 3px;");
         blue_Button.setStyle("-fx-background-color: #eae1b8;"+ "-fx-border-color: #000000;" + "-fx-border-radius: 3px;");
@@ -36,6 +39,10 @@ public class ColorReadySceneController extends  SceneController{
         confirm_Color_Button.setDisable(false);
     }
 
+    /**
+     * This method is called when the players whants to choose the blue color
+     * @param actionEvent
+     */
     public void askColorBlue(ActionEvent actionEvent) {
         green_Button.setStyle("-fx-background-color: #eae1b8;" + "-fx-border-color: #000000;" + "-fx-border-radius: 3px;");
         blue_Button.setStyle("-fx-background-color: #0000FF;" + "-fx-border-color: #000000;" + "-fx-border-radius: 3px;");
@@ -46,6 +53,10 @@ public class ColorReadySceneController extends  SceneController{
         confirm_Color_Button.setDisable(false);
     }
 
+    /**
+     * This method is called when the players whants to choose the yellow color
+     * @param actionEvent
+     */
     public void askColorYellow(ActionEvent actionEvent) {
         green_Button.setStyle("-fx-background-color: #eae1b8;" + "-fx-border-color: #000000;" + "-fx-border-radius: 3px;");
         blue_Button.setStyle("-fx-background-color: #eae1b8;" + "-fx-border-color: #000000;" + "-fx-border-radius: 3px;");
@@ -56,6 +67,10 @@ public class ColorReadySceneController extends  SceneController{
         confirm_Color_Button.setDisable(false);
     }
 
+    /**
+     * This method is called when the players whants to choose the red color
+     * @param actionEvent
+     */
     public void askColorRed(ActionEvent actionEvent) {
         green_Button.setStyle("-fx-background-color: #eae1b8;" + "-fx-border-color: #000000;" + "-fx-border-radius: 3px;");
         blue_Button.setStyle("-fx-background-color: #eae1b8;" + "-fx-border-color: #000000;" + "-fx-border-radius: 3px;");
@@ -67,6 +82,10 @@ public class ColorReadySceneController extends  SceneController{
 
     }
 
+    /**
+     * This method is called when the players whants to set ready
+     * @param actionEvent
+     */
     public void askSetReady(ActionEvent actionEvent) {
         controller.setReady();
         label_ready.setOpacity(1);
@@ -74,10 +93,18 @@ public class ColorReadySceneController extends  SceneController{
         readyButton.setOpacity(0);
     }
 
+    /**
+     * This method is called when the server accepts the color request
+     * @param actionEvent
+     */
     public void setColorConfirm(ActionEvent actionEvent) {
         controller.askSetColor(color.toString());
     }
 
+    /**
+     * This method is called when the player wants to send a message in the chat
+     * @param actionEvent
+     */
     public void sendMessages(ActionEvent actionEvent) {
         controller.sendChatMessage(messageToSend.getText());
     }
