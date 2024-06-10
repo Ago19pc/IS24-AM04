@@ -19,7 +19,7 @@ public void testGetFace() {
                 CardCorners.BOTTOM_RIGHT, Symbol.NONE, CardCorners.BOTTOM_LEFT, Symbol.NONE),
                 1, Map.of(Symbol.NONE, 1), Map.of(Symbol.NONE, 1), Symbol.FUNGUS);
         RegularBackFace backFace = new RegularBackFace("image2.jpg", List.of(Symbol.NONE, Symbol.NONE, Symbol.NONE, Symbol.NONE));
-        GoldCard goldCard = new GoldCard(frontFace, backFace);
+        GoldCard goldCard = new GoldCard(frontFace, backFace, "1.jpeg");
         assertEquals(frontFace, goldCard.getFace(Face.FRONT));
         assertEquals(backFace, goldCard.getFace(Face.BACK));
     }
