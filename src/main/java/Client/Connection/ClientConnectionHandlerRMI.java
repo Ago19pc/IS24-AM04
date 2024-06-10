@@ -29,8 +29,8 @@ public class ClientConnectionHandlerRMI implements ClientConnectionHandler {
         this.rmi_client_port = rmi_port;
     }
 
-    public void setServer(String server_rmi_host) throws RemoteException {
-        serverRegistry = LocateRegistry.getRegistry(server_rmi_host, 1099);
+    public void setServer(String server_rmi_host, int serverPort) throws RemoteException {
+        serverRegistry = LocateRegistry.getRegistry(server_rmi_host, serverPort);
         try {
             server = (ServerConnectionHandler) serverRegistry.lookup("ServerConnectionHandler");
         } catch (Exception e) {

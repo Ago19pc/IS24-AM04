@@ -27,30 +27,9 @@ public class GeneralClientConnectionHandler {
         }
     }
 
-    public GeneralClientConnectionHandler(ClientController controller, boolean trueifRMI, boolean debugMode) {
-        this.trueifRMI = trueifRMI;
-        this.controller = controller;
-        if(!trueifRMI){
-            clientConnectionHandlerSOCKET = new ClientConnectionHandlerSOCKET(debugMode, controller);
-        } else {
-            try {
-                setSocket("localhost", 1099);
-            } catch (NotBoundException e) {
-                throw new RuntimeException(e);
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            } catch (ClientExecuteNotCallableException e) {
-                throw new RuntimeException(e);
-            } catch (PlayerNotFoundByNameException e) {
-                throw new RuntimeException(e);
-            }
-        }
-
-    }
-
     public void setSocket(String server_host, int server_port) throws NotBoundException, IOException, ClientExecuteNotCallableException, PlayerNotFoundByNameException {
         if(trueifRMI) {
-            clientConnectionHandlerRMI.setServer(server_host);
+            clientConnectionHandlerRMI.setServer(server_host, server_port);
             clientConnectionHandlerRMI.setController(controller);
             LobbyPlayersMessage lobby = clientConnectionHandlerRMI.server.join(clientConnectionHandlerRMI.rmi_client_port);
             lobby.clientExecute(controller);

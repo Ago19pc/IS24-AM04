@@ -15,12 +15,11 @@
 |Chat|✅|
 
 |To Do |Comments | Priority |Status|
-|-------|-------|----------|------|
-|Switch to state pattern|currently clientcontroller and servercontroller use a gamestate variable| 2        |⏱|
+|-------|-------|----------|-----|
+|Switch to state pattern|currently clientcontroller and servercontroller use a gamestate variable| WIP      |⚙️|
 |Add missing javadoc|-------| 1        |⚙️|
-|Add missing tests|tests are currently broken| 3        |⏱|
-|Add RMI port choice|currently they are hardcoded and the user choice is fake| WIP        |⚙️|
-|Improve CLI|It works but it's not enjoyable + cards and manuscript are shown incorrectly| 4        |⏱|
+|Add missing tests|tests are currently broken| 2        |⏱|
+|Improve CLI|It works but it's not enjoyable + cards and manuscript are shown incorrectly| 3        |⏱|
 |Finish GUI|-------| WIP      |⚙️|
-|Finish UML|-------| 6|⚙️|
-|Create interfaces|-------| 5|⚙️|
+|Finish UML|-------| 5        |⚙️|
+|Create interfaces|-------| 4        |⚙️|
