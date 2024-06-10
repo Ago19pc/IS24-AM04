@@ -13,6 +13,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 
 public interface UI {
+
     void askConnectionMode();
 
     void nameChanged(String name);

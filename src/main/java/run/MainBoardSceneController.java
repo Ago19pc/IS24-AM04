@@ -14,13 +14,17 @@ import javafx.fxml.FXML;
 import javafx.scene.Group;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.Tab;
+import javafx.scene.control.TabPane;
 import javafx.scene.effect.Glow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.text.Text;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class MainBoardSceneController extends SceneController {
 
@@ -39,8 +43,13 @@ public class MainBoardSceneController extends SceneController {
     public Group yourManuscript;
     @FXML
     public Text yourTurnText;
+
     @FXML
-    public List<OtherPlayerTab> otherPlayerTabs = new ArrayList<>();
+    public TabPane tabPane;
+    /**
+    Maps the player name to the tab of the player
+     */
+    public Map<String, OtherPlayerTab> otherPlayerTabs = new HashMap<>();
     @FXML
     public Label Player1, Player2, Player3, Player4;
 
@@ -52,9 +61,9 @@ public class MainBoardSceneController extends SceneController {
     private Face selectedFace = null;
 
 
-
-
-
+    /**
+     * Displays the hand cards of the player
+     */
     public void setHandCards() {
 
         firstCardImage.setImage(getImageFromCard(controller.getHand().get(0), Face.FRONT));
@@ -65,33 +74,64 @@ public class MainBoardSceneController extends SceneController {
         thirdFace = Face.FRONT;
     }
 
+    /**
+     * Displays the secret card of the player
+     * @param card the secret card
+     */
     public void setSecretCard(Card card) {
         secretCardImage.setImage(getImageFromCard(card, Face.FRONT));
     }
 
+    /**
+     * Returns the image of the card
+     * @param card the card
+     * @param face the face
+     * @return
+     */
     private Image getImageFromCard(Card card, Face face) {
+        if (card == null) return new Image(getClass().getResourceAsStream("/images/Faces/back-96.jpeg"));
         return new Image(getClass().getResourceAsStream("/images/Faces/" + card.getFace(face).getImageURI()));
     }
 
+    /**
+     * This method is the same as the one above, but it takes a CardFace instead of a Face, so you can use the same method in different situations
+     * Returns the image of the cardface
+     * @param cardFace the cardface
+     * @return
+     */
     private Image getImageFromCard(CardFace cardFace) {
+        if (cardFace == null) return new Image(getClass().getResourceAsStream("/images/Faces/back-96.jpeg"));
         return new Image(getClass().getResourceAsStream("/images/Faces/" + cardFace.getImageURI()));
     }
 
+    /**
+     * Rotates the first card in hand to see the other face
+     */
     public void rotateFirstCard() {
         firstCardImage.setImage(getImageFromCard(controller.getHand().get(0), firstFace.getOpposite()));
         firstFace = firstFace.getOpposite();
     }
 
+    /**
+     * Rotates the second card in hand to see the other face
+     */
     public void rotateSecondCard() {
         secondCardImage.setImage(getImageFromCard(controller.getHand().get(1), secondFace.getOpposite()));
         secondFace = secondFace.getOpposite();
     }
 
+    /**
+     * Rotates the third card in hand to see the other face
+     */
     public void rotateThirdCard() {
         thirdCardImage.setImage(getImageFromCard(controller.getHand().get(2), thirdFace.getOpposite()));
         thirdFace = thirdFace.getOpposite();
     }
 
+    /**
+     * Sets the board cards, the gold/resource/achievement ones
+     * @param deck the deck you want to set
+     */
     public void setBoardCards(Decks deck) {
         if (deck == Decks.GOLD) {
 
@@ -109,6 +149,12 @@ public class MainBoardSceneController extends SceneController {
         }
     }
 
+    /**
+     * Sets the card on the floor
+     * @param card the card you want to set
+     * @param deck the deck you want to set (gold - resource - achievement)
+     * @param position the position you want to set (DECK - FIRST_CARD - SECOND_CARD)
+     */
     public void setCardOnFloor(Card card, Decks deck, DeckPosition position) {
         if (deck == Decks.GOLD) {
             switch (position) {
@@ -146,6 +192,10 @@ public class MainBoardSceneController extends SceneController {
             }
     }
 
+    /**
+     * Updates all the floor cards
+     * Gold, Resource and Achievement
+     */
     public void updateAllFloorCards() {
         setCardOnFloor(controller.getBoardCards(Decks.GOLD).get(0), Decks.GOLD, DeckPosition.DECK);
         setCardOnFloor(controller.getBoardCards(Decks.GOLD).get(1), Decks.GOLD, DeckPosition.FIRST_CARD);
@@ -160,16 +210,31 @@ public class MainBoardSceneController extends SceneController {
         }
     }
 
+    /**
+     * Updates the manuscript of the player
+     * This method is called to place a new card
+     * @param name the name of the player, useful to find the correct manuscript to place
+     * @param cardFace the cardface
+     * @param x the x coordinate
+     * @param y the y coordinate
+     */
     public void updateManuscript(String name, CardFace cardFace, int x, int y) {
         if (name.equals(controller.getMyName())) {
-            OnBoardCard card = new OnBoardCard(getImageFromCard(cardFace), x, y, null, this);
+            OnBoardCard card = new OnBoardCard(getImageFromCard(cardFace), x, y, this);
             card.place(yourManuscript);
         } else {
-            // piazza la carta nel manoscritto di un altro
+            OtherPlayerTab tab = otherPlayerTabs.get(name);
+            if (tab != null) {
+                OnBoardCard card = new OnBoardCard(getImageFromCard(cardFace), x, y, this);
+                tab.placeCard(card);
+            }
         }
 
     }
 
+    /**
+     * This is called when a player selects/deselects the first card in hand
+     */
     public void firstCardSelected() {
         if (selectedCardIndex == 0) {
             selectedCardIndex = -1;
@@ -180,6 +245,9 @@ public class MainBoardSceneController extends SceneController {
         }
     }
 
+    /**
+     * This is called when a player selects/deselects the second card in hand
+     */
     public void secondCardSelected() {
         if (selectedCardIndex == 1) {
             selectedCardIndex = -1;
@@ -190,6 +258,9 @@ public class MainBoardSceneController extends SceneController {
         }
     }
 
+    /**
+     * This is called when a player selects/deselects the third card in hand
+     */
     public void thirdCardSelected() {
         if (selectedCardIndex == 2) {
             selectedCardIndex = -1;
@@ -200,6 +271,10 @@ public class MainBoardSceneController extends SceneController {
         }
     }
 
+    /**
+     * This method is called to illuminate the selected card
+     * @param index the index of the card in the hand position counting from 0
+     */
     private void illuminateHandCard(int index) {
         switch (index) {
             case 0:
@@ -286,41 +361,69 @@ public class MainBoardSceneController extends SceneController {
         }
     }
 
+    /**
+     * This method is called when the player places a card
+     * this method calls the controller to place the card
+     * which will ask the server to place the card
+     * @param x the x coordinate
+     * @param y the y coordinate
+     */
     public void placeCard(int x, int y) {
         if (selectedCardIndex >= 0 && selectedCardIndex <= 2)
             controller.askPlayCard(selectedCardIndex, selectedFace, x, y);
     }
 
+    /**
+     * This method is called when the player wants to draw a gold card from the gold deck
+     */
     @FXML
     public void drawFromGoldDeck() {
         controller.askDrawCard(Decks.GOLD, DeckPosition.DECK);
     }
 
+    /**
+     * This method is called when the player wants to draw a resource card from the resource deck
+     */
     @FXML
     public void drawFromResourceDeck() {
         controller.askDrawCard(Decks.RESOURCE, DeckPosition.DECK);
     }
 
+    /**
+     * This method is called when the player wants to draw a gold card from the first position on the floor
+     */
     @FXML
     public void drawFromGoldFloor1() {
         controller.askDrawCard(Decks.GOLD, DeckPosition.FIRST_CARD);
     }
 
+    /**
+     * This method is called when the player wants to draw a gold card from the second position on the floor
+     */
     @FXML
     public void drawFromGoldFloor2() {
         controller.askDrawCard(Decks.GOLD, DeckPosition.SECOND_CARD);
     }
 
+    /**
+     * This method is called when the player wants to draw a resource card from the first position on the floor
+     */
     @FXML
     public void drawFromResourceFloor1() {
         controller.askDrawCard(Decks.RESOURCE, DeckPosition.FIRST_CARD);
     }
 
+    /**
+     * This method is called when the player wants to draw a resource card from the second position on the floor
+     */
     @FXML
     public void drawFromResourceFloor2() {
         controller.askDrawCard(Decks.RESOURCE, DeckPosition.SECOND_CARD);
     }
 
+    /**
+     * This method removes the card from the player hand
+     */
     public void removeCardFromHand(String playerName) {
         if (controller.getMyName().equals(playerName)) {
             switch (selectedCardIndex) {
@@ -339,16 +442,25 @@ public class MainBoardSceneController extends SceneController {
         }
     }
 
+    /**
+     * Generates the Tabs to see the other player's manuscript
+     */
     public void setup()
     {
         for(Player p : controller.getPlayers()) {
             if(!p.getName().equals(controller.getMyName())) {
                 OtherPlayerTab tab = new OtherPlayerTab(p.getName());
-                otherPlayerTabs.add(tab);
+                if (!tabPane.getTabs().stream().map(Tab::getText).toList().contains(p.getName())) {
+                    otherPlayerTabs.put(p.getName(), tab);
+                    tabPane.getTabs().add(tab.tab);
+                }
             }
         }
     }
 
+    /**
+     * Updates the player order in the leaderboard tab
+     */
     public void updateLeaderBoard() {
         List<Player> sorted = new ArrayList<Player>(controller.getPlayers());
         sorted.sort((p1, p2) -> p2.getPoints() - p1.getPoints());

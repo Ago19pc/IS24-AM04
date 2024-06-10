@@ -31,8 +31,10 @@ public abstract class SceneController implements Initializable {
         this.sceneMap = sceneMap;
         this.sceneControllerMap = sceneControllerMap;
     }
-    public void initialize(URL url, ResourceBundle resourceBundle) {
-    }
+
+    public void initialize(URL url, ResourceBundle resourceBundle) {}
+
+    public void setup(){}
 
 
 }

@@ -340,6 +340,7 @@ public class GUI implements UI{
             if (name.equals(controller.getMyName())){
                 ((ChooseSecretCardController) sceneControllerMap.get(SceneName.SECRETCARDCHOICE)).confirmation();
                 ((MainBoardSceneController) sceneControllerMap.get(SceneName.GAME)).setSecretCard(controller.getSecretAchievement());
+                sceneControllerMap.get(SceneName.GAME).setup();
                 stage.setScene(getScene(SceneName.GAME));
             }
 
@@ -351,6 +352,7 @@ public class GUI implements UI{
         Platform.runLater(() -> {
             try {
                 if (controller.getMyName().equals(name)) {
+
                     ((ChooseStartingCardController) sceneControllerMap.get(SceneName.STARTINGCARDCHOICE)).confirmation();
                 }
                 ((MainBoardSceneController) sceneControllerMap.get(SceneName.GAME)).updateManuscript(name, controller.getPlayerByName(name).getManuscript().getCardByCoord(0,0),0 ,0);
@@ -381,6 +383,7 @@ public class GUI implements UI{
     public void chooseStartingCardFace(Card card) {
         Platform.runLater(() -> {
             ((ChooseStartingCardController) sceneControllerMap.get(SceneName.STARTINGCARDCHOICE)).setUp(card);
+            ((MainBoardSceneController) sceneControllerMap.get(SceneName.GAME)).setup();
             stage.setScene(getScene(SceneName.STARTINGCARDCHOICE));
         });
 
@@ -492,7 +495,6 @@ public class GUI implements UI{
 
     @Override
     public void displayGameInfo() {
-        System.out.println("Game info displayed before platform runlater");
         Platform.runLater(() -> {
             System.out.println("Game info displayed");
             switch (controller.getGameState()) {
@@ -501,6 +503,7 @@ public class GUI implements UI{
                     throw new RuntimeException("Unexpected game state");
                 case CHOOSE_STARTING_CARD:
                     System.out.println("Choose starting card");
+                    ((MainBoardSceneController) sceneControllerMap.get(SceneName.GAME)).setup();
                     stage.setScene(getScene(SceneName.STARTINGCARDCHOICE));
                     stage.show();
                     break;
@@ -521,6 +524,7 @@ public class GUI implements UI{
                     }
 
                     secretAchievementChosen(controller.getMyName());
+                    sceneControllerMap.get(SceneName.GAME).setup();
 
                     stage.setScene(getScene(SceneName.GAME));
                     stage.show();

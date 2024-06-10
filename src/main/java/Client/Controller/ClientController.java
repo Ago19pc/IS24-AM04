@@ -228,6 +228,9 @@ public class ClientController {
     }
 
     //ui getters
+    public int getIndexofSecretAchievement() {
+        return indexofSecretAchievement;
+    }
     public String getMyName() {
         return myName;
     }
