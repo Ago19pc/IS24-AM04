@@ -5,7 +5,6 @@ import Server.Card.*;
 import Server.Chat.Message;
 import Server.Connections.GeneralServerConnectionHandler;
 import Server.Deck.AchievementDeck;
-import Server.Deck.ResourceDeck;
 import Server.Enums.*;
 import Server.Exception.*;
 import Server.GameModel.GameModel;
@@ -498,9 +497,11 @@ public class ControllerInstance implements Controller{
                 player.addPoints(obtainedPoints);
             } else {
                 player.addPoints(cardPoints);
+                obtainedPoints = cardPoints;
             }
         } else {
             player.addPoints(cardPoints);
+            obtainedPoints = cardPoints;
         }
         player.getManuscript().addCard(xCoord, yCoord, cardFace, getTurn());
         OtherPlayerPlayCardMessage otherPlayerPlayCardMessage = new OtherPlayerPlayCardMessage(

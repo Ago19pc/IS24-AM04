@@ -297,10 +297,14 @@ public class Manuscript implements Serializable {
 
     public Map<CardCorners, CornerCardFace> getNeighbors(int x, int y){
         Map<CardCorners, CornerCardFace> neighbors = new HashMap<>();
-        neighbors.put(CardCorners.TOP_LEFT, getCardByCoord(x-1, y+1));
-        neighbors.put(CardCorners.TOP_RIGHT, getCardByCoord(x+1, y+1));
-        neighbors.put(CardCorners.BOTTOM_LEFT, getCardByCoord(x-1, y-1));
-        neighbors.put(CardCorners.BOTTOM_RIGHT, getCardByCoord(x+1, y-1));
+        if(getCardByCoord(x-1, y+1) != null)
+            neighbors.put(CardCorners.TOP_LEFT, getCardByCoord(x-1, y+1));
+        if(getCardByCoord(x+1, y+1) != null)
+            neighbors.put(CardCorners.TOP_RIGHT, getCardByCoord(x+1, y+1));
+        if(getCardByCoord(x-1, y-1) != null)
+            neighbors.put(CardCorners.BOTTOM_LEFT, getCardByCoord(x-1, y-1));
+        if(getCardByCoord(x+1, y-1) != null)
+            neighbors.put(CardCorners.BOTTOM_RIGHT, getCardByCoord(x+1, y-1));
         return neighbors;
     }
 
