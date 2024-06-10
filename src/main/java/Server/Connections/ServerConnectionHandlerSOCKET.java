@@ -6,6 +6,7 @@ import Server.Enums.Color;
 import Server.Enums.GameState;
 import Server.Exception.*;
 import Server.Messages.*;
+import Server.Player.Player;
 
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -28,7 +29,7 @@ public class ServerConnectionHandlerSOCKET extends Thread implements ServerConne
     /**
      * Create the server socket
      */
-    public ServerConnectionHandlerSOCKET() throws IOException {
+    public ServerConnectionHandlerSOCKET() {
         this.clients = new HashMap<>();
         askForPort();
         while (!startServer(port)) {
@@ -67,12 +68,9 @@ public class ServerConnectionHandlerSOCKET extends Thread implements ServerConne
      * Accept new connections and create a new ClientHandler thread for each one
      */
     public void run() {
-        Thread.UncaughtExceptionHandler h = new Thread.UncaughtExceptionHandler() {
-            @Override
-            public void uncaughtException(Thread th, Throwable ex) {
-                System.out.println("[Socket] ServerConnectionHandler gestore eccezioni thread figli: " + ex);
-                th.interrupt();
-            }
+        Thread.UncaughtExceptionHandler h = (th, ex) -> {
+            System.out.println("[Socket] ServerConnectionHandler gestore eccezioni thread figli: " + ex);
+            th.interrupt();
         };
         try {
             while (true) {
@@ -92,7 +90,7 @@ public class ServerConnectionHandlerSOCKET extends Thread implements ServerConne
                 controller.getPlayerList().forEach(p -> playerReady.put(p.getName(), p.isReady()));
                 Boolean isSavedGame = controller.getGameState().equals(GameState.LOAD_GAME_LOBBY);
                 LobbyPlayersMessage message = new LobbyPlayersMessage(
-                        controller.getPlayerList().stream().map(p -> p.getName()).toList(),
+                        controller.getPlayerList().stream().map(Player::getName).toList(),
                         playerColors,
                         playerReady,
                         id,
@@ -174,7 +172,6 @@ public class ServerConnectionHandlerSOCKET extends Thread implements ServerConne
             if(c.isClosed()) continue;
             String clientId = clients.get(c);
             if(!controller.getConnectionHandler().isInDisconnectedList(clientId)){
-                System.out.println("Sending message to " + c.getSocketAddress() + " - id " + clients.get(c));
                 c.sendMessage(message);
             }
         }

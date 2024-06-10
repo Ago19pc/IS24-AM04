@@ -99,7 +99,6 @@ public class GeneralServerConnectionHandler {
     }
 
     public void sendAllMessage(ToClientMessage message) {
-        System.out.println("Sending message to all clients");
         serverConnectionHandlerSOCKET.sendAllMessage(message);
         serverConnectionHandlerRMI.sendAllMessage(message);
     }
