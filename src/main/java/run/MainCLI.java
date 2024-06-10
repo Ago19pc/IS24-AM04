@@ -1,6 +1,7 @@
 package run;
 
 import Client.Controller.ClientController;
+import Client.Controller.ClientControllerInstance;
 import Client.View.CLI;
 import Client.View.UI;
 
@@ -10,7 +11,7 @@ public class MainCLI {
     private static ClientController controller;
     private static CLI cli;
     public static void main() throws RemoteException {
-        controller = new ClientController();
+        controller = new ClientControllerInstance();
         cli = new CLI(controller);
         cli.start();
         controller.main((UI) cli);
