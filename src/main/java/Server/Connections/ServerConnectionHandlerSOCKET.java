@@ -90,7 +90,7 @@ public class ServerConnectionHandlerSOCKET extends Thread implements ServerConne
                 controller.getPlayerList().forEach(p -> playerColors.put(p.getName(), p.getColor()));
                 Map<String, Boolean> playerReady = new HashMap<>();
                 controller.getPlayerList().forEach(p -> playerReady.put(p.getName(), p.isReady()));
-                Boolean isSavedGame = controller.getGameState().equals(GameState.LOAD_GAME_LOBBY);
+                Boolean isSavedGame = controller.isInSavedGameLobby();
                 LobbyPlayersMessage message = new LobbyPlayersMessage(
                         controller.getPlayerList().stream().map(p -> p.getName()).toList(),
                         playerColors,

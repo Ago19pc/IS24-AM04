@@ -53,7 +53,6 @@ public class ClientController {
     private Boolean isSavedGame;
 
     public void main(UI ui) throws RemoteException {
-
         this.ui = ui;
         this.gameState = GameState.LOBBY;
     }
@@ -609,7 +608,7 @@ public class ClientController {
         ui.displayGameInfo();
     }
 
-    public void loadGame(List<AchievementCard> commonAchievements, Deck<GoldCard> goldDeck, Deck<ResourceCard> resourceDeck, AchievementCard secretAchievement, List<Card> hand, int turn, List<Player> players, Chat chat, GameState gameState, String name) {
+    public void loadGame(List<AchievementCard> commonAchievements, Deck<GoldCard> goldDeck, Deck<ResourceCard> resourceDeck, AchievementCard secretAchievement, List<Card> hand, int turn, List<Player> players, Chat chat, String name) {
         this.commonAchievements = commonAchievements;
         this.goldDeck = goldDeck;
         this.resourceDeck = resourceDeck;
@@ -618,7 +617,7 @@ public class ClientController {
         this.turn = turn;
         this.players = players;
         this.chat = chat;
-        this.gameState = gameState;
+        this.gameState = GameState.PLACE_CARD;
         this.myName = name;
         this.unavaiableColors = new ArrayList<>();
         for (Player p : players){

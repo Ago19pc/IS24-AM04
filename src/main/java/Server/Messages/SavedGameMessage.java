@@ -29,14 +29,13 @@ public class SavedGameMessage implements Serializable, ToServerMessage, ToClient
     private int turn;
     private List<Player> players;
     private Chat chat;
-    private GameState gameState;
 
     public SavedGameMessage(String id, String name) {
         this.id = id;
         this.name = name;
     }
 
-    public SavedGameMessage(String name, List<AchievementCard> commonAchievements, Deck<GoldCard> goldDeck, Deck<ResourceCard> resourceDeck, AchievementCard secretAchievement, List<Card> hand, int turn, List<Player> players, Chat chat, GameState gameState) {
+    public SavedGameMessage(String name, List<AchievementCard> commonAchievements, Deck<GoldCard> goldDeck, Deck<ResourceCard> resourceDeck, AchievementCard secretAchievement, List<Card> hand, int turn, List<Player> players, Chat chat) {
         this.id = null;
         this.name = name;
         this.commonAchievements = commonAchievements;
@@ -47,7 +46,6 @@ public class SavedGameMessage implements Serializable, ToServerMessage, ToClient
         this.turn = turn;
         this.players = players;
         this.chat = chat;
-        this.gameState = gameState;
     }
 
     @Override
@@ -80,6 +78,6 @@ public class SavedGameMessage implements Serializable, ToServerMessage, ToClient
 
     @Override
     public void clientExecute(ClientController controller) {
-        controller.loadGame(commonAchievements, goldDeck, resourceDeck, secretAchievement, hand, turn, players, chat, gameState, name);
+        controller.loadGame(commonAchievements, goldDeck, resourceDeck, secretAchievement, hand, turn, players, chat, name);
     }
 }

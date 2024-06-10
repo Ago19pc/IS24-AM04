@@ -11,6 +11,8 @@ import java.util.List;
 
 public interface Controller {
 
+    public void changeState(ServerState state);
+
     public void addPlayer(String name, String clientID) throws TooManyPlayersException, IllegalArgumentException, AlreadyStartedException;
 
 
@@ -25,8 +27,6 @@ public interface Controller {
     public List<Player> getPlayerList();
 
     public void setOffline(String id);
-
-    public GameState getGameState();
 
     /**
      * set the player color
@@ -142,5 +142,19 @@ public interface Controller {
     public void reconnect(String newId, String oldId) throws IllegalArgumentException, AlreadySetException, NotYetStartedException, AlreadyFinishedException;
 
     public void addSavedPlayer(String id, String name) throws AlreadyStartedException, IllegalArgumentException, PlayerNotFoundByNameException;
+
+    public void shufflePlayerList();
+
+    public void nextTurn();
+
+    public void giveInitialHand() throws AlreadySetException, AlreadyFinishedException;
+
+    public void computeLeaderboard() throws AlreadyFinishedException;
+
+    public void endGame() throws AlreadySetException;
+
+    public void start() throws TooFewElementsException, AlreadySetException;
+
+    public boolean isInSavedGameLobby();
 }
 
