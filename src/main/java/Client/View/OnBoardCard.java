@@ -23,7 +23,7 @@ public class OnBoardCard {
 
     private MainBoardSceneController sceneController;
 
-    public OnBoardCard (Image image, int x, int y, CardCorners occupied, MainBoardSceneController sceneController) {
+    public OnBoardCard (Image image, int x, int y, MainBoardSceneController sceneController) {
         this.sceneController = sceneController;
         this.x = x;
         this.y = y;
@@ -47,16 +47,7 @@ public class OnBoardCard {
         this.image.setFitWidth(143);
         this.image.setLayoutX(x * 143 - x * 35);
         this.image.setLayoutY(y * 100 - y * 159);
-        //La prossima volta guarda qui
-        /*if (occupied == CardCorners.TOP_LEFT) {
-            TOP_LEFT.setDisable(true);
-        } else if (occupied == CardCorners.TOP_RIGHT) {
-            TOP_RIGHT.setDisable(true);
-        } else if (occupied == CardCorners.BOTTOM_LEFT) {
-            BOTTOM_LEFT.setDisable(true);
-        } else if (occupied == CardCorners.BOTTOM_RIGHT) {
-            BOTTOM_RIGHT.setDisable(true);
-        }*/
+
 
         TOP_LEFT.setPrefHeight(41);
         TOP_LEFT.setPrefWidth(35);

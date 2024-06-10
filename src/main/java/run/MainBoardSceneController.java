@@ -14,6 +14,7 @@ import javafx.fxml.FXML;
 import javafx.scene.Group;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.TabPane;
 import javafx.scene.effect.Glow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -41,7 +42,9 @@ public class MainBoardSceneController extends SceneController {
     public Group yourManuscript;
     @FXML
     public Text yourTurnText;
+
     @FXML
+    public TabPane tabPane;
     /**
     Maps the player name to the tab of the player
      */
@@ -167,14 +170,13 @@ public class MainBoardSceneController extends SceneController {
 
     public void updateManuscript(String name, CardFace cardFace, int x, int y) {
         if (name.equals(controller.getMyName())) {
-            System.out.println("Placing card in your manuscript");
-            OnBoardCard card = new OnBoardCard(getImageFromCard(cardFace), x, y, null, this);
+            OnBoardCard card = new OnBoardCard(getImageFromCard(cardFace), x, y, this);
             card.place(yourManuscript);
         } else {
             OtherPlayerTab tab = otherPlayerTabs.get(name);
             if (tab != null) {
-                OnBoardCard card = new OnBoardCard(getImageFromCard(cardFace), x, y, null, this);
-                card.place(tab.group);
+                OnBoardCard card = new OnBoardCard(getImageFromCard(cardFace), x, y, this);
+                tab.placeCard(card);
             }
         }
 
@@ -355,6 +357,7 @@ public class MainBoardSceneController extends SceneController {
             if(!p.getName().equals(controller.getMyName())) {
                 OtherPlayerTab tab = new OtherPlayerTab(p.getName());
                 otherPlayerTabs.put(p.getName(), tab);
+                tabPane.getTabs().add(tab.tab);
             }
         }
     }
