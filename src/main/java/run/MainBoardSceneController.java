@@ -14,6 +14,7 @@ import javafx.fxml.FXML;
 import javafx.scene.Group;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.effect.Glow;
 import javafx.scene.image.Image;
@@ -24,6 +25,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class MainBoardSceneController extends SceneController {
 
@@ -356,8 +358,10 @@ public class MainBoardSceneController extends SceneController {
         for(Player p : controller.getPlayers()) {
             if(!p.getName().equals(controller.getMyName())) {
                 OtherPlayerTab tab = new OtherPlayerTab(p.getName());
-                otherPlayerTabs.put(p.getName(), tab);
-                tabPane.getTabs().add(tab.tab);
+                if (!tabPane.getTabs().stream().map(Tab::getText).toList().contains(p.getName())) {
+                    otherPlayerTabs.put(p.getName(), tab);
+                    tabPane.getTabs().add(tab.tab);
+                }
             }
         }
     }

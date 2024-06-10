@@ -352,6 +352,7 @@ public class GUI implements UI{
         Platform.runLater(() -> {
             try {
                 if (controller.getMyName().equals(name)) {
+
                     ((ChooseStartingCardController) sceneControllerMap.get(SceneName.STARTINGCARDCHOICE)).confirmation();
                 }
                 ((MainBoardSceneController) sceneControllerMap.get(SceneName.GAME)).updateManuscript(name, controller.getPlayerByName(name).getManuscript().getCardByCoord(0,0),0 ,0);
@@ -382,6 +383,7 @@ public class GUI implements UI{
     public void chooseStartingCardFace(Card card) {
         Platform.runLater(() -> {
             ((ChooseStartingCardController) sceneControllerMap.get(SceneName.STARTINGCARDCHOICE)).setUp(card);
+            ((MainBoardSceneController) sceneControllerMap.get(SceneName.GAME)).setup();
             stage.setScene(getScene(SceneName.STARTINGCARDCHOICE));
         });
 
@@ -498,6 +500,7 @@ public class GUI implements UI{
                     throw new RuntimeException("Unexpected game state");
                 case CHOOSE_STARTING_CARD:
                     System.out.println("Choose starting card");
+                    ((MainBoardSceneController) sceneControllerMap.get(SceneName.GAME)).setup();
                     stage.setScene(getScene(SceneName.STARTINGCARDCHOICE));
                     stage.show();
                     break;
