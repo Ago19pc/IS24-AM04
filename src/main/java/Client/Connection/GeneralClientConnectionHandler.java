@@ -27,6 +27,12 @@ public class GeneralClientConnectionHandler {
         }
     }
 
+    /**
+     * Constructor for debug only
+     * @param controller
+     * @param trueifRMI
+     * @param debugMode
+     */
     public GeneralClientConnectionHandler(ClientController controller, boolean trueifRMI, boolean debugMode) {
         this.trueifRMI = trueifRMI;
         this.controller = controller;
@@ -39,16 +45,19 @@ public class GeneralClientConnectionHandler {
                 throw new RuntimeException(e);
             } catch (IOException e) {
                 throw new RuntimeException(e);
-            } catch (ClientExecuteNotCallableException e) {
-                throw new RuntimeException(e);
-            } catch (PlayerNotFoundByNameException e) {
-                throw new RuntimeException(e);
             }
         }
 
     }
 
-    public void setSocket(String server_host, int server_port) throws NotBoundException, IOException, ClientExecuteNotCallableException, PlayerNotFoundByNameException {
+    /**
+     * Sets the socket
+     * @param server_host, the ip
+     * @param server_port, the port
+     * @throws NotBoundException, if can't bound to RMI
+     * @throws IOException
+     */
+    public void setSocket(String server_host, int server_port) throws NotBoundException, IOException {
         if(trueifRMI) {
             clientConnectionHandlerRMI.setServer(server_host);
             clientConnectionHandlerRMI.setController(controller);
@@ -60,16 +69,22 @@ public class GeneralClientConnectionHandler {
 
     }
 
+    /**
+     * Starts the connection (for socket only)
+     */
     public void start() {
         if (!trueifRMI) {
             clientConnectionHandlerSOCKET.start();
         }
     }
 
+    /**
+     * This method sends a message to the server
+     * @param message, the message to send
+     */
     public void sendMessage(ToServerMessage message){
         if(trueifRMI) {
             try {
-                System.out.println("Sending message to server");
                 clientConnectionHandlerRMI.sendMessage(message);
             } catch (IOException e) {
                 e.printStackTrace();
@@ -83,6 +98,9 @@ public class GeneralClientConnectionHandler {
         }
     }
 
+    /**
+     * @return true if the client is connected to the server
+     */
     public boolean isConnectedToServer() {
         if(trueifRMI) {
             return clientConnectionHandlerRMI != null;
@@ -91,14 +109,23 @@ public class GeneralClientConnectionHandler {
         }
     }
 
+    /**
+     * @return the client connection handler RMI
+     */
     public ClientConnectionHandlerRMI getClientConnectionHandlerRMI() {
         return clientConnectionHandlerRMI;
     }
 
+    /**
+     * @return the client connection handler SOCKET
+     */
     public ClientConnectionHandlerSOCKET getClientConnectionHandlerSOCKET() {
         return clientConnectionHandlerSOCKET;
     }
 
+    /**
+     * @return true if the client is using RMI
+     */
     public boolean getTrueIfRMI() {
         return trueifRMI;
     }

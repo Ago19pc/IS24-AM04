@@ -264,6 +264,7 @@ public class GUI implements UI{
             ((ChooseSecretCardController) sceneControllerMap.get(SceneName.SECRETCARDCHOICE)).messageToSend.clear();
             ((ChooseStartingCardController) sceneControllerMap.get(SceneName.STARTINGCARDCHOICE)).chat_message.getItems().add( message.getName() + ": "+  message.getMessage());
             ((ChooseStartingCardController) sceneControllerMap.get(SceneName.STARTINGCARDCHOICE)).messageToSend.clear();
+            ((MainBoardSceneController) sceneControllerMap.get(SceneName.GAME)).chatMessages.getItems().add( message.getName() + ": "+  message.getMessage());
             //todo: for others scene
         });
     }

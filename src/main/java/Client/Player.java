@@ -62,7 +62,6 @@ public class Player implements Serializable {
     }
 
     public void initializeManuscript(CornerCardFace startingCard) {
-        System.out.println("Initializing manuscript for player " + name);
         this.manuscript = new Manuscript(startingCard);
     }
 

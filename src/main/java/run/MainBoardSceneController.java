@@ -12,13 +12,9 @@ import Server.Enums.Face;
 import Server.Exception.PlayerNotFoundByNameException;
 import javafx.fxml.FXML;
 import javafx.scene.Group;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.Tab;
-import javafx.scene.control.TabPane;
+import javafx.scene.control.*;
 import javafx.scene.effect.Glow;
 import javafx.scene.image.ImageView;
-import javafx.scene.text.Text;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -41,10 +37,19 @@ public class MainBoardSceneController extends SceneController {
     @FXML
     public Group yourManuscript;
     @FXML
-    public Text yourTurnText;
+    public Label yourTurnLabel;
 
     @FXML
     public TabPane tabPane;
+
+    @FXML
+    public Button chatButton;
+
+    @FXML
+    public TextField chatField;
+
+    @FXML
+    public ListView chatMessages;
     /**
     Maps the player name to the tab of the player
      */
@@ -85,7 +90,7 @@ public class MainBoardSceneController extends SceneController {
      * Rotates the first card in hand to see the other face
      */
     public void rotateFirstCard() {
-        firstCardImage.setImage(getImageFromCard(controller.getHand().get(0), firstFace.getOpposite()));
+        firstCardImage.setImage(getImageFromCard(controller.getHand().getFirst(), firstFace.getOpposite()));
         firstFace = firstFace.getOpposite();
     }
 
@@ -286,42 +291,34 @@ public class MainBoardSceneController extends SceneController {
                     if(controller.getPlayerByName(controller.getMyName()).getManuscript().isPlaceable(c.x - 1, c.y - 1, face)) {
                         c.BOTTOM_LEFT.setStyle("-fx-background-color: transparent; -fx-border-width: 2; -fx-border-color: gold;");
                         c.BOTTOM_LEFT.setDisable(false);
-                        System.out.println("CornerCardFace: " + face + "botton Bottom_Left enabled");
                     }
                     else {
                         c.BOTTOM_LEFT.setStyle("-fx-background-color: transparent; -fx-border-width: 0;");
                         c.BOTTOM_LEFT.setDisable(true);
-                        System.out.println("CornerCardFace: " + face + "botton Bottom_Left disabled");
                     }
                     if(controller.getPlayerByName(controller.getMyName()).getManuscript().isPlaceable(c.x + 1, c.y - 1, face)){
                         c.BOTTOM_RIGHT.setStyle("-fx-background-color: transparent; -fx-border-width: 2; -fx-border-color: gold;");
                         c.BOTTOM_RIGHT.setDisable(false);
-                        System.out.println("CornerCardFace: " + face + "botton Bottom_Right enabled");
                     }
                     else {
                         c.BOTTOM_RIGHT.setStyle("-fx-background-color: transparent; -fx-border-width: 0;");
                         c.BOTTOM_RIGHT.setDisable(true);
-                        System.out.println("CornerCardFace: " + face + "botton Bottom_right disabled");
                     }
                     if(controller.getPlayerByName(controller.getMyName()).getManuscript().isPlaceable(c.x - 1, c.y + 1, face)){
                         c.TOP_LEFT.setStyle("-fx-background-color: transparent; -fx-border-width: 2; -fx-border-color: gold;");
                         c.TOP_LEFT.setDisable(false);
-                        System.out.println("CornerCardFace: " + face + "botton Top_Left enabled");
                     }
                     else {
                         c.TOP_LEFT.setStyle("-fx-background-color: transparent; -fx-border-width: 0;");
                         c.TOP_LEFT.setDisable(true);
-                        System.out.println("CornerCardFace: " + face + "botton Top_Left disabled");
                     }
                     if(controller.getPlayerByName(controller.getMyName()).getManuscript().isPlaceable(c.x + 1, c.y + 1, face)){
                         c.TOP_RIGHT.setStyle("-fx-background-color: transparent; -fx-border-width: 2; -fx-border-color: gold;");
                         c.TOP_RIGHT.setDisable(false);
-                        System.out.println("CornerCardFace: " + face + "botton Top_Right enabled");
                     }
                     else {
                         c.TOP_RIGHT.setStyle("-fx-background-color: transparent; -fx-border-width: 0;");
                         c.TOP_RIGHT.setDisable(true);
-                        System.out.println("CornerCardFace: " + face + "botton Top_Right disabled");
                     }
                 } catch (PlayerNotFoundByNameException e) {
                     throw new RuntimeException(e);
@@ -433,27 +430,33 @@ public class MainBoardSceneController extends SceneController {
                 }
             }
         }
+        updateLeaderBoard();
     }
 
     /**
      * Updates the player order in the leaderboard tab
      */
     public void updateLeaderBoard() {
+        System.out.println("Leaderboard updated");
         List<Player> sorted = new ArrayList<Player>(controller.getPlayers());
         sorted.sort((p1, p2) -> p2.getPoints() - p1.getPoints());
-        if (sorted.size() > 0) {
-            Player1.setText(sorted.get(0).getName() + " " + sorted.get(0).getPoints());
-        }
-        if (sorted.size() > 1) {
-            Player2.setText(sorted.get(1).getName() + " " + sorted.get(1).getPoints());
-        }
+        Player1.setText("Player: " + sorted.get(0).getName() + " Points: " + sorted.get(0).getPoints());
+        Player2.setText("Player: " + sorted.get(1).getName() + " Points: " + sorted.get(1).getPoints());
         if (sorted.size() > 2) {
-            Player3.setText(sorted.get(2).getName() + " " + sorted.get(2).getPoints());
+            Player3.setText("Player: " + sorted.get(2).getName() + " Points: " + sorted.get(2).getPoints());
+        } else {
+            Player3.setText("");
         }
         if (sorted.size() > 3) {
-            Player4.setText(sorted.get(3).getName() + " " + sorted.get(3).getPoints());
+            Player4.setText("Player: " + sorted.get(3).getName() + " Points: " + sorted.get(3).getPoints());
+        } else {
+            Player4.setText("");
         }
 
+    }
+
+    public void chat_button_action() {
+        controller.sendChatMessage(chatField.getText());
     }
 
 }
