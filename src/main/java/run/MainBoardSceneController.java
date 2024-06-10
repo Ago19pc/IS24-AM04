@@ -16,7 +16,6 @@ import javafx.scene.control.*;
 import javafx.scene.effect.Glow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.text.Text;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -114,7 +113,7 @@ public class MainBoardSceneController extends SceneController {
      * Rotates the first card in hand to see the other face
      */
     public void rotateFirstCard() {
-        firstCardImage.setImage(getImageFromCard(controller.getHand().get(0), firstFace.getOpposite()));
+        firstCardImage.setImage(getImageFromCard(controller.getHand().getFirst(), firstFace.getOpposite()));
         firstFace = firstFace.getOpposite();
     }
 

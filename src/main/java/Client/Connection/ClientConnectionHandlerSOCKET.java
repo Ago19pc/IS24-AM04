@@ -134,6 +134,10 @@ public class ClientConnectionHandlerSOCKET extends Thread implements ClientConne
         clientSocket.close();
     }
 
+    /**
+     * Executes a message
+     * @param message the message to execute
+     */
     public void executeMessage(ToClientMessage message) {
         message.clientExecute(controller);
     }

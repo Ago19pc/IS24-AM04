@@ -25,10 +25,20 @@ public class ClientConnectionHandlerRMI implements ClientConnectionHandler {
     private ClientController controller;
     int rmi_client_port;
 
+    /**
+     * Sets the port for the RMI connection
+     * @param rmi_port, the port
+     * @throws RemoteException
+     */
     public ClientConnectionHandlerRMI(int rmi_port) throws RemoteException {
         this.rmi_client_port = rmi_port;
     }
 
+    /**
+     * Locates the RMI server
+     * @param server_rmi_host
+     * @throws RemoteException
+     */
     public void setServer(String server_rmi_host) throws RemoteException {
         serverRegistry = LocateRegistry.getRegistry(server_rmi_host, 1099);
         try {
@@ -39,6 +49,10 @@ public class ClientConnectionHandlerRMI implements ClientConnectionHandler {
 
     }
 
+    /**
+     * Sets the controller
+     * @param controller
+     */
     public void setController(ClientController controller) {
         this.controller = controller;
     }
@@ -72,18 +86,34 @@ public class ClientConnectionHandlerRMI implements ClientConnectionHandler {
         message.clientExecute(controller);
     }
 
+    /**
+     * Save the server in the local variable
+     * @throws RemoteException
+     */
     public void setServer(ServerConnectionHandler server) {
         this.server = server;
     }
 
+    /**
+     * For the ping returns true
+     * @throws RemoteException
+     */
     public boolean ping() {
         return true;
     }
 
+    /**
+     * Get the RMI client port
+     * @return the RMI client port
+     */
     public int getRmi_client_port() {
         return rmi_client_port;
     }
 
+    /**
+     * Set the RMI client port
+     * @param rmi_client_port
+     */
     public void setRmi_client_port(int rmi_client_port) {
         this.rmi_client_port = rmi_client_port;
         try {

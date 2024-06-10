@@ -58,31 +58,62 @@ public class ClientController {
         this.gameState = GameState.LOBBY;
     }
 
+    /**
+     * @return true if you're joining a saved game
+     */
     public boolean isSavedGame() {
         return isSavedGame;
     }
 
+    /**
+     * Sets the name of the player
+     * @param name
+     */
     public void setName(String name) {
         this.myName = name;
     }
+
+    /**
+     * @return the list of card from witch you can choose the secret achievement
+     */
     public List<AchievementCard> getPotentialSecretAchievements() {
         return potentialSecretAchievements;
     }
+
+    /**
+     * Sets the selected handcard
+     * @param chosenHandCard, the position of the card in hand
+     */
     public void setChosenHandCard(Integer chosenHandCard) {
         this.chosenHandCard = chosenHandCard;
     }
 
+    /**
+     * @return the selected handcard
+     */
     public Integer getChosenHandCard() {
         return chosenHandCard;
     }
 
     //helper methods
+
+    /**
+     * Gets the player with the given name
+     * @param name, the name of the player
+     * @return player, the player with the provided name
+     * @throws PlayerNotFoundByNameException if player can't be found
+     */
     public Player getPlayerByName(String name) throws PlayerNotFoundByNameException {
         for (Player p : this.players){
             if (p.getName().equals(name)) return p;
         }
         throw new PlayerNotFoundByNameException(name);
     }
+
+    /**
+     * Gets the color of the player
+     * @return color, the color of the player
+     */
     public Color getMyColor() {
         Color myColor = null;
         try {
@@ -92,9 +123,19 @@ public class ClientController {
         }
         return myColor;
     }
+
+    /**
+     * Gets the id of the player
+     * @return id, the id of the player
+     */
     public String getMyId() {
         return id;
     }
+
+    /**
+     * Sets the color of the player
+     * @param color, the color
+     */
     public void setMyColor(Color color) {
         try {
             getPlayerByName(myName).setColor(color);
@@ -102,19 +143,40 @@ public class ClientController {
             e.printStackTrace();
         }
     }
+
+    /**
+     * Sets the id of the player
+     * @param id, the ID
+     */
     public void setId(String id) {
         this.id = id;
     }
 
     //ui actions
+
+    /**
+     * Called when you want to reconnect to a game
+     * @param newId, the old id of the player
+     */
     public void reconnect(String newId) {
         ReconnectionMessage message = new ReconnectionMessage(id, newId);
         clientConnectionHandler.sendMessage(message);
     }
+
+    /**
+     * Called when you want to join a game that was saved
+     * @param name, your name
+     */
     public void joinSavedGame(String name) {
         SavedGameMessage savedGameMessage = new SavedGameMessage(id, name);
         clientConnectionHandler.sendMessage(savedGameMessage);
     }
+
+    /**
+     * Called when you want to join a game
+     * @param ip, the ip of the server
+     * @param port, the port of the server (watch out! it should be the port for what kind of connection you choose, RMI or SOCKET)
+     */
     public void joinServer(String ip, int port) {
         try {
             clientConnectionHandler = new GeneralClientConnectionHandler(this, rmiMode);
@@ -126,12 +188,12 @@ public class ClientController {
             ui.successfulConnection();
         } catch (IOException | NotBoundException e){
             ui.connectionFailed();
-        } catch (ClientExecuteNotCallableException e) {
-            throw new RuntimeException(e);
-        } catch (PlayerNotFoundByNameException e) {
-            throw new RuntimeException(e);
         }
     }
+
+    /**
+     * Called when you want to be Ready to start the game
+     */
     public void setReady() {
         if (myName == null || getMyColor() == null) {
             ui.needNameOrColor();
@@ -144,6 +206,11 @@ public class ClientController {
             e.printStackTrace();
         }
     }
+
+    /**
+     * Called when you choose a color, the server will respond if your choice is legal
+     * @param color, the color you are asking for
+     */
     public void askSetColor(String color) {
         if (this.myName == null) {
             ui.needName();
@@ -168,6 +235,11 @@ public class ClientController {
             e.printStackTrace();
         }
     }
+
+    /**
+     * Called when you want to send a chat message
+     * @param message, the message you want to send
+     */
     public void sendChatMessage (String message){
         if (myName == null) {
             ui.needName();
@@ -176,6 +248,11 @@ public class ClientController {
         ChatMessage chatMessage = new ChatMessage(message, id);
         clientConnectionHandler.sendMessage(chatMessage);
     }
+
+    /**
+     * Called when you want to choose your name, you're asking if it's ok for the server
+     * @param name, the name you want
+     */
     public void askSetName(String name) {
         this.proposedName = name;
         PlayerNameMessage playerNameMessage = new PlayerNameMessage(proposedName, true, id);
@@ -185,9 +262,19 @@ public class ClientController {
             ui.nameChangeFailed();
         }
     }
+
+    /**
+     * Do you want to connect via RMI?
+     * @param rmi, true if you want RMI
+     */
     public void setRMIMode(boolean rmi) {
         this.rmiMode = rmi;
     }
+
+    /**
+     * Choose the starting card face
+     * @param face, the face (FRONT or BACK)
+     */
     public void chooseStartingCardFace(Face face) {
         SetStartingCardMessage startingCardMessage = new SetStartingCardMessage(face, id);
         try {
@@ -196,6 +283,11 @@ public class ClientController {
             e.printStackTrace();
         }
     }
+
+    /**
+     * Choose the secret achievement card
+     * @param index, which card you want to choose
+     */
     public void chooseSecretAchievement(int index) {
 
         this.indexofSecretAchievement = index;
@@ -206,6 +298,14 @@ public class ClientController {
             e.printStackTrace();
         }
     }
+
+    /**
+     * Ask the server if the placement you want to make is possible
+     * @param cardNumber the index of the card in your hand
+     * @param face front or back
+     * @param x x coord
+     * @param y y coord
+     */
     public void askPlayCard(int cardNumber, Face face, int x, int y) {
         chosenHandCard = cardNumber;
         PlayCardMessage placeCardMessage = new PlayCardMessage(id, cardNumber, face, x, y);
@@ -215,6 +315,12 @@ public class ClientController {
             e.printStackTrace();
         }
     }
+
+    /**
+     * Ask the server to draw a card
+     * @param deck which deck? Gold or Resource
+     * @param deckPosition from where? Deck, First or Second
+     */
     public void askDrawCard(Decks deck, DeckPosition deckPosition) {
         DrawCardMessage drawCardMessage = new DrawCardMessage(deckPosition, deck, id);
         try {
@@ -225,15 +331,35 @@ public class ClientController {
     }
 
     //ui getters
+
+    /**
+     * Index of the secretAchievementCard chosen
+     * @return the index
+     */
     public int getIndexofSecretAchievement() {
         return indexofSecretAchievement;
     }
+
+    /**
+     * Getter for the name
+     * @return myName
+     */
     public String getMyName() {
         return myName;
     }
+
+    /**
+     * Getter for list of players
+     * @return the list of players
+     */
     public List<Player> getPlayers() {
         return players;
     }
+
+    /**
+     * Getter for the gameState
+     * @return the gameState
+     */
     public GameState getGameState() {
         return gameState;
     }
@@ -250,12 +376,25 @@ public class ClientController {
         }
         return availableColors;
     }
+
+    /**
+     * Gets the list of card in your hand
+     * @return List<Card> handCards
+     */
     public List<Card> getHand() {
         return hand;
     }
+
+    /**
+     * @return List<AchievementCard> commonAchievements, the achievements common to all players
+     */
     public List<AchievementCard> getCommonAchievements() {
         return commonAchievements;
     }
+
+    /**
+     * @return the ordered leatherboard as a map
+     */
     public Map<String, Integer> getLeaderboard(){
         Map<String, Integer> leaderboard = new LinkedHashMap<>(); //linkedhashmap keeps order of insertion which will be the player order
         List<Player> orderedPlayers = players.stream().sorted((p1, p2) -> {
@@ -268,6 +407,12 @@ public class ClientController {
         }
         return leaderboard;
     }
+
+    /**
+     * Get how many cards are left in the selected deck
+     * @param deck Gold or Resource
+     * @return the quantity
+     */
     public int getDeckSize(Decks deck){
         return switch (deck) {
             case GOLD -> goldDeck.getDeckSize();
@@ -275,6 +420,12 @@ public class ClientController {
             default -> 0;
         };
     }
+
+    /**
+     * Get the card on the board from the selected deck
+     * @param deck Gold or Resource
+     * @return List<Card>
+     */
     public List<Card> getBoardCards(Decks deck){
         List<Card> boardCards = new ArrayList<>();
         switch (deck){
@@ -289,15 +440,30 @@ public class ClientController {
         }
         return boardCards;
     }
+
+    /**
+     * Get the player that is currently playing
+     * @return the player
+     */
     public Player getActivePlayer(){
         for (Player p : players){
             if (p.isActive()) return p;
         }
         return null;
     }
+
+    /**
+     * Get the turn number
+     * @return the turn number
+     */
     public int getTurn() {
         return turn;
     }
+
+    /**
+     * Get the list of player names
+     * @return List of names
+     */
     public List<String> getPlayerNames(){
         List<String> playerNames = new ArrayList<>();
         for (Player p : players){
@@ -307,6 +473,7 @@ public class ClientController {
     }
 
     //methods called by incoming messages
+
     public void loadLobbyInfo(String id, List<String> playerNames, Map<String, Color> playerColors, Map<String, Boolean> playerReady, Boolean isSavedGame) {
         this.isSavedGame = isSavedGame;
         setId(id);
