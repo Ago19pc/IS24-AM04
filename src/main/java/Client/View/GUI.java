@@ -260,7 +260,7 @@ public class GUI implements UI{
             ((ColorReadySceneController) sceneControllerMap.get(SceneName.SETCOLOR)).chat_messages.getItems().add( message.getName() + ": "+  message.getMessage());
             ((ColorReadySceneController) sceneControllerMap.get(SceneName.SETCOLOR)).messageToSend.clear();
             ((NameReadySceneController) sceneControllerMap.get(SceneName.SETNAME)).chat_message.getItems().add( message.getName() + ": "+  message.getMessage());
-
+            ((MainBoardSceneController) sceneControllerMap.get(SceneName.GAME)).chatMessages.getItems().add( message.getName() + ": "+  message.getMessage());
             //todo: for others scene
         });
     }
@@ -319,9 +319,9 @@ public class GUI implements UI{
     public void newTurn() {
         Platform.runLater(() -> {
         if (controller.getActivePlayer().getName().equals(controller.getMyName())) {
-            ((MainBoardSceneController) sceneControllerMap.get(SceneName.GAME)).yourTurnText.setVisible(true);
+            ((MainBoardSceneController) sceneControllerMap.get(SceneName.GAME)).yourTurnLabel.setVisible(true);
         } else {
-            ((MainBoardSceneController) sceneControllerMap.get(SceneName.GAME)).yourTurnText.setVisible(false);
+            ((MainBoardSceneController) sceneControllerMap.get(SceneName.GAME)).yourTurnLabel.setVisible(false);
         }
         });
 
@@ -511,9 +511,9 @@ public class GUI implements UI{
                     regenerateManuscript();
 
                     if (controller.getActivePlayer().getName().equals(controller.getMyName())) {
-                        ((MainBoardSceneController) sceneControllerMap.get(SceneName.GAME)).yourTurnText.setVisible(true);
+                        ((MainBoardSceneController) sceneControllerMap.get(SceneName.GAME)).yourTurnLabel.setVisible(true);
                     } else {
-                        ((MainBoardSceneController) sceneControllerMap.get(SceneName.GAME)).yourTurnText.setVisible(false);
+                        ((MainBoardSceneController) sceneControllerMap.get(SceneName.GAME)).yourTurnLabel.setVisible(false);
                     }
 
                     secretAchievementChosen(controller.getMyName());
