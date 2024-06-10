@@ -89,6 +89,7 @@ public class MainBoardSceneController extends SceneController {
      * @return
      */
     private Image getImageFromCard(Card card, Face face) {
+        if (card == null) return new Image(getClass().getResourceAsStream("/images/Faces/back-96.jpeg"));
         return new Image(getClass().getResourceAsStream("/images/Faces/" + card.getFace(face).getImageURI()));
     }
 
@@ -99,6 +100,7 @@ public class MainBoardSceneController extends SceneController {
      * @return
      */
     private Image getImageFromCard(CardFace cardFace) {
+        if (cardFace == null) return new Image(getClass().getResourceAsStream("/images/Faces/back-96.jpeg"));
         return new Image(getClass().getResourceAsStream("/images/Faces/" + cardFace.getImageURI()));
     }
 
