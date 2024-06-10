@@ -340,6 +340,7 @@ public class GUI implements UI{
             if (name.equals(controller.getMyName())){
                 ((ChooseSecretCardController) sceneControllerMap.get(SceneName.SECRETCARDCHOICE)).confirmation();
                 ((MainBoardSceneController) sceneControllerMap.get(SceneName.GAME)).setSecretCard(controller.getSecretAchievement());
+                ((MainBoardSceneController) sceneControllerMap.get(SceneName.GAME)).setup();
                 stage.setScene(getScene(SceneName.GAME));
             }
 
@@ -489,7 +490,6 @@ public class GUI implements UI{
 
     @Override
     public void displayGameInfo() {
-        System.out.println("Game info displayed before platform runlater");
         Platform.runLater(() -> {
             System.out.println("Game info displayed");
             switch (controller.getGameState()) {
@@ -518,6 +518,7 @@ public class GUI implements UI{
                     }
 
                     secretAchievementChosen(controller.getMyName());
+                    ((MainBoardSceneController) sceneControllerMap.get(SceneName.GAME)).setup();
 
                     stage.setScene(getScene(SceneName.GAME));
                     stage.show();

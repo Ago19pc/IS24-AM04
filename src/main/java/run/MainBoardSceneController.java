@@ -20,7 +20,9 @@ import javafx.scene.image.ImageView;
 import javafx.scene.text.Text;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class MainBoardSceneController extends SceneController {
 
@@ -40,7 +42,10 @@ public class MainBoardSceneController extends SceneController {
     @FXML
     public Text yourTurnText;
     @FXML
-    public List<OtherPlayerTab> otherPlayerTabs = new ArrayList<>();
+    /**
+    Maps the player name to the tab of the player
+     */
+    public Map<String, OtherPlayerTab> otherPlayerTabs = new HashMap<>();
     @FXML
     public Label Player1, Player2, Player3, Player4;
 
@@ -165,7 +170,11 @@ public class MainBoardSceneController extends SceneController {
             OnBoardCard card = new OnBoardCard(getImageFromCard(cardFace), x, y, null, this);
             card.place(yourManuscript);
         } else {
-            // piazza la carta nel manoscritto di un altro
+            OtherPlayerTab tab = otherPlayerTabs.get(name);
+            if (tab != null) {
+                OnBoardCard card = new OnBoardCard(getImageFromCard(cardFace), x, y, null, this);
+                card.place(tab.group);
+            }
         }
 
     }
@@ -344,7 +353,7 @@ public class MainBoardSceneController extends SceneController {
         for(Player p : controller.getPlayers()) {
             if(!p.getName().equals(controller.getMyName())) {
                 OtherPlayerTab tab = new OtherPlayerTab(p.getName());
-                otherPlayerTabs.add(tab);
+                otherPlayerTabs.put(p.getName(), tab);
             }
         }
     }
