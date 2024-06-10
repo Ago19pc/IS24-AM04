@@ -5,7 +5,6 @@ import javafx.event.ActionEvent;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
-import javafx.scene.control.TextField;
 import javafx.scene.layout.Pane;
 
 public class ColorReadySceneController extends  SceneController{
@@ -22,7 +21,6 @@ public class ColorReadySceneController extends  SceneController{
     public ListView<String> list_Player;
     public Button confirm_Color_Button;
     public ListView<String> chat_messages;
-    public TextField messageToSend;
 
 
     /**
@@ -101,12 +99,6 @@ public class ColorReadySceneController extends  SceneController{
         controller.askSetColor(color.toString());
     }
 
-    /**
-     * This method is called when the player wants to send a message in the chat
-     * @param actionEvent
-     */
-    public void sendMessages(ActionEvent actionEvent) {
-        controller.sendChatMessage(messageToSend.getText());
-    }
+
 
 }

@@ -17,7 +17,6 @@ import javafx.scene.control.Label;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.effect.Glow;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.text.Text;
 
@@ -80,28 +79,6 @@ public class MainBoardSceneController extends SceneController {
      */
     public void setSecretCard(Card card) {
         secretCardImage.setImage(getImageFromCard(card, Face.FRONT));
-    }
-
-    /**
-     * Returns the image of the card
-     * @param card the card
-     * @param face the face
-     * @return
-     */
-    private Image getImageFromCard(Card card, Face face) {
-        if (card == null) return new Image(getClass().getResourceAsStream("/images/Faces/back-96.jpeg"));
-        return new Image(getClass().getResourceAsStream("/images/Faces/" + card.getFace(face).getImageURI()));
-    }
-
-    /**
-     * This method is the same as the one above, but it takes a CardFace instead of a Face, so you can use the same method in different situations
-     * Returns the image of the cardface
-     * @param cardFace the cardface
-     * @return
-     */
-    private Image getImageFromCard(CardFace cardFace) {
-        if (cardFace == null) return new Image(getClass().getResourceAsStream("/images/Faces/back-96.jpeg"));
-        return new Image(getClass().getResourceAsStream("/images/Faces/" + cardFace.getImageURI()));
     }
 
     /**

@@ -260,7 +260,10 @@ public class GUI implements UI{
             ((ColorReadySceneController) sceneControllerMap.get(SceneName.SETCOLOR)).chat_messages.getItems().add( message.getName() + ": "+  message.getMessage());
             ((ColorReadySceneController) sceneControllerMap.get(SceneName.SETCOLOR)).messageToSend.clear();
             ((NameReadySceneController) sceneControllerMap.get(SceneName.SETNAME)).chat_message.getItems().add( message.getName() + ": "+  message.getMessage());
-
+            ((ChooseSecretCardController) sceneControllerMap.get(SceneName.SECRETCARDCHOICE)).chat_message.getItems().add( message.getName() + ": "+  message.getMessage());
+            ((ChooseSecretCardController) sceneControllerMap.get(SceneName.SECRETCARDCHOICE)).messageToSend.clear();
+            ((ChooseStartingCardController) sceneControllerMap.get(SceneName.STARTINGCARDCHOICE)).chat_message.getItems().add( message.getName() + ": "+  message.getMessage());
+            ((ChooseStartingCardController) sceneControllerMap.get(SceneName.STARTINGCARDCHOICE)).messageToSend.clear();
             //todo: for others scene
         });
     }

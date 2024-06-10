@@ -5,6 +5,7 @@ import Server.Card.CornerCardFace;
 import Server.Exception.PlayerNotFoundByNameException;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.ListView;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.text.Text;
@@ -23,6 +24,8 @@ public class ChooseStartingCardController extends SceneController {
     public Text backFaceText;
     public Text frontFaceText;
     public Text chosenCardText;
+    public ListView<String> chat_message;
+    public Button sendButton;
     @FXML
     private Face chosenFace;
 
