@@ -467,7 +467,6 @@ public class ControllerInstance implements Controller{
             if (e.getMessage() == "Regular cards do not have score requirements") ;
             scoreRequirements = null;
         }
-        System.out.println("ScoreRequirements " + scoreRequirements + "Player " + player.getName() + " CardPoints " + cardPoints);
         if (scoreRequirements != null) {
             Symbol requiredSymbol = (Symbol) scoreRequirements.keySet().toArray()[0];
             int i = 0;
@@ -477,11 +476,7 @@ public class ControllerInstance implements Controller{
                 }
                 i++;
             }
-            /*System.out.println("///////////////////////////");
-            System.out.println("RequiredSymbol " + requiredSymbol);
-            System.out.println("///////////////////////////");*/
             int requiredQuantity = scoreRequirements.get(requiredSymbol);
-            System.out.println("RequiredQuantity " + requiredQuantity);
             int actualQuantity;
             if (requiredSymbol == Symbol.COVERED_CORNER) {
                 actualQuantity = player.getManuscript().getNeighbors(xCoord, yCoord).size();
