@@ -628,6 +628,7 @@ public class ControllerInstance implements Controller{
         gameModel = new GameModelInstance();
         givenStartingCards = new HashMap<>();
         givenSecretObjectiveCards = new HashMap<>();
+        gameState = GameState.LOBBY;
     }
 
     public void setReady(Player player) throws MissingInfoException, AlreadyStartedException {
