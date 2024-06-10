@@ -260,6 +260,10 @@ public class GUI implements UI{
             ((ColorReadySceneController) sceneControllerMap.get(SceneName.SETCOLOR)).chat_messages.getItems().add( message.getName() + ": "+  message.getMessage());
             ((ColorReadySceneController) sceneControllerMap.get(SceneName.SETCOLOR)).messageToSend.clear();
             ((NameReadySceneController) sceneControllerMap.get(SceneName.SETNAME)).chat_message.getItems().add( message.getName() + ": "+  message.getMessage());
+            ((ChooseSecretCardController) sceneControllerMap.get(SceneName.SECRETCARDCHOICE)).chat_message.getItems().add( message.getName() + ": "+  message.getMessage());
+            ((ChooseSecretCardController) sceneControllerMap.get(SceneName.SECRETCARDCHOICE)).messageToSend.clear();
+            ((ChooseStartingCardController) sceneControllerMap.get(SceneName.STARTINGCARDCHOICE)).chat_message.getItems().add( message.getName() + ": "+  message.getMessage());
+            ((ChooseStartingCardController) sceneControllerMap.get(SceneName.STARTINGCARDCHOICE)).messageToSend.clear();
             ((MainBoardSceneController) sceneControllerMap.get(SceneName.GAME)).chatMessages.getItems().add( message.getName() + ": "+  message.getMessage());
             //todo: for others scene
         });
@@ -335,6 +339,8 @@ public class GUI implements UI{
     @Override
     public void secretAchievementChosen(String name) {
         Platform.runLater(() -> {
+            System.out.println("Secret achievement chosen name : "+ name);
+            System.out.println("Secret achievement chosen achievement : "+ controller.getSecretAchievement());
             if (name.equals(controller.getMyName())){
                 ((ChooseSecretCardController) sceneControllerMap.get(SceneName.SECRETCARDCHOICE)).confirmation();
                 ((MainBoardSceneController) sceneControllerMap.get(SceneName.GAME)).setSecretCard(controller.getSecretAchievement());
@@ -430,6 +436,7 @@ public class GUI implements UI{
     @Override
     public void displayPlayerPoints(String playerName) throws PlayerNotFoundByNameException {
         Platform.runLater(() -> {
+            System.out.println("Player points displayed");
             ((MainBoardSceneController) sceneControllerMap.get(SceneName.GAME)).updateLeaderBoard();
         });
 
@@ -437,6 +444,7 @@ public class GUI implements UI{
 
     @Override
     public void cardPlaced(String playerName, CornerCardFace cornerCardFace, int x, int y) {
+        System.out.println("Card placed in x: " + x + " y: " + y + " by " + playerName);
         Platform.runLater(() -> {
             ((MainBoardSceneController) sceneControllerMap.get(SceneName.GAME)).updateManuscript(playerName, cornerCardFace, x, y);
             ((MainBoardSceneController) sceneControllerMap.get(SceneName.GAME)).removeCardFromHand(playerName);
@@ -465,7 +473,6 @@ public class GUI implements UI{
     public void displayId() {
         Platform.runLater(() -> {
             ((NameReadySceneController) sceneControllerMap.get(SceneName.SETNAME)).setup();
-            System.out.println("ID: " + controller.getMyId());
         });
 
     }
@@ -493,10 +500,13 @@ public class GUI implements UI{
     @Override
     public void displayGameInfo() {
         Platform.runLater(() -> {
+            System.out.println("Game info displayed");
             switch (controller.getGameState()) {
                 case LOBBY:
+                    System.out.println("Lobby");
                     throw new RuntimeException("Unexpected game state");
                 case CHOOSE_STARTING_CARD:
+                    System.out.println("Choose starting card");
                     ((MainBoardSceneController) sceneControllerMap.get(SceneName.GAME)).setup();
                     stage.setScene(getScene(SceneName.STARTINGCARDCHOICE));
                     stage.show();
@@ -505,6 +515,7 @@ public class GUI implements UI{
                     chooseSecretAchievement(controller.getPotentialSecretAchievements());
                     break;
                 default:
+                    System.out.println("Game started! reconnection  19");
                     displayHand();
                     displayBoardCards();
                     displayCommonAchievements();
@@ -523,6 +534,7 @@ public class GUI implements UI{
                     stage.show();
                     break;
         }
+        System.out.println("Game info displayed 19");
         });
     }
 
