@@ -323,9 +323,9 @@ public class GUI implements UI{
     public void newTurn() {
         Platform.runLater(() -> {
         if (controller.getActivePlayer().getName().equals(controller.getMyName())) {
-            ((MainBoardSceneController) sceneControllerMap.get(SceneName.GAME)).yourTurnText.setVisible(true);
+            ((MainBoardSceneController) sceneControllerMap.get(SceneName.GAME)).yourTurnLabel.setVisible(true);
         } else {
-            ((MainBoardSceneController) sceneControllerMap.get(SceneName.GAME)).yourTurnText.setVisible(false);
+            ((MainBoardSceneController) sceneControllerMap.get(SceneName.GAME)).yourTurnLabel.setVisible(false);
         }
         });
 
@@ -522,9 +522,9 @@ public class GUI implements UI{
                     regenerateManuscript();
 
                     if (controller.getActivePlayer().getName().equals(controller.getMyName())) {
-                        ((MainBoardSceneController) sceneControllerMap.get(SceneName.GAME)).yourTurnText.setVisible(true);
+                        ((MainBoardSceneController) sceneControllerMap.get(SceneName.GAME)).yourTurnLabel.setVisible(true);
                     } else {
-                        ((MainBoardSceneController) sceneControllerMap.get(SceneName.GAME)).yourTurnText.setVisible(false);
+                        ((MainBoardSceneController) sceneControllerMap.get(SceneName.GAME)).yourTurnLabel.setVisible(false);
                     }
 
                     secretAchievementChosen(controller.getMyName());
