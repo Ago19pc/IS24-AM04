@@ -429,7 +429,10 @@ public class GUI implements UI{
 
     @Override
     public void displayPlayerPoints(String playerName) throws PlayerNotFoundByNameException {
-        ((MainBoardSceneController) sceneControllerMap.get(SceneName.GAME)).updateLeaderBoard();
+        Platform.runLater(() -> {
+            ((MainBoardSceneController) sceneControllerMap.get(SceneName.GAME)).updateLeaderBoard();
+        });
+
     }
 
     @Override
