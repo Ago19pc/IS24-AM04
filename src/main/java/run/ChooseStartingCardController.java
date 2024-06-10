@@ -1,6 +1,8 @@
 package run;
 
 import Server.Card.Card;
+import Server.Card.CornerCardFace;
+import Server.Exception.PlayerNotFoundByNameException;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
@@ -49,10 +51,10 @@ public class ChooseStartingCardController extends SceneController {
 
     public void confirmationButtonPressed() {
         controller.chooseStartingCardFace(chosenFace);
-
     }
 
     public void confirmation() {
+        System.out.println("Card chosen correctly");
         waitText.setVisible(true);
         firstCard.setOpacity(0);
         firstCard.setDisable(true);
@@ -63,13 +65,20 @@ public class ChooseStartingCardController extends SceneController {
         backFaceText.setOpacity(0);
         frontFaceText.setOpacity(0);
         chosenCardText.setOpacity(1);
+        chosenCardText.setText("Chosen Card");
         chosenCard.setLayoutX(414);
         chosenCard.setLayoutY(264);
         chosenCard.setOpacity(1);
-
+        try {
+            CornerCardFace chosenCardFace = controller.getPlayerByName(controller.getMyName()).getManuscript().getCardByCoord(0, 0);
+            chosenCard.setImage(new Image(getClass().getResource("/images/Faces/"+ chosenCardFace.getImageURI()).toExternalForm()));
+        } catch (PlayerNotFoundByNameException e) {
+            e.printStackTrace();
+        }
     }
 
     public void setUp(Card card) {
+        System.out.println("Setting up scene");
         confirmButton.setDisable(true);
         confirmButton.setOpacity(0);
         firstCard.setImage(new Image(getClass().getResource("/images/Faces/"+ card.getFace(FRONT).getImageURI()).toExternalForm()));
