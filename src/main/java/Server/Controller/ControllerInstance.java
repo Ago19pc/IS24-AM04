@@ -400,7 +400,7 @@ public class ControllerInstance implements Controller{
             }
         } else {
             //sets end game if necessary
-            if (gameModel.getActivePlayerIndex() != -1 && getPlayerList().get(gameModel.getActivePlayerIndex()).getPoints() >= 20) {
+            if (gameModel.getActivePlayerIndex() != -1 && getPlayerList().get(gameModel.getActivePlayerIndex()).getPoints() >= 2) {
                 try {
                     endGame();
                 } catch (AlreadySetException e) {

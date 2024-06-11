@@ -10,6 +10,7 @@ import java.io.Serializable;
 import java.util.*;
 
 import static java.lang.Math.abs;
+import static java.lang.Math.min;
 
 public class Manuscript implements Serializable {
     private final Graph graph;
@@ -99,66 +100,46 @@ public class Manuscript implements Serializable {
      * @return int the points given by the achievement card
      */
     public int calculatePoints(AchievementCard achievementCard) {
-        System.out.println("I am calculating points" );
         Map<Symbol, Integer> scoreRequirements = achievementCard.getFace(Face.FRONT).getScoreRequirements();
+        List<Symbol> requiredSymbols = new ArrayList<>();
+        for(Symbol symbol : scoreRequirements.keySet()){
+            if(scoreRequirements.get(symbol) != 0){
+                requiredSymbols.add(symbol);
+            }
+        }
         int points = 0;
-        int symbolCount = scoreRequirements.keySet().size(); //number of symbols required
-        //todo: make symbolCount with the right size
-
-        // symbolCount now is always 18 (all the symbols) because the scoreRequirements keyset contains all the symbols, also the ones that are not required (with value 0)
-        //symbolCount could be 1 or 3, (3 in the case where I have the card with 1 quill, 1 parchment and 1 bottle and 1 in ALL other cases)
-        System.out.println("Symbol count: " + symbolCount);
-        //int symbolCount = scoreRequirements.keySet().toArray().length; //number of symbols required
-        if(symbolCount == 1){//2 points for each set of the 2 symbols
-            /*int leastCommonSymbolCount = activeSymbols.entrySet().stream().filter(entry -> scoreRequirements.containsKey(entry.getKey()))
-                                                    .min(Map.Entry.comparingByValue()).get().getValue();
-            points = leastCommonSymbolCount * 2;*/
-            if(scoreRequirements.containsKey(Symbol.QUILL)){
+        if(requiredSymbols.size() == 1){
+            if(requiredSymbols.contains(Symbol.QUILL)){
                 int quillCount = activeSymbols.get(Symbol.QUILL);
                 points += quillCount/2 * 2;
-                System.out.println("Quill count: " + quillCount + " Points: " + points);
             }
-            if(scoreRequirements.containsKey(Symbol.PARCHMENT)){
+            if(requiredSymbols.contains(Symbol.PARCHMENT)){
                 int parchmentCount = activeSymbols.get(Symbol.PARCHMENT);
                 points += parchmentCount/2 * 2;
-                System.out.println("Parchment count: " + parchmentCount + " Points: " + points);
             }
-            if(scoreRequirements.containsKey(Symbol.BOTTLE)){
+            if(requiredSymbols.contains(Symbol.BOTTLE)){
                 int bottleCount = activeSymbols.get(Symbol.BOTTLE);
                 points += bottleCount/2 * 2;
-                System.out.println("Bottle count: " + bottleCount + " Points: " + points);
             }
-            if(scoreRequirements.containsKey(Symbol.FUNGUS)){
+            if(requiredSymbols.contains(Symbol.FUNGUS)){
                 int fungusCount = activeSymbols.get(Symbol.FUNGUS);
-                points += fungusCount/3 * 3;
-                System.out.println("Fungus count: " + fungusCount + " Points: " + points);
+                points += fungusCount/3 * 2;
             }
-            if(scoreRequirements.containsKey(Symbol.ANIMAL)){
+            if(requiredSymbols.contains(Symbol.ANIMAL)){
                 int animalCount = activeSymbols.get(Symbol.ANIMAL);
-                points += animalCount/3 * 3;
-                System.out.println("Animal count: " + animalCount + " Points: " + points);
+                points += animalCount/3 * 2;
             }
-            if(scoreRequirements.containsKey(Symbol.PLANT)){
+            if(requiredSymbols.contains(Symbol.PLANT)){
                 int plantCount = activeSymbols.get(Symbol.PLANT);
-                points += plantCount/3 * 3;
-                System.out.println("Plant count: " + plantCount + " Points: " + points);
+                points += plantCount/3 * 2;
             }
-            if(scoreRequirements.containsKey(Symbol.BUG)){
+            if(requiredSymbols.contains(Symbol.BUG)){
                 int bugCount = activeSymbols.get(Symbol.BUG);
-                points += bugCount/3 * 3;
-                System.out.println("Bug count: " + bugCount + " Points: " + points);
+                points += bugCount/3 * 2;
             }
-            //
-            /*int leastCommonSymbolCount = activeSymbols.entrySet().stream().filter(entry -> scoreRequirements.containsKey(entry.getKey()))
-                                                    .min(Map.Entry.comparingByValue()).get().getValue();
-            points = leastCommonSymbolCount * 3;*/
-        }
-        if(symbolCount == 1){
-            Symbol symbol = scoreRequirements.keySet().stream().findFirst().get();
-            if(symbol.isPattern()){ //symbol is a pattern
-                int patternCount = 0;
+            if(requiredSymbols.getFirst().isPattern()){ //symbol is a pattern
                 List<CornerCardFace> usedCards = new LinkedList<>();
-                switch (symbol){ //probably we can optimize these
+                switch (requiredSymbols.getFirst()){ //probably we can optimize these
                     case PATTERN1F -> {
                         for(CornerCardFace card : graph.getAllCards()){
                             try{
@@ -167,10 +148,10 @@ public class Manuscript implements Serializable {
                                     if(secondCard != null && secondCard.getKingdom() == Symbol.FUNGUS && !usedCards.contains(secondCard)){
                                         CornerCardFace thirdCard = getCardByCoord(card.getXCoord() + 2, card.getYCoord() + 2);
                                         if(thirdCard != null && thirdCard.getKingdom() == Symbol.FUNGUS && !usedCards.contains(thirdCard)){
-                                            patternCount++;
                                             usedCards.add(card);
                                             usedCards.add(secondCard);
                                             usedCards.add(thirdCard);
+                                            points += 2;
                                         }
                                     }
                                 }
@@ -187,10 +168,10 @@ public class Manuscript implements Serializable {
                                     if(secondCard != null && secondCard.getKingdom() == Symbol.ANIMAL && !usedCards.contains(secondCard)){
                                         CornerCardFace thirdCard = getCardByCoord(card.getXCoord() + 2, card.getYCoord() + 2);
                                         if(thirdCard != null && thirdCard.getKingdom() == Symbol.ANIMAL && !usedCards.contains(thirdCard)){
-                                            patternCount++;
                                             usedCards.add(card);
                                             usedCards.add(secondCard);
                                             usedCards.add(thirdCard);
+                                            points += 2;
                                         }
                                     }
                                 }
@@ -207,10 +188,10 @@ public class Manuscript implements Serializable {
                                     if(secondCard != null && secondCard.getKingdom() == Symbol.PLANT && !usedCards.contains(secondCard)){
                                         CornerCardFace thirdCard = getCardByCoord(card.getXCoord() + 2, card.getYCoord() - 2);
                                         if(thirdCard != null && thirdCard.getKingdom() == Symbol.PLANT && !usedCards.contains(thirdCard)){
-                                            patternCount++;
                                             usedCards.add(card);
                                             usedCards.add(secondCard);
                                             usedCards.add(thirdCard);
+                                            points += 2;
                                         }
                                     }
                                 }
@@ -227,10 +208,10 @@ public class Manuscript implements Serializable {
                                     if(secondCard != null && secondCard.getKingdom() == Symbol.BUG && !usedCards.contains(secondCard)){
                                         CornerCardFace thirdCard = getCardByCoord(card.getXCoord() + 2, card.getYCoord() - 2);
                                         if(thirdCard != null && thirdCard.getKingdom() == Symbol.BUG && !usedCards.contains(thirdCard)){
-                                            patternCount++;
                                             usedCards.add(card);
                                             usedCards.add(secondCard);
                                             usedCards.add(thirdCard);
+                                            points += 2;
                                         }
                                     }
                                 }
@@ -247,10 +228,10 @@ public class Manuscript implements Serializable {
                                     if(secondCard != null && secondCard.getKingdom() == Symbol.FUNGUS && !usedCards.contains(secondCard)){
                                         CornerCardFace thirdCard = getCardByCoord(card.getXCoord() + 1, card.getYCoord() - 3);
                                         if(thirdCard != null && thirdCard.getKingdom() == Symbol.PLANT && !usedCards.contains(thirdCard)){
-                                            patternCount++;
                                             usedCards.add(card);
                                             usedCards.add(secondCard);
                                             usedCards.add(thirdCard);
+                                            points += 3;
                                         }
                                     }
                                 }
@@ -267,10 +248,10 @@ public class Manuscript implements Serializable {
                                     if(secondCard != null && secondCard.getKingdom() == Symbol.PLANT && !usedCards.contains(secondCard)){
                                         CornerCardFace thirdCard = getCardByCoord(card.getXCoord() - 1, card.getYCoord() - 3);
                                         if(thirdCard != null && thirdCard.getKingdom() == Symbol.BUG && !usedCards.contains(thirdCard)){
-                                            patternCount++;
                                             usedCards.add(card);
                                             usedCards.add(secondCard);
                                             usedCards.add(thirdCard);
+                                            points += 3;
                                         }
                                     }
                                 }
@@ -287,10 +268,10 @@ public class Manuscript implements Serializable {
                                     if(secondCard != null && secondCard.getKingdom() == Symbol.ANIMAL && !usedCards.contains(secondCard)){
                                         CornerCardFace thirdCard = getCardByCoord(card.getXCoord() + 1, card.getYCoord() + 3);
                                         if(thirdCard != null && thirdCard.getKingdom() == Symbol.FUNGUS && !usedCards.contains(thirdCard)){
-                                            patternCount++;
                                             usedCards.add(card);
                                             usedCards.add(secondCard);
                                             usedCards.add(thirdCard);
+                                            points += 3;
                                         }
                                     }
                                 }
@@ -307,10 +288,10 @@ public class Manuscript implements Serializable {
                                     if(secondCard != null && secondCard.getKingdom() == Symbol.BUG && !usedCards.contains(secondCard)){
                                         CornerCardFace thirdCard = getCardByCoord(card.getXCoord() - 1, card.getYCoord() + 3);
                                         if(thirdCard != null && thirdCard.getKingdom() == Symbol.ANIMAL && !usedCards.contains(thirdCard)){
-                                            patternCount++;
                                             usedCards.add(card);
                                             usedCards.add(secondCard);
                                             usedCards.add(thirdCard);
+                                            points += 3;
                                         }
                                     }
                                 }
@@ -320,15 +301,17 @@ public class Manuscript implements Serializable {
                         }
                     }
                 }
-                int pointsGained = scoreRequirements.get(symbol);
-                return patternCount * pointsGained;
-            } else {
-                int requiredSymbolCount = scoreRequirements.get(symbol); //can either be 2 or 3. 2 points for each set of 2 symbols or 2 points for each set of 3 symbols
-                int actualSymbolCount = activeSymbols.get(symbol);
-                points = actualSymbolCount / requiredSymbolCount * 2;
             }
         }
-        //todo: implement the case where there are 3 different symbols
+        else if(requiredSymbols.size() == 3){
+            int quillCount = activeSymbols.get(Symbol.QUILL);
+            int parchmentCount = activeSymbols.get(Symbol.PARCHMENT);
+            int bottleCount = activeSymbols.get(Symbol.BOTTLE);
+            int minimum = min(quillCount, min(parchmentCount, bottleCount));
+            if(minimum > 0){
+                points += minimum * 3;
+            }
+        }
         return points;
     }
 
