@@ -99,13 +99,59 @@ public class Manuscript implements Serializable {
      * @return int the points given by the achievement card
      */
     public int calculatePoints(AchievementCard achievementCard) {
+        System.out.println("I am calculating points" );
         Map<Symbol, Integer> scoreRequirements = achievementCard.getFace(Face.FRONT).getScoreRequirements();
         int points = 0;
-        int symbolCount = scoreRequirements.keySet().toArray().length; //symbolcount can be either 1 or 3.
-        if(symbolCount == 3){ //3 points for each set of the 3 symbols
-            int leastCommonSymbolCount = activeSymbols.entrySet().stream().filter(entry -> scoreRequirements.containsKey(entry.getKey()))
+        int symbolCount = scoreRequirements.keySet().size(); //number of symbols required
+        //todo: make symbolCount with the right size
+
+        // symbolCount now is always 18 (all the symbols) because the scoreRequirements keyset contains all the symbols, also the ones that are not required (with value 0)
+        //symbolCount could be 1 or 3, (3 in the case where I have the card with 1 quill, 1 parchment and 1 bottle and 1 in ALL other cases)
+        System.out.println("Symbol count: " + symbolCount);
+        //int symbolCount = scoreRequirements.keySet().toArray().length; //number of symbols required
+        if(symbolCount == 1){//2 points for each set of the 2 symbols
+            /*int leastCommonSymbolCount = activeSymbols.entrySet().stream().filter(entry -> scoreRequirements.containsKey(entry.getKey()))
                                                     .min(Map.Entry.comparingByValue()).get().getValue();
-            points = leastCommonSymbolCount * 3;
+            points = leastCommonSymbolCount * 2;*/
+            if(scoreRequirements.containsKey(Symbol.QUILL)){
+                int quillCount = activeSymbols.get(Symbol.QUILL);
+                points += quillCount/2 * 2;
+                System.out.println("Quill count: " + quillCount + " Points: " + points);
+            }
+            if(scoreRequirements.containsKey(Symbol.PARCHMENT)){
+                int parchmentCount = activeSymbols.get(Symbol.PARCHMENT);
+                points += parchmentCount/2 * 2;
+                System.out.println("Parchment count: " + parchmentCount + " Points: " + points);
+            }
+            if(scoreRequirements.containsKey(Symbol.BOTTLE)){
+                int bottleCount = activeSymbols.get(Symbol.BOTTLE);
+                points += bottleCount/2 * 2;
+                System.out.println("Bottle count: " + bottleCount + " Points: " + points);
+            }
+            if(scoreRequirements.containsKey(Symbol.FUNGUS)){
+                int fungusCount = activeSymbols.get(Symbol.FUNGUS);
+                points += fungusCount/3 * 3;
+                System.out.println("Fungus count: " + fungusCount + " Points: " + points);
+            }
+            if(scoreRequirements.containsKey(Symbol.ANIMAL)){
+                int animalCount = activeSymbols.get(Symbol.ANIMAL);
+                points += animalCount/3 * 3;
+                System.out.println("Animal count: " + animalCount + " Points: " + points);
+            }
+            if(scoreRequirements.containsKey(Symbol.PLANT)){
+                int plantCount = activeSymbols.get(Symbol.PLANT);
+                points += plantCount/3 * 3;
+                System.out.println("Plant count: " + plantCount + " Points: " + points);
+            }
+            if(scoreRequirements.containsKey(Symbol.BUG)){
+                int bugCount = activeSymbols.get(Symbol.BUG);
+                points += bugCount/3 * 3;
+                System.out.println("Bug count: " + bugCount + " Points: " + points);
+            }
+            //
+            /*int leastCommonSymbolCount = activeSymbols.entrySet().stream().filter(entry -> scoreRequirements.containsKey(entry.getKey()))
+                                                    .min(Map.Entry.comparingByValue()).get().getValue();
+            points = leastCommonSymbolCount * 3;*/
         }
         if(symbolCount == 1){
             Symbol symbol = scoreRequirements.keySet().stream().findFirst().get();
@@ -282,6 +328,7 @@ public class Manuscript implements Serializable {
                 points = actualSymbolCount / requiredSymbolCount * 2;
             }
         }
+        //todo: implement the case where there are 3 different symbols
         return points;
     }
 
