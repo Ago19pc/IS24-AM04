@@ -49,13 +49,15 @@ public class MainBoardSceneController extends SceneController {
     public TextField chatField;
 
     @FXML
-    public ListView chatMessages;
+    public ListView<String> chatMessages;
     /**
     Maps the player name to the tab of the player
      */
     public Map<String, OtherPlayerTab> otherPlayerTabs = new HashMap<>();
     @FXML
     public Label Player1, Player2, Player3, Player4;
+    public Label goldDeck_counter;
+    public Label resourceDeck_counter;
 
     private Face firstFace, secondFace, thirdFace;
     private int selectedCardIndex = -1;
@@ -64,7 +66,14 @@ public class MainBoardSceneController extends SceneController {
 
     private Face selectedFace = null;
 
-
+    public void decrementGoldDeckCounter() {
+        int counter = Integer.parseInt(goldDeck_counter.getText());
+        goldDeck_counter.setText(String.valueOf(counter - 1));
+    }
+    public void decrementResourceDeckCounter() {
+        int counter = Integer.parseInt(resourceDeck_counter.getText());
+        resourceDeck_counter.setText(String.valueOf(counter - 1));
+    }
     /**
      * Displays the hand cards of the player
      */
@@ -117,11 +126,11 @@ public class MainBoardSceneController extends SceneController {
     public void setBoardCards(Decks deck) {
         if (deck == Decks.GOLD) {
 
-            goldOnDeck.setImage(getImageFromCard(controller.getBoardCards(Decks.GOLD).get(0), Face.FRONT));
+            goldOnDeck.setImage(getImageFromCard(controller.getBoardCards(Decks.GOLD).get(0), Face.BACK));
             goldOnFloor1.setImage(getImageFromCard(controller.getBoardCards(Decks.GOLD).get(1), Face.FRONT));
             goldOnFloor2.setImage(getImageFromCard(controller.getBoardCards(Decks.GOLD).get(2), Face.FRONT));
         } else if (deck == Decks.RESOURCE) {
-            resourceOnDeck.setImage(getImageFromCard(controller.getBoardCards(Decks.RESOURCE).get(0), Face.FRONT));
+            resourceOnDeck.setImage(getImageFromCard(controller.getBoardCards(Decks.RESOURCE).get(0), Face.BACK));
             resourceOnFloor1.setImage(getImageFromCard(controller.getBoardCards(Decks.RESOURCE).get(1), Face.FRONT));
             resourceOnFloor2.setImage(getImageFromCard(controller.getBoardCards(Decks.RESOURCE).get(2), Face.FRONT));
         } else if (deck == Decks.ACHIEVEMENT) {
@@ -141,7 +150,7 @@ public class MainBoardSceneController extends SceneController {
         if (deck == Decks.GOLD) {
             switch (position) {
                 case DECK:
-                    goldOnDeck.setImage(getImageFromCard(card, Face.FRONT));
+                    goldOnDeck.setImage(getImageFromCard(card, Face.BACK));
                     break;
                 case FIRST_CARD:
                     goldOnFloor1.setImage(getImageFromCard(card, Face.FRONT));
@@ -153,7 +162,7 @@ public class MainBoardSceneController extends SceneController {
         } else if (deck == Decks.RESOURCE) {
             switch (position) {
                 case DECK:
-                    resourceOnDeck.setImage(getImageFromCard(card, Face.FRONT));
+                    resourceOnDeck.setImage(getImageFromCard(card, Face.BACK));
                     break;
                 case FIRST_CARD:
                     resourceOnFloor1.setImage(getImageFromCard(card, Face.FRONT));
@@ -454,7 +463,6 @@ public class MainBoardSceneController extends SceneController {
         }
 
     }
-
     public void chat_button_action() {
         controller.sendChatMessage(chatField.getText());
     }

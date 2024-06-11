@@ -265,7 +265,7 @@ public class GUI implements UI{
             ((ChooseStartingCardController) sceneControllerMap.get(SceneName.STARTINGCARDCHOICE)).chat_message.getItems().add( message.getName() + ": "+  message.getMessage());
             ((ChooseStartingCardController) sceneControllerMap.get(SceneName.STARTINGCARDCHOICE)).messageToSend.clear();
             ((MainBoardSceneController) sceneControllerMap.get(SceneName.GAME)).chatMessages.getItems().add( message.getName() + ": "+  message.getMessage());
-            //todo: for others scene
+            ((MainBoardSceneController) sceneControllerMap.get(SceneName.GAME)).chatField.clear();
         });
     }
 
@@ -281,6 +281,7 @@ public class GUI implements UI{
 
     @Override
     public void endGameStarted() {
+        //todo: implement this
         System.out.println("End game started");
     }
 
@@ -294,6 +295,17 @@ public class GUI implements UI{
 
     @Override
     public void displayLeaderboard(LinkedHashMap<String, Integer> playerPoints) {
+        Platform.runLater(() -> {
+            ((MainBoardSceneController) sceneControllerMap.get(SceneName.GAME)).updateLeaderBoard();
+            ((MainBoardSceneController) sceneControllerMap.get(SceneName.GAME)).tabPane.getTabs().stream().forEach(tab -> {
+                if (!tab.getText().equals("LeaderBoard")) {
+                    tab.setDisable(true);
+                    tab.setStyle("-fx-opacity: 0;");
+                }
+            });
+
+        });
+        //Todo: implement this
         System.out.println("Leaderboard displayed");
     }
 
@@ -316,6 +328,10 @@ public class GUI implements UI{
     public void otherPlayerDraw(String name, Decks deckFrom, DeckPosition position) {
         Platform.runLater(() -> {
             ((MainBoardSceneController) sceneControllerMap.get(SceneName.GAME)).setBoardCards(deckFrom);
+            if(deckFrom == Decks.GOLD)
+                ((MainBoardSceneController) sceneControllerMap.get(SceneName.GAME)).decrementGoldDeckCounter();
+            if(deckFrom == Decks.RESOURCE)
+                ((MainBoardSceneController) sceneControllerMap.get(SceneName.GAME)).decrementResourceDeckCounter();
         });
     }
 

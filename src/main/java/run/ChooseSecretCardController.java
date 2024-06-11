@@ -90,10 +90,10 @@ public class ChooseSecretCardController extends SceneController {
         thirdCardInHand.setImage(getImageFromCard(controller.getHand().get(2), Face.FRONT));
         objective1.setImage(getImageFromCard(controller.getCommonAchievements().get(0), Face.FRONT));
         objective2.setImage(getImageFromCard(controller.getCommonAchievements().get(1), Face.FRONT));
-        resourceDeckCard.setImage(getImageFromCard(controller.getBoardCards(Decks.RESOURCE).get(0), Face.FRONT));
+        resourceDeckCard.setImage(getImageFromCard(controller.getBoardCards(Decks.RESOURCE).get(0), Face.BACK));
         resourceCard1.setImage(getImageFromCard(controller.getBoardCards(Decks.RESOURCE).get(1), Face.FRONT));
         resourceCard2.setImage(getImageFromCard(controller.getBoardCards(Decks.RESOURCE).get(2), Face.FRONT));
-        goldDeckCard.setImage(getImageFromCard(controller.getBoardCards(Decks.GOLD).get(0), Face.FRONT));
+        goldDeckCard.setImage(getImageFromCard(controller.getBoardCards(Decks.GOLD).get(0), Face.BACK));
         goldCard1.setImage(getImageFromCard(controller.getBoardCards(Decks.GOLD).get(1), Face.FRONT));
         goldCard2.setImage(getImageFromCard(controller.getBoardCards(Decks.GOLD).get(2), Face.FRONT));
     }
