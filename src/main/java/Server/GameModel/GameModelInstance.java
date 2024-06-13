@@ -174,7 +174,7 @@ public class GameModelInstance implements GameModel{
     }
 
     /**
-     * @return List<StartingCard> the starting cards
+     * @return the starting cards
      */
     @Override
     public List<StartingCard> getStartingCards() {

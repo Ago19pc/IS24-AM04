@@ -3,6 +3,9 @@ package Server.Chat;
 import java.io.Serializable;
 import java.sql.Timestamp;
 
+/**
+ * This class is used to represent messages
+ */
 public class Message implements Serializable {
     private final String message;
     private final String name;
@@ -10,8 +13,8 @@ public class Message implements Serializable {
 
     /**
      * Generates the message
-     * @param message
-     * @param name
+     * @param message the message text
+     * @param name the name of the sender
      */
     public Message(String message, String name) {
         this.message = message;
@@ -20,21 +23,24 @@ public class Message implements Serializable {
     }
 
     /**
-     * @return String the message
+     * Returns the message text
+     * @return the text
      */
     public String getMessage() {
         return message;
     }
 
     /**
-     * @return Player the sender
+     * Returns the sender
+     * @return the sender name
      */
     public String getName() {
         return name;
     }
 
     /**
-     * @return Timestamp the timestamp
+     * Returns the timestamp
+     * @return the timestamp of the message
      */
     public Timestamp getTimestamp() {
         return timestamp;

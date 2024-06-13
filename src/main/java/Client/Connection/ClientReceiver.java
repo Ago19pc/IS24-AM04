@@ -9,6 +9,9 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.net.Socket;
 
+/**
+ * This class is responsible for receiving messages from the server and executing them on a socket connection.
+ */
 public class ClientReceiver extends Thread {
     private ObjectInputStream in;
 
@@ -22,8 +25,7 @@ public class ClientReceiver extends Thread {
 
 
     /**
-     * Run method
-     * Receives messages from the server and acts accordingly
+     * Receives messages from the server and executes them
      */
     @Override
     public void run() {

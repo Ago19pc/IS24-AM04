@@ -6,6 +6,9 @@ import Server.Enums.Symbol;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * This class represents the front face of gold cards
+ */
 public class GoldFrontFace extends ResourceFrontFace {
     private final Map<Symbol, Integer> placementRequirements;
     private final Map<Symbol, Integer> scoreRequirements;
@@ -25,27 +28,25 @@ public class GoldFrontFace extends ResourceFrontFace {
         this.scoreRequirements = scoreRequirements;
     }
 
-    /**
-     * Returns the placement requirements
-     * @return Map<Symbol, Integer> the placement requirements
-     */
     public Map<Symbol, Integer> getPlacementRequirements() throws UnsupportedOperationException{
         return placementRequirements;
     }
 
-    /**
-     * Returns the score requirements
-     * @return List<Symbol> the score requirements
-     */
     public Map<Symbol, Integer> getScoreRequirements() throws UnsupportedOperationException {
         return scoreRequirements;
     }
-
+    /**
+     * @throws UnsupportedOperationException because front faces of gold cards do not have score requirements
+     */
     @Override
     public List<Symbol> getCenterSymbols() throws UnsupportedOperationException{
         throw new UnsupportedOperationException("Gold cards do not have center symbols");
     }
 
+    /**
+     * Returns a string representation of the card face
+     * @return a string representation of the card face
+     */
     @Override
     public String toString() {
         String toReturn =   "----------\n" +

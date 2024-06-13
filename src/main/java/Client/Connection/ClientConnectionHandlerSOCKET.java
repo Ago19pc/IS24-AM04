@@ -11,7 +11,10 @@ import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.net.Socket;
 import java.rmi.RemoteException;
-
+/**
+ * This class handles the connection between the client and the server using Socket.
+ * It uses a ClientSender to send messages to the server and a ClientReceiver to receive messages from the server.
+ */
 public class ClientConnectionHandlerSOCKET extends Thread implements ClientConnectionHandler {
     private Socket clientSocket;
     public ClientSender sender;
@@ -21,7 +24,8 @@ public class ClientConnectionHandlerSOCKET extends Thread implements ClientConne
 
     /**
      * Constructor
-     * Establishes a connection with the server
+     * Starts attempting to establish a connection with the server
+     * @param controller the controller to use. This is used to execute incoming messages
      */
     public ClientConnectionHandlerSOCKET(ClientController controller)  {
         this.controller = controller;
@@ -30,7 +34,9 @@ public class ClientConnectionHandlerSOCKET extends Thread implements ClientConne
     }
 
     /**
-     * Constructor for the tests, sets the host to localhost and port to 1234
+     * Fast constructor. Used for testing purposes
+     * @param debugMode if true, connects to localhost:1234 automatically
+     * @param controller the controller to use. This is used to execute incoming messages
      */
     public ClientConnectionHandlerSOCKET(boolean debugMode, ClientController controller) {
         try {
@@ -56,10 +62,9 @@ public class ClientConnectionHandlerSOCKET extends Thread implements ClientConne
     }
 
     /**
-     * Sets the socket for the receiver
+     * Connects to a server
      * @param host the ip address of the server
      * @param port the port of the server
-     * @throws IOException
      */
     public void setSocket(String host, int port) throws IOException {
         this.clientSocket = new Socket(host, port);
@@ -90,10 +95,7 @@ public class ClientConnectionHandlerSOCKET extends Thread implements ClientConne
 
 
 
-    /**
-     * Run method
-     * The main body, what the thread does
-     */
+    //todo: add javadoc
     public void run() {
         while(receiver == null){
             try {
@@ -111,23 +113,13 @@ public class ClientConnectionHandlerSOCKET extends Thread implements ClientConne
 
     }
 
-
-
-
-    /**
-     * Sends a message to the server
-     * @param message    e the message to send
-     * @throws IOException
-     */
     public void sendMessage(ToServerMessage message) throws IOException {
         sender.sendMessage(message);
-
     }
 
 
     /**
      * Stops the connection, interrupts the sender and receiver threads and closes the socket
-     * @throws IOException
      */
     public void stopConnection() throws IOException {
         receiver.interrupt();
@@ -140,9 +132,7 @@ public class ClientConnectionHandlerSOCKET extends Thread implements ClientConne
 
 
     /**
-     * This function is not used but is required by the interface
-     * @return false
-     * @throws RemoteException
+     * @return false because this is not an RMI connection
      */
     @Override
     public boolean ping() throws RemoteException {

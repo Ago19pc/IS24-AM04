@@ -27,7 +27,7 @@ public class SetSecretCardMessage implements Serializable, ToClientMessage, ToSe
         if(chosenCard == null){
             controller.setSecretCard(name);
         } else {
-            controller.setSecretCard(name, chosenCard);
+            controller.setSecretCard(chosenCard);
         }
     }
 

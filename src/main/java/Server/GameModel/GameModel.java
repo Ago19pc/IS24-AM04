@@ -32,7 +32,7 @@ public interface GameModel {
     public AchievementDeck getAchievementDeck();
 
     /**
-     * @return List<StartingCard> the starting cards
+     * @return the starting cards
      */
     public List<StartingCard> getStartingCards();
 
@@ -68,7 +68,7 @@ public interface GameModel {
     public void removePlayer(Player player) throws IllegalArgumentException;
 
     /**
-     * @return List<Player> the list of players
+     * @return the list of players
      */
     public List<Player> getPlayerList();
     /**
@@ -78,7 +78,6 @@ public interface GameModel {
     public void setPlayerList(List<Player> playerList);
     /**
      * shuffles the player list
-     * @return void
      */
     public void shufflePlayerList();
 

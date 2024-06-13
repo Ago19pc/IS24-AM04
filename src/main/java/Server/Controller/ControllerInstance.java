@@ -51,21 +51,22 @@ public class ControllerInstance implements Controller{
     }
     @Override
     public void addPlayer(String name, String clientID) throws TooManyPlayersException, AlreadyStartedException, IllegalArgumentException {
-        if(gameState != GameState.LOBBY) throw new AlreadyStartedException("Game already started");
-        Player player = new PlayerInstance(name);
-        for (Player p : gameModel.getPlayerList()){
-            if (p.getName().equals(player.getName())) throw new IllegalArgumentException("Player with same name already exists");
-        }
-        if(gameModel.getPlayerList().size()<4) {
-            gameModel.addPlayer(player);
-            connectionHandler.addPlayerByID(name, clientID);
-            PlayerNameMessage playerNameMessage = new PlayerNameMessage(player.getName(), true);
-            connectionHandler.sendMessage(playerNameMessage, player.getName());
-            NewPlayerMessage playerMessage = new NewPlayerMessage(gameModel.getPlayerList());
-            connectionHandler.sendAllMessage(playerMessage);
-        } else {
-            throw new TooManyPlayersException("Too many players");
-        }
+    if(connectionHandler.isIdConnectedToName(clientID)) throw new IllegalArgumentException("Player already connected");
+    if(gameState != GameState.LOBBY) throw new AlreadyStartedException("Game already started");
+    Player player = new PlayerInstance(name);
+    for (Player p : gameModel.getPlayerList()){
+        if (p.getName().equals(player.getName())) throw new IllegalArgumentException("Player with same name already exists");
+    }
+    if(gameModel.getPlayerList().size()<4) {
+        gameModel.addPlayer(player);
+        connectionHandler.addPlayerByID(name, clientID);
+        PlayerNameMessage playerNameMessage = new PlayerNameMessage(player.getName(), true);
+        connectionHandler.sendMessage(playerNameMessage, player.getName());
+        NewPlayerMessage playerMessage = new NewPlayerMessage(gameModel.getPlayerList());
+        connectionHandler.sendAllMessage(playerMessage);
+    } else {
+        throw new TooManyPlayersException("Too many players");
+    }
     }
     @Override
     public void addSavedPlayer(String clientId, String name) throws AlreadyStartedException, IllegalArgumentException, PlayerNotFoundByNameException {

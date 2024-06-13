@@ -55,7 +55,7 @@ public class PlayerInstance implements Player {
     }
 
     /**
-     * @return List<Card> the player's hand
+     * @return the player's hand
      */
     @Override
     public List<Card> getHand() {

@@ -9,13 +9,22 @@ import java.io.Serializable;
 */
 public interface Card extends Serializable {
     /**
-     *
-     * @param face Enum face, used to select witch face to get
+     * Returns a face of class CardFace of the card
+     * @param face Enum face, used to select which face to get
      * @return CardFace the face of the card
      */
     public CardFace getFace(Face face);
-
+    /**
+     * Returns a face of class CornerCardFace of the card
+     * @param face Enum face, used to select which face to get
+     * @return CardFace the face of the card
+     * @throws UnsupportedOperationException if the card does not have corners
+     */
     public CornerCardFace getCornerFace(Face face) throws UnsupportedOperationException;
 
+    /**
+     * Returns the image URI of the card
+     * @return the image URI
+     */
     public String getImageURI();
 }

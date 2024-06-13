@@ -36,7 +36,7 @@ public class Graph implements Serializable {
     /**
      * Returns the neighbors of a node
      * @param node the node to get the neighbors of
-     * @return Map<CardCorners, CornerCardFace> the neighbors of the node
+     * @return the neighbors of the node
      */
     public Map<CardCorners, CornerCardFace> getNeighbors(CornerCardFace node) throws IllegalArgumentException{
         if(!this.containedCards.contains(node)){
@@ -47,7 +47,7 @@ public class Graph implements Serializable {
     /**
      * Returns the neighbors of a node that were placed after the node
      * @param node the node to get the neighbors of
-     * @return Map<CardCorners, CornerCardFace> the neighbors of the node
+     * @return the neighbors of the node
      */
     public Map<CardCorners, CornerCardFace> getCardsOver(CornerCardFace node) throws IllegalArgumentException{
         Map<CardCorners, CornerCardFace> cardsOver;
@@ -59,7 +59,7 @@ public class Graph implements Serializable {
     /**
      * Returns the neighbors of a node that were placed before the node
      * @param node the node to get the neighbors of
-     * @return Map<CardCorners, CornerCardFace> the neighbors of the node
+     * @return the neighbors of the node
      */
     public Map<CardCorners, CornerCardFace> getCardsUnder(CornerCardFace node) throws IllegalArgumentException{
         Map<CardCorners, CornerCardFace> cardsUnder;

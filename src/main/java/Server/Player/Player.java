@@ -27,7 +27,7 @@ public interface Player extends Serializable {
 
     /**
      * Returns the player's hand
-     * @return List<Card> the player's hand
+     * @return the player's hand
      */
     public List<Card> getHand();
 

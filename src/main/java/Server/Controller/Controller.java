@@ -20,7 +20,7 @@ public interface Controller {
      */
     public void removePlayer(Player player) throws IllegalArgumentException;
     /**
-     * @return List<Player> the list of players
+     * @return the list of players
      */
     public List<Player> getPlayerList();
 
@@ -103,7 +103,7 @@ public interface Controller {
     public void addMessage(String message, Player player) throws IllegalArgumentException;
 
     /**
-     * @return List<Message> the chat messages
+     * @return the chat messages
      */
     public List<Message> getChatMessages();
 

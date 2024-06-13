@@ -13,6 +13,9 @@ import java.net.Socket;
 import java.rmi.RemoteException;
 import java.util.*;
 
+/**
+ * This class handles the connection between the server and the clients using sockets
+ */
 public class ServerConnectionHandlerSOCKET extends Thread implements ServerConnectionHandler {
     private ServerSocket socket;
     /**
@@ -55,10 +58,7 @@ public class ServerConnectionHandlerSOCKET extends Thread implements ServerConne
         System.out.println("[Socket] Server avviato sulla porta: " + port);
     }
 
-    /**
-     * Set the controller instance
-     * @param controller the controller instance
-     */
+
     public void setController(Controller controller) {
         this.controller = controller;
     }
@@ -120,10 +120,19 @@ public class ServerConnectionHandlerSOCKET extends Thread implements ServerConne
         return connected;
     }
 
+    /**
+     * Gets a client thread name
+     * @param clientHandler the client thread
+     * @return the name of the client thread
+     */
     public String getThreadName(ClientHandler clientHandler) {
         return clients.get(clientHandler);
     }
-
+    /**
+     * Start the server on a specific port
+     * @param port the port to start the server on
+     * @return true if the server started correctly, false otherwise
+     */
     private boolean startServer(int port) {
         try {
             this.socket = new ServerSocket(port);
@@ -142,11 +151,7 @@ public class ServerConnectionHandlerSOCKET extends Thread implements ServerConne
         this.port = inputReader.nextInt();
     }
 
-    /**
-     * Kill a ClientHandler thread
-     * @param id the name of the client thread to kill
-     */
-    public void killClient(String id) throws PlayerNotFoundByNameException, AlreadyFinishedException {
+    public void killClient(String id){
         ClientHandler target = clients.entrySet().stream()
                 .filter(entry -> entry.getValue().equals(id))
                 .toList().getFirst().getKey();
@@ -159,16 +164,9 @@ public class ServerConnectionHandlerSOCKET extends Thread implements ServerConne
     }
 
 
-    /**
-     * Get the controller instance
-     * @return the ControllerInstance of the server
-     */
     public Controller getController() {return this.controller;}
 
-    /**
-     * Send a message to all the clients
-     * @param message the message to send
-     */
+
     public void sendAllMessage(ToClientMessage message) {
         for (ClientHandler c : clients.keySet()) {
             if(c.isClosed()) continue;
@@ -180,11 +178,7 @@ public class ServerConnectionHandlerSOCKET extends Thread implements ServerConne
         }
     }
 
-    /**
-     * Send a message to a specific client
-     * @param message the message to send
-     * @param id the name of the client to send the message to
-     */
+
     public void sendMessage(ToClientMessage message, String id) {
         ClientHandler target = clients.entrySet().stream()
                 .filter(entry -> Objects.equals(entry.getValue(), id))
@@ -192,19 +186,8 @@ public class ServerConnectionHandlerSOCKET extends Thread implements ServerConne
         target.sendMessage(message);
     }
 
-    /**
-     * Sets a name for the ClientHandler to be easier to find later
-     * @param id the id of the client to associate with the name
-     * @param name the name
-     */
-    public void setName(String name, String id) throws IllegalArgumentException, TooManyPlayersException, AlreadyStartedException {
-        controller.addPlayer(name, id);
-    }
 
-    /**
-     * Execute a message
-     * @param message, a GeneralMessage to be executed
-     */
+
     public void executeMessage(ToServerMessage message) {
         synchronized (controller) {
             message.serverExecute(controller);
@@ -216,15 +199,11 @@ public class ServerConnectionHandlerSOCKET extends Thread implements ServerConne
         return clients.containsValue(id);
     }
 
+    /**
+     * @return null because this is used by RMI clients
+     */
     public LobbyPlayersMessage join(int rmi_port) throws RemoteException {
         return null;
-    }
-
-    public void changeId(String oldId, String newId) {
-        ClientHandler target = clients.entrySet().stream()
-                .filter(entry -> Objects.equals(entry.getValue(), oldId))
-                .toList().getFirst().getKey();
-        clients.remove(target);
     }
 }
 

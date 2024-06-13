@@ -31,7 +31,7 @@ public class PlayerNameMessage implements ToClientMessage, ToServerMessage, Seri
     public void serverExecute(Controller controller){
 
         try {
-            controller.getConnectionHandler().setName(this.name, this.id);
+            controller.addPlayer(this.name, this.id);
         } catch (IllegalArgumentException e) {
             InvalidNameMessage message = new InvalidNameMessage();
             try{

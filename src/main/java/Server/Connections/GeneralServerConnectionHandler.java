@@ -12,6 +12,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * This class is the endpoint for managing the connections to the clients.
+ * It works by creating a ServerConnectionHandlerSOCKET and a ServerConnectionHandlerRMI and using their methods.
+ * It also holds a map between player ids and names and a list of disconnected ids.
+ */
 public class GeneralServerConnectionHandler {
     private ServerConnectionHandlerSOCKET serverConnectionHandlerSOCKET;
     private ServerConnectionHandlerRMI serverConnectionHandlerRMI;
@@ -21,16 +26,26 @@ public class GeneralServerConnectionHandler {
     private Map<String, String> playerID = new HashMap<>();
     private final List<String> disconnectedPlayerIds = new ArrayList<>();
 
+    /**
+     * Constructor
+     * creates the connection handlers and starts a new ping pong thread
+     */
     public GeneralServerConnectionHandler() throws IOException {
         serverConnectionHandlerRMI = new ServerConnectionHandlerRMI();
         serverConnectionHandlerSOCKET = new ServerConnectionHandlerSOCKET();
         PingPong pingPong = new PingPong(this);
         pingPong.start();
     }
-
+    /**
+     * Debug Constructor
+     * creates the connection handlers and starts a new ping pong thread
+     * @param debugMode if true, the server will start using the default ports
+     */
     public GeneralServerConnectionHandler(boolean debugMode) {
         serverConnectionHandlerRMI = new ServerConnectionHandlerRMI(debugMode);
         serverConnectionHandlerSOCKET = new ServerConnectionHandlerSOCKET(debugMode);
+        PingPong pingPong = new PingPong(this);
+        pingPong.start();
     }
 
     /**
@@ -43,6 +58,10 @@ public class GeneralServerConnectionHandler {
         System.out.println(playerID);
     }
 
+    /**
+     * Removes a client from the data structures by its name
+     * @param name the name of the player whose client has to be removed
+     */
     public void removePlayerByName(String name) {
         String id = playerID.entrySet().stream().filter(entry -> entry.getValue().equals(name)).findFirst().get().getKey();
         try{
@@ -69,18 +88,38 @@ public class GeneralServerConnectionHandler {
         return playerID.get(id);
     }
 
+    /**
+     * Gets a player id by name
+     * @param name the name
+     * @return the id
+     */
     public String getIdByName(String name) {
         return playerID.entrySet().stream().filter(entry -> entry.getValue().equals(name)).findFirst().get().getKey();
     }
 
+    /**
+     * Checks if a name is already linked to an id
+     * @param name the name to check
+     * @return true if the name is already linked to an id, false if it's free
+     */
     public Boolean isNameConnectedToId(String name) {
         return playerID.containsValue(name);
     }
 
+    /**
+     * Returns the socket connection handler as a ServerConnectionHandler
+     * @return the socket connection handler
+     */
     public ServerConnectionHandler getServerConnectionHandler() {
         return serverConnectionHandlerSOCKET;
     }
 
+    /**
+     * Returns the server connection handler corresponding to the specific client's connection mode
+     * @param id the client's id
+     * @return the appropriate server connection handler
+     * @throws PlayerNotInAnyServerConnectionHandlerException if the player is not found in any server connection handler (i.e. the player is not connected)
+     */
     public ServerConnectionHandler getServerConnectionHandler(String id) throws PlayerNotInAnyServerConnectionHandlerException {
         if (serverConnectionHandlerRMI.isClientAvailable(id)) {
             return serverConnectionHandlerRMI;
@@ -89,21 +128,36 @@ public class GeneralServerConnectionHandler {
         } else throw new PlayerNotInAnyServerConnectionHandlerException();
 
     }
-
+    /**
+     * Returns the RMI connection handler
+     * @return the socket connection handler
+     */
     public ServerConnectionHandlerRMI getServerConnectionHandlerRMI() {
         return serverConnectionHandlerRMI;
     }
-
+    /**
+     * Returns the socket connection handler as a ServerConnectionHandlerSOCKET
+     * @return the socket connection handler
+     */
     public ServerConnectionHandlerSOCKET getServerConnectionHandlerSOCKET() {
         return serverConnectionHandlerSOCKET;
     }
 
+    /**
+     * Sends a message to all the clients
+     * @param message the message to send
+     */
     public void sendAllMessage(ToClientMessage message) {
         System.out.println("Sending message to all clients");
         serverConnectionHandlerSOCKET.sendAllMessage(message);
         serverConnectionHandlerRMI.sendAllMessage(message);
     }
 
+    /**
+     * Sends a message to a specific client by name
+     * @param message the message to send
+     * @param name the name of the client to send the message to
+     */
     public void sendMessage(ToClientMessage message, String name) {
         System.out.println(playerID);
         try {
@@ -121,23 +175,18 @@ public class GeneralServerConnectionHandler {
         }
     }
 
-    public void setName(String name, String clientID) throws IllegalArgumentException, TooManyPlayersException, AlreadyStartedException {
-         if (serverConnectionHandlerSOCKET.isClientAvailable(clientID)) {
-            serverConnectionHandlerSOCKET.setName(name, clientID);
-        } else if (serverConnectionHandlerRMI.isClientAvailable(clientID)){
-             serverConnectionHandlerRMI.setName(name, clientID);
-         }
-         else {
-            System.out.println("Client not found in any server connection handler, NAME NOT SET!");
-        }
-
-    }
-
+    /**
+     * Sets the controller for the connection handlers
+     * @param controller the controller to set
+     */
     public void setController(Controller controller) {
         serverConnectionHandlerSOCKET.setController(controller);
         serverConnectionHandlerRMI.setController(controller);
     }
 
+    /**
+     * Starts the socket connection handler
+     */
     public void start() {
         serverConnectionHandlerSOCKET.start();
     }
@@ -151,17 +200,33 @@ public class GeneralServerConnectionHandler {
         System.out.println("Player " + getPlayerNameByID(id) + " is now set offline");
     }
 
+    /**
+     * Sets a player as online i.e. removes it from the to disconnect list
+     * @param id the player's id
+     */
     public void setOnline(String id) {
         disconnectedPlayerIds.remove(id);
         System.out.println("Player " + getPlayerNameByID(id) + " is now set online");
     }
+    /**
+     * Checks if an id is associated to a player
+     * @param id the id to check
+     */
+    public boolean isIdConnectedToName(String id) {
+        return playerID.containsKey(id);
+    }
 
+    /**
+     * Changes the client id of a player
+     * @param name the player's name
+     * @param id the new id
+     */
     public void changePlayerId(String name, String id) {
         String idToRemove = playerID.entrySet().stream().filter(entry -> entry.getValue().equals(name)).findFirst().get().getKey();
         playerID.remove(idToRemove);
         playerID.put(id, name);
         try{
-            getServerConnectionHandler(idToRemove).changeId(idToRemove, id);
+            getServerConnectionHandler(idToRemove).killClient(idToRemove);
         } catch (PlayerNotInAnyServerConnectionHandlerException e) {
             System.out.println("Player not found in any server connection handler, ID NOT CHANGED!");
             e.printStackTrace();
@@ -170,11 +235,19 @@ public class GeneralServerConnectionHandler {
             e.printStackTrace();
         }
     }
-
+    /**
+     * Checks if a player is in the disconnected list
+     * @param id the player's id
+     * @return true if the player is in the disconnected list, false otherwise
+     */
     public boolean isInDisconnectedList(String id) {
         return disconnectedPlayerIds.contains(id);
     }
 
+    /**
+     * Returns the list of disconnected players
+     * @return the list of disconnected players' ids
+     */
     public List<String> getDisconnectedList() {
         return disconnectedPlayerIds;
     }

@@ -9,10 +9,14 @@ module it.am04.demo1 {
     requires java.rmi;
 
     opens Client to javafx.fxml;
+
+
     exports Client;
+    exports run;
+    exports Server;
+    exports theMain;
     exports Server.Connections to java.rmi;
     exports Client.Connection to java.rmi;
-    exports run to javafx.graphics;
 
     opens Server.GameModel to com.google.gson;
     opens Server.Deck to com.google.gson;

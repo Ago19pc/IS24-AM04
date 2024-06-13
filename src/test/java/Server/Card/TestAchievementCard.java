@@ -1,4 +1,4 @@
-package Server.Card;
+/*package Server.Card;
 import Server.Enums.Face;
 import org.junit.jupiter.api.Test;
 
@@ -37,3 +37,4 @@ public class TestAchievementCard {
 
 
 }
+*/

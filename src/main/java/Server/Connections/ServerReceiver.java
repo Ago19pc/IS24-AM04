@@ -10,6 +10,9 @@ import java.io.ObjectInputStream;
 import java.net.Socket;
 import java.net.SocketException;
 
+/**
+ * This class is used to receive messages from a single socket client
+ */
 public class ServerReceiver extends Thread {
     private Socket clientSocket;
     private ObjectInputStream in;

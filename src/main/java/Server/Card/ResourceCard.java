@@ -2,6 +2,11 @@ package Server.Card;
 
 import Server.Enums.Face;
 
+/**
+ * This class represents resource cards. They are composed of a ResourceFrontFace and a RegularBackFace
+ * @see ResourceFrontFace
+ * @see RegularBackFace
+ */
 public class ResourceCard implements Card {
     protected final ResourceFrontFace frontFace;
     protected final RegularBackFace backFace;
@@ -18,24 +23,19 @@ public class ResourceCard implements Card {
         this.imageURI = imageURI;
     }
 
-    /**
-     * Returns the face of the card
-     * @param face to return
-     * @return CardFace the face of the card
-     */
+
     public CardFace getFace(Face face){
         return face == Face.FRONT ? frontFace : backFace;
     }
 
-    /**
-     * Returns the corner face of the card
-     * @param face to return
-     * @return CornerCardFace the face of the card
-     */
     public CornerCardFace getCornerFace(Face face) throws UnsupportedOperationException{
         return face == Face.FRONT ? frontFace : backFace;
     }
 
+    /**
+     * Returns a string representation of the resource card
+     * @return a string representation of the resource card
+     */
     public String toString(){
         return "Carta risorsa. Faccia anteriore: \n" + frontFace.toString() + "\nFaccia posteriore: \n" + backFace.toString();
     }

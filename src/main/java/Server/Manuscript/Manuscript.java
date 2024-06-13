@@ -288,7 +288,7 @@ public class Manuscript implements Serializable {
     /**
      * Get all cards under a certain card
      * @param cardFace the card face to get the cards under
-     * @return Map<CardCorners, CornerCardFace> the cards under the card
+     * @return the cards under the card
      * @throws IllegalArgumentException if the card is not in the manuscript
      */
     public Map<CardCorners, CornerCardFace> getCardsUnder(CornerCardFace cardFace) throws IllegalArgumentException{
