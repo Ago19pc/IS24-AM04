@@ -10,7 +10,7 @@ public enum Symbol {
         return this == PATTERN1F || this == PATTERN1A || this == PATTERN2P || this == PATTERN2B || this == PATTERN3 || this == PATTERN4 || this == PATTERN5 || this == PATTERN6;
     }
 
-    char toChar(){
+    public char toChar(){
         switch(this){
             case ANIMAL:
                 return 'A';

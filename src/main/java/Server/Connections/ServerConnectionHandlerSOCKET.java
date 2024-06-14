@@ -137,7 +137,12 @@ public class ServerConnectionHandlerSOCKET extends Thread implements ServerConne
     private void askForPort() {
         Scanner inputReader = new Scanner(System.in);
         System.out.println("[Socket] Ciao, su quale porta vuoi avviare il server?");
-        this.port = inputReader.nextInt();
+        try {
+            this.port = inputReader.nextInt();
+        } catch (InputMismatchException e) {
+            System.out.println("[Socket] Inserisci un numero valido");
+            askForPort();
+        }
     }
 
     /**

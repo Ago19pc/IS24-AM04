@@ -299,8 +299,8 @@ public class GUI implements UI{
             ((MainBoardSceneController) sceneControllerMap.get(SceneName.GAME)).updateLeaderBoard();
             ((MainBoardSceneController) sceneControllerMap.get(SceneName.GAME)).tabPane.getTabs().stream().forEach(tab -> {
                 if (!tab.getText().equals("LeaderBoard")) {
-                    tab.setDisable(true);
-                    tab.setStyle("-fx-opacity: 0;");
+                    //tab.setDisable(true);
+                    tab.setStyle("-fx-opacity: 0.5;");
                 }
             });
 
