@@ -28,6 +28,19 @@ public class GoldDeck implements Deckable {
             System.err.println("Error while moving cards to the board, generating gold deck");
         }
     }
+    public GoldDeck(Boolean test){
+        this.boardCards = new HashMap<>();
+        this.cards = new ArrayList<>();
+        boardCards.put(FIRST_CARD, null);
+        boardCards.put(SECOND_CARD, null);
+        createCards();
+        try {
+            moveCardToBoard(FIRST_CARD);
+            moveCardToBoard(SECOND_CARD);
+        } catch (Exception e) {
+            System.err.println("Error while moving cards to the board, generating gold deck");
+        }
+    }
 
     /**
      * Shuffle the deck
