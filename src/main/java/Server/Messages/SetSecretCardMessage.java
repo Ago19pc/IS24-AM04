@@ -9,19 +9,37 @@ import Server.Player.Player;
 import java.io.Serializable;
 import java.rmi.RemoteException;
 
+/**
+ * Message to ask the server to set a player's secret card and to notify the clients that a player's secret card has been set
+ */
 public class SetSecretCardMessage implements Serializable, ToClientMessage, ToServerMessage {
     private String name;
     private Integer chosenCard;
     private String id;
+
+    /**
+     * ToServer constructor and ToClient constructor for the client who chose the secret card
+     * @param chosenCard the chosen card
+     * @param id the id of the client
+     */
     public SetSecretCardMessage(int chosenCard, String id){
         this.chosenCard = chosenCard;
         this.id = id;
     }
+
+    /**
+     * ToClient constructor for the other clients
+     * @param player the name of the player who chose the secret card
+     */
     public SetSecretCardMessage(String player){
         this.name = player;
         this.chosenCard = null;
     }
 
+    /**
+     * If the client is the one who chose the secret card, sets the secret card, otherwise notifies the clients that a player has chosen the secret card
+     * @param controller the controller where the message will be executed
+     */
     @Override
     public void clientExecute(ClientController controller){
         if(chosenCard == null){
@@ -31,6 +49,10 @@ public class SetSecretCardMessage implements Serializable, ToClientMessage, ToSe
         }
     }
 
+    /**
+     * Asks the server controller to set a player's secret card
+     * @param controller the controller where the message will be executed
+     */
     @Override
     public void serverExecute(Controller controller) {
         String playerName = "";

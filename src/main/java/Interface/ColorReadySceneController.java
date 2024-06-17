@@ -1,4 +1,4 @@
-package run;
+package Interface;
 
 import Server.Enums.Color;
 import javafx.event.ActionEvent;

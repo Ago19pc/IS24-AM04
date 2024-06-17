@@ -1,4 +1,4 @@
-package run;
+package Interface;
 
 import Server.Card.Card;
 import javafx.fxml.FXML;

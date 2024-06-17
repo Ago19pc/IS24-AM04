@@ -1,4 +1,4 @@
-package run;
+package Interface;
 
 import Client.Controller.ClientController;
 import Client.View.CLI;

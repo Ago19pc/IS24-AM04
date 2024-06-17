@@ -42,13 +42,7 @@ public class ClientHandler extends Thread {
             @Override
             public void uncaughtException(Thread th, Throwable ex){
                 System.out.println("Exception, killing ClientHandler Thread " + ex);
-                try {
-                    connectionHandler.killClient(connectionHandler.getThreadName(me));
-                } catch (PlayerNotFoundByNameException e) {
-                    throw new RuntimeException(e);
-                } catch (AlreadyFinishedException e) {
-                    throw new RuntimeException(e);
-                }
+                connectionHandler.killClient(connectionHandler.getThreadName(me));
             }
         };
         try {

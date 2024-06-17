@@ -14,7 +14,7 @@ import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import run.*;
+import Interface.*;
 
 import java.io.IOException;
 import java.util.HashMap;

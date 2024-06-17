@@ -6,6 +6,9 @@ import java.io.Serializable;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+/**
+ * Message to send the client the leaderboard
+ */
 public class LeaderboardMessage implements Serializable, ToClientMessage {
 
     private LinkedHashMap<String, Integer> playerPoints;

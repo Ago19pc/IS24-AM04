@@ -1,5 +1,8 @@
 package Server.Enums;
 
+/**
+ * Contains the faces of a card
+ */
 public enum Face {
     FRONT, BACK;
 

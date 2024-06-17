@@ -1,8 +1,6 @@
 package Client.Connection;
 
 import Client.Controller.ClientController;
-import Server.Exception.ClientExecuteNotCallableException;
-import Server.Exception.PlayerNotFoundByNameException;
 import Server.Messages.ToClientMessage;
 
 import java.io.IOException;

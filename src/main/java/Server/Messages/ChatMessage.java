@@ -9,20 +9,22 @@ import Server.Player.Player;
 
 import java.io.Serializable;
 
+/**
+ * This message is used to send a message to the chat and update the clients
+ */
 public class ChatMessage implements Serializable, ToServerMessage, ToClientMessage {
     private String message;
     private String nameOrId;
 
-    /**
-     * Constructor for the ChatMessage, which is the message used to update the chat
-     * @param message
-     * @param player
-     */
     public ChatMessage(String message, String player){
         this.message = message;
         this.nameOrId = player;
     }
 
+    /**
+     * Sends a message to the chat
+     * @param controller the controller where the message will be executed
+     */
     @Override
     public void serverExecute(Controller controller) {
         String playerName = "";
@@ -46,6 +48,10 @@ public class ChatMessage implements Serializable, ToServerMessage, ToClientMessa
 
     }
 
+    /**
+     * Updates the clients with the new chat message
+     * @param controller the controller where the message will be executed
+     */
     @Override
     public void clientExecute(ClientController controller) {
         controller.addChatMessage(new Message(message, nameOrId));

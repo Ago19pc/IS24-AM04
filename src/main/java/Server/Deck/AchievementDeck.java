@@ -16,7 +16,10 @@ import java.util.*;
 
 import static Server.Enums.DeckPosition.*;
 
-
+/**
+ * Class for the Achievement Deck
+ * In this deck, the board cards are the common achievements
+ */
 public class AchievementDeck implements Deckable{
     protected List<AchievementCard> cards;
     private final Map<DeckPosition, AchievementCard> boardCards;
@@ -45,7 +48,9 @@ public class AchievementDeck implements Deckable{
     }
 
     /**
+     * Moves a card from the deck to the board. This is used to set the common achievements.
      * @param where_to the position to add the card to
+     * @throws IncorrectDeckPositionException if the position is not in the board (i.e. the deck itself)
      */
     public void moveCardToBoard(DeckPosition where_to) throws IncorrectDeckPositionException {
         if (where_to == DECK)
@@ -62,7 +67,8 @@ public class AchievementDeck implements Deckable{
     }
 
     /**
-     * @return Card the card from the position
+     * Gets the board cards (common achievements)
+     * @return a map linking board positions to the cards
      */
     public Map<DeckPosition, AchievementCard> getBoardCard() {
         Map<DeckPosition, AchievementCard> boardCardsToReturn = new HashMap<>();
@@ -141,18 +147,12 @@ public class AchievementDeck implements Deckable{
         }
     }
 
-    /**
-     * @return boolean true if the deck is empty
-     */
+
     public boolean isEmpty() {
         return cards.isEmpty();
     }
 
-    /**
-     * Add card to the board in the specified position
-     * @param card card to add
-     * @param position position to add the card to
-     */
+
     public void addCard(Card card, DeckPosition position) throws IncorrectDeckPositionException {
         if (position == DECK)
             throw new IncorrectDeckPositionException("Cannot add card to the deck, only to FIST_CARD or SECOND_CARD.");
@@ -168,7 +168,8 @@ public class AchievementDeck implements Deckable{
     }
 
     /**
-     * @return int the number of cards in the deck
+     * Get the number of cards in the deck
+     * @return the number of cards in the deck
      */
     public int getNumberOfCards() {
         return cards.size();

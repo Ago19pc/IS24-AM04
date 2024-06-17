@@ -8,7 +8,6 @@ import Server.Card.*;
 import Server.Chat.Chat;
 import Server.Chat.Message;
 import Server.Enums.*;
-import Server.Exception.ClientExecuteNotCallableException;
 import Server.Exception.PlayerNotFoundByNameException;
 import Server.Messages.*;
 
@@ -265,7 +264,7 @@ public class ClientController {
      */
     public void askSetName(String name) {
         this.proposedName = name;
-        PlayerNameMessage playerNameMessage = new PlayerNameMessage(proposedName, true, id);
+        PlayerNameMessage playerNameMessage = new PlayerNameMessage(proposedName, id);
         try {
             clientConnectionHandler.sendMessage(playerNameMessage);
         } catch (Exception e) {

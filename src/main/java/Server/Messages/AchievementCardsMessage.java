@@ -2,11 +2,13 @@ package Server.Messages;
 
 import Client.Controller.ClientController;
 import Server.Card.AchievementCard;
-import Server.Exception.ClientExecuteNotCallableException;
 
 import java.io.Serializable;
 import java.util.List;
 
+/**
+ * This message is used to send the achievement cards to the client
+ */
 public class AchievementCardsMessage implements Serializable, ToClientMessage {
 
     private List<AchievementCard> secretCards;

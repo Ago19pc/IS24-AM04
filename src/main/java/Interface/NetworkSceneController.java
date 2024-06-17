@@ -1,4 +1,4 @@
-package run;
+package Interface;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;

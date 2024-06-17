@@ -10,27 +10,48 @@ import Server.Player.Player;
 
 import java.io.Serializable;
 
+/**
+ * Message to ask the server to set a player's starting card and to notify the clients that a player's starting card has been set
+ */
 public class SetStartingCardMessage implements Serializable, ToClientMessage, ToServerMessage {
     private Face face;
     private String name;
     private CornerCardFace startingFace;
     private String id;
 
+    /**
+     * ToServer constructor
+     * @param face the chosen face
+     * @param id the id of the client
+     */
     public SetStartingCardMessage(Face face, String id){
         this.face = face;
         this.id = id;
     }
 
+    /**
+     * ToClient constructor
+     * @param name the name of the player who chose the starting card
+     * @param startingFace the starting face of the player
+     */
     public SetStartingCardMessage(String name, CornerCardFace startingFace){
         this.name = name;
         this.startingFace = startingFace;
     }
 
+    /**
+     * Sets the starting card for the corresponding player
+     * @param controller the controller where the message will be executed
+     */
     @Override
     public void clientExecute(ClientController controller){
         controller.startingCardChosen(name, startingFace);
     }
 
+    /**
+     * Asks the server controller to set a player's starting card
+     * @param controller the controller where the message will be executed
+     */
     @Override
     public void serverExecute(Controller controller){
         String playerName = "";

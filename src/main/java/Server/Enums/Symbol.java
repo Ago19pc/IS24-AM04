@@ -1,5 +1,8 @@
 package Server.Enums;
 
+/**
+ * Contains all the symbols found in cards
+ */
 public enum Symbol {
     ANIMAL, FUNGUS, PLANT, BUG,
     QUILL, BOTTLE, PARCHMENT,

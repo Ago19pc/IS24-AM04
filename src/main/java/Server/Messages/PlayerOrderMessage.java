@@ -1,12 +1,13 @@
 package Server.Messages;
 
 import Client.Controller.ClientController;
-import Server.Exception.ClientExecuteNotCallableException;
-import Server.Exception.PlayerNotFoundByNameException;
 
 import java.io.Serializable;
 import java.util.List;
 
+/**
+ * Message to inform the client of the order of the players
+ */
 public class PlayerOrderMessage implements Serializable, ToClientMessage {
 
     private final List<String> playerNames;

@@ -4,12 +4,17 @@ import Server.Connections.GeneralServerConnectionHandler;
 import Server.Controller.Controller;
 import Server.Controller.ControllerInstance;
 
-
+/**
+ * Main class of the server
+ */
 public class Main {
     private static GeneralServerConnectionHandler connectionHandler;
     private static Controller controller;
 
-
+    /**
+     * Main method of the server
+     * Creates the connection handler and the controller, then starts the socket connection handler
+     */
     public static void main() {
         try {
             connectionHandler = new GeneralServerConnectionHandler();
@@ -22,13 +27,6 @@ public class Main {
         }
 
         System.out.println("Avvio controller");
-        /*
-        try {
-            controller.start();
-        } catch (TooFewElementsException | AlreadySetException e) {
-            throw new RuntimeException(e);
-        }
-        */
 
     }
 

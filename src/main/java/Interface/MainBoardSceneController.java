@@ -1,4 +1,4 @@
-package run;
+package Interface;
 
 import Client.Player;
 import Client.View.OnBoardCard;

@@ -2,10 +2,12 @@ package Server.Messages;
 
 import Client.Controller.ClientController;
 import Server.Enums.Actions;
-import Server.Exception.ClientExecuteNotCallableException;
 
 import java.io.Serializable;
 
+/**
+ * Message to inform the client that he still needs to receive one or more cards to do what he wants
+ */
 public class NotYetGivenCardMessage implements Serializable, ToClientMessage {
     private final Actions type;
     public NotYetGivenCardMessage(Actions type) {

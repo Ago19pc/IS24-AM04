@@ -1,4 +1,4 @@
-package run;
+package Interface;
 
 public enum SceneName {
     NETWORK,

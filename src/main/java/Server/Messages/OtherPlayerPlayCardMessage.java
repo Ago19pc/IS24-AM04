@@ -2,11 +2,12 @@ package Server.Messages;
 
 import Client.Controller.ClientController;
 import Server.Card.CornerCardFace;
-import Server.Exception.ClientExecuteNotCallableException;
-import Server.Exception.PlayerNotFoundByNameException;
 
 import java.io.Serializable;
 
+/**
+ * Message to inform the client that a player has placed a card on the board
+ */
 public class OtherPlayerPlayCardMessage implements Serializable, ToClientMessage {
     String playerName;
     CornerCardFace placedCardFace;

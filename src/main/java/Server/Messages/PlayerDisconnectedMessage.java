@@ -1,11 +1,12 @@
 package Server.Messages;
 
 import Client.Controller.ClientController;
-import Server.Exception.ClientExecuteNotCallableException;
-import Server.Exception.PlayerNotFoundByNameException;
 
 import java.io.Serializable;
 
+/**
+ * Message to inform the client that a player has disconnected
+ */
 public class PlayerDisconnectedMessage implements Serializable, ToClientMessage{
     private final String playerName;
 
