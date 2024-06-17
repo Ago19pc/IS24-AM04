@@ -9,9 +9,7 @@ import Server.Enums.Symbol;
 import Server.Exception.AlreadyFinishedException;
 import Server.Exception.IncorrectDeckPositionException;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
+import java.io.*;
 import java.util.*;
 
 import static Server.Enums.DeckPosition.*;
@@ -76,15 +74,15 @@ public class AchievementDeck implements Deckable{
      * generate the cards
      */
     private void createCards() {
-        File fileFRONT;
+        InputStream fileFRONT;
         
         BufferedReader readerFRONT;
         
 
         try {
-            fileFRONT = new File(getClass().getResource("/images/AchievementFrontFace.txt").toURI());
+            fileFRONT = getClass().getResourceAsStream("/images/AchievementFrontFace.txt");
             
-            readerFRONT = new BufferedReader(new FileReader(fileFRONT));
+            readerFRONT = new BufferedReader(new InputStreamReader(fileFRONT));
             
         
         

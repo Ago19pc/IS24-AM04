@@ -13,9 +13,7 @@ import Server.Exception.AlreadySetException;
 import Server.Player.Player;
 import Server.Player.PlayerInstance;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
+import java.io.*;
 import java.util.*;
 
 
@@ -60,16 +58,16 @@ public class GameModelInstance implements GameModel{
      * Generate the starting cards
      */
     private void generateStartingCards() {
-        File fileFRONT;
-        File fileBACK;
+        InputStream fileFRONT;
+        InputStream fileBACK;
         BufferedReader readerFRONT;
         BufferedReader readerBACK;
 
         try {
-            fileFRONT = new File(getClass().getResource("/images/StartingCardsFRONT.txt").toURI());
-            fileBACK = new File(getClass().getResource("/images/StartingCardsBACK.txt").toURI());
-            readerFRONT = new BufferedReader(new FileReader(fileFRONT));
-            readerBACK = new BufferedReader(new FileReader(fileBACK));
+            fileFRONT = getClass().getResourceAsStream("/images/StartingCardsFRONT.txt");
+            fileBACK = getClass().getResourceAsStream("/images/StartingCardsBACK.txt");
+            readerFRONT = new BufferedReader(new InputStreamReader(fileFRONT));
+            readerBACK = new BufferedReader(new InputStreamReader(fileBACK));
         
         
 

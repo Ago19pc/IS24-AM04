@@ -9,9 +9,7 @@ import Server.Enums.DeckPosition;
 import Server.Enums.Symbol;
 import Server.Exception.AlreadyFinishedException;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
+import java.io.*;
 import java.util.*;
 
 import static Server.Enums.DeckPosition.*;
@@ -129,16 +127,16 @@ public class ResourceDeck implements Deckable {
      * generate the cards
      */
     private void createCards() {
-        File fileFRONT;
-        File fileBACK;
+        InputStream fileFRONT;
+        InputStream fileBACK;
         BufferedReader readerFRONT;
         BufferedReader readerBACK;
 
         try {
-            fileFRONT = new File(getClass().getResource("/images/ResourceFrontFace.txt").toURI());
-            fileBACK = new File(getClass().getResource("/images/ResourceBackFace.txt").toURI());
-            readerFRONT = new BufferedReader(new FileReader(fileFRONT));
-            readerBACK = new BufferedReader(new FileReader(fileBACK));
+            fileFRONT = getClass().getResourceAsStream("/images/ResourceFrontFace.txt");
+            fileBACK = getClass().getResourceAsStream("/images/ResourceBackFace.txt");
+            readerFRONT = new BufferedReader(new InputStreamReader(fileFRONT));
+            readerBACK = new BufferedReader(new InputStreamReader(fileBACK));
 
             String lineF;
             int cardNumber = 0;
