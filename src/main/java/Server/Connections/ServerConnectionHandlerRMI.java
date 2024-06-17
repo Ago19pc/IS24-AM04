@@ -25,7 +25,6 @@ import static java.rmi.server.RemoteServer.getClientHost;
 
 /**
  * This class handles the connection between the server and the clients using RMI
- * The ServerConnectionHandlerRMI port is set to 1099
  */
 public class ServerConnectionHandlerRMI implements ServerConnectionHandler, Remote {
 
@@ -42,7 +41,13 @@ public class ServerConnectionHandlerRMI implements ServerConnectionHandler, Remo
     private int port;
 
     public ServerConnectionHandlerRMI() {
-        startServer(1099);
+        askForPort();
+        while (!startServer(port)) {
+            System.out.println("[RMI] Porta già in uso, provo la successiva...");
+            port++;
+        }
+        System.out.println("[RMI] Server avviato sulla porta: " + port);
+
     }
 
     public ServerConnectionHandlerRMI(boolean debugMode) {
@@ -93,9 +98,8 @@ public class ServerConnectionHandlerRMI implements ServerConnectionHandler, Remo
 
             System.out.println("Server hostname is " + System.getProperty("java.rmi.server.hostname"));
             stub = (ServerConnectionHandler) UnicastRemoteObject.exportObject( this, port);
-            registry = LocateRegistry.createRegistry(1099);
+            registry = LocateRegistry.createRegistry(port);
             registry.rebind("ServerConnectionHandler", stub);
-            System.out.println("[RMI] Server avviato sulla porta: " + port);
             return true;
         } catch (RemoteException e) {
             System.err.println("[RMI] Errore durante l'avvio del server RMI");
@@ -142,6 +146,7 @@ public class ServerConnectionHandlerRMI implements ServerConnectionHandler, Remo
                 }
             } catch (RemoteException e) {
                 System.out.println(" Send All Message : Client disconnected: " + clients.entrySet().stream().filter(entry -> entry.getValue().equals(client)).findFirst().get().getKey());
+                e.printStackTrace();
             }
         }
     }
@@ -157,6 +162,7 @@ public class ServerConnectionHandlerRMI implements ServerConnectionHandler, Remo
             clients.get(id).executeMessage(message);
         } catch (RemoteException e) {
             System.out.println("Send message : Client disconnected");
+            e.printStackTrace();
         }
     }
 

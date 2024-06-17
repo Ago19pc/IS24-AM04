@@ -5,6 +5,7 @@ import Server.Connections.ServerConnectionHandler;
 import Server.Messages.ToClientMessage;
 import Server.Messages.ToServerMessage;
 
+import java.io.IOException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
@@ -33,13 +34,8 @@ public class ClientConnectionHandlerRMI implements ClientConnectionHandler {
         this.rmi_client_port = rmi_port;
     }
 
-    /**
-     * Locates the RMI server
-     * @param server_rmi_host the ip address of the server
-     * @throws RemoteException like all RMI stuff
-     */
-    public void setServer(String server_rmi_host) throws RemoteException {
-        serverRegistry = LocateRegistry.getRegistry(server_rmi_host, 1099);
+    public void setServer(String server_rmi_host, int serverPort) throws RemoteException {
+        serverRegistry = LocateRegistry.getRegistry(server_rmi_host, serverPort);
         try {
             server = (ServerConnectionHandler) serverRegistry.lookup("ServerConnectionHandler");
         } catch (Exception e) {

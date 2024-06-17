@@ -1,6 +1,8 @@
 package Client.Connection;
 
 import Client.Controller.ClientController;
+import Server.Exception.ClientExecuteNotCallableException;
+import Server.Exception.PlayerNotFoundByNameException;
 import Server.Messages.LobbyPlayersMessage;
 import Server.Messages.ToServerMessage;
 
@@ -25,37 +27,9 @@ public class GeneralClientConnectionHandler {
         }
     }
 
-    /**
-     * Constructor for debug only
-     * @param controller the controller
-     * @param trueifRMI true if RMI
-     * @param debugMode true if debug
-     */
-    public GeneralClientConnectionHandler(ClientController controller, boolean trueifRMI, boolean debugMode) {
-        this.trueifRMI = trueifRMI;
-        this.controller = controller;
-        if(!trueifRMI){
-            clientConnectionHandlerSOCKET = new ClientConnectionHandlerSOCKET(debugMode, controller);
-        } else {
-            try {
-                setSocket("localhost", 1099);
-            } catch (NotBoundException | IOException e) {
-                throw new RuntimeException(e);
-            }
-        }
-
-    }
-
-    /**
-     * Sets the socket
-     * @param server_host, the ip
-     * @param server_port, the port
-     * @throws NotBoundException if you can't bound to RMI
-     * @throws IOException when problem with socket
-     */
     public void setSocket(String server_host, int server_port) throws NotBoundException, IOException {
         if(trueifRMI) {
-            clientConnectionHandlerRMI.setServer(server_host);
+            clientConnectionHandlerRMI.setServer(server_host, server_port);
             clientConnectionHandlerRMI.setController(controller);
             LobbyPlayersMessage lobby = clientConnectionHandlerRMI.server.join(clientConnectionHandlerRMI.rmi_client_port);
             lobby.clientExecute(controller);
