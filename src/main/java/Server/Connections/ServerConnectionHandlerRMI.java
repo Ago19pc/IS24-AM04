@@ -40,7 +40,7 @@ public class ServerConnectionHandlerRMI implements ServerConnectionHandler, Remo
     /**
      * String is the ID
      */
-    Map<String, ClientConnectionHandler> clients = new HashMap<>();
+    final Map<String, ClientConnectionHandler> clients = new HashMap<>();
 
     Controller controller;
 
@@ -48,15 +48,6 @@ public class ServerConnectionHandlerRMI implements ServerConnectionHandler, Remo
 
     public ServerConnectionHandlerRMI() {
         startServer(1099);
-        /*
-        askForPort();
-        while (!startServer(port)) {
-            System.out.println("[RMI] Porta già in uso, provo la successiva...");
-            port++;
-        }
-        System.out.println("[RMI] Server avviato sulla porta: " + port);
-        */
-
     }
 
     public ServerConnectionHandlerRMI(boolean debugMode) {
@@ -94,7 +85,7 @@ public class ServerConnectionHandlerRMI implements ServerConnectionHandler, Remo
                         InetAddress addr = addresses.nextElement();
                         ip = addr.getHostAddress();
                         if(ip.contains(":")) continue;
-                        System.setProperty("java.rmi.server.hostname", ip);;
+                        System.setProperty("java.rmi.server.hostname", ip);
                         System.out.println(iface.getDisplayName() + " " + ip);
                     }
                 }
@@ -109,8 +100,7 @@ public class ServerConnectionHandlerRMI implements ServerConnectionHandler, Remo
             System.out.println("[RMI] Server avviato sulla porta: " + port);
             return true;
         } catch (RemoteException e) {
-            e.printStackTrace();
-            System.out.println("[RMI] Errore durante l'avvio del server RMI");
+            System.err.println("[RMI] Errore durante l'avvio del server RMI");
             return false;
         }
     }
@@ -154,7 +144,6 @@ public class ServerConnectionHandlerRMI implements ServerConnectionHandler, Remo
                 }
             } catch (RemoteException e) {
                 System.out.println(" Send All Message : Client disconnected: " + clients.entrySet().stream().filter(entry -> entry.getValue().equals(client)).findFirst().get().getKey());
-                e.printStackTrace();
             }
         }
     }
@@ -170,7 +159,6 @@ public class ServerConnectionHandlerRMI implements ServerConnectionHandler, Remo
             clients.get(id).executeMessage(message);
         } catch (RemoteException e) {
             System.out.println("Send message : Client disconnected");
-            e.printStackTrace();
         }
     }
 

@@ -13,7 +13,7 @@ import java.rmi.RemoteException;
 public class GeneralClientConnectionHandler {
     private ClientConnectionHandlerSOCKET clientConnectionHandlerSOCKET;
     private ClientConnectionHandlerRMI clientConnectionHandlerRMI;
-    private ClientController controller;
+    private final ClientController controller;
     private boolean trueifRMI = false;
 
     public GeneralClientConnectionHandler(ClientController controller, boolean trueifRMI) throws RemoteException {
@@ -84,16 +84,12 @@ public class GeneralClientConnectionHandler {
      */
     public void sendMessage(ToServerMessage message){
         if(trueifRMI) {
-            try {
-                clientConnectionHandlerRMI.sendMessage(message);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            clientConnectionHandlerRMI.sendMessage(message);
         } else {
             try {
                 clientConnectionHandlerSOCKET.sendMessage(message);
             } catch (IOException e) {
-                e.printStackTrace();
+                System.err.println("[SOCKET] Error while sending message to the server");
             }
         }
     }

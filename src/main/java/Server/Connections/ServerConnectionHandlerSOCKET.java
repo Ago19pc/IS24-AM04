@@ -19,7 +19,7 @@ public class ServerConnectionHandlerSOCKET extends Thread implements ServerConne
     /**
      * The String is the ID
      */
-    private Map<ClientHandler, String> clients;
+    private final Map<ClientHandler, String> clients;
     private int port;
 
     private Controller controller;
@@ -98,9 +98,8 @@ public class ServerConnectionHandlerSOCKET extends Thread implements ServerConne
                 );
                 t.sendMessage(message);
             }
-        } catch (Exception e) {
-            e.printStackTrace();
-            System.out.println("[Socket] EDDIO SOLO SA PERCHE");
+        } catch (IOException | RuntimeException e) {
+            System.err.println("[Socket] Errore nel main loop del ServerConnectionHandlerSOCKET");
         }
     }
 

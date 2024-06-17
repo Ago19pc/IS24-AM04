@@ -13,7 +13,7 @@ import java.util.*;
 import static Server.Enums.DeckPosition.*;
 
 public class GoldDeck implements Deckable {
-    protected List<GoldCard> cards;
+    protected final List<GoldCard> cards;
     private final Map<DeckPosition, GoldCard> boardCards;
     public GoldDeck(){
         this.boardCards = new HashMap<>();
@@ -26,7 +26,7 @@ public class GoldDeck implements Deckable {
             moveCardToBoard(FIRST_CARD);
             moveCardToBoard(SECOND_CARD);
         } catch (Exception e) {
-            e.printStackTrace();
+            System.err.println("Error while moving cards to the board, generating gold deck");
         }
     }
 
@@ -71,7 +71,7 @@ public class GoldDeck implements Deckable {
      */
     public GoldCard popCard(DeckPosition position) throws AlreadyFinishedException{
         if (position == DECK) {
-            return (GoldCard) cards.remove(0);
+            return cards.remove(0);
         } else {
             // LA POSIZIONE NON E' DECK
 
@@ -204,10 +204,6 @@ public class GoldDeck implements Deckable {
                         kingdom = Symbol.NONE;
                         break;
                 }
-                /*for (int j = 0; j < 4; j++) {
-                    System.out.println("corner: " + CardCorners.values()[j] + " symbol: " + cornerSymbolsF.get(CardCorners.values()[j]) + " Kingdom: "+kingdom );
-                }*/
-
                 GoldFrontFace frontFace = new GoldFrontFace("front-" + counter + ".jpeg", cornerSymbolsF, point, placementRequirementsF, scoreRequirementsF, kingdom);
 
                 // DA QUI E DA VEDERE
@@ -222,9 +218,7 @@ public class GoldDeck implements Deckable {
                 cardNumber++;
             }
         } catch (Exception e) {
-            System.out.println("An error occurred while generating cards");
-
-            e.printStackTrace();
+            System.err.println("An error occurred while generating cards");
         }
 
 

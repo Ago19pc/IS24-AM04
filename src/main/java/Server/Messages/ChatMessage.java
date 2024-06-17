@@ -10,8 +10,8 @@ import Server.Player.Player;
 import java.io.Serializable;
 
 public class ChatMessage implements Serializable, ToServerMessage, ToClientMessage {
-    private String message;
-    private String nameOrId;
+    private final String message;
+    private final String nameOrId;
 
     /**
      * Constructor for the ChatMessage, which is the message used to update the chat

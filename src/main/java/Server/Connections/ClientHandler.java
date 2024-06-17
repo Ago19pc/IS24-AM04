@@ -14,11 +14,9 @@ public class ClientHandler extends Thread {
     private final ServerConnectionHandlerSOCKET connectionHandler;
     private final ServerSender sender ;
     private final ServerReceiver receiver ;
-    private final Thread.UncaughtExceptionHandler h;
-    private Controller controller;
 
 
-    ClientHandler me = this;
+    final ClientHandler me = this;
 
     /**
      * Constructor
@@ -29,12 +27,11 @@ public class ClientHandler extends Thread {
      * @throws RuntimeException if the sender or receiver can't be created
      */
     public ClientHandler(ServerConnectionHandlerSOCKET connectionHandler, Socket client, Controller controller) throws IOException, RuntimeException {
-        this.controller = controller;
         this.socket = client;
         this.connectionHandler = connectionHandler;
-        h = new Thread.UncaughtExceptionHandler() {
+        UncaughtExceptionHandler h = new UncaughtExceptionHandler() {
             @Override
-            public void uncaughtException(Thread th, Throwable ex){
+            public void uncaughtException(Thread th, Throwable ex) {
                 System.out.println("Exception, killing ClientHandler Thread " + ex);
                 try {
                     connectionHandler.killClient(connectionHandler.getThreadName(me));
@@ -47,7 +44,7 @@ public class ClientHandler extends Thread {
         };
         try {
             sender = new ServerSender(this.socket);
-            receiver = new ServerReceiver(this, this.socket, this.controller);
+            receiver = new ServerReceiver(this, this.socket, controller);
             receiver.setUncaughtExceptionHandler(h);
         } catch (Exception e) {
             System.out.println("LOL2");

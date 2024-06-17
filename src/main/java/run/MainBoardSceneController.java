@@ -53,7 +53,7 @@ public class MainBoardSceneController extends SceneController {
     /**
     Maps the player name to the tab of the player
      */
-    public Map<String, OtherPlayerTab> otherPlayerTabs = new HashMap<>();
+    public final Map<String, OtherPlayerTab> otherPlayerTabs = new HashMap<>();
     @FXML
     public Label Player1, Player2, Player3, Player4;
     public Label goldDeck_counter;
@@ -62,7 +62,7 @@ public class MainBoardSceneController extends SceneController {
     private Face firstFace, secondFace, thirdFace;
     private int selectedCardIndex = -1;
 
-    private Glow glow = new Glow(7);
+    private final Glow glow = new Glow(7);
 
     private Face selectedFace = null;
 

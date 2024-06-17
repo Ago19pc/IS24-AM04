@@ -8,12 +8,10 @@ import Client.View.UI;
 import java.rmi.RemoteException;
 
 public class MainCLI {
-    private static ClientController controller;
-    private static CLI cli;
     public static void main() throws RemoteException {
-        controller = new ClientControllerInstance();
-        cli = new CLI(controller);
+        ClientController controller = new ClientControllerInstance();
+        CLI cli = new CLI(controller);
         cli.start();
-        controller.main((UI) cli);
+        controller.main(cli);
     }
 }

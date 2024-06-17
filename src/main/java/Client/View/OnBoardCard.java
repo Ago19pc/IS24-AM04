@@ -16,14 +16,21 @@ import java.util.List;
  */
 public class OnBoardCard {
     @FXML
-    public ImageView image;
+    public final ImageView image;
     @FXML
-    public Button TOP_LEFT, TOP_RIGHT, BOTTOM_LEFT, BOTTOM_RIGHT;
+    public final Button TOP_LEFT;
+    @FXML
+    public final Button TOP_RIGHT;
+    @FXML
+    public final Button BOTTOM_LEFT;
+    @FXML
+    public final Button BOTTOM_RIGHT;
 
-    public static List<OnBoardCard> onBoardCards = new ArrayList<>();
-    public int x,y;
+    public static final List<OnBoardCard> onBoardCards = new ArrayList<>();
+    public final int x;
+    public final int y;
 
-    private MainBoardSceneController sceneController;
+    private final MainBoardSceneController sceneController;
 
     public OnBoardCard (Image image, int x, int y, MainBoardSceneController sceneController) {
         this.sceneController = sceneController;

@@ -11,10 +11,10 @@ import java.util.List;
 
 public class OtherPlayerDrawCardMessage implements Serializable, ToClientMessage {
 
-    private String name;
-    private Decks deckFrom;
-    private DeckPosition drawPosition;
-    private List<Card> newBoardCards;
+    private final String name;
+    private final Decks deckFrom;
+    private final DeckPosition drawPosition;
+    private final List<Card> newBoardCards;
 
     public OtherPlayerDrawCardMessage(String name, Decks deckFrom, DeckPosition drawPosition, List<Card> newBoardCards) {
         this.name = name;

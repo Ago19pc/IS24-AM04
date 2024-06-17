@@ -8,10 +8,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class OtherPlayerTab {
-    public Tab tab;
-    public ScrollPane scrollPane;
-    public Group group;
-    public List<OnBoardCard> onBoardCardList = new ArrayList<>();
+    public final Tab tab;
+    public final ScrollPane scrollPane;
+    public final Group group;
+    public final List<OnBoardCard> onBoardCardList = new ArrayList<>();
 
 
     public OtherPlayerTab(String playerName){

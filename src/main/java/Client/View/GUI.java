@@ -24,20 +24,20 @@ import java.util.Map;
 
 public class GUI implements UI{
     private static ClientController controller;
-    private static Map<SceneName,Scene> sceneMap = new HashMap<>();
+    private static final Map<SceneName,Scene> sceneMap = new HashMap<>();
     private Stage stage;
-    private Map<SceneName,SceneController> sceneControllerMap = new HashMap<>();
+    private final Map<SceneName,SceneController> sceneControllerMap = new HashMap<>();
 
 
     public GUI(ClientController controller) {
-        this.controller = controller;
+        GUI.controller = controller;
     }
 
 
     public void generateScene(String fxmlPath, SceneName sceneName, Stage stage) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(MainGUI.class.getResource(fxmlPath));
         Scene scene = new Scene(fxmlLoader.load());
-        SceneController sceneController = (SceneController) fxmlLoader.getController();
+        SceneController sceneController = fxmlLoader.getController();
         sceneController.setAll(controller, stage, sceneMap, sceneControllerMap);
         sceneMap.put(sceneName, scene);
         sceneControllerMap.put(sceneName, sceneController);
@@ -65,7 +65,7 @@ public class GUI implements UI{
                 //todo: implement graphically with another scene
                 System.out.println("WAITING FOR OTHERS, TODO");
             } else {
-                ((ColorReadySceneController) sceneControllerMap.get(SceneName.SETCOLOR)).messageToSend.setPromptText("Scrivi un messaggio!");
+                sceneControllerMap.get(SceneName.SETCOLOR).messageToSend.setPromptText("Scrivi un messaggio!");
                 stage.setScene(getScene(SceneName.SETCOLOR));
                 stage.show();
             }
@@ -258,12 +258,12 @@ public class GUI implements UI{
         Platform.runLater(()->
         {
             ((ColorReadySceneController) sceneControllerMap.get(SceneName.SETCOLOR)).chat_messages.getItems().add( message.getName() + ": "+  message.getMessage());
-            ((ColorReadySceneController) sceneControllerMap.get(SceneName.SETCOLOR)).messageToSend.clear();
+            sceneControllerMap.get(SceneName.SETCOLOR).messageToSend.clear();
             ((NameReadySceneController) sceneControllerMap.get(SceneName.SETNAME)).chat_message.getItems().add( message.getName() + ": "+  message.getMessage());
             ((ChooseSecretCardController) sceneControllerMap.get(SceneName.SECRETCARDCHOICE)).chat_message.getItems().add( message.getName() + ": "+  message.getMessage());
-            ((ChooseSecretCardController) sceneControllerMap.get(SceneName.SECRETCARDCHOICE)).messageToSend.clear();
+            sceneControllerMap.get(SceneName.SECRETCARDCHOICE).messageToSend.clear();
             ((ChooseStartingCardController) sceneControllerMap.get(SceneName.STARTINGCARDCHOICE)).chat_message.getItems().add( message.getName() + ": "+  message.getMessage());
-            ((ChooseStartingCardController) sceneControllerMap.get(SceneName.STARTINGCARDCHOICE)).messageToSend.clear();
+            sceneControllerMap.get(SceneName.STARTINGCARDCHOICE).messageToSend.clear();
             ((MainBoardSceneController) sceneControllerMap.get(SceneName.GAME)).chatMessages.getItems().add( message.getName() + ": "+  message.getMessage());
             ((MainBoardSceneController) sceneControllerMap.get(SceneName.GAME)).chatField.clear();
         });
@@ -338,11 +338,7 @@ public class GUI implements UI{
     @Override
     public void newTurn() {
         Platform.runLater(() -> {
-        if (controller.getActivePlayer().getName().equals(controller.getMyName())) {
-            ((MainBoardSceneController) sceneControllerMap.get(SceneName.GAME)).yourTurnLabel.setVisible(true);
-        } else {
-            ((MainBoardSceneController) sceneControllerMap.get(SceneName.GAME)).yourTurnLabel.setVisible(false);
-        }
+            ((MainBoardSceneController) sceneControllerMap.get(SceneName.GAME)).yourTurnLabel.setVisible(controller.getActivePlayer().getName().equals(controller.getMyName()));
         });
 
     }
@@ -403,7 +399,7 @@ public class GUI implements UI{
     public void chooseStartingCardFace(Card card) {
         Platform.runLater(() -> {
             ((ChooseStartingCardController) sceneControllerMap.get(SceneName.STARTINGCARDCHOICE)).setUp(card);
-            ((MainBoardSceneController) sceneControllerMap.get(SceneName.GAME)).setup();
+            sceneControllerMap.get(SceneName.GAME).setup();
             stage.setScene(getScene(SceneName.STARTINGCARDCHOICE));
         });
 
@@ -488,7 +484,7 @@ public class GUI implements UI{
     @Override
     public void displayId() {
         Platform.runLater(() -> {
-            ((NameReadySceneController) sceneControllerMap.get(SceneName.SETNAME)).setup();
+            sceneControllerMap.get(SceneName.SETNAME).setup();
         });
 
     }
@@ -523,7 +519,7 @@ public class GUI implements UI{
                     throw new RuntimeException("Unexpected game state");
                 case CHOOSE_STARTING_CARD:
                     System.out.println("Choose starting card");
-                    ((MainBoardSceneController) sceneControllerMap.get(SceneName.GAME)).setup();
+                    sceneControllerMap.get(SceneName.GAME).setup();
                     stage.setScene(getScene(SceneName.STARTINGCARDCHOICE));
                     stage.show();
                     break;
@@ -537,11 +533,7 @@ public class GUI implements UI{
                     displayCommonAchievements();
                     regenerateManuscript();
 
-                    if (controller.getActivePlayer().getName().equals(controller.getMyName())) {
-                        ((MainBoardSceneController) sceneControllerMap.get(SceneName.GAME)).yourTurnLabel.setVisible(true);
-                    } else {
-                        ((MainBoardSceneController) sceneControllerMap.get(SceneName.GAME)).yourTurnLabel.setVisible(false);
-                    }
+                    ((MainBoardSceneController) sceneControllerMap.get(SceneName.GAME)).yourTurnLabel.setVisible(controller.getActivePlayer().getName().equals(controller.getMyName()));
 
                     secretAchievementChosen(controller.getMyName());
                     sceneControllerMap.get(SceneName.GAME).setup();

@@ -70,15 +70,7 @@ public class GoldFrontFace extends ResourceFrontFace {
                 toRet.append(s.toChar() + "-" + placementRequirements.get(s));
             }
         }
-        /*
-        if (toRet.isEmpty()) {
-            toRet.append(" ".repeat(scoreReqForPrint().length()));
-        }
-        if (toRet.length() < scoreReqForPrint().length()) {
-            toRet.append(" ".repeat(scoreReqForPrint().length() - toRet.length()));
-        }
 
-         */
         return toRet.toString();
     }
 

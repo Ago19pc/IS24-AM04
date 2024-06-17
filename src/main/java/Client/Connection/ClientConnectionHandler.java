@@ -13,17 +13,17 @@ public interface ClientConnectionHandler extends Remote {
      * @param message the message to send
      * @throws IOException
      */
-    public void sendMessage(ToServerMessage message) throws IOException, RemoteException;
+    void sendMessage(ToServerMessage message) throws IOException;
 
     /**
      * Execute a message
      * @param message the message to execute
      */
-    public void executeMessage(ToClientMessage message) throws RemoteException;
+    void executeMessage(ToClientMessage message) throws RemoteException;
 
     /**
      * Ping the server
      * @throws RemoteException
      */
-    public boolean ping() throws RemoteException;
+    boolean ping() throws RemoteException;
 }

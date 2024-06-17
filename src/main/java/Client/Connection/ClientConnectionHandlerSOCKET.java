@@ -16,7 +16,7 @@ public class ClientConnectionHandlerSOCKET extends Thread implements ClientConne
     private Socket clientSocket;
     public ClientSender sender;
     public ClientReceiver receiver;
-    private ClientController controller;
+    private final ClientController controller;
 
 
     /**
@@ -69,20 +69,19 @@ public class ClientConnectionHandlerSOCKET extends Thread implements ClientConne
             Thread.UncaughtExceptionHandler h = new Thread.UncaughtExceptionHandler() {
                 @Override
                 public void uncaughtException(Thread th, Throwable ex) {
-                    System.out.println("Uncaught exception: " + ex);
-                    ex.printStackTrace();
+                    System.err.println("Uncaught exception: " + ex);
                     try {
                         clientSocket.close();
 
                     } catch (IOException e) {
-                        e.printStackTrace();
+                        System.err.println("Error while closing the socket");
                     }
                 }
             };
             receiver.setUncaughtExceptionHandler(h);
             receiver.start();
         } catch (Exception e) {
-            e.printStackTrace();
+            System.err.println("Error while setting the socket");
         }
 
 

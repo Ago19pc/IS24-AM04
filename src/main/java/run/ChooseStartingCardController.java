@@ -86,7 +86,7 @@ public class ChooseStartingCardController extends SceneController {
             CornerCardFace chosenCardFace = controller.getPlayerByName(controller.getMyName()).getManuscript().getCardByCoord(0, 0);
             chosenCard.setImage(new Image(getClass().getResource("/images/Faces/"+ chosenCardFace.getImageURI()).toExternalForm()));
         } catch (PlayerNotFoundByNameException e) {
-            e.printStackTrace();
+            System.err.println("Player not found (ChooseStartingCardController)");
         }
     }
 

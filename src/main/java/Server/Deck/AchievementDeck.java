@@ -16,7 +16,7 @@ import static Server.Enums.DeckPosition.*;
 
 
 public class AchievementDeck implements Deckable{
-    protected List<AchievementCard> cards;
+    protected final List<AchievementCard> cards;
     private final Map<DeckPosition, AchievementCard> boardCards;
 
     public AchievementDeck(){
@@ -30,7 +30,7 @@ public class AchievementDeck implements Deckable{
             moveCardToBoard(FIRST_CARD);
             moveCardToBoard(SECOND_CARD);
         } catch (Exception e) {
-            e.printStackTrace();
+            System.err.println("Error while moving cards to the board (AchievementDeck)");
         }
     }
 
@@ -118,8 +118,7 @@ public class AchievementDeck implements Deckable{
                 this.cards.add(card);
             }
         } catch (Exception e) {
-            System.out.println("An error occurred while generating cards");
-            e.printStackTrace();
+            System.err.println("An error occurred while generating cards (AchievementDeck)");
         }
             
 
@@ -130,12 +129,12 @@ public class AchievementDeck implements Deckable{
         if(position == DECK){
             if(cards.isEmpty())
                 throw new AlreadyFinishedException("Achievement Deck is empty");
-            return (AchievementCard) cards.remove(0);
+            return cards.remove(0);
         } else {
             if (boardCards.get(position) == null) {
                 throw new AlreadyFinishedException("No card in the specified position");
             }
-            return (AchievementCard) getBoardCard().get(position);
+            return getBoardCard().get(position);
         }
     }
 

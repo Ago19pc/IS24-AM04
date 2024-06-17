@@ -126,7 +126,7 @@ public class ClientControllerInstance implements ClientController {
         try {
             myColor = getPlayerByName(myName).getColor();
         } catch (PlayerNotFoundByNameException e) {
-            e.printStackTrace();
+            System.err.println("Error finding player in getMyColor");
         }
         return myColor;
     }
@@ -149,7 +149,7 @@ public class ClientControllerInstance implements ClientController {
         try {
             getPlayerByName(myName).setColor(color);
         } catch (PlayerNotFoundByNameException e) {
-            e.printStackTrace();
+            System.err.println("Error finding player in setMyColor");
         }
     }
 
@@ -214,11 +214,8 @@ public class ClientControllerInstance implements ClientController {
             return;
         }
         ReadyStatusMessage readyStatusMessage = new ReadyStatusMessage(true, id);
-        try {
-            clientConnectionHandler.sendMessage(readyStatusMessage);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        clientConnectionHandler.sendMessage(readyStatusMessage);
+
     }
 
     /**
@@ -244,11 +241,8 @@ public class ClientControllerInstance implements ClientController {
         }
         proposedColor = castedColor;
         PlayerColorMessage playerColorMessage = new PlayerColorMessage(castedColor, id);
-        try {
-            clientConnectionHandler.sendMessage(playerColorMessage);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        clientConnectionHandler.sendMessage(playerColorMessage);
+
     }
 
     /**
@@ -273,11 +267,7 @@ public class ClientControllerInstance implements ClientController {
     public void askSetName(String name) {
         this.proposedName = name;
         PlayerNameMessage playerNameMessage = new PlayerNameMessage(proposedName, true, id);
-        try {
-            clientConnectionHandler.sendMessage(playerNameMessage);
-        } catch (Exception e) {
-            ui.nameChangeFailed();
-        }
+        clientConnectionHandler.sendMessage(playerNameMessage);
     }
 
     /**
@@ -296,11 +286,7 @@ public class ClientControllerInstance implements ClientController {
     @Override
     public void chooseStartingCardFace(Face face) {
         SetStartingCardMessage startingCardMessage = new SetStartingCardMessage(face, id);
-        try {
-            clientConnectionHandler.sendMessage(startingCardMessage);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        clientConnectionHandler.sendMessage(startingCardMessage);
     }
 
     /**
@@ -312,11 +298,8 @@ public class ClientControllerInstance implements ClientController {
 
         this.indexofSecretAchievement = index;
         SetSecretCardMessage secretAchievementMessage = new SetSecretCardMessage(index, id);
-        try {
-            clientConnectionHandler.sendMessage(secretAchievementMessage);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        clientConnectionHandler.sendMessage(secretAchievementMessage);
+
     }
 
     /**
@@ -330,11 +313,7 @@ public class ClientControllerInstance implements ClientController {
     public void askPlayCard(int cardNumber, Face face, int x, int y) {
         chosenHandCard = cardNumber;
         PlayCardMessage placeCardMessage = new PlayCardMessage(id, cardNumber, face, x, y);
-        try {
-            clientConnectionHandler.sendMessage(placeCardMessage);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        clientConnectionHandler.sendMessage(placeCardMessage);
     }
 
     /**
@@ -345,11 +324,7 @@ public class ClientControllerInstance implements ClientController {
     @Override
     public void askDrawCard(Decks deck, DeckPosition deckPosition) {
         DrawCardMessage drawCardMessage = new DrawCardMessage(deckPosition, deck, id);
-        try {
-            clientConnectionHandler.sendMessage(drawCardMessage);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        clientConnectionHandler.sendMessage(drawCardMessage);
     }
 
     //ui getters
@@ -608,7 +583,7 @@ public class ClientControllerInstance implements ClientController {
      */
     @Override
     public void giveDrawnCard(Card drawnCard) {
-        hand.add((ResourceCard) drawnCard);
+        hand.add(drawnCard);
         ui.displayNewCardInHand();
     }
 
@@ -652,7 +627,7 @@ public class ClientControllerInstance implements ClientController {
     @Override
     public void giveInitialHand(List<Card> hand) {
         for (Card c : hand){
-            this.hand.add((ResourceCard) c);
+            this.hand.add(c);
         }
         ui.displayHand();
     }

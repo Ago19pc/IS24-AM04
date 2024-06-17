@@ -61,7 +61,7 @@ public class PlayerInstance implements Player {
     public List<Card> getHand() {
         List<Card> handToReturn = new LinkedList<>();
         for(ResourceCard card : handCards){
-            handToReturn.add((Card) card);
+            handToReturn.add(card);
         }
         return handToReturn;
     }

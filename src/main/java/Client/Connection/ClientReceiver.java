@@ -10,9 +10,9 @@ import java.io.ObjectInputStream;
 import java.net.Socket;
 
 public class ClientReceiver extends Thread {
-    private ObjectInputStream in;
+    private final ObjectInputStream in;
 
-    private ClientController controller;
+    private final ClientController controller;
 
 
     public ClientReceiver(Socket clientSocket, ClientController controller) throws IOException {

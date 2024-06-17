@@ -44,7 +44,7 @@ public class ClientConnectionHandlerRMI implements ClientConnectionHandler {
         try {
             server = (ServerConnectionHandler) serverRegistry.lookup("ServerConnectionHandler");
         } catch (Exception e) {
-            e.printStackTrace();
+            System.out.println("[RMI] Error with registryLookup");
         }
 
     }
@@ -65,7 +65,7 @@ public class ClientConnectionHandlerRMI implements ClientConnectionHandler {
      */
 
     @Override
-    public void sendMessage(ToServerMessage message) throws IOException {
+    public void sendMessage(ToServerMessage message) {
         if (server == null) {
             System.err.println("Server connection is not initialized!");
             return;
@@ -73,7 +73,7 @@ public class ClientConnectionHandlerRMI implements ClientConnectionHandler {
         try {
             server.executeMessage(message);
         } catch (RemoteException e) {
-            e.printStackTrace();
+            System.err.println("Error while sending message to the server");
         }
     }
     /**
@@ -117,7 +117,7 @@ public class ClientConnectionHandlerRMI implements ClientConnectionHandler {
     public void setRmi_client_port(int rmi_client_port) {
         this.rmi_client_port = rmi_client_port;
         try {
-            stub = (ClientConnectionHandler) UnicastRemoteObject.exportObject((ClientConnectionHandler) this, rmi_client_port);
+            stub = (ClientConnectionHandler) UnicastRemoteObject.exportObject(this, rmi_client_port);
             registry = LocateRegistry.createRegistry(rmi_client_port);
             registry.rebind("ClientConnectionHandler", stub);
             System.out.println("[RMI] Service started on port: " + rmi_client_port);
