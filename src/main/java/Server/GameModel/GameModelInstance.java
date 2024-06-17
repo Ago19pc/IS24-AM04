@@ -112,11 +112,7 @@ public class GameModelInstance implements GameModel{
     }
 
     public List<Player> getPlayerList() {
-        List<Player> playerListToReturn = new ArrayList<>();
-        for (PlayerInstance player : playerList) {
-            playerListToReturn.add(player);
-        }
-        return playerListToReturn;
+        return new ArrayList<>(playerList);
     }
     public void setPlayerList(List<Player> playerList) {
         this.playerList.clear();

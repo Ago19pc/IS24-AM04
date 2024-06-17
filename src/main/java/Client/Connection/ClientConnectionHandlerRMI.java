@@ -5,7 +5,6 @@ import Server.Connections.ServerConnectionHandler;
 import Server.Messages.ToClientMessage;
 import Server.Messages.ToServerMessage;
 
-import java.io.IOException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
@@ -28,7 +27,7 @@ public class ClientConnectionHandlerRMI implements ClientConnectionHandler {
     /**
      * Sets the port for the RMI connection
      * @param rmi_port, the port
-     * @throws RemoteException
+     * @throws RemoteException like all RMI stuff
      */
     public ClientConnectionHandlerRMI(int rmi_port) throws RemoteException {
         this.rmi_client_port = rmi_port;
@@ -36,8 +35,8 @@ public class ClientConnectionHandlerRMI implements ClientConnectionHandler {
 
     /**
      * Locates the RMI server
-     * @param server_rmi_host
-     * @throws RemoteException
+     * @param server_rmi_host the ip address of the server
+     * @throws RemoteException like all RMI stuff
      */
     public void setServer(String server_rmi_host) throws RemoteException {
         serverRegistry = LocateRegistry.getRegistry(server_rmi_host, 1099);
@@ -51,7 +50,7 @@ public class ClientConnectionHandlerRMI implements ClientConnectionHandler {
 
     /**
      * Sets the controller
-     * @param controller
+     * @param controller the ClientController
      */
     public void setController(ClientController controller) {
         this.controller = controller;
@@ -61,7 +60,6 @@ public class ClientConnectionHandlerRMI implements ClientConnectionHandler {
      * Send a message to the server
      *
      * @param message the message to send
-     * @throws IOException
      */
 
     @Override
@@ -88,7 +86,6 @@ public class ClientConnectionHandlerRMI implements ClientConnectionHandler {
 
     /**
      * Save the server in the local variable
-     * @throws RemoteException
      */
     public void setServer(ServerConnectionHandler server) {
         this.server = server;
@@ -96,7 +93,6 @@ public class ClientConnectionHandlerRMI implements ClientConnectionHandler {
 
     /**
      * For the ping returns true
-     * @throws RemoteException
      */
     public boolean ping() {
         return true;
@@ -112,7 +108,7 @@ public class ClientConnectionHandlerRMI implements ClientConnectionHandler {
 
     /**
      * Set the RMI client port
-     * @param rmi_client_port
+     * @param rmi_client_port the port of RMI client
      */
     public void setRmi_client_port(int rmi_client_port) {
         this.rmi_client_port = rmi_client_port;

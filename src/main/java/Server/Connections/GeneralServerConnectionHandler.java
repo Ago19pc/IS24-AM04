@@ -5,7 +5,6 @@ import Server.Exception.*;
 import Server.Messages.RemovedPlayerMessage;
 import Server.Messages.ToClientMessage;
 
-import java.io.IOException;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -21,7 +20,7 @@ public class GeneralServerConnectionHandler {
     private final Map<String, String> playerID = new HashMap<>();
     private final List<String> disconnectedPlayerIds = new ArrayList<>();
 
-    public GeneralServerConnectionHandler() throws IOException {
+    public GeneralServerConnectionHandler() {
         serverConnectionHandlerRMI = new ServerConnectionHandlerRMI();
         serverConnectionHandlerSOCKET = new ServerConnectionHandlerSOCKET();
         PingPong pingPong = new PingPong(this);

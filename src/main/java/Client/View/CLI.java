@@ -622,7 +622,7 @@ public class CLI extends Thread implements UI {
 
     /**
      * Asks the user to choose the starting card
-     * @param card
+     * @param card the card
      */
     public void chooseStartingCardFace(Card card){
         printOnNewLine("Scegli la faccia della carta iniziale: \n" + card);
@@ -666,9 +666,9 @@ public class CLI extends Thread implements UI {
 
     /**
      * Shows that a player has placed a card
-     * @param playerName
-     * @param x
-     * @param y
+     * @param playerName the player that placed the card
+     * @param x the x coord
+     * @param y the y coord
      */
     public void cardPlaced(String playerName, CornerCardFace cornerCardFace, int x, int y) {
         printOnNewLine(playerName + " ha piazzato una carta in posizione " + x + ", " + y);

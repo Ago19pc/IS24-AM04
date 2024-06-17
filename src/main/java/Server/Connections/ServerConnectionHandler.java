@@ -51,8 +51,8 @@ public interface ServerConnectionHandler extends Remote {
 
     /**
      * Set the controller
-     * @param controller
-     * @throws RemoteException
+     * @param controller the controller
+     * @throws RemoteException like all RMI stuff
      */
 
     void setController(Controller controller) throws RemoteException;

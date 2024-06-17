@@ -83,7 +83,7 @@ public class GoldDeck implements Deckable {
      */
     public GoldCard popCard(DeckPosition position) throws AlreadyFinishedException{
         if (position == DECK) {
-            return cards.remove(0);
+            return cards.removeFirst();
         } else {
             // LA POSIZIONE NON E' DECK
 
@@ -122,7 +122,7 @@ public class GoldDeck implements Deckable {
     public GoldCard getTopCardNoPop() {
         if(cards.isEmpty())
             return null;
-        return cards.get(0);
+        return cards.getFirst();
     }
 
     /**
@@ -198,24 +198,13 @@ public class GoldDeck implements Deckable {
                     }
 
                 }
-                Symbol kingdom;
-                switch (cardNumber / 10) {
-                    case 0:
-                        kingdom = Symbol.FUNGUS;
-                        break;
-                    case 1:
-                        kingdom = Symbol.PLANT;
-                        break;
-                    case 2:
-                        kingdom = Symbol.ANIMAL;
-                        break;
-                    case 3:
-                        kingdom = Symbol.BUG;
-                        break;
-                    default:
-                        kingdom = Symbol.NONE;
-                        break;
-                }
+                Symbol kingdom = switch (cardNumber / 10) {
+                    case 0 -> Symbol.FUNGUS;
+                    case 1 -> Symbol.PLANT;
+                    case 2 -> Symbol.ANIMAL;
+                    case 3 -> Symbol.BUG;
+                    default -> Symbol.NONE;
+                };
                 GoldFrontFace frontFace = new GoldFrontFace("front-" + counter + ".jpeg", cornerSymbolsF, point, placementRequirementsF, scoreRequirementsF, kingdom);
 
                 // DA QUI E DA VEDERE

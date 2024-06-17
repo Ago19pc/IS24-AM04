@@ -10,8 +10,8 @@ public class Message implements Serializable {
 
     /**
      * Generates the message
-     * @param message
-     * @param name
+     * @param message the text
+     * @param name the player that sent the message
      */
     public Message(String message, String name) {
         this.message = message;

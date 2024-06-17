@@ -51,7 +51,7 @@ public class ClientControllerInstance implements ClientController {
     private Boolean isSavedGame;
 
     @Override
-    public void main(UI ui) throws RemoteException {
+    public void main(UI ui) {
 
         this.ui = ui;
         this.gameState = GameState.LOBBY;
@@ -67,7 +67,7 @@ public class ClientControllerInstance implements ClientController {
 
     /**
      * Sets the name of the player
-     * @param name
+     * @param name the name duh
      */
     @Override
     public void setName(String name) {
@@ -439,13 +439,9 @@ public class ClientControllerInstance implements ClientController {
         List<Card> boardCards = new ArrayList<>();
         switch (deck){
             case GOLD:
-                for (GoldCard c : goldDeck.getBoardCards()){
-                    boardCards.add(c);
-                }
+                boardCards.addAll(goldDeck.getBoardCards());
             case RESOURCE:
-                for (ResourceCard c : resourceDeck.getBoardCards()){
-                    boardCards.add(c);
-                }
+                boardCards.addAll(resourceDeck.getBoardCards());
         }
         return boardCards;
     }
@@ -510,17 +506,15 @@ public class ClientControllerInstance implements ClientController {
 
     /**
      * Give the player all the achievement, the list of secret and common
-     * @param secretCards
-     * @param commonCards
+     * @param secretCards the cards to display only to a specific player
+     * @param commonCards the cards to display to all players
      */
     @Override
     public void giveAchievementCards(List<AchievementCard> secretCards, List<AchievementCard> commonCards) {
         gameState = GameState.CHOOSE_SECRET_ACHIEVEMENT;
         commonAchievements = new ArrayList<>();
         potentialSecretAchievements = secretCards;
-        for (AchievementCard c : commonCards){
-            commonAchievements.add(c);
-        }
+        commonAchievements.addAll(commonCards);
         ui.displayCommonAchievements();
         ui.chooseSecretAchievement(secretCards);
     }
@@ -553,7 +547,7 @@ public class ClientControllerInstance implements ClientController {
 
     /**
      * Send a message to the chat
-     * @param message
+     * @param message the message in chat as name and text
      */
     @Override
     public void addChatMessage(Message message){
@@ -628,9 +622,7 @@ public class ClientControllerInstance implements ClientController {
      */
     @Override
     public void giveInitialHand(List<Card> hand) {
-        for (Card c : hand){
-            this.hand.add(c);
-        }
+        this.hand.addAll(hand);
         ui.displayHand();
     }
 
@@ -645,7 +637,7 @@ public class ClientControllerInstance implements ClientController {
 
     /**
      * Display the leaderboard when game is finished
-     * @param playerPoints
+     * @param playerPoints the map of player points
      */
     @Override
     public void displayLeaderboard(LinkedHashMap<String, Integer> playerPoints) {
@@ -670,7 +662,7 @@ public class ClientControllerInstance implements ClientController {
 
     /**
      * Adds a player and displays it
-     * @param playerNames
+     * @param playerNames list of all players
      */
     @Override
     public void newPlayer(List<String> playerNames) {
@@ -724,8 +716,8 @@ public class ClientControllerInstance implements ClientController {
             Player p = getPlayerByName(name);
             p.setHandSize(3);
             if (resourceDeck == null || goldDeck == null){
-                resourceDeck = new Deck<ResourceCard>();
-                goldDeck = new Deck<GoldCard>();
+                resourceDeck = new Deck<>();
+                goldDeck = new Deck<>();
             }
             resourceDeck.setDeckSize(resourceDeck.getDeckSize() - 2);
             goldDeck.setDeckSize(goldDeck.getDeckSize() - 1);
@@ -781,7 +773,7 @@ public class ClientControllerInstance implements ClientController {
 
     /**
      * Sets the secret card to player
-     * @param name
+     * @param name the name of the player
      */
     @Override
     public void setSecretCard(String name) {
@@ -793,8 +785,8 @@ public class ClientControllerInstance implements ClientController {
 
     /**
      * Sets the secret card to player
-     * @param name
-     * @param chosenCard
+     * @param name the name of the player
+     * @param chosenCard the index of the card chosen
      */
     @Override
     public void setSecretCard(String name, int chosenCard){
@@ -806,8 +798,8 @@ public class ClientControllerInstance implements ClientController {
 
     /**
      * Sets the starting card
-     * @param name
-     * @param startingFace
+     * @param name the player name
+     * @param startingFace the chosen face of the card
      */
     @Override
     public void startingCardChosen(String name, CornerCardFace startingFace) {
@@ -821,8 +813,8 @@ public class ClientControllerInstance implements ClientController {
 
     /**
      * Game has started, adds the cards to the decks
-     * @param goldBoardCards
-     * @param resourceBoardCards
+     * @param goldBoardCards a list of GoldCards (DECK, FIRST, SECOND)
+     * @param resourceBoardCards a list of ResourceCards (DECK, FIRST, SECOND)
      */
     @Override
     public void startGame(List<GoldCard> goldBoardCards, List<ResourceCard> resourceBoardCards){
@@ -853,7 +845,7 @@ public class ClientControllerInstance implements ClientController {
 
     /**
      * Give to the player the stating card
-     * @param card
+     * @param card the starting card where the player choose one face
      */
     @Override
     public void giveStartingCard(Card card) {
@@ -872,11 +864,11 @@ public class ClientControllerInstance implements ClientController {
 
     /**
      * Place the card on the manuscript
-     * @param playerName
-     * @param placedCardFace
-     * @param x
-     * @param y
-     * @param points
+     * @param playerName the player name that placed the card
+     * @param placedCardFace the face of the placed card
+     * @param x the x coord in the manuscript
+     * @param y the y coord in the manuscript
+     * @param points the points gained by placing the card
      */
     @Override
     public void placeCard(String playerName, CornerCardFace placedCardFace, int x, int y, int points){
@@ -901,7 +893,7 @@ public class ClientControllerInstance implements ClientController {
 
     /**
      * Player has disconnected
-     * @param playerName
+     * @param playerName the name of the disconnected player
      */
     @Override
     public void playerDisconnected(String playerName) {
@@ -926,7 +918,7 @@ public class ClientControllerInstance implements ClientController {
 
     /**
      * Player was removed
-     * @param name
+     * @param name the name of the removed player
      */
     @Override
     public void playerRemoved(String name) {
@@ -936,7 +928,7 @@ public class ClientControllerInstance implements ClientController {
 
     /**
      * Other player has disconnected
-     * @param name
+     * @param name the name of the disconnected player
      */
     @Override
     public void otherPlayerReconnected(String name) {
@@ -961,7 +953,7 @@ public class ClientControllerInstance implements ClientController {
 
     /**
      * Get the player's secret achievement
-     * @return
+     * @return the secret achievement card
      */
     @Override
     public AchievementCard getSecretAchievement() {
@@ -970,7 +962,7 @@ public class ClientControllerInstance implements ClientController {
 
     /**
      * Get the list of messages in the chat
-     * @return
+     * @return the list of Messages in chat
      */
     @Override
     public List<Message> getChat() {
@@ -979,17 +971,17 @@ public class ClientControllerInstance implements ClientController {
 
     /**
      * Loads data
-     * @param id
-     * @param commonAchievements
-     * @param goldDeck
-     * @param resourceDeck
-     * @param name
-     * @param secretAchievement
-     * @param hand
-     * @param turn
-     * @param players
-     * @param chat
-     * @param gameState
+     * @param id the id of the player
+     * @param commonAchievements the list of common achievements
+     * @param goldDeck all the cards in the goldDeck (DECK, FIRST, SECOND)
+     * @param resourceDeck all the cards in the resourceDeck (DECK, FIRST, SECOND)
+     * @param name the name of the player
+     * @param secretAchievement the secret card
+     * @param hand the card in hand
+     * @param turn the current turn of the game
+     * @param players the list of all players
+     * @param chat the chat
+     * @param gameState the state of the game
      */
     @Override
     public void setGameInfo(String id, List<AchievementCard> commonAchievements, Deck<GoldCard> goldDeck, Deck<ResourceCard> resourceDeck, String name, AchievementCard secretAchievement, List<Card> hand, int turn, List<Player> players, Chat chat, GameState gameState) {
@@ -1015,16 +1007,16 @@ public class ClientControllerInstance implements ClientController {
 
     /**
      * Loads the data
-     * @param commonAchievements
-     * @param goldDeck
-     * @param resourceDeck
-     * @param secretAchievement
-     * @param hand
-     * @param turn
-     * @param players
-     * @param chat
-     * @param gameState
-     * @param name
+     * @param commonAchievements the list of common achievement cards
+     * @param goldDeck the goldDeck (DECK, FIRST, SECOND)
+     * @param resourceDeck the resourceDeck (DECK, FIRST, SECOND)
+     * @param secretAchievement the secret achievement card
+     * @param hand the cards in hand
+     * @param turn the current turn
+     * @param players the list of all players
+     * @param chat the chat
+     * @param gameState the state of the game
+     * @param name the player's name
      */
     @Override
     public void loadGame(List<AchievementCard> commonAchievements, Deck<GoldCard> goldDeck, Deck<ResourceCard> resourceDeck, AchievementCard secretAchievement, List<Card> hand, int turn, List<Player> players, Chat chat, GameState gameState, String name) {

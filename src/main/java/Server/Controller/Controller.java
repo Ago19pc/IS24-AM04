@@ -119,9 +119,9 @@ public interface Controller {
     void loadGame() throws IOException;
 
     /**
-     * @param name
+     * @param name the name of the player
      * @return the Player instance associated with the name
-     * @throws PlayerNotFoundByNameException
+     * @throws PlayerNotFoundByNameException if the player cannot be found
      */
     Player getPlayerByName(String name) throws PlayerNotFoundByNameException;
 

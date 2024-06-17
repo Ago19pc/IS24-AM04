@@ -9,63 +9,81 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
 
-<Pane fx:id="loginScene" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="768.0" prefWidth="1024.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="run.ColorReadySceneController">
-   <children>
-      <ImageView fitHeight="776.0" fitWidth="747.0">
-         <image>
-            <Image url="@./images/otherImages/logovuoto.jpg" />
-         </image>
-      </ImageView>
-      <Label fx:id="label_ready" layoutX="274.0" layoutY="331.0" opacity="0.0" text="You are ready!" textAlignment="CENTER">
-         <font>
-            <Font size="32.0" />
-         </font>
-      </Label>
-      <Button fx:id="red_Button" layoutX="395.0" layoutY="380.0" mnemonicParsing="false" onAction="#askColorRed" prefHeight="60.0" prefWidth="137.0" style="-fx-background-color: transparent; -fx-border-radius: 3; -fx-border-color: black;" text="Red">
-         <font>
-            <Font size="32.0" />
-         </font>
-      </Button>
-      <Button fx:id="green_Button" layoutX="212.0" layoutY="379.0" mnemonicParsing="false" onAction="#askColorGreen" prefHeight="60.0" prefWidth="137.0" style="-fx-background-color: transparent; -fx-border-radius: 3; -fx-border-color: black;" text="Green">
-         <font>
-            <Font size="32.0" />
-         </font>
-      </Button>
-      <Button fx:id="blue_Button" layoutX="212.0" layoutY="263.0" mnemonicParsing="false" onAction="#askColorBlue" prefHeight="60.0" prefWidth="137.0" style="-fx-background-color: transparent; -fx-border-radius: 3; -fx-border-color: black;" text="Blue">
-         <font>
-            <Font size="32.0" />
-         </font>
-      </Button>
-      <Button fx:id="yellow_Button" layoutX="395.0" layoutY="263.0" mnemonicParsing="false" onAction="#askColorYellow" prefHeight="60.0" prefWidth="137.0" style="-fx-background-color: transparent; -fx-border-radius: 3; -fx-border-color: black;" text="Yellow">
-         <font>
-            <Font size="32.0" />
-         </font>
-      </Button>
-      <Label fx:id="label_color" layoutX="335.0" layoutY="186.0" text="Color">
-         <font>
-            <Font size="32.0" />
-         </font>
-      </Label>
-      <Button fx:id="readyButton" disable="true" layoutX="299.0" layoutY="319.0" mnemonicParsing="false" onAction="#askSetReady" opacity="0.0" prefHeight="60.0" prefWidth="144.0" style="-fx-background-color: transparent; -fx-background-radius: 3; -fx-border-color: black;" text="Ready">
-         <font>
-            <Font size="32.0" />
-         </font>
-      </Button>
-      <Button fx:id="confirm_Color_Button" disable="true" layoutX="294.0" layoutY="478.0" mnemonicParsing="false" onAction="#setColorConfirm" opacity="0.0" prefHeight="60.0" prefWidth="156.0" style="-fx-background-color: transparent; -fx-border-color: black; -fx-background-radius: 3;" text="Confirm">
-         <font>
-            <Font size="32.0" />
-         </font>
-      </Button>
-      <ListView fx:id="list_Player" layoutX="747.0" prefHeight="140.0" prefWidth="277.0" style="-fx-background-color: eae1b8;" />
-      <ListView fx:id="chat_messages" layoutX="747.0" layoutY="140.0" prefHeight="575.0" prefWidth="277.0" style="-fx-background-color: eae1b8;" />
-      <TextField fx:id="messageToSend" layoutX="747.0" layoutY="715.0" prefHeight="53.0" prefWidth="277.0" style="-fx-background-color: eae1b8; -fx-border-color: black; -fx-border-radius: 0;">
-         <font>
-            <Font size="25.0" />
-         </font></TextField>
-      <Button layoutX="608.0" layoutY="694.0" mnemonicParsing="false" onAction="#sendMessages" prefHeight="59.0" prefWidth="119.0" style="-fx-background-color: eae1b8; -fx-border-radius: 3; -fx-border-color: white;" text="Send">
-         <font>
-            <Font size="32.0" />
-         </font>
-      </Button>
-   </children>
+<Pane fx:id="loginScene" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
+      prefHeight="768.0" prefWidth="1024.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="run.ColorReadySceneController">
+    <ImageView fitHeight="776.0" fitWidth="747.0">
+        <Image url="@./images/otherImages/logovuoto.jpg"/>
+    </ImageView>
+    <Label fx:id="label_ready" layoutX="274.0" layoutY="331.0" opacity="0.0" text="You are ready!"
+           textAlignment="CENTER">
+        <font>
+          <Font size="32.0"/>
+        </font>
+    </Label>
+    <Button fx:id="red_Button" layoutX="395.0" layoutY="380.0" mnemonicParsing="false" onAction="#askColorRed"
+            prefHeight="60.0" prefWidth="137.0"
+            style="-fx-background-color: transparent; -fx-border-radius: 3; -fx-border-color: black;" text="Red">
+        <font>
+          <Font size="32.0"/>
+        </font>
+    </Button>
+    <Button fx:id="green_Button" layoutX="212.0" layoutY="379.0" mnemonicParsing="false" onAction="#askColorGreen"
+            prefHeight="60.0" prefWidth="137.0"
+            style="-fx-background-color: transparent; -fx-border-radius: 3; -fx-border-color: black;" text="Green">
+        <font>
+          <Font size="32.0"/>
+        </font>
+    </Button>
+    <Button fx:id="blue_Button" layoutX="212.0" layoutY="263.0" mnemonicParsing="false" onAction="#askColorBlue"
+            prefHeight="60.0" prefWidth="137.0"
+            style="-fx-background-color: transparent; -fx-border-radius: 3; -fx-border-color: black;" text="Blue">
+        <font>
+          <Font size="32.0"/>
+        </font>
+    </Button>
+    <Button fx:id="yellow_Button" layoutX="395.0" layoutY="263.0" mnemonicParsing="false" onAction="#askColorYellow"
+            prefHeight="60.0" prefWidth="137.0"
+            style="-fx-background-color: transparent; -fx-border-radius: 3; -fx-border-color: black;" text="Yellow">
+        <font>
+          <Font size="32.0"/>
+        </font>
+    </Button>
+    <Label fx:id="label_color" layoutX="335.0" layoutY="186.0" text="Color">
+        <font>
+          <Font size="32.0"/>
+        </font>
+    </Label>
+    <Button fx:id="readyButton" disable="true" layoutX="299.0" layoutY="319.0" mnemonicParsing="false"
+            onAction="#askSetReady" opacity="0.0" prefHeight="60.0" prefWidth="144.0"
+            style="-fx-background-color: transparent; -fx-background-radius: 3; -fx-border-color: black;" text="Ready">
+        <font>
+          <Font size="32.0"/>
+        </font>
+    </Button>
+    <Button fx:id="confirm_Color_Button" disable="true" layoutX="294.0" layoutY="478.0" mnemonicParsing="false"
+            onAction="#setColorConfirm" opacity="0.0" prefHeight="60.0" prefWidth="156.0"
+            style="-fx-background-color: transparent; -fx-border-color: black; -fx-background-radius: 3;"
+            text="Confirm">
+        <font>
+          <Font size="32.0"/>
+        </font>
+    </Button>
+    <ListView fx:id="list_Player" layoutX="747.0" prefHeight="140.0" prefWidth="277.0"
+              style="-fx-background-color: eae1b8;"/>
+    <ListView fx:id="chat_messages" layoutX="747.0" layoutY="140.0" prefHeight="575.0" prefWidth="277.0"
+              style="-fx-background-color: eae1b8;"/>
+    <TextField fx:id="messageToSend" layoutX="747.0" layoutY="715.0" prefHeight="53.0" prefWidth="277.0"
+               style="-fx-background-color: eae1b8; -fx-border-color: black; -fx-border-radius: 0;">
+        <font>
+          <Font size="25.0"/>
+        </font>
+    </TextField>
+    <Button layoutX="608.0" layoutY="694.0" mnemonicParsing="false" onAction="#sendMessages" prefHeight="59.0"
+            prefWidth="119.0" style="-fx-background-color: eae1b8; -fx-border-radius: 3; -fx-border-color: white;"
+            text="Send">
+        <font>
+          <Font size="32.0"/>
+        </font>
+    </Button>
 </Pane>

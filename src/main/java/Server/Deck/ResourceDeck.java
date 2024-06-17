@@ -87,7 +87,7 @@ public class ResourceDeck implements Deckable {
     public ResourceCard popCard(DeckPosition position) throws  AlreadyFinishedException{
 
             if (position == DECK) {
-                return cards.remove(0);
+                return cards.removeFirst();
             } else {
                 // LA POSIZIONE NON E' DECK
 
@@ -126,7 +126,7 @@ public class ResourceDeck implements Deckable {
     public ResourceCard getTopCardNoPop() {
         if(cards.isEmpty())
             return null;
-        return cards.get(0);
+        return cards.getFirst();
     }
 
     /**

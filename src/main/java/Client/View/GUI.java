@@ -107,9 +107,7 @@ public class GUI implements UI{
 
     @Override
     public void displayNewCardInHand() {
-        Platform.runLater(() -> {
-            ((MainBoardSceneController) sceneControllerMap.get(SceneName.GAME)).setHandCards();
-        });
+        Platform.runLater(() -> ((MainBoardSceneController) sceneControllerMap.get(SceneName.GAME)).setHandCards());
     }
 
     @Override
@@ -193,21 +191,21 @@ public class GUI implements UI{
     public void chatMessageIsEmpty() {
         Platform.runLater(() -> {
             if(sceneMap.get(SceneName.SETCOLOR) == stage.getScene()){
-                ((ColorReadySceneController) sceneControllerMap.get(SceneName.SETCOLOR)).messageToSend.clear();
-                ((ColorReadySceneController) sceneControllerMap.get(SceneName.SETCOLOR)).messageToSend.setPromptText("Cannot send empty message");
+                sceneControllerMap.get(SceneName.SETCOLOR).messageToSend.clear();
+                sceneControllerMap.get(SceneName.SETCOLOR).messageToSend.setPromptText("Cannot send empty message");
 
             }
             if(sceneMap.get(SceneName.SECRETCARDCHOICE) == stage.getScene()){
-                ((ChooseSecretCardController) sceneControllerMap.get(SceneName.SECRETCARDCHOICE)).messageToSend.clear();
-                ((ChooseSecretCardController) sceneControllerMap.get(SceneName.SECRETCARDCHOICE)).messageToSend.setPromptText("Cannot send empty message");
+                sceneControllerMap.get(SceneName.SECRETCARDCHOICE).messageToSend.clear();
+                sceneControllerMap.get(SceneName.SECRETCARDCHOICE).messageToSend.setPromptText("Cannot send empty message");
             }
             if(sceneMap.get(SceneName.STARTINGCARDCHOICE) == stage.getScene()){
-                ((ChooseStartingCardController) sceneControllerMap.get(SceneName.STARTINGCARDCHOICE)).messageToSend.clear();
-                ((ChooseStartingCardController) sceneControllerMap.get(SceneName.STARTINGCARDCHOICE)).messageToSend.setPromptText("Cannot send empty message");
+                sceneControllerMap.get(SceneName.STARTINGCARDCHOICE).messageToSend.clear();
+                sceneControllerMap.get(SceneName.STARTINGCARDCHOICE).messageToSend.setPromptText("Cannot send empty message");
             }
             if(sceneMap.get(SceneName.GAME) == stage.getScene()){
-                ((MainBoardSceneController) sceneControllerMap.get(SceneName.GAME)).messageToSend.clear();
-                ((MainBoardSceneController) sceneControllerMap.get(SceneName.GAME)).messageToSend.setPromptText("Cannot send empty message");
+                sceneControllerMap.get(SceneName.GAME).messageToSend.clear();
+                sceneControllerMap.get(SceneName.GAME).messageToSend.setPromptText("Cannot send empty message");
             }
         });
 
@@ -251,10 +249,7 @@ public class GUI implements UI{
 
     @Override
     public void displayPlayerColors() {
-        Platform.runLater(() -> {
-            listViewSetUpdate();
-
-        });
+        Platform.runLater(this::listViewSetUpdate);
     }
 
     @Override
@@ -301,17 +296,13 @@ public class GUI implements UI{
 
     @Override
     public void endGameStarted() {
-        Platform.runLater(() -> {
-            ((MainBoardSceneController) sceneControllerMap.get(SceneName.GAME)).endingLabel.setOpacity(1);
-        });
+        Platform.runLater(() -> ((MainBoardSceneController) sceneControllerMap.get(SceneName.GAME)).endingLabel.setOpacity(1));
         System.out.println("End game started");
     }
 
     @Override
     public void displayHand() {
-        Platform.runLater(() -> {
-            ((MainBoardSceneController) sceneControllerMap.get(SceneName.GAME)).setHandCards();
-        });
+        Platform.runLater(() -> ((MainBoardSceneController) sceneControllerMap.get(SceneName.GAME)).setHandCards());
 
     }
 
@@ -319,9 +310,8 @@ public class GUI implements UI{
     public void displayLeaderboard(LinkedHashMap<String, Integer> playerPoints) {
         Platform.runLater(() -> {
             ((MainBoardSceneController) sceneControllerMap.get(SceneName.GAME)).updateLeaderBoard();
-            ((MainBoardSceneController) sceneControllerMap.get(SceneName.GAME)).tabPane.getTabs().stream().forEach(tab -> {
+            ((MainBoardSceneController) sceneControllerMap.get(SceneName.GAME)).tabPane.getTabs().forEach(tab -> {
                 if (!tab.getText().equals("LeaderBoard")) {
-                    //tab.setDisable(true);
                     tab.setStyle("-fx-opacity: 0.5;");
                 }
             });
@@ -358,9 +348,7 @@ public class GUI implements UI{
 
     @Override
     public void newTurn() {
-        Platform.runLater(() -> {
-            ((MainBoardSceneController) sceneControllerMap.get(SceneName.GAME)).yourTurnLabel.setVisible(controller.getActivePlayer().getName().equals(controller.getMyName()));
-        });
+        Platform.runLater(() -> ((MainBoardSceneController) sceneControllerMap.get(SceneName.GAME)).yourTurnLabel.setVisible(controller.getActivePlayer().getName().equals(controller.getMyName())));
 
     }
 
@@ -411,9 +399,7 @@ public class GUI implements UI{
 
     @Override
     public void displayBoardCards() {
-        Platform.runLater(() -> {
-            ((MainBoardSceneController) sceneControllerMap.get(SceneName.GAME)).updateAllFloorCards();
-        });
+        Platform.runLater(() -> ((MainBoardSceneController) sceneControllerMap.get(SceneName.GAME)).updateAllFloorCards());
     }
 
     @Override
@@ -467,7 +453,7 @@ public class GUI implements UI{
     }
 
     @Override
-    public void displayPlayerPoints(String playerName) throws PlayerNotFoundByNameException {
+    public void displayPlayerPoints(String playerName) {
         Platform.runLater(() -> {
             System.out.println("Player points displayed");
             ((MainBoardSceneController) sceneControllerMap.get(SceneName.GAME)).updateLeaderBoard();
@@ -504,9 +490,7 @@ public class GUI implements UI{
 
     @Override
     public void displayId() {
-        Platform.runLater(() -> {
-            sceneControllerMap.get(SceneName.SETNAME).setup();
-        });
+        Platform.runLater(() -> sceneControllerMap.get(SceneName.SETNAME).setup());
 
     }
 

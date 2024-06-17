@@ -144,7 +144,7 @@
                         <!-- Default configuration for running with: mvn clean javafx:run -->
                         <id>default-main</id>
                         <configuration>
-                            <mainClass>it.am04.demo1/theMain.main</mainClass>
+                            <mainClass>it.am04.demo1/theMain</mainClass>
                             <launcher>app</launcher>
                             <jlinkZipName>app</jlinkZipName>
                             <jlinkImageName>app</jlinkImageName>

@@ -1,6 +1,5 @@
 package run;
 
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -27,10 +26,9 @@ public class NameReadySceneController extends SceneController{
     public Button confirm_ButtonId;
 
     /**
-     * This method is called when the users inserts their name, but still need confirmation from server
-     * @param actionEvent
+     * This method is called when the users insert their name, but still need confirmation from server
      */
-    public void askSetName(ActionEvent actionEvent) {
+    public void askSetName() {
         System.out.println("Name Field: " + possible_Name.getText());
         if (controller.isSavedGame()) {
             controller.joinSavedGame(possible_Name.getText());
@@ -60,9 +58,8 @@ public class NameReadySceneController extends SceneController{
 
     /**
      * This method is called when the user wants to reconnect to a game
-     * @param actionEvent
      */
-    public void idLogin(ActionEvent actionEvent) {
+    public void idLogin() {
         System.out.println("Id Field: "+reconnection_idField.getText());
         controller.reconnect(reconnection_idField.getText());
     }
