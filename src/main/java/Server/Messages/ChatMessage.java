@@ -15,8 +15,8 @@ public class ChatMessage implements Serializable, ToServerMessage, ToClientMessa
 
     /**
      * Constructor for the ChatMessage, which is the message used to update the chat
-     * @param message
-     * @param player
+     * @param message the message to be sent
+     * @param player the player who sent the message
      */
     public ChatMessage(String message, String player){
         this.message = message;
@@ -39,11 +39,7 @@ public class ChatMessage implements Serializable, ToServerMessage, ToClientMessa
             } catch (java.rmi.RemoteException exception) {
                 System.out.println("Remote exception");
             }
-        } catch (IllegalArgumentException e) {
-            ChatMessageIsEmptyMessage chatMessageIsEmptyMessage = new ChatMessageIsEmptyMessage();
-            controller.getConnectionHandler().sendMessage(chatMessageIsEmptyMessage, playerName);
         }
-
     }
 
     @Override

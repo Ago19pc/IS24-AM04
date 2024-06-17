@@ -255,6 +255,10 @@ public class ClientControllerInstance implements ClientController {
             ui.needName();
             return;
         }
+        if(message.isEmpty()){
+            ui.chatMessageIsEmpty();
+            return;
+        }
         ChatMessage chatMessage = new ChatMessage(message, id);
         clientConnectionHandler.sendMessage(chatMessage);
     }

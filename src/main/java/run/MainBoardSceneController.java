@@ -38,15 +38,13 @@ public class MainBoardSceneController extends SceneController {
     public Group yourManuscript;
     @FXML
     public Label yourTurnLabel;
-
+    @FXML
+    public Label endingLabel;
     @FXML
     public TabPane tabPane;
 
     @FXML
     public Button chatButton;
-
-    @FXML
-    public TextField chatField;
 
     @FXML
     public ListView<String> chatMessages;
@@ -463,8 +461,6 @@ public class MainBoardSceneController extends SceneController {
         }
 
     }
-    public void chat_button_action() {
-        controller.sendChatMessage(chatField.getText());
-    }
+
 
 }
