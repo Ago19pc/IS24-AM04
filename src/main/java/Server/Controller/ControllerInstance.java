@@ -49,6 +49,7 @@ public class ControllerInstance implements Controller{
         for (Player p : gameModel.getPlayerList()){
             if (p.getName().equals(player.getName())) throw new IllegalArgumentException("Player with same name already exists");
         }
+        if( name.isBlank() ) throw new IllegalArgumentException("Name cannot be empty");
         if(gameModel.getPlayerList().size()<4) {
             gameModel.addPlayer(player);
             connectionHandler.addPlayerByID(name, clientID);

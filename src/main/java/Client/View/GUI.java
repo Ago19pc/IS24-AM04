@@ -114,7 +114,7 @@ public class GUI implements UI{
     public void nameChangeFailed() {
         Platform.runLater(() -> {
             ((NameReadySceneController) sceneControllerMap.get(SceneName.SETNAME)).possible_Name.clear();
-            ((NameReadySceneController) sceneControllerMap.get(SceneName.SETNAME)).possible_Name.setPromptText("Nome già esistente");
+            ((NameReadySceneController) sceneControllerMap.get(SceneName.SETNAME)).possible_Name.setPromptText("Nome non valido");
             stage.setScene(getScene(SceneName.SETNAME));
             stage.show();
         });
