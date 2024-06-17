@@ -5,8 +5,6 @@ import Server.Enums.DeckPosition;
 import Server.Exception.AlreadyFinishedException;
 import Server.Exception.IncorrectDeckPositionException;
 
-import java.util.Map;
-
 public interface Deckable {
     /**
      * @return Map<DeckPosition, Card> the cards on the board

@@ -8,7 +8,6 @@ import Server.Card.Card;
 import Server.Card.GoldCard;
 import Server.Card.ResourceCard;
 import Server.Chat.Chat;
-import Server.Connections.ServerConnectionHandler;
 import Server.Controller.Controller;
 import Server.Enums.GameState;
 import Server.Exception.AlreadyFinishedException;

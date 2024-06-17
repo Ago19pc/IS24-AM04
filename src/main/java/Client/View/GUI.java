@@ -22,8 +22,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import static run.SceneName.*;
-
 public class GUI implements UI{
     private static ClientController controller;
     private static final Map<SceneName,Scene> sceneMap = new HashMap<>();
@@ -67,8 +65,8 @@ public class GUI implements UI{
                 //todo: implement graphically with another scene
                 System.out.println("WAITING FOR OTHERS, TODO");
             } else {
-                ((ColorReadySceneController) sceneControllerMap.get(SETCOLOR)).messageToSend.setPromptText("Scrivi un messaggio!");
-                stage.setScene(getScene(SETCOLOR));
+                sceneControllerMap.get(SceneName.SETCOLOR).messageToSend.setPromptText("Scrivi un messaggio!");
+                stage.setScene(getScene(SceneName.SETCOLOR));
                 stage.show();
             }
         });
@@ -77,19 +75,19 @@ public class GUI implements UI{
     @Override
     public void colorChanged() {
         Platform.runLater(() -> {
-            ((ColorReadySceneController) sceneControllerMap.get(SETCOLOR)).confirm_Color_Button.setDisable(true);
-            ((ColorReadySceneController) sceneControllerMap.get(SETCOLOR)).green_Button.setDisable(true);
-            ((ColorReadySceneController) sceneControllerMap.get(SETCOLOR)).blue_Button.setDisable(true);
-            ((ColorReadySceneController) sceneControllerMap.get(SETCOLOR)).yellow_Button.setDisable(true);
-            ((ColorReadySceneController) sceneControllerMap.get(SETCOLOR)).red_Button.setDisable(true);
-            ((ColorReadySceneController) sceneControllerMap.get(SETCOLOR)).label_color.setOpacity(0);
-            ((ColorReadySceneController) sceneControllerMap.get(SETCOLOR)).confirm_Color_Button.setOpacity(0);
-            ((ColorReadySceneController) sceneControllerMap.get(SETCOLOR)).green_Button.setOpacity(0);
-            ((ColorReadySceneController) sceneControllerMap.get(SETCOLOR)).blue_Button.setOpacity(0);
-            ((ColorReadySceneController) sceneControllerMap.get(SETCOLOR)).yellow_Button.setOpacity(0);
-            ((ColorReadySceneController) sceneControllerMap.get(SETCOLOR)).red_Button.setOpacity(0);
-            ((ColorReadySceneController) sceneControllerMap.get(SETCOLOR)).readyButton.setOpacity(1);
-            ((ColorReadySceneController) sceneControllerMap.get(SETCOLOR)).readyButton.setDisable(false);
+            ((ColorReadySceneController) sceneControllerMap.get(SceneName.SETCOLOR)).confirm_Color_Button.setDisable(true);
+            ((ColorReadySceneController) sceneControllerMap.get(SceneName.SETCOLOR)).green_Button.setDisable(true);
+            ((ColorReadySceneController) sceneControllerMap.get(SceneName.SETCOLOR)).blue_Button.setDisable(true);
+            ((ColorReadySceneController) sceneControllerMap.get(SceneName.SETCOLOR)).yellow_Button.setDisable(true);
+            ((ColorReadySceneController) sceneControllerMap.get(SceneName.SETCOLOR)).red_Button.setDisable(true);
+            ((ColorReadySceneController) sceneControllerMap.get(SceneName.SETCOLOR)).label_color.setOpacity(0);
+            ((ColorReadySceneController) sceneControllerMap.get(SceneName.SETCOLOR)).confirm_Color_Button.setOpacity(0);
+            ((ColorReadySceneController) sceneControllerMap.get(SceneName.SETCOLOR)).green_Button.setOpacity(0);
+            ((ColorReadySceneController) sceneControllerMap.get(SceneName.SETCOLOR)).blue_Button.setOpacity(0);
+            ((ColorReadySceneController) sceneControllerMap.get(SceneName.SETCOLOR)).yellow_Button.setOpacity(0);
+            ((ColorReadySceneController) sceneControllerMap.get(SceneName.SETCOLOR)).red_Button.setOpacity(0);
+            ((ColorReadySceneController) sceneControllerMap.get(SceneName.SETCOLOR)).readyButton.setOpacity(1);
+            ((ColorReadySceneController) sceneControllerMap.get(SceneName.SETCOLOR)).readyButton.setDisable(false);
             listViewSetUpdate();
         });
     }
@@ -110,16 +108,16 @@ public class GUI implements UI{
     @Override
     public void displayNewCardInHand() {
         Platform.runLater(() -> {
-            ((MainBoardSceneController) sceneControllerMap.get(GAME)).setHandCards();
+            ((MainBoardSceneController) sceneControllerMap.get(SceneName.GAME)).setHandCards();
         });
     }
 
     @Override
     public void nameChangeFailed() {
         Platform.runLater(() -> {
-            ((NameReadySceneController) sceneControllerMap.get(SETNAME)).possible_Name.clear();
-            ((NameReadySceneController) sceneControllerMap.get(SETNAME)).possible_Name.setPromptText("Nome già esistente");
-            stage.setScene(getScene(SETNAME));
+            ((NameReadySceneController) sceneControllerMap.get(SceneName.SETNAME)).possible_Name.clear();
+            ((NameReadySceneController) sceneControllerMap.get(SceneName.SETNAME)).possible_Name.setPromptText("Nome già esistente");
+            stage.setScene(getScene(SceneName.SETNAME));
             stage.show();
         });
     }
@@ -167,11 +165,11 @@ public class GUI implements UI{
     @Override
     public void connectionFailed() {
         Platform.runLater(() -> {
-            ((JoinSceneController) sceneControllerMap.get(JOIN)).text_ip.clear();
-            ((JoinSceneController) sceneControllerMap.get(JOIN)).text_Port.clear();
-            ((JoinSceneController) sceneControllerMap.get(JOIN)).text_ip.setPromptText("Indirizzo IP non valido");
-            ((JoinSceneController) sceneControllerMap.get(JOIN)).text_Port.setPromptText("Porta non valida");
-            stage.setScene(getScene(JOIN));
+            ((JoinSceneController) sceneControllerMap.get(SceneName.JOIN)).text_ip.clear();
+            ((JoinSceneController) sceneControllerMap.get(SceneName.JOIN)).text_Port.clear();
+            ((JoinSceneController) sceneControllerMap.get(SceneName.JOIN)).text_ip.setPromptText("Indirizzo IP non valido");
+            ((JoinSceneController) sceneControllerMap.get(SceneName.JOIN)).text_Port.setPromptText("Porta non valida");
+            stage.setScene(getScene(SceneName.JOIN));
             stage.show();
         });
     }
@@ -194,22 +192,22 @@ public class GUI implements UI{
     @Override
     public void chatMessageIsEmpty() {
         Platform.runLater(() -> {
-            if(sceneMap.get(SETCOLOR) == stage.getScene()){
-                ((ColorReadySceneController) sceneControllerMap.get(SETCOLOR)).messageToSend.clear();
-                ((ColorReadySceneController) sceneControllerMap.get(SETCOLOR)).messageToSend.setPromptText("Cannot send empty message");
+            if(sceneMap.get(SceneName.SETCOLOR) == stage.getScene()){
+                ((ColorReadySceneController) sceneControllerMap.get(SceneName.SETCOLOR)).messageToSend.clear();
+                ((ColorReadySceneController) sceneControllerMap.get(SceneName.SETCOLOR)).messageToSend.setPromptText("Cannot send empty message");
 
             }
-            if(sceneMap.get(SECRETCARDCHOICE) == stage.getScene()){
-                ((ChooseSecretCardController) sceneControllerMap.get(SECRETCARDCHOICE)).messageToSend.clear();
-                ((ChooseSecretCardController) sceneControllerMap.get(SECRETCARDCHOICE)).messageToSend.setPromptText("Cannot send empty message");
+            if(sceneMap.get(SceneName.SECRETCARDCHOICE) == stage.getScene()){
+                ((ChooseSecretCardController) sceneControllerMap.get(SceneName.SECRETCARDCHOICE)).messageToSend.clear();
+                ((ChooseSecretCardController) sceneControllerMap.get(SceneName.SECRETCARDCHOICE)).messageToSend.setPromptText("Cannot send empty message");
             }
-            if(sceneMap.get(STARTINGCARDCHOICE) == stage.getScene()){
-                ((ChooseStartingCardController) sceneControllerMap.get(STARTINGCARDCHOICE)).messageToSend.clear();
-                ((ChooseStartingCardController) sceneControllerMap.get(STARTINGCARDCHOICE)).messageToSend.setPromptText("Cannot send empty message");
+            if(sceneMap.get(SceneName.STARTINGCARDCHOICE) == stage.getScene()){
+                ((ChooseStartingCardController) sceneControllerMap.get(SceneName.STARTINGCARDCHOICE)).messageToSend.clear();
+                ((ChooseStartingCardController) sceneControllerMap.get(SceneName.STARTINGCARDCHOICE)).messageToSend.setPromptText("Cannot send empty message");
             }
-            if(sceneMap.get(GAME) == stage.getScene()){
-                ((MainBoardSceneController) sceneControllerMap.get(GAME)).messageToSend.clear();
-                ((MainBoardSceneController) sceneControllerMap.get(GAME)).messageToSend.setPromptText("Cannot send empty message");
+            if(sceneMap.get(SceneName.GAME) == stage.getScene()){
+                ((MainBoardSceneController) sceneControllerMap.get(SceneName.GAME)).messageToSend.clear();
+                ((MainBoardSceneController) sceneControllerMap.get(SceneName.GAME)).messageToSend.setPromptText("Cannot send empty message");
             }
         });
 
@@ -268,9 +266,9 @@ public class GUI implements UI{
                 String name1 = controller.getPlayers().get(i).getName();
                 String color = controller.getPlayers().get(i).getColor() == null ? "No Color" : controller.getPlayers().get(i).getColor().toString();
                 String ready1 = controller.getPlayers().get(i).isReady() ? "Ready" : "Not Ready";
-                ((ColorReadySceneController) sceneControllerMap.get(SETCOLOR)).list_Player.getItems().set(i, name1 + "   " + color + "   " + ready1);
+                ((ColorReadySceneController) sceneControllerMap.get(SceneName.SETCOLOR)).list_Player.getItems().set(i, name1 + "   " + color + "   " + ready1);
                 //------------------------------------------------------------------
-                ((NameReadySceneController) sceneControllerMap.get(SceneName.SETNAME)).cloneListView(((ColorReadySceneController) sceneControllerMap.get(SETCOLOR)).list_Player);
+                ((NameReadySceneController) sceneControllerMap.get(SceneName.SETNAME)).cloneListView(((ColorReadySceneController) sceneControllerMap.get(SceneName.SETCOLOR)).list_Player);
             }
         });
     }
@@ -279,23 +277,23 @@ public class GUI implements UI{
     public void chat(Message message) {
         Platform.runLater(()->
         {
-            ((ColorReadySceneController) sceneControllerMap.get(SETCOLOR)).chat_messages.getItems().add( message.getName() + ": "+  message.getMessage());
-            sceneControllerMap.get(SETCOLOR).messageToSend.clear();
-            ((NameReadySceneController) sceneControllerMap.get(SETNAME)).chat_message.getItems().add( message.getName() + ": "+  message.getMessage());
-            ((ChooseSecretCardController) sceneControllerMap.get(SECRETCARDCHOICE)).chat_message.getItems().add( message.getName() + ": "+  message.getMessage());
-            sceneControllerMap.get(SECRETCARDCHOICE).messageToSend.clear();
-            ((ChooseStartingCardController) sceneControllerMap.get(STARTINGCARDCHOICE)).chat_message.getItems().add( message.getName() + ": "+  message.getMessage());
-            sceneControllerMap.get(STARTINGCARDCHOICE).messageToSend.clear();
-            ((MainBoardSceneController) sceneControllerMap.get(GAME)).chatMessages.getItems().add( message.getName() + ": "+  message.getMessage());
-            sceneControllerMap.get(GAME).messageToSend.clear();
+            ((ColorReadySceneController) sceneControllerMap.get(SceneName.SETCOLOR)).chat_messages.getItems().add( message.getName() + ": "+  message.getMessage());
+            sceneControllerMap.get(SceneName.SETCOLOR).messageToSend.clear();
+            ((NameReadySceneController) sceneControllerMap.get(SceneName.SETNAME)).chat_message.getItems().add( message.getName() + ": "+  message.getMessage());
+            ((ChooseSecretCardController) sceneControllerMap.get(SceneName.SECRETCARDCHOICE)).chat_message.getItems().add( message.getName() + ": "+  message.getMessage());
+            sceneControllerMap.get(SceneName.SECRETCARDCHOICE).messageToSend.clear();
+            ((ChooseStartingCardController) sceneControllerMap.get(SceneName.STARTINGCARDCHOICE)).chat_message.getItems().add( message.getName() + ": "+  message.getMessage());
+            sceneControllerMap.get(SceneName.STARTINGCARDCHOICE).messageToSend.clear();
+            ((MainBoardSceneController) sceneControllerMap.get(SceneName.GAME)).chatMessages.getItems().add( message.getName() + ": "+  message.getMessage());
+            sceneControllerMap.get(SceneName.GAME).messageToSend.clear();
         });
     }
 
     @Override
     public void chooseSecretAchievement(List<AchievementCard> possibleAchievements) {
         Platform.runLater( () -> {
-            ((ChooseSecretCardController) sceneControllerMap.get(SECRETCARDCHOICE)).setUp(possibleAchievements);
-            stage.setScene(getScene(SECRETCARDCHOICE));
+            ((ChooseSecretCardController) sceneControllerMap.get(SceneName.SECRETCARDCHOICE)).setUp(possibleAchievements);
+            stage.setScene(getScene(SceneName.SECRETCARDCHOICE));
         });
 
 
@@ -304,7 +302,7 @@ public class GUI implements UI{
     @Override
     public void endGameStarted() {
         Platform.runLater(() -> {
-            ((MainBoardSceneController) sceneControllerMap.get(GAME)).endingLabel.setOpacity(1);
+            ((MainBoardSceneController) sceneControllerMap.get(SceneName.GAME)).endingLabel.setOpacity(1);
         });
         System.out.println("End game started");
     }
@@ -320,8 +318,8 @@ public class GUI implements UI{
     @Override
     public void displayLeaderboard(LinkedHashMap<String, Integer> playerPoints) {
         Platform.runLater(() -> {
-            ((MainBoardSceneController) sceneControllerMap.get(GAME)).updateLeaderBoard();
-            ((MainBoardSceneController) sceneControllerMap.get(GAME)).tabPane.getTabs().stream().forEach(tab -> {
+            ((MainBoardSceneController) sceneControllerMap.get(SceneName.GAME)).updateLeaderBoard();
+            ((MainBoardSceneController) sceneControllerMap.get(SceneName.GAME)).tabPane.getTabs().stream().forEach(tab -> {
                 if (!tab.getText().equals("LeaderBoard")) {
                     //tab.setDisable(true);
                     tab.setStyle("-fx-opacity: 0.5;");
@@ -338,9 +336,9 @@ public class GUI implements UI{
             String name = controller.getPlayers().getLast().getName();
             String color = controller.getPlayers().getLast().getColor() == null ? "No Color" : controller.getPlayers().getLast().getColor().toString();
             String ready = controller.getPlayers().getLast().isReady() ? "Ready" : "Not Ready";
-            ((ColorReadySceneController) sceneControllerMap.get(SETCOLOR)).list_Player.getItems().add(name + "   " + color + "   " + ready);
+            ((ColorReadySceneController) sceneControllerMap.get(SceneName.SETCOLOR)).list_Player.getItems().add(name + "   " + color + "   " + ready);
             //----------------------------------------------------------------------q
-            ((NameReadySceneController) sceneControllerMap.get(SceneName.SETNAME)).cloneListView(((ColorReadySceneController) sceneControllerMap.get(SETCOLOR)).list_Player);
+            ((NameReadySceneController) sceneControllerMap.get(SceneName.SETNAME)).cloneListView(((ColorReadySceneController) sceneControllerMap.get(SceneName.SETCOLOR)).list_Player);
 
         });
 
@@ -350,11 +348,11 @@ public class GUI implements UI{
     @Override
     public void otherPlayerDraw(String name, Decks deckFrom, DeckPosition position) {
         Platform.runLater(() -> {
-            ((MainBoardSceneController) sceneControllerMap.get(GAME)).setBoardCards(deckFrom);
+            ((MainBoardSceneController) sceneControllerMap.get(SceneName.GAME)).setBoardCards(deckFrom);
             if(deckFrom == Decks.GOLD)
-                ((MainBoardSceneController) sceneControllerMap.get(GAME)).decrementGoldDeckCounter();
+                ((MainBoardSceneController) sceneControllerMap.get(SceneName.GAME)).decrementGoldDeckCounter();
             if(deckFrom == Decks.RESOURCE)
-                ((MainBoardSceneController) sceneControllerMap.get(GAME)).decrementResourceDeckCounter();
+                ((MainBoardSceneController) sceneControllerMap.get(SceneName.GAME)).decrementResourceDeckCounter();
         });
     }
 
@@ -377,10 +375,10 @@ public class GUI implements UI{
             System.out.println("Secret achievement chosen name : "+ name);
             System.out.println("Secret achievement chosen achievement : "+ controller.getSecretAchievement());
             if (name.equals(controller.getMyName())){
-                ((ChooseSecretCardController) sceneControllerMap.get(SECRETCARDCHOICE)).confirmation();
-                ((MainBoardSceneController) sceneControllerMap.get(GAME)).setSecretCard(controller.getSecretAchievement());
-                sceneControllerMap.get(GAME).setup();
-                stage.setScene(getScene(GAME));
+                ((ChooseSecretCardController) sceneControllerMap.get(SceneName.SECRETCARDCHOICE)).confirmation();
+                ((MainBoardSceneController) sceneControllerMap.get(SceneName.GAME)).setSecretCard(controller.getSecretAchievement());
+                sceneControllerMap.get(SceneName.GAME).setup();
+                stage.setScene(getScene(SceneName.GAME));
             }
 
         });
@@ -392,9 +390,9 @@ public class GUI implements UI{
             try {
                 if (controller.getMyName().equals(name)) {
 
-                    ((ChooseStartingCardController) sceneControllerMap.get(STARTINGCARDCHOICE)).confirmation();
+                    ((ChooseStartingCardController) sceneControllerMap.get(SceneName.STARTINGCARDCHOICE)).confirmation();
                 }
-                ((MainBoardSceneController) sceneControllerMap.get(GAME)).updateManuscript(name, controller.getPlayerByName(name).getManuscript().getCardByCoord(0,0),0 ,0);
+                ((MainBoardSceneController) sceneControllerMap.get(SceneName.GAME)).updateManuscript(name, controller.getPlayerByName(name).getManuscript().getCardByCoord(0,0),0 ,0);
             } catch (PlayerNotFoundByNameException e) {
                 throw new RuntimeException(e);
             }
@@ -414,16 +412,16 @@ public class GUI implements UI{
     @Override
     public void displayBoardCards() {
         Platform.runLater(() -> {
-            ((MainBoardSceneController) sceneControllerMap.get(GAME)).updateAllFloorCards();
+            ((MainBoardSceneController) sceneControllerMap.get(SceneName.GAME)).updateAllFloorCards();
         });
     }
 
     @Override
     public void chooseStartingCardFace(Card card) {
         Platform.runLater(() -> {
-            ((ChooseStartingCardController) sceneControllerMap.get(STARTINGCARDCHOICE)).setUp(card);
-            ((MainBoardSceneController) sceneControllerMap.get(GAME)).setup();
-            stage.setScene(getScene(STARTINGCARDCHOICE));
+            ((ChooseStartingCardController) sceneControllerMap.get(SceneName.STARTINGCARDCHOICE)).setUp(card);
+            sceneControllerMap.get(SceneName.GAME).setup();
+            stage.setScene(getScene(SceneName.STARTINGCARDCHOICE));
         });
 
 
@@ -442,22 +440,22 @@ public class GUI implements UI{
                 String name = controller.getPlayers().get(i).getName();
                 String color = controller.getPlayers().get(i).getColor() == null ? "No Color" : controller.getPlayers().get(i).getColor().toString();
                 String ready = controller.getPlayers().get(i).isReady() ? "Ready" : "Not Ready";
-                ((ColorReadySceneController) sceneControllerMap.get(SETCOLOR)).list_Player.getItems().add(name + "   " + color + "   " + ready);
+                ((ColorReadySceneController) sceneControllerMap.get(SceneName.SETCOLOR)).list_Player.getItems().add(name + "   " + color + "   " + ready);
                 //-------------------------------------------------------------q
-                ((NameReadySceneController) sceneControllerMap.get(SETNAME)).cloneListView(((ColorReadySceneController) sceneControllerMap.get(SETCOLOR)).list_Player);
+                ((NameReadySceneController) sceneControllerMap.get(SceneName.SETNAME)).cloneListView(((ColorReadySceneController) sceneControllerMap.get(SceneName.SETCOLOR)).list_Player);
 
                 switch (controller.getPlayers().getLast().getColor()) {
                     case RED:
-                        ((ColorReadySceneController) sceneControllerMap.get(SETCOLOR)).red_Button.setDisable(true);
+                        ((ColorReadySceneController) sceneControllerMap.get(SceneName.SETCOLOR)).red_Button.setDisable(true);
                         break;
                     case GREEN:
-                        ((ColorReadySceneController) sceneControllerMap.get(SETCOLOR)).green_Button.setDisable(true);
+                        ((ColorReadySceneController) sceneControllerMap.get(SceneName.SETCOLOR)).green_Button.setDisable(true);
                         break;
                     case BLUE:
-                        ((ColorReadySceneController) sceneControllerMap.get(SETCOLOR)).blue_Button.setDisable(true);
+                        ((ColorReadySceneController) sceneControllerMap.get(SceneName.SETCOLOR)).blue_Button.setDisable(true);
                         break;
                     case YELLOW:
-                        ((ColorReadySceneController) sceneControllerMap.get(SETCOLOR)).yellow_Button.setDisable(true);
+                        ((ColorReadySceneController) sceneControllerMap.get(SceneName.SETCOLOR)).yellow_Button.setDisable(true);
                         break;
                     case null:
                         break;
@@ -472,7 +470,7 @@ public class GUI implements UI{
     public void displayPlayerPoints(String playerName) throws PlayerNotFoundByNameException {
         Platform.runLater(() -> {
             System.out.println("Player points displayed");
-            ((MainBoardSceneController) sceneControllerMap.get(GAME)).updateLeaderBoard();
+            ((MainBoardSceneController) sceneControllerMap.get(SceneName.GAME)).updateLeaderBoard();
         });
 
     }
@@ -481,8 +479,8 @@ public class GUI implements UI{
     public void cardPlaced(String playerName, CornerCardFace cornerCardFace, int x, int y) {
         System.out.println("Card placed in x: " + x + " y: " + y + " by " + playerName);
         Platform.runLater(() -> {
-            ((MainBoardSceneController) sceneControllerMap.get(GAME)).updateManuscript(playerName, cornerCardFace, x, y);
-            ((MainBoardSceneController) sceneControllerMap.get(GAME)).removeCardFromHand(playerName);
+            ((MainBoardSceneController) sceneControllerMap.get(SceneName.GAME)).updateManuscript(playerName, cornerCardFace, x, y);
+            ((MainBoardSceneController) sceneControllerMap.get(SceneName.GAME)).removeCardFromHand(playerName);
         });
     }
 
@@ -494,8 +492,8 @@ public class GUI implements UI{
     @Override
     public void displayCommonAchievements() {
         Platform.runLater( () -> {
-            ((MainBoardSceneController) sceneControllerMap.get(GAME)).setCardOnFloor(controller.getCommonAchievements().get(0), Decks.ACHIEVEMENT, DeckPosition.FIRST_CARD);
-            ((MainBoardSceneController) sceneControllerMap.get(GAME)).setCardOnFloor(controller.getCommonAchievements().get(1), Decks.ACHIEVEMENT, DeckPosition.SECOND_CARD);
+            ((MainBoardSceneController) sceneControllerMap.get(SceneName.GAME)).setCardOnFloor(controller.getCommonAchievements().get(0), Decks.ACHIEVEMENT, DeckPosition.FIRST_CARD);
+            ((MainBoardSceneController) sceneControllerMap.get(SceneName.GAME)).setCardOnFloor(controller.getCommonAchievements().get(1), Decks.ACHIEVEMENT, DeckPosition.SECOND_CARD);
         });
     }
 
@@ -507,7 +505,7 @@ public class GUI implements UI{
     @Override
     public void displayId() {
         Platform.runLater(() -> {
-            ((NameReadySceneController) sceneControllerMap.get(SETNAME)).setup();
+            sceneControllerMap.get(SceneName.SETNAME).setup();
         });
 
     }
@@ -540,8 +538,9 @@ public class GUI implements UI{
                 case LOBBY:
                     throw new RuntimeException("Unexpected game state");
                 case CHOOSE_STARTING_CARD:
-                    ((MainBoardSceneController) sceneControllerMap.get(GAME)).setup();
-                    stage.setScene(getScene(STARTINGCARDCHOICE));
+                    System.out.println("Choose starting card");
+                    sceneControllerMap.get(SceneName.GAME).setup();
+                    stage.setScene(getScene(SceneName.STARTINGCARDCHOICE));
                     stage.show();
                     break;
                 case CHOOSE_SECRET_ACHIEVEMENT:
@@ -553,16 +552,12 @@ public class GUI implements UI{
                     displayCommonAchievements();
                     regenerateManuscript();
 
-                    if (controller.getActivePlayer().getName().equals(controller.getMyName())) {
-                        ((MainBoardSceneController) sceneControllerMap.get(GAME)).yourTurnLabel.setVisible(true);
-                    } else {
-                        ((MainBoardSceneController) sceneControllerMap.get(GAME)).yourTurnLabel.setVisible(false);
-                    }
+                    ((MainBoardSceneController) sceneControllerMap.get(SceneName.GAME)).yourTurnLabel.setVisible(controller.getActivePlayer().getName().equals(controller.getMyName()));
 
                     secretAchievementChosen(controller.getMyName());
-                    sceneControllerMap.get(GAME).setup();
+                    sceneControllerMap.get(SceneName.GAME).setup();
 
-                    stage.setScene(getScene(GAME));
+                    stage.setScene(getScene(SceneName.GAME));
                     stage.show();
                     break;
         }
@@ -577,50 +572,50 @@ public class GUI implements UI{
             String name = controller.getPlayers().get(i).getName();
             String color = controller.getPlayers().get(i).getColor() == null ? "No Color" : controller.getPlayers().get(i).getColor().toString();
             String ready = controller.getPlayers().get(i).isReady() ? "Ready" : "Not Ready";
-            ((ColorReadySceneController) sceneControllerMap.get(SETCOLOR)).list_Player.getItems().set(i, name + "   " + color + "   " + ready);
+            ((ColorReadySceneController) sceneControllerMap.get(SceneName.SETCOLOR)).list_Player.getItems().set(i, name + "   " + color + "   " + ready);
             //----------------------------------------------------------q
             switch (controller.getPlayers().get(i).getColor()) {
                 case RED:
-                    ((ColorReadySceneController) sceneControllerMap.get(SETCOLOR)).red_Button.setDisable(true);
-                    ((ColorReadySceneController) sceneControllerMap.get(SETCOLOR)).red_Button.setStyle("-fx-background-color: #eae1b8;"+ "-fx-border-color: #000000;" + "-fx-border-radius: 3px;");
-                    if(((ColorReadySceneController) sceneControllerMap.get(SETCOLOR)).color == Color.RED)
+                    ((ColorReadySceneController) sceneControllerMap.get(SceneName.SETCOLOR)).red_Button.setDisable(true);
+                    ((ColorReadySceneController) sceneControllerMap.get(SceneName.SETCOLOR)).red_Button.setStyle("-fx-background-color: #eae1b8;"+ "-fx-border-color: #000000;" + "-fx-border-radius: 3px;");
+                    if(((ColorReadySceneController) sceneControllerMap.get(SceneName.SETCOLOR)).color == Color.RED)
                     {
-                        ((ColorReadySceneController) sceneControllerMap.get(SETCOLOR)).confirm_Color_Button.setOpacity(0);
-                        ((ColorReadySceneController) sceneControllerMap.get(SETCOLOR)).confirm_Color_Button.setDisable(true);
+                        ((ColorReadySceneController) sceneControllerMap.get(SceneName.SETCOLOR)).confirm_Color_Button.setOpacity(0);
+                        ((ColorReadySceneController) sceneControllerMap.get(SceneName.SETCOLOR)).confirm_Color_Button.setDisable(true);
                     }
                     break;
                 case GREEN:
-                    ((ColorReadySceneController) sceneControllerMap.get(SETCOLOR)).green_Button.setDisable(true);
-                    ((ColorReadySceneController) sceneControllerMap.get(SETCOLOR)).green_Button.setStyle("-fx-background-color: #eae1b8;"+ "-fx-border-color: #000000;" + "-fx-border-radius: 3px;");
-                    if(((ColorReadySceneController) sceneControllerMap.get(SETCOLOR)).color == Color.GREEN)
+                    ((ColorReadySceneController) sceneControllerMap.get(SceneName.SETCOLOR)).green_Button.setDisable(true);
+                    ((ColorReadySceneController) sceneControllerMap.get(SceneName.SETCOLOR)).green_Button.setStyle("-fx-background-color: #eae1b8;"+ "-fx-border-color: #000000;" + "-fx-border-radius: 3px;");
+                    if(((ColorReadySceneController) sceneControllerMap.get(SceneName.SETCOLOR)).color == Color.GREEN)
                     {
-                        ((ColorReadySceneController) sceneControllerMap.get(SETCOLOR)).confirm_Color_Button.setOpacity(0);
-                        ((ColorReadySceneController) sceneControllerMap.get(SETCOLOR)).confirm_Color_Button.setDisable(true);
+                        ((ColorReadySceneController) sceneControllerMap.get(SceneName.SETCOLOR)).confirm_Color_Button.setOpacity(0);
+                        ((ColorReadySceneController) sceneControllerMap.get(SceneName.SETCOLOR)).confirm_Color_Button.setDisable(true);
                     }
                     break;
                 case BLUE:
-                    ((ColorReadySceneController) sceneControllerMap.get(SETCOLOR)).blue_Button.setDisable(true);
-                    ((ColorReadySceneController) sceneControllerMap.get(SETCOLOR)).blue_Button.setStyle("-fx-background-color: #eae1b8;"+ "-fx-border-color: #000000;" + "-fx-border-radius: 3px;");
-                    if(((ColorReadySceneController) sceneControllerMap.get(SETCOLOR)).color == Color.BLUE)
+                    ((ColorReadySceneController) sceneControllerMap.get(SceneName.SETCOLOR)).blue_Button.setDisable(true);
+                    ((ColorReadySceneController) sceneControllerMap.get(SceneName.SETCOLOR)).blue_Button.setStyle("-fx-background-color: #eae1b8;"+ "-fx-border-color: #000000;" + "-fx-border-radius: 3px;");
+                    if(((ColorReadySceneController) sceneControllerMap.get(SceneName.SETCOLOR)).color == Color.BLUE)
                     {
-                        ((ColorReadySceneController) sceneControllerMap.get(SETCOLOR)).confirm_Color_Button.setOpacity(0);
-                        ((ColorReadySceneController) sceneControllerMap.get(SETCOLOR)).confirm_Color_Button.setDisable(true);
+                        ((ColorReadySceneController) sceneControllerMap.get(SceneName.SETCOLOR)).confirm_Color_Button.setOpacity(0);
+                        ((ColorReadySceneController) sceneControllerMap.get(SceneName.SETCOLOR)).confirm_Color_Button.setDisable(true);
                     }
                     break;
                 case YELLOW:
-                    ((ColorReadySceneController) sceneControllerMap.get(SETCOLOR)).yellow_Button.setDisable(true);
-                    ((ColorReadySceneController) sceneControllerMap.get(SETCOLOR)).yellow_Button.setStyle("-fx-background-color: #eae1b8;"+ "-fx-border-color: #000000;" + "-fx-border-radius: 3px;");
-                    if(((ColorReadySceneController) sceneControllerMap.get(SETCOLOR)).color == Color.YELLOW)
+                    ((ColorReadySceneController) sceneControllerMap.get(SceneName.SETCOLOR)).yellow_Button.setDisable(true);
+                    ((ColorReadySceneController) sceneControllerMap.get(SceneName.SETCOLOR)).yellow_Button.setStyle("-fx-background-color: #eae1b8;"+ "-fx-border-color: #000000;" + "-fx-border-radius: 3px;");
+                    if(((ColorReadySceneController) sceneControllerMap.get(SceneName.SETCOLOR)).color == Color.YELLOW)
                     {
-                        ((ColorReadySceneController) sceneControllerMap.get(SETCOLOR)).confirm_Color_Button.setOpacity(0);
-                        ((ColorReadySceneController) sceneControllerMap.get(SETCOLOR)).confirm_Color_Button.setDisable(true);
+                        ((ColorReadySceneController) sceneControllerMap.get(SceneName.SETCOLOR)).confirm_Color_Button.setOpacity(0);
+                        ((ColorReadySceneController) sceneControllerMap.get(SceneName.SETCOLOR)).confirm_Color_Button.setDisable(true);
                     }
                     break;
                 case null:
                     break;
             }
         }
-        ((NameReadySceneController) sceneControllerMap.get(SceneName.SETNAME)).cloneListView(((ColorReadySceneController) sceneControllerMap.get(SETCOLOR)).list_Player);
+        ((NameReadySceneController) sceneControllerMap.get(SceneName.SETNAME)).cloneListView(((ColorReadySceneController) sceneControllerMap.get(SceneName.SETCOLOR)).list_Player);
     }
 
     public void gameAlreadyFinished() {
@@ -632,7 +627,7 @@ public class GUI implements UI{
         try {
             for(CornerCardFace c : controller.getPlayerByName(controller.getMyName()).getManuscript().getAllCards())
             {
-                ((MainBoardSceneController) sceneControllerMap.get(GAME)).updateManuscript(controller.getMyName(), c, c.getXCoord(), c.getYCoord());
+                ((MainBoardSceneController) sceneControllerMap.get(SceneName.GAME)).updateManuscript(controller.getMyName(), c, c.getXCoord(), c.getYCoord());
             }
         } catch (PlayerNotFoundByNameException e) {
             throw new RuntimeException(e);

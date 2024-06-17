@@ -5,7 +5,6 @@ import Server.Enums.CardCorners;
 import Server.Enums.DeckPosition;
 import Server.Enums.Symbol;
 import Server.Exception.AlreadyFinishedException;
-import Server.Exception.IncorrectDeckPositionException;
 
 import java.io.*;
 import java.util.*;

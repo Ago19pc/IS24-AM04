@@ -520,8 +520,8 @@ public class ClientControllerInstance implements ClientController {
         gameState = GameState.CHOOSE_SECRET_ACHIEVEMENT;
         commonAchievements = new ArrayList<>();
         potentialSecretAchievements = secretCards;
-        for (Card c : commonCards){
-            commonAchievements.add((AchievementCard) c);
+        for (AchievementCard c : commonCards){
+            commonAchievements.add(c);
         }
         ui.displayCommonAchievements();
         ui.chooseSecretAchievement(secretCards);

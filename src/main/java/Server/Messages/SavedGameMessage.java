@@ -12,7 +12,6 @@ import Server.Controller.Controller;
 import Server.Enums.GameState;
 import Server.Exception.AlreadyStartedException;
 import Server.Exception.PlayerNotFoundByNameException;
-import Server.Exception.PlayerNotInAnyServerConnectionHandlerException;
 
 import java.io.Serializable;
 import java.util.List;
