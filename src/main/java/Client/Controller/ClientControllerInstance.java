@@ -45,7 +45,6 @@ public class ClientControllerInstance implements ClientController {
 
     //temp stuff
     private String proposedName;
-    private Color proposedColor;
     private int indexofSecretAchievement;
     private List<AchievementCard> potentialSecretAchievements;
     private Integer chosenHandCard;
@@ -239,7 +238,6 @@ public class ClientControllerInstance implements ClientController {
             ui.invalidColor();
             return;
         }
-        proposedColor = castedColor;
         PlayerColorMessage playerColorMessage = new PlayerColorMessage(castedColor, id);
         clientConnectionHandler.sendMessage(playerColorMessage);
 
