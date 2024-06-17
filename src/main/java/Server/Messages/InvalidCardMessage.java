@@ -2,7 +2,6 @@ package Server.Messages;
 
 import Client.Controller.ClientController;
 import Server.Enums.Actions;
-import Server.Exception.ClientExecuteNotCallableException;
 
 import java.io.Serializable;
 

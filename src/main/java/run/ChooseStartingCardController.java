@@ -5,6 +5,7 @@ import Server.Card.CornerCardFace;
 import Server.Exception.PlayerNotFoundByNameException;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.ListView;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.text.Text;
@@ -23,11 +24,15 @@ public class ChooseStartingCardController extends SceneController {
     public Text backFaceText;
     public Text frontFaceText;
     public Text chosenCardText;
+    public ListView<String> chat_message;
+    public Button sendButton;
     @FXML
     private Face chosenFace;
 
 
-
+    /**
+     * Method to choose the first card face
+     */
     public void chooseFirstCard() {
         chosenFace = FRONT;
         confirmButton.setDisable(false);
@@ -38,6 +43,9 @@ public class ChooseStartingCardController extends SceneController {
         chosenCard.setImage(firstCard.getImage());
     }
 
+    /**
+     * Method to choose the second card face
+     */
     public void chooseSecondCard() {
         chosenFace = BACK;
         confirmButton.setDisable(false);
@@ -49,12 +57,17 @@ public class ChooseStartingCardController extends SceneController {
     }
 
 
+    /**
+     * Method to confirm the chosen card face
+     */
     public void confirmationButtonPressed() {
         controller.chooseStartingCardFace(chosenFace);
     }
 
+    /**
+     * This is called when the server confirms the chosen card
+     */
     public void confirmation() {
-        System.out.println("Card chosen correctly");
         waitText.setVisible(true);
         firstCard.setOpacity(0);
         firstCard.setDisable(true);
@@ -73,12 +86,15 @@ public class ChooseStartingCardController extends SceneController {
             CornerCardFace chosenCardFace = controller.getPlayerByName(controller.getMyName()).getManuscript().getCardByCoord(0, 0);
             chosenCard.setImage(new Image(getClass().getResource("/images/Faces/"+ chosenCardFace.getImageURI()).toExternalForm()));
         } catch (PlayerNotFoundByNameException e) {
-            e.printStackTrace();
+            System.err.println("Player not found (ChooseStartingCardController)");
         }
     }
 
+    /**
+     * Method to set up the scene
+     * @param card the card to be displayed
+     */
     public void setUp(Card card) {
-        System.out.println("Setting up scene");
         confirmButton.setDisable(true);
         confirmButton.setOpacity(0);
         firstCard.setImage(new Image(getClass().getResource("/images/Faces/"+ card.getFace(FRONT).getImageURI()).toExternalForm()));

@@ -9,7 +9,7 @@ import java.io.ObjectOutputStream;
 import java.net.Socket;
 
 public class ServerSender {
-    private ObjectOutputStream out;
+    private final ObjectOutputStream out;
 
     public ServerSender(Socket clientSocket) throws IOException {
         out = new ObjectOutputStream(clientSocket.getOutputStream());
@@ -18,14 +18,12 @@ public class ServerSender {
     /**
      * Sends a message packet to the client
      * @param message, the message packet to be sent
-     * @throws IOException
      */
     public void sendMessage(ToClientMessage message){
         try{
             out.writeObject(message);
         } catch (IOException e) {
-            System.out.println("Error sending message to client");
-            e.printStackTrace();
+            System.err.println("Error sending message to client");
         }
     }
 }

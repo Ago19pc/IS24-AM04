@@ -13,7 +13,7 @@ public class TestResourceCard {
 public void testGetFace() {
         ResourceFrontFace frontFace = new ResourceFrontFace("image1.jpg", new HashMap<>(), 1, Symbol.FUNGUS);
         RegularBackFace backFace = new RegularBackFace("image2.jpg", List.of(Symbol.NONE));
-        ResourceCard resourceCard = new ResourceCard(frontFace, backFace);
+        ResourceCard resourceCard = new ResourceCard(frontFace, backFace, "1.jpeg");
         assertEquals(frontFace, resourceCard.getFace(Face.FRONT));
         assertEquals(backFace, resourceCard.getFace(Face.BACK));
     }
@@ -22,7 +22,7 @@ public void testGetFace() {
     public void testGetCornerFace() {
         ResourceFrontFace frontFace = new ResourceFrontFace("image1.jpg", new HashMap<>(), 1, Symbol.FUNGUS);
         RegularBackFace backFace = new RegularBackFace("image2.jpg", List.of(Symbol.NONE));
-        ResourceCard resourceCard = new ResourceCard(frontFace, backFace);
+        ResourceCard resourceCard = new ResourceCard(frontFace, backFace, "1.jpeg");
         assertEquals(frontFace, resourceCard.getCornerFace(Face.FRONT));
         assertEquals(backFace, resourceCard.getCornerFace(Face.BACK));
     }

@@ -13,8 +13,8 @@ import java.rmi.RemoteException;
 public class GeneralClientConnectionHandler {
     private ClientConnectionHandlerSOCKET clientConnectionHandlerSOCKET;
     private ClientConnectionHandlerRMI clientConnectionHandlerRMI;
-    private ClientController controller;
-    private boolean trueifRMI = false;
+    private final ClientController controller;
+    private final boolean trueifRMI;
 
     public GeneralClientConnectionHandler(ClientController controller, boolean trueifRMI) throws RemoteException {
         this.trueifRMI = trueifRMI;
@@ -27,7 +27,7 @@ public class GeneralClientConnectionHandler {
         }
     }
 
-    public void setSocket(String server_host, int server_port) throws NotBoundException, IOException, ClientExecuteNotCallableException, PlayerNotFoundByNameException {
+    public void setSocket(String server_host, int server_port) throws NotBoundException, IOException {
         if(trueifRMI) {
             clientConnectionHandlerRMI.setServer(server_host, server_port);
             clientConnectionHandlerRMI.setController(controller);
@@ -39,29 +39,34 @@ public class GeneralClientConnectionHandler {
 
     }
 
+    /**
+     * Starts the connection (for socket only)
+     */
     public void start() {
         if (!trueifRMI) {
             clientConnectionHandlerSOCKET.start();
         }
     }
 
+    /**
+     * This method sends a message to the server
+     * @param message, the message to send
+     */
     public void sendMessage(ToServerMessage message){
         if(trueifRMI) {
-            try {
-                System.out.println("Sending message to server");
-                clientConnectionHandlerRMI.sendMessage(message);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            clientConnectionHandlerRMI.sendMessage(message);
         } else {
             try {
                 clientConnectionHandlerSOCKET.sendMessage(message);
             } catch (IOException e) {
-                e.printStackTrace();
+                System.err.println("[SOCKET] Error while sending message to the server");
             }
         }
     }
 
+    /**
+     * @return true if the client is connected to the server
+     */
     public boolean isConnectedToServer() {
         if(trueifRMI) {
             return clientConnectionHandlerRMI != null;
@@ -70,14 +75,23 @@ public class GeneralClientConnectionHandler {
         }
     }
 
+    /**
+     * @return the client connection handler RMI
+     */
     public ClientConnectionHandlerRMI getClientConnectionHandlerRMI() {
         return clientConnectionHandlerRMI;
     }
 
+    /**
+     * @return the client connection handler SOCKET
+     */
     public ClientConnectionHandlerSOCKET getClientConnectionHandlerSOCKET() {
         return clientConnectionHandlerSOCKET;
     }
 
+    /**
+     * @return true if the client is using RMI
+     */
     public boolean getTrueIfRMI() {
         return trueifRMI;
     }

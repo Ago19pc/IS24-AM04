@@ -9,15 +9,13 @@ import Server.Enums.DeckPosition;
 import Server.Enums.Symbol;
 import Server.Exception.AlreadyFinishedException;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
+import java.io.*;
 import java.util.*;
 
 import static Server.Enums.DeckPosition.*;
 
 public class ResourceDeck implements Deckable {
-    protected List<ResourceCard> cards;
+    protected final List<ResourceCard> cards;
     private final Map<DeckPosition, ResourceCard> boardCards;
     public ResourceDeck(){
         this.boardCards = new HashMap<>();
@@ -30,7 +28,20 @@ public class ResourceDeck implements Deckable {
             moveCardToBoard(FIRST_CARD);
             moveCardToBoard(SECOND_CARD);
         } catch (Exception e) {
-            e.printStackTrace();
+            System.err.println("Error while moving cards to the board, generating resource deck");
+        }
+    }
+    public ResourceDeck(Boolean test){
+        this.boardCards = new HashMap<>();
+        this.cards = new ArrayList<>();
+        boardCards.put(FIRST_CARD, null);
+        boardCards.put(SECOND_CARD, null);
+        createCards();
+        try {
+            moveCardToBoard(FIRST_CARD);
+            moveCardToBoard(SECOND_CARD);
+        } catch (Exception e) {
+            System.err.println("Error while moving cards to the board, generating resource deck");
         }
     }
 
@@ -62,7 +73,7 @@ public class ResourceDeck implements Deckable {
      */
     public Map<DeckPosition, ResourceCard> getBoardCard() {
         Map<DeckPosition, ResourceCard> boardCardsToReturn = new HashMap<>();
-        boardCardsToReturn.put(DECK, (ResourceCard) getTopCardNoPop());
+        boardCardsToReturn.put(DECK, getTopCardNoPop());
         boardCardsToReturn.put(FIRST_CARD, boardCards.get(FIRST_CARD));
         boardCardsToReturn.put(SECOND_CARD, boardCards.get(SECOND_CARD));
 
@@ -76,7 +87,7 @@ public class ResourceDeck implements Deckable {
     public ResourceCard popCard(DeckPosition position) throws  AlreadyFinishedException{
 
             if (position == DECK) {
-                return (ResourceCard) cards.remove(0);
+                return cards.removeFirst();
             } else {
                 // LA POSIZIONE NON E' DECK
 
@@ -115,7 +126,7 @@ public class ResourceDeck implements Deckable {
     public ResourceCard getTopCardNoPop() {
         if(cards.isEmpty())
             return null;
-        return cards.get(0);
+        return cards.getFirst();
     }
 
     /**
@@ -129,16 +140,16 @@ public class ResourceDeck implements Deckable {
      * generate the cards
      */
     private void createCards() {
-        File fileFRONT;
-        File fileBACK;
+        InputStream fileFRONT;
+        InputStream fileBACK;
         BufferedReader readerFRONT;
         BufferedReader readerBACK;
 
         try {
-            fileFRONT = new File(getClass().getResource("/images/ResourceFrontFace.txt").toURI());
-            fileBACK = new File(getClass().getResource("/images/ResourceBackFace.txt").toURI());
-            readerFRONT = new BufferedReader(new FileReader(fileFRONT));
-            readerBACK = new BufferedReader(new FileReader(fileBACK));
+            fileFRONT = getClass().getResourceAsStream("/images/ResourceFrontFace.txt");
+            fileBACK = getClass().getResourceAsStream("/images/ResourceBackFace.txt");
+            readerFRONT = new BufferedReader(new InputStreamReader(fileFRONT));
+            readerBACK = new BufferedReader(new InputStreamReader(fileBACK));
 
             String lineF;
             int cardNumber = 0;
@@ -154,8 +165,6 @@ public class ResourceDeck implements Deckable {
                 Map<CardCorners, Symbol> cornerSymbolsF = new HashMap<>();
                 int point = 0;
                 for(int i = 0; i < 4; i++){
-                    //System.out.print(CardCorners.values()[i]);
-                    //System.out.println(Symbol.valueOf(partsF[i]));
                     cornerSymbolsF.put(CardCorners.values()[i], Symbol.valueOf(partsF[i]));
                 }
 
@@ -201,8 +210,7 @@ public class ResourceDeck implements Deckable {
                 cardNumber++;
             }
         } catch (Exception e) {
-            System.out.println("An error occurred while generating starting cards");
-            e.printStackTrace();
+            System.err.println("An error occurred while generating starting cards");
         }
 
     }

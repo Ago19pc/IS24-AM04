@@ -9,11 +9,11 @@ import Server.Player.Player;
 import java.io.Serializable;
 
 public class PlayCardMessage implements Serializable, ToServerMessage{
-    private String id;
-    private int cardNumber;
-    private int x;
-    private int y;
-    private Face face;
+    private final String id;
+    private final int cardNumber;
+    private final int x;
+    private final int y;
+    private final Face face;
 
     public PlayCardMessage(String id, int cardNumber, Face face, int x, int y){
         this.id = id;

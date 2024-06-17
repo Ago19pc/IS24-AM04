@@ -5,19 +5,13 @@ import Server.Enums.DeckPosition;
 import Server.Exception.AlreadyFinishedException;
 import Server.Exception.IncorrectDeckPositionException;
 
-import java.util.Map;
-
 public interface Deckable {
-    /**
-     * @return Map<DeckPosition, Card> the cards on the board
-     */
-
 
     /**
      * @param position the position pop the card from
      * @return Card the card from the position
      */
-    public Card popCard(DeckPosition position) throws IncorrectDeckPositionException, AlreadyFinishedException;
+    Card popCard(DeckPosition position) throws IncorrectDeckPositionException, AlreadyFinishedException;
 
     /**
      * @return boolean true if the deck is empty
@@ -29,7 +23,7 @@ public interface Deckable {
      * @param card card to add
      * @param position position to add the card to
      */
-     public void addCard(Card card, DeckPosition position) throws IncorrectDeckPositionException;
+    void addCard(Card card, DeckPosition position) throws IncorrectDeckPositionException;
 
-     public Card getTopCardNoPop();
+     Card getTopCardNoPop();
 }

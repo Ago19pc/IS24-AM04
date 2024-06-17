@@ -20,7 +20,7 @@ public class StartingFrontFace extends  CornerCardFace implements Serializable {
      */
     public StartingFrontFace(String imageURI, Map<CardCorners, Symbol> cornerSymbols, List<Symbol> centerSymbols) {
         super(imageURI, cornerSymbols);
-        this.centerSymbols = new ArrayList<Symbol>(centerSymbols);
+        this.centerSymbols = new ArrayList<>(centerSymbols);
     }
 
     /**

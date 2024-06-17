@@ -2,13 +2,12 @@ package Server.Messages;
 
 import Client.Controller.ClientController;
 import Server.Card.Card;
-import Server.Exception.ClientExecuteNotCallableException;
 
 import java.io.Serializable;
 
 public class StartingCardsMessage implements Serializable, ToClientMessage {
 
-    private Card card;
+    private final Card card;
 
     public StartingCardsMessage(Card card){
         this.card = card;

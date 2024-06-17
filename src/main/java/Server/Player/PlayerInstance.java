@@ -6,7 +6,6 @@ import Server.Card.ResourceCard;
 import Server.Enums.Color;
 import Server.Enums.Face;
 import Server.Exception.AlreadySetException;
-import Server.Exception.TooFewElementsException;
 import Server.Exception.TooManyElementsException;
 import Server.Manuscript.Manuscript;
 
@@ -47,7 +46,7 @@ public class PlayerInstance implements Player {
      * @param position the position of the card to remove
      */
     @Override
-    public void removeCardFromHand(int position) throws IndexOutOfBoundsException, TooFewElementsException{
+    public void removeCardFromHand(int position) throws IndexOutOfBoundsException {
         if(position < 0 || position >= handCards.size()){
             throw new IndexOutOfBoundsException("Position out of bounds");
         }
@@ -59,11 +58,7 @@ public class PlayerInstance implements Player {
      */
     @Override
     public List<Card> getHand() {
-        List<Card> handToReturn = new LinkedList<>();
-        for(ResourceCard card : handCards){
-            handToReturn.add((Card) card);
-        }
-        return handToReturn;
+        return new LinkedList<>(handCards);
     }
 
     /**

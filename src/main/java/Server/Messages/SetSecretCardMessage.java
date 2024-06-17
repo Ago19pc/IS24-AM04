@@ -10,8 +10,8 @@ import java.io.Serializable;
 import java.rmi.RemoteException;
 
 public class SetSecretCardMessage implements Serializable, ToClientMessage, ToServerMessage {
-    private Integer chosenCard;
-    private String idOrName;
+    private final Integer chosenCard;
+    private final String idOrName;
     public SetSecretCardMessage(int chosenCard, String idOrName){
         this.chosenCard = chosenCard;
         this.idOrName = idOrName;
@@ -43,7 +43,6 @@ public class SetSecretCardMessage implements Serializable, ToClientMessage, ToSe
             controller.setSecretObjectiveCard(player, chosenCard);
         } catch (PlayerNotFoundByNameException e) {
             NameNotYetSetMessage message = new NameNotYetSetMessage();
-            e.printStackTrace();
             try{
                 controller.getConnectionHandler().getServerConnectionHandler(idOrName).sendMessage(message, idOrName);
             } catch (PlayerNotInAnyServerConnectionHandlerException exception) {

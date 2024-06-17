@@ -3,20 +3,15 @@ package Server.Connections;
 import Client.Connection.ClientConnectionHandler;
 import Server.Controller.Controller;
 import Server.Enums.Color;
-import Server.Exception.AlreadyFinishedException;
-import Server.Exception.AlreadyStartedException;
-import Server.Exception.PlayerNotFoundByNameException;
-import Server.Exception.TooManyPlayersException;
 import Server.Enums.GameState;
 import Server.Exception.*;
 import Server.Messages.LobbyPlayersMessage;
-import Server.Messages.PlayerDisconnectedMessage;
 import Server.Messages.ToClientMessage;
 import Server.Messages.ToServerMessage;
+import Server.Player.Player;
 
 import java.net.InetAddress;
 import java.net.NetworkInterface;
-import java.net.UnknownHostException;
 import java.rmi.NotBoundException;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
@@ -39,7 +34,7 @@ public class ServerConnectionHandlerRMI implements ServerConnectionHandler, Remo
     /**
      * String is the ID
      */
-    Map<String, ClientConnectionHandler> clients = new HashMap<>();
+    final Map<String, ClientConnectionHandler> clients = new HashMap<>();
 
     Controller controller;
 
@@ -69,15 +64,18 @@ public class ServerConnectionHandlerRMI implements ServerConnectionHandler, Remo
     }
 
     /**
-     * Starts the server
-     * @param port
-     * @return
+     * Starts the server on the specified port.
+     * If the port is not available will try the following one, and so on until it finds one.
+     * If non is found will return false.
+     * @param port the port to start the server on
+     * @return true if started successfully
      */
 
     private boolean startServer(int port) {
         try {
             String ip;
             try { //todo. @ago19 questa è una soliuzione temporanea per ottenere l'ip del server
+                // Reply by ago: it works fine, the teacher said it's the only way so its ok. Also I can't find anything better that will work all the time.
                 Enumeration<NetworkInterface> interfaces = NetworkInterface.getNetworkInterfaces();
                 while (interfaces.hasMoreElements()) {
                     NetworkInterface iface = interfaces.nextElement();
@@ -90,7 +88,7 @@ public class ServerConnectionHandlerRMI implements ServerConnectionHandler, Remo
                         InetAddress addr = addresses.nextElement();
                         ip = addr.getHostAddress();
                         if(ip.contains(":")) continue;
-                        System.setProperty("java.rmi.server.hostname", ip);;
+                        System.setProperty("java.rmi.server.hostname", ip);
                         System.out.println(iface.getDisplayName() + " " + ip);
                     }
                 }
@@ -104,8 +102,7 @@ public class ServerConnectionHandlerRMI implements ServerConnectionHandler, Remo
             registry.rebind("ServerConnectionHandler", stub);
             return true;
         } catch (RemoteException e) {
-            e.printStackTrace();
-            System.out.println("[RMI] Errore durante l'avvio del server RMI");
+            System.err.println("[RMI] Errore durante l'avvio del server RMI");
             return false;
         }
     }
@@ -177,7 +174,6 @@ public class ServerConnectionHandlerRMI implements ServerConnectionHandler, Remo
     @Override
     public void executeMessage(ToServerMessage message) {
         synchronized (controller) {
-            System.out.println("Executing message");
             message.serverExecute(controller);
             controller.notifyAll();
         }
@@ -189,7 +185,7 @@ public class ServerConnectionHandlerRMI implements ServerConnectionHandler, Remo
      * @param id the id of the client to kill
      */
     @Override
-    public void killClient(String id) throws AlreadyFinishedException, PlayerNotFoundByNameException {
+    public void killClient(String id) {
 
         clients.remove(id);
         System.out.println("Client killed. Sending message");
@@ -205,7 +201,7 @@ public class ServerConnectionHandlerRMI implements ServerConnectionHandler, Remo
         Random rand = new Random();
         rand.setSeed(System.currentTimeMillis());
         String id = rand.nextInt(9999) + "-" + rand.nextInt(9999) + "-" + rand.nextInt(9999);
-        Registry clientRegistry = null;
+        Registry clientRegistry;
         try {
             clientRegistry = LocateRegistry.getRegistry(getClientHost(), rmi_port);
 
@@ -226,14 +222,13 @@ public class ServerConnectionHandlerRMI implements ServerConnectionHandler, Remo
         Map<String, Boolean> playerReady = new HashMap<>();
         controller.getPlayerList().forEach(p -> playerReady.put(p.getName(), p.isReady()));
         Boolean isSavedGame = controller.getGameState().equals(GameState.LOAD_GAME_LOBBY);
-        LobbyPlayersMessage message = new LobbyPlayersMessage(
-                controller.getPlayerList().stream().map(p -> p.getName()).toList(),
+        return new LobbyPlayersMessage(
+                controller.getPlayerList().stream().map(Player::getName).toList(),
                 playerColors,
                 playerReady,
                 id,
                 isSavedGame
         );
-        return message;
     }
 
     /**
@@ -256,17 +251,15 @@ public class ServerConnectionHandlerRMI implements ServerConnectionHandler, Remo
      */
     public void pingAll() {
         Map<String, ClientConnectionHandler> allClients = new HashMap<>(clients);
-        allClients = allClients.entrySet().stream().filter(entry -> {
-            return !controller.getConnectionHandler().isInDisconnectedList(entry.getKey());
-        }).collect(HashMap::new, (m, v) -> m.put(v.getKey(), v.getValue()), HashMap::putAll);
+        allClients = allClients.entrySet().stream().filter(entry -> !controller.getConnectionHandler().isInDisconnectedList(entry.getKey())).collect(HashMap::new, (m, v) -> m.put(v.getKey(), v.getValue()), HashMap::putAll);
         System.out.println("Pinging all clients. They are: " + allClients.keySet());
         allClients.keySet().forEach(this::ping);
     }
 
     /**
      * Checks for an association between an id and a ClientConnectionHandler
-     * @param id
-     * @return
+     * @param id the id of the client
+     * @return true if client id is present
      */
     public boolean isClientAvailable(String id) {
         return clients.containsKey(id);

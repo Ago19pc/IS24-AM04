@@ -5,17 +5,14 @@ import Server.Enums.CardCorners;
 import Server.Enums.DeckPosition;
 import Server.Enums.Symbol;
 import Server.Exception.AlreadyFinishedException;
-import Server.Exception.IncorrectDeckPositionException;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
+import java.io.*;
 import java.util.*;
 
 import static Server.Enums.DeckPosition.*;
 
 public class GoldDeck implements Deckable {
-    protected List<GoldCard> cards;
+    protected final List<GoldCard> cards;
     private final Map<DeckPosition, GoldCard> boardCards;
     public GoldDeck(){
         this.boardCards = new HashMap<>();
@@ -28,7 +25,20 @@ public class GoldDeck implements Deckable {
             moveCardToBoard(FIRST_CARD);
             moveCardToBoard(SECOND_CARD);
         } catch (Exception e) {
-            e.printStackTrace();
+            System.err.println("Error while moving cards to the board, generating gold deck");
+        }
+    }
+    public GoldDeck(Boolean test){
+        this.boardCards = new HashMap<>();
+        this.cards = new ArrayList<>();
+        boardCards.put(FIRST_CARD, null);
+        boardCards.put(SECOND_CARD, null);
+        createCards();
+        try {
+            moveCardToBoard(FIRST_CARD);
+            moveCardToBoard(SECOND_CARD);
+        } catch (Exception e) {
+            System.err.println("Error while moving cards to the board, generating gold deck");
         }
     }
 
@@ -73,7 +83,7 @@ public class GoldDeck implements Deckable {
      */
     public GoldCard popCard(DeckPosition position) throws AlreadyFinishedException{
         if (position == DECK) {
-            return (GoldCard) cards.remove(0);
+            return cards.removeFirst();
         } else {
             // LA POSIZIONE NON E' DECK
 
@@ -112,7 +122,7 @@ public class GoldDeck implements Deckable {
     public GoldCard getTopCardNoPop() {
         if(cards.isEmpty())
             return null;
-        return cards.get(0);
+        return cards.getFirst();
     }
 
     /**
@@ -126,16 +136,16 @@ public class GoldDeck implements Deckable {
      * generate the cards
      */
     private void createCards() {
-        File fileFRONT;
-        File fileBACK;
+        InputStream fileFRONT;
+        InputStream fileBACK;
         BufferedReader readerFRONT;
         BufferedReader readerBACK;
 
         try {
-            fileFRONT = new File(getClass().getResource("/images/GoldFrontFace.txt").toURI());
-            fileBACK = new File(getClass().getResource("/images/GoldBackFace.txt").toURI());
-            readerFRONT = new BufferedReader(new FileReader(fileFRONT));
-            readerBACK = new BufferedReader(new FileReader(fileBACK));
+            fileFRONT = getClass().getResourceAsStream("/images/GoldFrontFace.txt");
+            fileBACK = getClass().getResourceAsStream("/images/GoldBackFace.txt");
+            readerFRONT = new BufferedReader(new InputStreamReader(fileFRONT));
+            readerBACK = new BufferedReader(new InputStreamReader(fileBACK));
 
 
 
@@ -188,28 +198,13 @@ public class GoldDeck implements Deckable {
                     }
 
                 }
-                Symbol kingdom;
-                switch (cardNumber / 10) {
-                    case 0:
-                        kingdom = Symbol.FUNGUS;
-                        break;
-                    case 1:
-                        kingdom = Symbol.PLANT;
-                        break;
-                    case 2:
-                        kingdom = Symbol.ANIMAL;
-                        break;
-                    case 3:
-                        kingdom = Symbol.BUG;
-                        break;
-                    default:
-                        kingdom = Symbol.NONE;
-                        break;
-                }
-                /*for (int j = 0; j < 4; j++) {
-                    System.out.println("corner: " + CardCorners.values()[j] + " symbol: " + cornerSymbolsF.get(CardCorners.values()[j]) + " Kingdom: "+kingdom );
-                }*/
-
+                Symbol kingdom = switch (cardNumber / 10) {
+                    case 0 -> Symbol.FUNGUS;
+                    case 1 -> Symbol.PLANT;
+                    case 2 -> Symbol.ANIMAL;
+                    case 3 -> Symbol.BUG;
+                    default -> Symbol.NONE;
+                };
                 GoldFrontFace frontFace = new GoldFrontFace("front-" + counter + ".jpeg", cornerSymbolsF, point, placementRequirementsF, scoreRequirementsF, kingdom);
 
                 // DA QUI E DA VEDERE
@@ -224,9 +219,7 @@ public class GoldDeck implements Deckable {
                 cardNumber++;
             }
         } catch (Exception e) {
-            System.out.println("An error occurred while generating cards");
-
-            e.printStackTrace();
+            System.err.println("An error occurred while generating cards");
         }
 
 
