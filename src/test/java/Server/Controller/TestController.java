@@ -1,22 +1,5 @@
 package Server.Controller;
 
-import Server.Card.*;
-import Server.Connections.GeneralServerConnectionHandler;
-import Server.Connections.ServerConnectionHandler;
-import Server.Connections.ServerConnectionHandlerSOCKET;
-import Server.Deck.GoldDeck;
-import Server.Deck.ResourceDeck;
-import Server.Enums.*;
-import Server.Exception.*;
-import Server.Player.Player;
-import Server.Player.PlayerInstance;
-import org.junit.jupiter.api.Test;
-
-import java.io.IOException;
-import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.*;
-
 public class TestController {
     /*
     @Test

@@ -297,9 +297,8 @@ public class GUI implements UI{
     public void displayLeaderboard(LinkedHashMap<String, Integer> playerPoints) {
         Platform.runLater(() -> {
             ((MainBoardSceneController) sceneControllerMap.get(SceneName.GAME)).updateLeaderBoard();
-            ((MainBoardSceneController) sceneControllerMap.get(SceneName.GAME)).tabPane.getTabs().stream().forEach(tab -> {
+            ((MainBoardSceneController) sceneControllerMap.get(SceneName.GAME)).tabPane.getTabs().forEach(tab -> {
                 if (!tab.getText().equals("LeaderBoard")) {
-                    //tab.setDisable(true);
                     tab.setStyle("-fx-opacity: 0.5;");
                 }
             });

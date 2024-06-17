@@ -2,8 +2,6 @@ package Server.Messages;
 
 import Client.Controller.ClientController;
 import Server.Card.CornerCardFace;
-import Server.Exception.ClientExecuteNotCallableException;
-import Server.Exception.PlayerNotFoundByNameException;
 
 import java.io.Serializable;
 

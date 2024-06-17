@@ -3,7 +3,6 @@ package run;
 import Client.Controller.ClientController;
 import Client.Controller.ClientControllerInstance;
 import Client.View.CLI;
-import Client.View.UI;
 
 import java.rmi.RemoteException;
 

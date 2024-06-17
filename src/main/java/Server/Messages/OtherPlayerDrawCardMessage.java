@@ -4,7 +4,6 @@ import Client.Controller.ClientController;
 import Server.Card.Card;
 import Server.Enums.DeckPosition;
 import Server.Enums.Decks;
-import Server.Exception.PlayerNotFoundByNameException;
 
 import java.io.Serializable;
 import java.util.List;

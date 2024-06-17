@@ -18,7 +18,6 @@ import com.google.gson.Gson;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
-import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -475,7 +474,7 @@ public class ControllerInstance implements Controller{
                 actualQuantity = player.getManuscript().getSymbolCount(requiredSymbol);
                 Symbol finalRequiredSymbol = requiredSymbol;
                 int quantityOnCard = cardFace.getCornerSymbols().entrySet().stream()
-                        .filter(entry -> entry.getValue() == finalRequiredSymbol).collect(Collectors.toList()).size();
+                        .filter(entry -> entry.getValue() == finalRequiredSymbol).toList().size();
                 actualQuantity += quantityOnCard;
             }
             //System.out.println("RequiredSymbols " + requiredSymbol + " ScoreRequirements" + scoreRequirements);
@@ -708,7 +707,7 @@ public class ControllerInstance implements Controller{
     public void printData() {
         System.out.println("----------");
         System.out.println("Players:");
-        this.gameModel.getPlayerList().stream().forEach(p -> System.out.print(p.getName() + " " + p.getColor() + " " + p.isReady() +  ", "));
+        this.gameModel.getPlayerList().forEach(p -> System.out.print(p.getName() + " " + p.getColor() + " " + p.isReady() +  ", "));
         System.out.println("\n");
     }
 
@@ -758,10 +757,7 @@ public class ControllerInstance implements Controller{
                 break;
             default: //here we could be at secret or starting cardd choice or in game: we wait a minute to see if the player reconnects and after that we remove the player
                 switch (gameState) {
-                    case CHOOSE_SECRET_ACHIEVEMENT:
-                        new DisconnectionTimer(this, connectionHandler, id, 60);
-                        break;
-                    case CHOOSE_STARTING_CARD:
+                    case CHOOSE_SECRET_ACHIEVEMENT, CHOOSE_STARTING_CARD:
                         new DisconnectionTimer(this, connectionHandler, id, 60);
                         break;
                     case PLACE_CARD, DRAW_CARD:

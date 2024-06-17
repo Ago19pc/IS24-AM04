@@ -2,8 +2,6 @@ package Server.Messages;
 
 import Client.Controller.ClientController;
 import Server.Enums.Color;
-import Server.Exception.ClientExecuteNotCallableException;
-import Server.Exception.PlayerNotFoundByNameException;
 
 import java.io.Serializable;
 import java.util.List;
