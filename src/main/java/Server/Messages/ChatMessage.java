@@ -25,7 +25,7 @@ public class ChatMessage implements Serializable, ToServerMessage, ToClientMessa
 
     @Override
     public void serverExecute(Controller controller) {
-        String playerName = "";
+        String playerName;
         try {
             playerName = controller.getConnectionHandler().getPlayerNameByID(this.nameOrId);
             Player player = controller.getPlayerByName(playerName);

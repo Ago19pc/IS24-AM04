@@ -8,37 +8,45 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="768.0" prefWidth="1024.0" style="-fx-background-color: #eae1b8;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="run.NetworkSceneController">
-   <children>
-      <ImageView fitHeight="774.0" fitWidth="751.0" layoutX="135.0" pickOnBounds="true" preserveRatio="true" scaleX="1.37" AnchorPane.bottomAnchor="-0.67962646484375" AnchorPane.topAnchor="0.0">
-         <image>
-            <Image url="@./images/otherImages/logo.jpg" />
-         </image>
-      </ImageView>
-      <RadioButton fx:id="rmi_radio_button" layoutX="109.0" layoutY="634.0" mnemonicParsing="false" onAction="#setRMI" text="RMI" textFill="WHITE">
-         <font>
-            <Font size="35.0" />
-         </font>
-      </RadioButton>
-      <RadioButton fx:id="socket_radio_button" layoutX="737.0" layoutY="630.0" mnemonicParsing="false" onAction="#setSocket" text="SOCKET" textFill="WHITE">
-         <font>
-            <Font size="35.0" />
-         </font>
-      </RadioButton>
-      <Button fx:id="next_button" disable="true" layoutX="426.0" layoutY="674.0" mnemonicParsing="false" onAction="#select_connection_method" opacity="0.0" prefHeight="77.0" prefWidth="169.0" style="-fx-background-color: eae1b8; -fx-border-radius: 3; -fx-border-color: white; -fx-border-width: 3;" text="Next" textFill="#2b7c2e">
-         <font>
-            <Font size="35.0" />
-         </font>
-      </Button>
-      <Text fill="WHITE" layoutX="367.0" layoutY="51.0" stroke="BLACK" strokeType="OUTSIDE" strokeWidth="2.0" text="WELCOME TO" wrappingWidth="369.59661865234375">
-         <font>
-            <Font name="Constantia" size="50.0" />
-         </font>
-      </Text>
-      <Text fill="WHITE" layoutX="6.0" layoutY="87.0" smooth="false" stroke="BLACK" strokeType="OUTSIDE" strokeWidth="2.0" style="-fx-text-alignment: center;" text="Please choose how you would like to connect to the server" textAlignment="CENTER" wrappingWidth="1030.8203201293945" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
-         <font>
-            <Font name="Constantia" size="35.0" />
-         </font>
-      </Text>
-   </children>
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="768.0"
+            prefWidth="1024.0" style="-fx-background-color: #eae1b8;" xmlns="http://javafx.com/javafx/21"
+            xmlns:fx="http://javafx.com/fxml/1" fx:controller="run.NetworkSceneController">
+    <ImageView fitHeight="774.0" fitWidth="751.0" layoutX="135.0" pickOnBounds="true" preserveRatio="true"
+               scaleX="1.37" AnchorPane.bottomAnchor="-0.67962646484375" AnchorPane.topAnchor="0.0">
+        <Image url="@./images/otherImages/logo.jpg"/>
+    </ImageView>
+    <RadioButton fx:id="rmi_radio_button" layoutX="109.0" layoutY="634.0" mnemonicParsing="false" onAction="#setRMI"
+                 text="RMI" textFill="WHITE">
+        <font>
+          <Font size="35.0"/>
+        </font>
+    </RadioButton>
+    <RadioButton fx:id="socket_radio_button" layoutX="737.0" layoutY="630.0" mnemonicParsing="false"
+                 onAction="#setSocket" text="SOCKET" textFill="WHITE">
+        <font>
+          <Font size="35.0"/>
+        </font>
+    </RadioButton>
+    <Button fx:id="next_button" disable="true" layoutX="426.0" layoutY="674.0" mnemonicParsing="false"
+            onAction="#select_connection_method" opacity="0.0" prefHeight="77.0" prefWidth="169.0"
+            style="-fx-background-color: eae1b8; -fx-border-radius: 3; -fx-border-color: white; -fx-border-width: 3;"
+            text="Next" textFill="#2b7c2e">
+        <font>
+          <Font size="35.0"/>
+        </font>
+    </Button>
+    <Text fill="WHITE" layoutX="367.0" layoutY="51.0" stroke="BLACK" strokeType="OUTSIDE" strokeWidth="2.0"
+          text="WELCOME TO" wrappingWidth="369.59661865234375">
+        <font>
+          <Font name="Constantia" size="50.0"/>
+        </font>
+    </Text>
+    <Text fill="WHITE" layoutX="6.0" layoutY="87.0" smooth="false" stroke="BLACK" strokeType="OUTSIDE" strokeWidth="2.0"
+          style="-fx-text-alignment: center;" text="Please choose how you would like to connect to the server"
+          textAlignment="CENTER" wrappingWidth="1030.8203201293945" AnchorPane.leftAnchor="0.0"
+          AnchorPane.rightAnchor="0.0">
+        <font>
+          <Font name="Constantia" size="35.0"/>
+        </font>
+    </Text>
 </AnchorPane>

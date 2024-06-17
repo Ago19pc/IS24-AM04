@@ -170,7 +170,7 @@ public class MainBoardSceneController extends SceneController {
                     break;
             }
 
-        } else if (deck == Decks.ACHIEVEMENT);
+        } else if (deck == Decks.ACHIEVEMENT) {
             switch (position) {
                 case FIRST_CARD:
                     commonAchievement1.setImage(getImageFromCard(card, Face.FRONT));
@@ -179,6 +179,7 @@ public class MainBoardSceneController extends SceneController {
                     commonAchievement2.setImage(getImageFromCard(card, Face.FRONT));
                     break;
             }
+        }
     }
 
     /**
@@ -445,7 +446,7 @@ public class MainBoardSceneController extends SceneController {
      */
     public void updateLeaderBoard() {
         System.out.println("Leaderboard updated");
-        List<Player> sorted = new ArrayList<Player>(controller.getPlayers());
+        List<Player> sorted = new ArrayList<>(controller.getPlayers());
         sorted.sort((p1, p2) -> p2.getPoints() - p1.getPoints());
         Player1.setText("Player: " + sorted.get(0).getName() + " Points: " + sorted.get(0).getPoints());
         Player2.setText("Player: " + sorted.get(1).getName() + " Points: " + sorted.get(1).getPoints());

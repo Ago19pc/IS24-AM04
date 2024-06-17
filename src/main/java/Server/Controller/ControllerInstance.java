@@ -19,7 +19,6 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class ControllerInstance implements Controller{
     private GameModel gameModel;
@@ -77,7 +76,7 @@ public class ControllerInstance implements Controller{
         connectionHandler.sendMessage(playerNameMessage, name);
         NewPlayerMessage playerMessage = new NewPlayerMessage(gameModel.getPlayerList());
         connectionHandler.sendAllMessage(playerMessage);
-        Boolean allSet = true;
+        boolean allSet = true;
         for (Player p : gameModel.getPlayerList()){
             if (!connectionHandler.isNameConnectedToId(p.getName())){
                 allSet = false;
@@ -89,11 +88,11 @@ public class ControllerInstance implements Controller{
             List<AchievementCard> commonAchievementCards = new ArrayList<>();
             commonAchievementCards.add(gameModel.getAchievementDeck().getBoardCard().get(DeckPosition.FIRST_CARD));
             commonAchievementCards.add(gameModel.getAchievementDeck().getBoardCard().get(DeckPosition.SECOND_CARD));
-            Deck<GoldCard> goldDeck = new Deck<GoldCard>(
+            Deck<GoldCard> goldDeck = new Deck<>(
                     gameModel.getGoldDeck().getNumberOfCards(),
                     new ArrayList<>(List.of(gameModel.getGoldDeck().getTopCardNoPop(), gameModel.getGoldDeck().getBoardCard().get(DeckPosition.FIRST_CARD), gameModel.getGoldDeck().getBoardCard().get(DeckPosition.SECOND_CARD)))
             );
-            Deck<ResourceCard> resourceDeck = new Deck<ResourceCard>(
+            Deck<ResourceCard> resourceDeck = new Deck<>(
                     gameModel.getResourceDeck().getNumberOfCards(),
                     new ArrayList<>(List.of(gameModel.getResourceDeck().getTopCardNoPop(), gameModel.getResourceDeck().getBoardCard().get(DeckPosition.FIRST_CARD), gameModel.getResourceDeck().getBoardCard().get(DeckPosition.SECOND_CARD)))
             );
@@ -443,19 +442,19 @@ public class ControllerInstance implements Controller{
         }
         player.removeCardFromHand(position);
         int cardPoints;
-        int obtainedPoints = 0;
+        int obtainedPoints;
         try {
             cardPoints = cardFace.getScore();
         } catch (UnsupportedOperationException e) {
-            if (e.getMessage() == "Regular cards do not have scores") ;
-            cardPoints = 0;
+            if (Objects.equals(e.getMessage(), "Regular cards do not have scores")) {
+                cardPoints = 0;
+            }
         }
-        Map<Symbol, Integer> scoreRequirements;
+        Map<Symbol, Integer> scoreRequirements = null;
         try {
             scoreRequirements = cardFace.getScoreRequirements();
         } catch (UnsupportedOperationException e) {
-            if (e.getMessage() == "Regular cards do not have score requirements") ;
-            scoreRequirements = null;
+            // Already handled by initializing scoreRequirements to null
         }
         if (scoreRequirements != null) {
             Symbol requiredSymbol = (Symbol) scoreRequirements.keySet().toArray()[0];
@@ -589,7 +588,7 @@ public class ControllerInstance implements Controller{
                 if(playersWithMaxPoints.isEmpty()){
                     playersWithMaxPoints.add(player);
                 }
-                else if(points == Collections.max(playerCardPoints.values())){
+                else if(Objects.equals(points, Collections.max(playerCardPoints.values()))){
                     playersWithMaxPoints.add(player);
                 }
                 else if(points > Collections.max(playerCardPoints.values())){
@@ -712,7 +711,7 @@ public class ControllerInstance implements Controller{
     }
 
     public void reactToDisconnection(String id){
-        String playerName = "";
+        String playerName;
         try {
             if(getPlayerByName(connectionHandler.getPlayerNameByID(id)) == null){ //this means the client is not a player
                 try {
@@ -914,7 +913,7 @@ public class ControllerInstance implements Controller{
                 for(Player p: getPlayerList()){
                     if(p.getSecretObjective() != null) {
                         SetSecretCardMessage setSecretCardMessage;
-                        if(p.getName() == playerName){
+                        if(Objects.equals(p.getName(), playerName)){
                             int chosenCardIndex = givenSecretObjectiveCards.get(p).indexOf(p.getSecretObjective());
                             setSecretCardMessage = new SetSecretCardMessage(chosenCardIndex, p.getName());
                         } else {
@@ -931,13 +930,13 @@ public class ControllerInstance implements Controller{
                 List<AchievementCard> commonAchievementCards = new ArrayList<>();
                 commonAchievementCards.add(gameModel.getAchievementDeck().getBoardCard().get(DeckPosition.FIRST_CARD));
                 commonAchievementCards.add(gameModel.getAchievementDeck().getBoardCard().get(DeckPosition.SECOND_CARD));
-                Deck<GoldCard> goldDeck = new Deck<GoldCard>(
+                Deck<GoldCard> goldDeck = new Deck<>(
                         gameModel.getGoldDeck().getNumberOfCards(),
-                        new ArrayList<>(List.of(gameModel.getGoldDeck().getTopCardNoPop() ,gameModel.getGoldDeck().getBoardCard().get(DeckPosition.FIRST_CARD), gameModel.getGoldDeck().getBoardCard().get(DeckPosition.SECOND_CARD)))
+                        new ArrayList<>(List.of(gameModel.getGoldDeck().getTopCardNoPop(), gameModel.getGoldDeck().getBoardCard().get(DeckPosition.FIRST_CARD), gameModel.getGoldDeck().getBoardCard().get(DeckPosition.SECOND_CARD)))
                 );
-                Deck<ResourceCard> resourceDeck = new Deck<ResourceCard>(
+                Deck<ResourceCard> resourceDeck = new Deck<>(
                         gameModel.getResourceDeck().getNumberOfCards(),
-                        new ArrayList<>(List.of(gameModel.getResourceDeck().getTopCardNoPop(),gameModel.getResourceDeck().getBoardCard().get(DeckPosition.FIRST_CARD), gameModel.getResourceDeck().getBoardCard().get(DeckPosition.SECOND_CARD)))
+                        new ArrayList<>(List.of(gameModel.getResourceDeck().getTopCardNoPop(), gameModel.getResourceDeck().getBoardCard().get(DeckPosition.FIRST_CARD), gameModel.getResourceDeck().getBoardCard().get(DeckPosition.SECOND_CARD)))
                 );
                 List<Client.Player> playerList = new ArrayList<>();
                 for (Player p : gameModel.getPlayerList()){

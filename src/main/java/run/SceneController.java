@@ -4,7 +4,6 @@ import Client.Controller.ClientController;
 import Server.Card.Card;
 import Server.Card.CardFace;
 import Server.Enums.Face;
-import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
 import javafx.scene.control.TextField;
@@ -46,7 +45,7 @@ public abstract class SceneController implements Initializable {
      * Returns the image of the card
      * @param card the card
      * @param face the face
-     * @return
+     * @return the Image of the card
      */
     public Image getImageFromCard(Card card, Face face) {
         if (card == null) return new Image(getClass().getResourceAsStream("/images/Faces/back-96.jpeg"));
@@ -57,7 +56,7 @@ public abstract class SceneController implements Initializable {
      * This method is the same as the one above, but it takes a CardFace instead of a Face, so you can use the same method in different situations
      * Returns the image of the cardface
      * @param cardFace the cardface
-     * @return
+     * @return the Image of the cardface
      */
     public Image getImageFromCard(CardFace cardFace) {
         if (cardFace == null) return new Image(getClass().getResourceAsStream("/images/Faces/back-96.jpeg"));
@@ -66,9 +65,8 @@ public abstract class SceneController implements Initializable {
 
     /**
      * This method is called when the player wants to send a message in the chat
-     * @param actionEvent
      */
-    public void sendMessages(ActionEvent actionEvent) {
+    public void sendMessages() {
         controller.sendChatMessage(messageToSend.getText());
     }
 

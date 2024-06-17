@@ -18,7 +18,6 @@ public class ServerSender {
     /**
      * Sends a message packet to the client
      * @param message, the message packet to be sent
-     * @throws IOException
      */
     public void sendMessage(ToClientMessage message){
         try{

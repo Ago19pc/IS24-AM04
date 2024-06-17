@@ -11,45 +11,26 @@ public enum Symbol {
     }
 
     public char toChar(){
-        switch(this){
-            case ANIMAL:
-                return 'A';
-            case FUNGUS:
-                return 'F';
-            case PLANT:
-                return 'P';
-            case BUG:
-                return 'B';
-            case QUILL:
-                return 'Q';
-            case BOTTLE:
-                return 'O';
-            case PARCHMENT:
-                return 'C';
-            case EMPTY:
-                return 'E';
-            case NONE:
-                return 'N';
-            case COVERED_CORNER:
-                return 'X';
-            case PATTERN1F:
-                return '1';
-            case PATTERN1A:
-                return '2';
-            case PATTERN2P:
-                return '3';
-            case PATTERN2B:
-                return '4';
-            case PATTERN3:
-                return '5';
-            case PATTERN4:
-                return '6';
-            case PATTERN5:
-                return '7';
-            case PATTERN6:
-                return '8';
-            default:
-                return ' ';
-        }
+        return switch (this) {
+            case ANIMAL -> 'A';
+            case FUNGUS -> 'F';
+            case PLANT -> 'P';
+            case BUG -> 'B';
+            case QUILL -> 'Q';
+            case BOTTLE -> 'O';
+            case PARCHMENT -> 'C';
+            case EMPTY -> 'E';
+            case NONE -> 'N';
+            case COVERED_CORNER -> 'X';
+            case PATTERN1F -> '1';
+            case PATTERN1A -> '2';
+            case PATTERN2P -> '3';
+            case PATTERN2B -> '4';
+            case PATTERN3 -> '5';
+            case PATTERN4 -> '6';
+            case PATTERN5 -> '7';
+            case PATTERN6 -> '8';
+            default -> ' ';
+        };
     }
 }

@@ -78,7 +78,6 @@ public interface GameModel {
     void setPlayerList(List<Player> playerList);
     /**
      * shuffles the player list
-     * @return void
      */
     void shufflePlayerList();
 

@@ -67,7 +67,7 @@ public class GoldFrontFace extends ResourceFrontFace {
                 if (!toRet.isEmpty()) {
                     toRet.append(" ");
                 }
-                toRet.append(s.toChar() + "-" + placementRequirements.get(s));
+                toRet.append(s.toChar()).append("-").append(placementRequirements.get(s));
             }
         }
 
@@ -82,7 +82,7 @@ public class GoldFrontFace extends ResourceFrontFace {
                 if (!toRet.isEmpty()) {
                     toRet.append(" ");
                 }
-                toRet.append(s.toChar() + "-" + scoreRequirements.get(s));
+                toRet.append(s.toChar()).append("-").append(scoreRequirements.get(s));
             }
         }
 

@@ -6,10 +6,6 @@ import Server.Exception.AlreadyFinishedException;
 import Server.Exception.IncorrectDeckPositionException;
 
 public interface Deckable {
-    /**
-     * @return Map<DeckPosition, Card> the cards on the board
-     */
-
 
     /**
      * @param position the position pop the card from

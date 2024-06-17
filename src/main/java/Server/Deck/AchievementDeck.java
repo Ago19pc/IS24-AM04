@@ -81,7 +81,7 @@ public class AchievementDeck implements Deckable{
 
         try {
             fileFRONT = getClass().getResourceAsStream("/images/AchievementFrontFace.txt");
-            
+
             readerFRONT = new BufferedReader(new InputStreamReader(fileFRONT));
             
         
@@ -129,7 +129,7 @@ public class AchievementDeck implements Deckable{
         if(position == DECK){
             if(cards.isEmpty())
                 throw new AlreadyFinishedException("Achievement Deck is empty");
-            return cards.remove(0);
+            return cards.removeFirst();
         } else {
             if (boardCards.get(position) == null) {
                 throw new AlreadyFinishedException("No card in the specified position");
@@ -161,7 +161,7 @@ public class AchievementDeck implements Deckable{
     public Card getTopCardNoPop() {
         if(cards.isEmpty())
             return null;
-        return cards.get(0);
+        return cards.getFirst();
     }
 
     /**

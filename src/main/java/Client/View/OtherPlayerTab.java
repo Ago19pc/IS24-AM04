@@ -23,7 +23,7 @@ public class OtherPlayerTab {
 
     /**
      * This method should be called when you want to place a card on the manuscript of another player
-     * @param onBoardCard
+     * @param onBoardCard the card to place
      */
     public void placeCard(OnBoardCard onBoardCard){
         onBoardCardList.add(onBoardCard);

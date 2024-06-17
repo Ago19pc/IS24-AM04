@@ -12,7 +12,7 @@ public class GeneralClientConnectionHandler {
     private ClientConnectionHandlerSOCKET clientConnectionHandlerSOCKET;
     private ClientConnectionHandlerRMI clientConnectionHandlerRMI;
     private final ClientController controller;
-    private boolean trueifRMI = false;
+    private final boolean trueifRMI;
 
     public GeneralClientConnectionHandler(ClientController controller, boolean trueifRMI) throws RemoteException {
         this.trueifRMI = trueifRMI;
@@ -27,9 +27,9 @@ public class GeneralClientConnectionHandler {
 
     /**
      * Constructor for debug only
-     * @param controller
-     * @param trueifRMI
-     * @param debugMode
+     * @param controller the controller
+     * @param trueifRMI true if RMI
+     * @param debugMode true if debug
      */
     public GeneralClientConnectionHandler(ClientController controller, boolean trueifRMI, boolean debugMode) {
         this.trueifRMI = trueifRMI;
@@ -39,9 +39,7 @@ public class GeneralClientConnectionHandler {
         } else {
             try {
                 setSocket("localhost", 1099);
-            } catch (NotBoundException e) {
-                throw new RuntimeException(e);
-            } catch (IOException e) {
+            } catch (NotBoundException | IOException e) {
                 throw new RuntimeException(e);
             }
         }
@@ -52,8 +50,8 @@ public class GeneralClientConnectionHandler {
      * Sets the socket
      * @param server_host, the ip
      * @param server_port, the port
-     * @throws NotBoundException, if can't bound to RMI
-     * @throws IOException
+     * @throws NotBoundException if you can't bound to RMI
+     * @throws IOException when problem with socket
      */
     public void setSocket(String server_host, int server_port) throws NotBoundException, IOException {
         if(trueifRMI) {

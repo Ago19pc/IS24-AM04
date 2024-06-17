@@ -62,7 +62,7 @@ public class TestGameModel {
         gameModelInstance.addPlayer(player);
         List<Player> playerList = gameModelInstance.getPlayerList();
         assertEquals(1, playerList.size());
-        assertEquals(player, playerList.get(0));
+        assertEquals(player, playerList.getFirst());
     }
     @Test
     public void testRemovePlayer() {

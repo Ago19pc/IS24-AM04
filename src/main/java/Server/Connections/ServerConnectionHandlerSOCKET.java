@@ -148,7 +148,7 @@ public class ServerConnectionHandlerSOCKET extends Thread implements ServerConne
      * Kill a ClientHandler thread
      * @param id the name of the client thread to kill
      */
-    public void killClient(String id) throws PlayerNotFoundByNameException, AlreadyFinishedException {
+    public void killClient(String id) {
         ClientHandler target = clients.entrySet().stream()
                 .filter(entry -> entry.getValue().equals(id))
                 .toList().getFirst().getKey();
