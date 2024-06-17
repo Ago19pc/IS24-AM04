@@ -442,7 +442,7 @@ public class ControllerInstance implements Controller{
             throw new TooFewElementsException("Already played");
         }
         player.removeCardFromHand(position);
-        int cardPoints;
+        int cardPoints = 0;
         int obtainedPoints;
         try {
             cardPoints = cardFace.getScore();
