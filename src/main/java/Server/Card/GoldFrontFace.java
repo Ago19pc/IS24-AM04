@@ -60,6 +60,10 @@ public class GoldFrontFace extends ResourceFrontFace {
         return boundaries + upper + middle + lower + boundaries;
     }
 
+    /**
+     * Returns a string representation of the placement requirements
+     * @return the string
+     */
     private String placeReqForPrint() {
         StringBuilder toRet = new StringBuilder();
 
@@ -74,7 +78,10 @@ public class GoldFrontFace extends ResourceFrontFace {
 
         return toRet.toString();
     }
-
+    /**
+     * Returns a string representation of the score requirements
+     * @return the string
+     */
     private String scoreReqForPrint() {
         StringBuilder toRet = new StringBuilder();
         toRet.append(getScore());

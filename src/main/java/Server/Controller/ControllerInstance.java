@@ -86,20 +86,14 @@ public class ControllerInstance implements Controller{
         return gameModel.getPlayerList();
     }
 
-    /**
-     * Shuffles the player list and sends the new order to all players
-     */
+
     public void shufflePlayerList() {
         gameModel.shufflePlayerList();
         PlayerOrderMessage playerOrderMessage = new PlayerOrderMessage(gameModel.getPlayerList().stream().map(Player::getName).toList());
         connectionHandler.sendAllMessage(playerOrderMessage);
     }
 
-    /**
-     * Starts the game by creating the decks and giving the starting cards to the players
-     * @throws TooFewElementsException if there are not enough players or not all players are ready
-     * @throws AlreadySetException if the decks are already set
-     */
+
     public void start() throws TooFewElementsException, AlreadySetException {
         if(gameModel.getPlayerList().size() < 2){
             throw new TooFewElementsException("Not enough players");
@@ -249,11 +243,7 @@ public class ControllerInstance implements Controller{
         }
     }
 
-    /**
-     * Gives the initial hand to the players
-     * @throws AlreadySetException if the initial hand is already given
-     * @throws AlreadyFinishedException if the deck is empty
-     */
+
     public void giveInitialHand() throws AlreadySetException, AlreadyFinishedException{
         for(Player player : getPlayerList()){
             Card card1 = gameModel.getResourceDeck().popCard(DeckPosition.DECK);
@@ -279,9 +269,7 @@ public class ControllerInstance implements Controller{
 
     }
 
-    /**
-     * Sets the next turn. Sets the end game phase or ends the game if necessary
-     */
+
     public void nextTurn(){
         if(gameModel.getActivePlayerIndex() == -1){ //sets active player as the first player. If it's not the first turn this is not valid
             if(gameModel.getTurn() != 0){
@@ -357,10 +345,7 @@ public class ControllerInstance implements Controller{
         gameState.drawCard(player, deckPosition, deck);
     }
 
-    /**
-     * Starts the end game phase
-     * @throws AlreadySetException if the end game phase is already set
-     */
+
     public void endGame() throws AlreadySetException {
         gameModel.setEndGamePhase();
         //if it's the last player to play, the extra round starts immediately
@@ -371,9 +356,7 @@ public class ControllerInstance implements Controller{
         connectionHandler.sendAllMessage(endGamePhaseMessage);
     }
 
-    /**
-     * Computes the leaderboard and sends it to all players
-     */
+
     public void computeLeaderboard() throws AlreadyFinishedException {
         changeState(new LeaderboardState(this));
         AchievementDeck achievementDeck = gameModel.getAchievementDeck();

@@ -7,6 +7,9 @@ import javafx.scene.control.Tab;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * This class is responsible for the visualization of the other player's manuscript.
+ */
 public class OtherPlayerTab {
     public final Tab tab;
     public final ScrollPane scrollPane;

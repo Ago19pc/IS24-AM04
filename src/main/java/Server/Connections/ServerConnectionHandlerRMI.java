@@ -39,7 +39,11 @@ public class ServerConnectionHandlerRMI implements ServerConnectionHandler, Remo
     Controller controller;
 
     private int port;
-    //todo add javadoc
+
+    /**
+     * Standard constructor
+     * Asks for the port to start the rmi server on and starts it on that port, or the next available one
+     */
     public ServerConnectionHandlerRMI() {
         askForPort();
         while (!startServer(port)) {
@@ -49,7 +53,10 @@ public class ServerConnectionHandlerRMI implements ServerConnectionHandler, Remo
         System.out.println("[RMI] Server avviato sulla porta: " + port);
 
     }
-    //todo add javadoc
+    /**
+     * Debug constructor
+     * @param debugMode if true, the server will start on port 1235, or the next available one
+     */
     public ServerConnectionHandlerRMI(boolean debugMode) {
         if (debugMode) {
             port = 1235;

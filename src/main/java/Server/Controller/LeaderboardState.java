@@ -14,6 +14,10 @@ import Server.Player.Player;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Class for the state where the leaderboard is shown
+
+ */
 public class LeaderboardState implements ServerState{
     private Controller controller;
 
@@ -34,21 +38,6 @@ public class LeaderboardState implements ServerState{
     @Override
     public void removePlayer(Player player) {
         //do nothing
-    }
-
-    @Override
-    public void setPlayerColor() {
-
-    }
-
-    @Override
-    public void setSecretObjectiveCard() {
-
-    }
-
-    @Override
-    public void setStartingCard() {
-
     }
 
     @Override

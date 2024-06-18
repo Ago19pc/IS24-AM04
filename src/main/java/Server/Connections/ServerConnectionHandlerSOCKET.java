@@ -165,7 +165,10 @@ public class ServerConnectionHandlerSOCKET extends Thread implements ServerConne
         return clients.values().stream().toList();
     }
 
-
+    /**
+     * Get the controller
+     * @return the controller
+     */
     public Controller getController() {return this.controller;}
 
 

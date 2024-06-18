@@ -46,6 +46,9 @@ public abstract class SceneController implements Initializable {
      */
     public void initialize(URL url, ResourceBundle resourceBundle) {}
 
+    /**
+     * Sets up the scene by doing initial operations
+     */
     public void setup(){}
     /**
      * Returns the image of the card

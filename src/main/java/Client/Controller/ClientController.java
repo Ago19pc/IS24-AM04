@@ -424,7 +424,7 @@ public interface ClientController {
      */
     AchievementCard getSecretAchievement();
     /**
-     * Gets all of the chat
+     * Gets all the chat
      * @return all the messages in the chat as a list of Message
      */
     List<Message> getChat();

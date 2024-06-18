@@ -1,5 +1,7 @@
 package Interface;
-
+/**
+ * This enum contains the names of the scenes.
+ */
 public enum SceneName {
     NETWORK,
     JOIN,

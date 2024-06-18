@@ -22,6 +22,9 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * This class is responsible for the graphical user interface logic of the client side of the application.
+ */
 public class GUI implements UI{
     private static ClientController controller;
     private static final Map<SceneName,Scene> sceneMap = new HashMap<>();
@@ -33,7 +36,12 @@ public class GUI implements UI{
         GUI.controller = controller;
     }
 
-
+    /**
+     * This method generates a scene from a fxml file, loads the scene controller , and adds the scene to the sceneMap and sceneControllerMap.
+     * @param fxmlPath the path of the fxml file
+     * @param sceneName the name of the scene to generate
+     * @param stage the stage where the scene will be displayed
+     */
     public void generateScene(String fxmlPath, SceneName sceneName, Stage stage) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(MainGUI.class.getResource(fxmlPath));
         Scene scene = new Scene(fxmlLoader.load());
@@ -43,10 +51,19 @@ public class GUI implements UI{
         sceneControllerMap.put(sceneName, sceneController);
     }
 
+    /**
+     * Gets a scene by its name
+     * @param sceneName the name of the scene
+     * @return the scene
+     */
     public Scene getScene(SceneName sceneName) {
         return sceneMap.get(sceneName);
     }
 
+    /**
+     * Sets the stage
+     * @param stage the stage
+     */
     public void setStage(Stage stage) {
         this.stage = stage;
     }
@@ -59,7 +76,7 @@ public class GUI implements UI{
     }
 
     @Override
-    public void nameChanged(String name) {
+    public void nameChanged() {
         Platform.runLater(() -> {
             if (controller.isSavedGame()) {
                 //todo: implement graphically with another scene
@@ -551,6 +568,9 @@ public class GUI implements UI{
 
     // Only GUI methods
 
+    /**
+     * Displays an update on player colors
+     */
     private void listViewSetUpdate() {
         for(int i = 0; i < controller.getPlayers().size(); i++) {
             String name = controller.getPlayers().get(i).getName();
@@ -601,11 +621,14 @@ public class GUI implements UI{
         }
         ((NameReadySceneController) sceneControllerMap.get(SceneName.SETNAME)).cloneListView(((ColorReadySceneController) sceneControllerMap.get(SceneName.SETCOLOR)).list_Player);
     }
-
     public void gameAlreadyFinished() {
         System.out.println("Game already finished");
         // todo: implement this
-         }
+    }
+
+    /**
+     * Generate a manuscript based on its data
+     */
     private void regenerateManuscript()
     {
         try {

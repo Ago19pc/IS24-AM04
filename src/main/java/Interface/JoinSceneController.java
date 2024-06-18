@@ -5,13 +5,16 @@ import javafx.scene.control.TextField;
 
 import java.util.Objects;
 
+/**
+ * This class is responsible for the logic of the scene where the player joins the server.
+ */
 public class JoinSceneController extends SceneController{
     public TextField text_ip;
     public TextField text_Port;
     public Button join_Button;
 
     /**
-     * LITERALLY THE JOIN BUTTON TO CONNECT TO THE SERVER, WHAT DID YOU EXPECT?
+     * Handles the join button click event
      */
     public void setJoin() {
         if(Objects.equals(text_ip.getText(), "")) {

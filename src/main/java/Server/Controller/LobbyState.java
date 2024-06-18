@@ -16,6 +16,10 @@ import Server.Player.PlayerInstance;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Class for the state where the lobby is
+
+ */
 public class LobbyState implements ServerState{
     private GameModel gameModel;
     private GeneralServerConnectionHandler connectionHandler;
@@ -53,21 +57,6 @@ public class LobbyState implements ServerState{
     @Override
     public void removePlayer(Player player) {
         //do nothing
-    }
-
-    @Override
-    public void setPlayerColor() {
-
-    }
-
-    @Override
-    public void setSecretObjectiveCard() {
-
-    }
-
-    @Override
-    public void setStartingCard() {
-
     }
 
     @Override

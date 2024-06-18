@@ -34,6 +34,11 @@ public class GeneralClientConnectionHandler {
         }
     }
 
+    /**
+     * Connects to the server
+     * @param server_host the server host name
+     * @param server_port the server port
+     */
     public void setSocket(String server_host, int server_port) throws NotBoundException, IOException {
         if(trueifRMI) {
             clientConnectionHandlerRMI.setServer(server_host, server_port);

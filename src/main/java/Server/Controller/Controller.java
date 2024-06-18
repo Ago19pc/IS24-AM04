@@ -13,7 +13,10 @@ import java.util.List;
  * This interface is used to represent the controller of the server. It manages the game flow and the game model.
  */
 public interface Controller {
-
+    /**
+     * Changes the state of the controller
+     * @param state the new state
+     */
     void changeState(ServerState state);
 
     /**
@@ -204,19 +207,39 @@ public interface Controller {
      * @throws PlayerNotFoundByNameException if there is no player with that name
      */
     void addSavedPlayer(String id, String name) throws AlreadyStartedException, IllegalArgumentException, PlayerNotFoundByNameException;
-
+    /**
+     * Shuffles the player list and sends the new order to all players
+     */
     void shufflePlayerList();
-
+    /**
+     * Sets the next turn. Sets the end game phase or ends the game if necessary
+     */
     void nextTurn();
-
+    /**
+     * Gives the initial hand to the players
+     * @throws AlreadySetException if the initial hand is already given
+     * @throws AlreadyFinishedException if the deck is empty
+     */
     void giveInitialHand() throws AlreadySetException, AlreadyFinishedException;
-
+    /**
+     * Computes the leaderboard and sends it to all players
+     */
     void computeLeaderboard() throws AlreadyFinishedException;
-
+    /**
+     * Starts the end game phase
+     * @throws AlreadySetException if the end game phase is already set
+     */
     void endGame() throws AlreadySetException;
-
+    /**
+     * Starts the game by creating the decks and giving the starting cards to the players
+     * @throws TooFewElementsException if there are not enough players or not all players are ready
+     * @throws AlreadySetException if the decks are already set
+     */
     void start() throws TooFewElementsException, AlreadySetException;
-
+    /**
+     * Checks if the server is in the saved game lobby
+     * @return true if the server is in the saved game lobby
+     */
     boolean isInSavedGameLobby();
 }
 

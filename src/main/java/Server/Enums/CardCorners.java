@@ -6,6 +6,10 @@ package Server.Enums;
 public enum CardCorners {
     TOP_LEFT, TOP_RIGHT, BOTTOM_RIGHT, BOTTOM_LEFT;
 
+    /**
+     * Returns the opposite corner of the card
+     * @return the opposite corner
+     */
     public CardCorners getOppositeCorner() {
         return switch (this) {
             case TOP_LEFT -> BOTTOM_RIGHT;

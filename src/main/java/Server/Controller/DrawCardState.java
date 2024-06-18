@@ -16,6 +16,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Class for the state where players draw cards
+
+ */
 public class DrawCardState implements ServerState{
     private Controller controller;
     private GameModel gameModel;
@@ -43,21 +47,6 @@ public class DrawCardState implements ServerState{
                 e.printStackTrace();
             }
         }
-    }
-
-    @Override
-    public void setPlayerColor() {
-
-    }
-
-    @Override
-    public void setSecretObjectiveCard() {
-
-    }
-
-    @Override
-    public void setStartingCard() {
-
     }
 
     @Override
