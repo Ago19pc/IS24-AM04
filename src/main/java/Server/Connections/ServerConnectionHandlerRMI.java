@@ -74,8 +74,7 @@ public class ServerConnectionHandlerRMI implements ServerConnectionHandler, Remo
     private boolean startServer(int port) {
         try {
             String ip;
-            try { //todo. @ago19 questa è una soliuzione temporanea per ottenere l'ip del server
-                // Reply by ago: it works fine, the teacher said it's the only way so its ok. Also I can't find anything better that will work all the time.
+            try {
                 Enumeration<NetworkInterface> interfaces = NetworkInterface.getNetworkInterfaces();
                 while (interfaces.hasMoreElements()) {
                     NetworkInterface iface = interfaces.nextElement();
@@ -221,7 +220,7 @@ public class ServerConnectionHandlerRMI implements ServerConnectionHandler, Remo
         });
         Map<String, Boolean> playerReady = new HashMap<>();
         controller.getPlayerList().forEach(p -> playerReady.put(p.getName(), p.isReady()));
-        Boolean isSavedGame = controller.getGameState().equals(GameState.LOAD_GAME_LOBBY);
+        Boolean isSavedGame = controller.isInSavedGameLobby();
         return new LobbyPlayersMessage(
                 controller.getPlayerList().stream().map(Player::getName).toList(),
                 playerColors,
