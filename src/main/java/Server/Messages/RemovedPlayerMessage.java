@@ -9,7 +9,10 @@ import java.io.Serializable;
  */
 public class RemovedPlayerMessage implements ToClientMessage, Serializable {
     private final String name;
-
+    /**
+     * Constructor
+     * @param name the name of the player who has been removed
+     */
     public RemovedPlayerMessage(String name) {
         this.name = name;
     }

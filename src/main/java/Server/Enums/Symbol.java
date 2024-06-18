@@ -4,10 +4,78 @@ package Server.Enums;
  * Contains all the symbols found in cards
  */
 public enum Symbol {
-    ANIMAL, FUNGUS, PLANT, BUG,
-    QUILL, BOTTLE, PARCHMENT,
-    EMPTY, NONE, COVERED_CORNER,
-    PATTERN1F, PATTERN1A, PATTERN2P, PATTERN2B, PATTERN3, PATTERN4, PATTERN5, PATTERN6;
+    /**
+     * The animal kingdom symbol
+     */
+    ANIMAL,
+    /**
+     * The fungus kingdom symbol
+     */
+    FUNGUS,
+    /**
+     * The plant kingdom symbol
+     */
+    PLANT,
+    /**
+     * The bug kingdom symbol
+     */
+    BUG,
+    /**
+     * The quill object symbol
+     */
+    QUILL,
+    /**
+     * The bottle object symbol
+     */
+    BOTTLE,
+    /**
+     * The parchment object symbol
+     */
+    PARCHMENT,
+    /**
+     * The empty symbol
+     */
+    EMPTY,
+    /**
+     * No symbol
+     */
+    NONE,
+    /**
+     * The symbol for covered corners
+     */
+    COVERED_CORNER,
+    /**
+     * Pattern 1 done with fungi
+     */
+    PATTERN1F,
+    /**
+     * Pattern 1 done with animals
+     */
+    PATTERN1A,
+    /**
+     * Pattern 2 done with plants
+     */
+    PATTERN2P,
+    /**
+     * Pattern 2 done with bugs
+     */
+    PATTERN2B,
+    /**
+     * Pattern 3
+     */
+    PATTERN3,
+    /**
+     * Pattern 4
+     */
+    PATTERN4,
+    /**
+     * Pattern 5
+     */
+    PATTERN5,
+    /**
+     * Pattern 6
+     */
+    PATTERN6;
 
     /**
      * Checks if the symbol is a pattern

@@ -7,7 +7,10 @@ import java.io.Serializable;
  */
 public class ReconnectionNameMessage implements ToClientMessage, Serializable {
     private final String name;
-
+    /**
+     * Constructor
+     * @param name the name of the player who reconnected
+     */
     public ReconnectionNameMessage(String name) {
         this.name = name;
     }

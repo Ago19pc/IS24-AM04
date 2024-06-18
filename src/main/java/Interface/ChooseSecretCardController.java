@@ -17,24 +17,69 @@ import java.util.List;
 
  */
 public class ChooseSecretCardController extends SceneController {
+    /**
+     * The constructor for the class
+     */
+    public ChooseSecretCardController() {
+    }
+    /**
+     * The button to confirm the choice
+     */
     @FXML
     public Button confirmButton;
+    /**
+     * The card images
+     */
     @FXML
     public ImageView firstCard, secondCard;
-    public Text firstCardText;
-    public Text secondCardText;
+    /**
+     * Card image for the third card in hand
+     */
     public ImageView thirdCardInHand;
+    /**
+     * Card image for the second card in hand
+     */
     public ImageView secondCardInHand;
+    /**
+     * Card image for the first card in hand
+     */
     public ImageView firstCardInHand;
+    /**
+     * Card image for the first gold card on the board
+     */
     public ImageView goldCard1;
+    /**
+     * Card image for the gold card on top of the deck
+     */
     public ImageView goldDeckCard;
+    /**
+     * Card image for the second common achievement card
+     */
     public ImageView objective2;
+    /**
+     * Card image for the second resource card on the board
+     */
     public ImageView resourceCard2;
+    /**
+     * Card image for the first resource card on the board
+     */
     public ImageView resourceCard1;
+    /**
+     * Card image for the resource card on top of the deck
+     */
     public ImageView resourceDeckCard;
+    /**
+     * Card image for the second gold card on the board
+     */
     public ImageView goldCard2;
+    /**
+     * Card image for the first common achievement card
+     */
     public ImageView objective1;
-    public Button sendButton;
+
+    /**
+     * The list of messages in the chat
+     */
     public ListView<String> chat_message;
 
     private int index = 0;

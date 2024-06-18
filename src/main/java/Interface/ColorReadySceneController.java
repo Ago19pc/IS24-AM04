@@ -11,18 +11,54 @@ import javafx.scene.layout.Pane;
  * This class is responsible for the logic of the scene where the player chooses the color and sets ready.
  */
 public class ColorReadySceneController extends  SceneController{
+    /**
+     * Constructor
+     */
+    public ColorReadySceneController() {}
 
-    public Pane loginScene;
+    /**
+     * Label to show the player if he is ready
+     */
     public Label label_ready;
+    /**
+     * Button to choose the red color
+     */
     public Button red_Button;
+    /**
+     * Button to choose the green color
+     */
     public Button green_Button;
+    /**
+     * Button to choose the blue color
+     */
     public Button blue_Button;
+    /**
+     * Button to choose the yellow color
+     */
     public Button yellow_Button;
+    /**
+     * Label to show the color
+     */
     public Label label_color;
+    /**
+     * Button to set ready
+     */
     public Button readyButton;
+    /**
+     * The color of the player
+     */
     public Color color;
+    /**
+     * The list of players
+     */
     public ListView<String> list_Player;
+    /**
+     * Button to confirm the color
+     */
     public Button confirm_Color_Button;
+    /**
+     * The messages of the chat
+     */
     public ListView<String> chat_messages;
 
 
@@ -82,7 +118,7 @@ public class ColorReadySceneController extends  SceneController{
     /**
      * This method is called when the players want to set ready
      */
-    public void askSetReady(ActionEvent actionEvent) {
+    public void askSetReady() {
         controller.setReady();
         label_ready.setOpacity(1);
         readyButton.setDisable(true);

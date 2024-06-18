@@ -16,7 +16,11 @@ import java.io.Serializable;
 public class ReadyStatusMessage implements Serializable, ToClientMessage, ToServerMessage {
     private final boolean ready;
     private final String nameOrId;
-
+    /**
+     * Constructor
+     * @param isReady true if the player is ready, false if the player is not ready
+     * @param nameOrId the name or id of the player. toClient uses the name, toServer uses the id
+     */
     public ReadyStatusMessage(boolean isReady, String nameOrId) {
         this.ready = isReady;
         this.nameOrId = nameOrId;

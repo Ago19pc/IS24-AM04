@@ -21,7 +21,14 @@ public class ServerReceiver extends Thread {
 
     private final ServerConnectionHandlerSOCKET serverConnectionHandler;
 
-
+    /**
+     * Constructor for the ServerReceiver
+     *
+     * @param clientHandler the client handler
+     * @param clientSocket the client socket
+     * @param controller the controller
+     * @throws IOException if an I/O error occurs when creating the input stream
+     */
     public ServerReceiver(ClientHandler clientHandler, Socket clientSocket, Controller controller) throws IOException {
         this.clientSocket = clientSocket;
         this.clientHandler = clientHandler;

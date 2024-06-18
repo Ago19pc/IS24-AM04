@@ -12,20 +12,51 @@ import javafx.scene.layout.Pane;
 
  */
 public class NameReadySceneController extends SceneController{
-
+    /**
+     * Constructor
+     */
+    public NameReadySceneController() {
+    }
+    /**
+     * The pane of the scene
+     */
     @FXML
     public  Pane loginScene;
+    /**
+     * The text field where the user inserts the name
+     */
     @FXML
     public TextField possible_Name;
+    /**
+     * The button to confirm the name
+     */
     @FXML
     public  Button confirm_Button;
+    /**
+     * The label to show the username
+     */
     @FXML
     public  Label label_Username;
+    /**
+     * The list of players
+     */
     @FXML
     public ListView<String> list_Player;
+    /**
+     * The list of messages in the chat
+     */
     public ListView<String> chat_message;
+    /**
+     * The label to show the reconnection id
+     */
     public Label labelReconnectionId;
+    /**
+     * The text field where the user inserts the reconnection id
+     */
     public TextField reconnection_idField;
+    /**
+     * The button to confirm the reconnection id
+     */
     public Button confirm_ButtonId;
 
     /**

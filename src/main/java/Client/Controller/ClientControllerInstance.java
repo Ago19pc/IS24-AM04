@@ -53,6 +53,11 @@ public class ClientControllerInstance implements ClientController {
     private Integer chosenHandCard;
     private Boolean isSavedGame;
 
+    /**
+     * Constructor
+     */
+    public ClientControllerInstance() {}
+
     @Override
     public void main(UI ui) {
 

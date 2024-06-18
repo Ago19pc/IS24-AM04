@@ -15,6 +15,14 @@ public class OtherPlayerPlayCardMessage implements Serializable, ToClientMessage
     final int y;
     final int obtainedPoints;
 
+    /**
+     * Constructor
+     * @param playerName the name of the player who placed the card
+     * @param placedCardFace the face of the card that was placed
+     * @param x the x coordinate of the card
+     * @param y the y coordinate of the card
+     * @param obtainedPoints the points obtained by placing the card
+     */
     public OtherPlayerPlayCardMessage(String playerName, CornerCardFace placedCardFace, int x, int y, int obtainedPoints) {
         this.playerName = playerName;
         this.placedCardFace = placedCardFace;

@@ -12,7 +12,13 @@ import static Server.Enums.Symbol.EMPTY;
  * This class represents the back face of gold and resource cards
  */
 public class RegularBackFace extends CornerCardFace {
+    /**
+     * The center symbols of the card
+     */
     private final List<Symbol> centerSymbols;
+    /**
+     * The kingdom symbol of the card
+     */
     private final Symbol kingdom;
     /**
      * Constructor for the RegularBackFace

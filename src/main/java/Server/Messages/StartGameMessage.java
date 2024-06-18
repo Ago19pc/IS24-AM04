@@ -14,6 +14,11 @@ public class StartGameMessage implements Serializable, ToClientMessage {
     private final List<GoldCard> goldBoardCards;
     private final List<ResourceCard> resourceBoardCards;
 
+    /**
+     * Constructor
+     * @param goldBoardCards the gold board cards
+     * @param resourceBoardCards the resource board cards
+     */
     public StartGameMessage(List<GoldCard> goldBoardCards, List<ResourceCard> resourceBoardCards) {
         this.goldBoardCards = goldBoardCards;
         this.resourceBoardCards = resourceBoardCards;

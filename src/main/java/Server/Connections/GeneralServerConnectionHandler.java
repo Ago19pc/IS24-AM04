@@ -205,6 +205,7 @@ public class GeneralServerConnectionHandler {
     /**
      * Checks if an id is associated to a player
      * @param id the id to check
+     * @return true if the id is associated to a player, false otherwise
      */
     public boolean isIdConnectedToName(String id) {
         return playerID.containsKey(id);

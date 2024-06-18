@@ -25,39 +25,84 @@ import java.util.Map;
  * This class is responsible for the logic of the main board scene
  */
 public class MainBoardSceneController extends SceneController {
+    /**
+     * Constructor
+     */
+    public MainBoardSceneController() {
+        super();
+    }
 
-
+    /**
+     * The images of the player hand and secret achievement cards
+     */
     @FXML
     public ImageView firstCardImage, secondCardImage, thirdCardImage, secretCardImage;
+    /**
+     * The images of the common achievements
+     */
     @FXML
     public ImageView commonAchievement1, commonAchievement2;
+    /**
+     * The images of the gold deck cards
+     */
     @FXML
     public ImageView goldOnDeck, goldOnFloor1, goldOnFloor2;
+    /**
+     * The images of the resource deck cards
+     */
     @FXML
     public ImageView resourceOnDeck, resourceOnFloor1, resourceOnFloor2;
+    /**
+     * The buttons to rotate the cards in the hand to show the other faces
+     */
     @FXML
     public Button rotateFirstCardButton, rotateSecondCardButton, rotateThirdCardButton;
+    /**
+     * The player's manuscript
+     */
     @FXML
     public Group yourManuscript;
+    /**
+     * The label to show that it's the player's turn
+     */
     @FXML
     public Label yourTurnLabel;
+    /**
+     * The label to show the end phase
+     */
     @FXML
     public Label endingLabel;
+    /**
+     * The Tabs to show the other players' manuscripts
+     */
     @FXML
     public TabPane tabPane;
-
+    /**
+     * The button to send a chat message
+     */
     @FXML
     public Button chatButton;
-
+    /**
+     * The list of chat messages
+     */
     @FXML
     public ListView<String> chatMessages;
     /**
     Maps the player name to the tab of the player
      */
     public final Map<String, OtherPlayerTab> otherPlayerTabs = new HashMap<>();
+    /**
+     * The player names
+     */
     @FXML
     public Label Player1, Player2, Player3, Player4;
+    /**
+     * The count of how many cards are left in the gold deck
+     */
     public Label goldDeck_counter;
+    /**
+     * The count of how many cards are left in the resource deck
+     */
     public Label resourceDeck_counter;
 
     private Face firstFace, secondFace, thirdFace;
@@ -415,6 +460,7 @@ public class MainBoardSceneController extends SceneController {
 
     /**
      * This method removes the card from the player hand
+     * @param playerName the name of the player
      */
     public void removeCardFromHand(String playerName) {
         if (controller.getMyName().equals(playerName)) {

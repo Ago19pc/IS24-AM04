@@ -18,6 +18,14 @@ public class PlayCardMessage implements Serializable, ToServerMessage{
     private final int y;
     private final Face face;
 
+    /**
+     * Constructor
+     * @param id the id of the player who wants to place the card
+     * @param cardNumber the number of the card to place in the player's hand
+     * @param face the face of the card
+     * @param x the x coordinate of the card
+     * @param y the y coordinate of the card
+     */
     public PlayCardMessage(String id, int cardNumber, Face face, int x, int y){
         this.id = id;
         this.cardNumber = cardNumber;

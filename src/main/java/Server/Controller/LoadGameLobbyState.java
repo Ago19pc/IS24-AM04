@@ -24,6 +24,12 @@ public class LoadGameLobbyState implements ServerState{
     private GameModel gameModel;
     private Controller controller;
 
+    /**
+     * Constructor
+     * @param connectionHandler the connection handler to use
+     * @param gameModel the game model to use
+     * @param controller the controller to use
+     */
     public LoadGameLobbyState(GeneralServerConnectionHandler connectionHandler, GameModel gameModel, Controller controller){
         this.connectionHandler = connectionHandler;
         this.gameModel = gameModel;

@@ -2,7 +2,16 @@ package Server.Messages;
 
 import java.io.Serializable;
 
-public class QuitOrPlayAgainMessage implements Serializable {/*
+/**
+ * Message to inform the client that the player has to choose between quitting the game or playing again
+ */
+public class QuitOrPlayAgainMessage implements Serializable {
+    /**
+     * Constructor
+     */
+    public QuitOrPlayAgainMessage() {
+    }
+    /*
 
     private QuitOrPlayAgain quitOrPlayAgain;
     private String name;

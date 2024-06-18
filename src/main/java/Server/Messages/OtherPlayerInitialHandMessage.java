@@ -9,6 +9,10 @@ import java.io.Serializable;
  */
 public class OtherPlayerInitialHandMessage implements Serializable, ToClientMessage {
     private final String name;
+    /**
+     * Constructor
+     * @param name the name of the player who received the initial hand
+     */
     public OtherPlayerInitialHandMessage(String name){
         this.name = name;
     }

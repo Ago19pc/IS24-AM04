@@ -13,7 +13,10 @@ import java.util.List;
 public class NewPlayerMessage implements Serializable, ToClientMessage {
 
     private final List<String> playerNames;
-
+    /**
+     * Constructor
+     * @param p the list of players
+     */
     public NewPlayerMessage(List<Player> p) {
         this.playerNames = p.stream().map(Player::getName).toList();
     }

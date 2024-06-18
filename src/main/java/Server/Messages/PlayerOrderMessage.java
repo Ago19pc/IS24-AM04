@@ -11,6 +11,10 @@ import java.util.List;
 public class PlayerOrderMessage implements Serializable, ToClientMessage {
 
     private final List<String> playerNames;
+    /**
+     * Constructor
+     * @param playerNames the names of the players in order
+     */
     public PlayerOrderMessage(List<String> playerNames) {
         this.playerNames = playerNames;
     }

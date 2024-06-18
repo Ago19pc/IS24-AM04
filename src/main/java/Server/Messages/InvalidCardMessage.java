@@ -10,7 +10,10 @@ import java.io.Serializable;
  */
 public class InvalidCardMessage implements ToClientMessage, Serializable {
     private final Actions cardType;
-
+    /**
+     * Constructor
+     * @param cardType the type of card that was invalid
+     */
     public InvalidCardMessage(Actions cardType) {
         this.cardType = cardType;
     }

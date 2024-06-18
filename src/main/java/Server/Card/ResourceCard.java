@@ -8,14 +8,24 @@ import Server.Enums.Face;
  * @see RegularBackFace
  */
 public class ResourceCard implements Card {
-    protected final ResourceFrontFace frontFace;
-    protected final RegularBackFace backFace;
+    /**
+     * The front face of the card
+     */
+    private final ResourceFrontFace frontFace;
+    /**
+     * The back face of the card
+     */
+    private final RegularBackFace backFace;
+    /**
+     * The URI of the image of the card
+     */
     private final String imageURI;
 
     /**
      * Constructor for the ResourceCard
      * @param frontFace the front face
      * @param backFace the back face
+     * @param imageURI the image URI
      */
     public ResourceCard(ResourceFrontFace frontFace, RegularBackFace backFace, String imageURI) {
         this.frontFace = frontFace;

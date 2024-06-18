@@ -36,6 +36,8 @@ public class ClientConnectionHandlerRMI implements ClientConnectionHandler {
      * Sets the server to connect to using host name
      *
      * @param server_rmi_host the host to connect to
+     * @param serverPort the port to connect to
+     * @throws RemoteException if the server can't be found
      */
     public void setServer(String server_rmi_host, int serverPort) throws RemoteException {
         serverRegistry = LocateRegistry.getRegistry(server_rmi_host, serverPort);

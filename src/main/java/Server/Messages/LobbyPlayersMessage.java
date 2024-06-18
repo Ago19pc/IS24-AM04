@@ -18,6 +18,14 @@ public class LobbyPlayersMessage implements Serializable, ToClientMessage {
     private final String id;
     private final Boolean isSavedGame;
 
+    /**
+     * Constructor
+     * @param playerNames the names of the players in the lobby
+     * @param playerColors the colors of the players in the lobby
+     * @param playerReady the ready status of the players in the lobby
+     * @param id the id of the game
+     * @param isSavedGame whether the game is a saved game or not
+     */
     public LobbyPlayersMessage(List<String> playerNames, Map<String, Color> playerColors, Map<String, Boolean> playerReady, String id, Boolean isSavedGame) {
         this.playerNames = playerNames;
         this.playerColors = playerColors;

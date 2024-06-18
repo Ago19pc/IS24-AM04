@@ -31,7 +31,10 @@ public class GUI implements UI{
     private Stage stage;
     private final Map<SceneName,SceneController> sceneControllerMap = new HashMap<>();
 
-
+    /**
+     * Constructor
+     * @param controller the controller
+     */
     public GUI(ClientController controller) {
         GUI.controller = controller;
     }
@@ -41,6 +44,7 @@ public class GUI implements UI{
      * @param fxmlPath the path of the fxml file
      * @param sceneName the name of the scene to generate
      * @param stage the stage where the scene will be displayed
+     * @throws IOException if the fxml file is not found
      */
     public void generateScene(String fxmlPath, SceneName sceneName, Stage stage) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(MainGUI.class.getResource(fxmlPath));

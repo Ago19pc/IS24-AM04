@@ -12,7 +12,13 @@ import java.util.List;
  * @param <T> the type of cards
  */
 public class Deck<T> implements Serializable {
+    /**
+     * The remaining cards in the deck, excluding the board cards but not the top card
+     */
     private int deckSize;
+    /**
+     * List of Boardcards, containing the top card of the deck, the first board card and the second board card
+     */
     private List<T> boardCards;
 
     /**

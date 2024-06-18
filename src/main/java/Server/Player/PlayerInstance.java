@@ -23,6 +23,10 @@ public class PlayerInstance implements Player {
     private int points;
     private Manuscript manuscript;
     private boolean ready;
+    /**
+     * Constructor
+     * @param name the name of the player
+     */
     public PlayerInstance(String name) {
         this.name = name;
         this.handCards = new LinkedList<>();

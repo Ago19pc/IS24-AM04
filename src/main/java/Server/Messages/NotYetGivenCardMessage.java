@@ -10,6 +10,10 @@ import java.io.Serializable;
  */
 public class NotYetGivenCardMessage implements Serializable, ToClientMessage {
     private final Actions type;
+    /**
+     * Constructor
+     * @param type the type of action that needs a card
+     */
     public NotYetGivenCardMessage(Actions type) {
         this.type = type;
     }

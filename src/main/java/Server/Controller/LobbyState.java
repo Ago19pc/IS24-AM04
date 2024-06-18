@@ -24,7 +24,12 @@ public class LobbyState implements ServerState{
     private GameModel gameModel;
     private GeneralServerConnectionHandler connectionHandler;
     private Controller controller;
-
+    /**
+     * Constructor
+     * @param gameModel the game model to use
+     * @param connectionHandler the connection handler to use
+     * @param controller the controller to use
+     */
     public LobbyState(GameModel gameModel, GeneralServerConnectionHandler connectionHandler, Controller controller){
         this.gameModel = gameModel;
         this.connectionHandler = connectionHandler;

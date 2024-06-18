@@ -17,7 +17,13 @@ public class OtherPlayerDrawCardMessage implements Serializable, ToClientMessage
     private final Decks deckFrom;
     private final DeckPosition drawPosition;
     private final List<Card> newBoardCards;
-
+    /**
+     * Constructor
+     * @param name the name of the player who drew the card
+     * @param deckFrom the deck from which the card was drawn
+     * @param drawPosition the position in which the card was drawn
+     * @param newBoardCards the new board cards
+     */
     public OtherPlayerDrawCardMessage(String name, Decks deckFrom, DeckPosition drawPosition, List<Card> newBoardCards) {
         this.name = name;
         this.deckFrom = deckFrom;

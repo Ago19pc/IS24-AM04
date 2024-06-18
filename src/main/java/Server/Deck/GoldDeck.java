@@ -16,8 +16,13 @@ import static Server.Enums.DeckPosition.*;
  * Class for the Gold cards Deck
  */
 public class GoldDeck implements Deckable {
-    protected final List<GoldCard> cards;
+    private final List<GoldCard> cards;
     private final Map<DeckPosition, GoldCard> boardCards;
+
+    /**
+     * Constructor
+     * Creates the cards, shuffles them and moves the first two to the board
+     */
     public GoldDeck(){
         this.boardCards = new HashMap<>();
         this.cards = new ArrayList<>();

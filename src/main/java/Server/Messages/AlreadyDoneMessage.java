@@ -10,6 +10,11 @@ import java.io.Serializable;
  */
 public class AlreadyDoneMessage implements Serializable, ToClientMessage {
     private final Actions action;
+
+    /**
+     * Constructor. The message needs to contain the action that is already done
+     * @param action the action that is already done
+     */
     public AlreadyDoneMessage(Actions action) {
         this.action = action;
     }

@@ -17,7 +17,10 @@ public class CLI extends Thread implements UI {
     private final ClientController controller;
     private final Scanner in = new Scanner(System.in);
 
-
+    /**
+     * The constructor for the class
+     * @param controller the controller
+     */
     public CLI(ClientController controller){
         System.out.println("Avvio gioco...");
         this.controller = controller;
@@ -70,6 +73,7 @@ public class CLI extends Thread implements UI {
 
     /**
      * Decodes the input from the console and calls the corresponding method in the controller
+     * @param args the input from the console
      */
     public void decode(String[] args){
         switch(args[0]){

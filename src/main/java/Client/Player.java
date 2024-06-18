@@ -11,14 +11,37 @@ import java.io.Serializable;
  * @see Server.Player
  */
 public class Player implements Serializable {
+    /**
+     * The name of the player
+     */
     private final String name;
+    /**
+     * The number of points the player has earned by placing cards
+     */
     private int manuscriptPoints;
+    /**
+     * The number of points the player has earned by completing achievements
+     */
     private int achievementPoints;
+    /**
+     * The size of the hand of the player
+     */
     private int handSize;
+    /**
+     * The status of the player. If true, it is the player's turn
+     */
     private boolean active;
+    /**
+     * The color of the player
+     */
     private Color color;
+    /**
+     * The status of the player. If true, the player is ready to start the game
+     */
     private boolean ready;
-
+    /**
+     * The manuscript of the player
+     */
     private Manuscript manuscript;
 
     /**
@@ -78,6 +101,10 @@ public class Player implements Serializable {
         this.manuscriptPoints += points;
     }
 
+    /**
+     * Initialize the manuscript of the player with a starting card
+     * @param startingCard the starting card of the manuscript
+     */
     public void initializeManuscript(CornerCardFace startingCard) {
         this.manuscript = new Manuscript(startingCard);
     }

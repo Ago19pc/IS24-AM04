@@ -9,6 +9,10 @@ import java.io.Serializable;
  */
 public class ToDoFirstMessage implements Serializable, ToClientMessage {
     private final Actions actionToDo;
+    /**
+     * Constructor
+     * @param actionToDo the action to do
+     */
     public ToDoFirstMessage(Actions actionToDo) {
         this.actionToDo = actionToDo;
     }

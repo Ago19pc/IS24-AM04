@@ -11,7 +11,10 @@ import java.io.Serializable;
 public class StartingCardsMessage implements Serializable, ToClientMessage {
 
     private final Card card;
-
+    /**
+     * Constructor
+     * @param card the card
+     */
     public StartingCardsMessage(Card card){
         this.card = card;
     }

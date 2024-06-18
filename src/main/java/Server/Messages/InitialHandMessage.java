@@ -13,6 +13,10 @@ public class InitialHandMessage implements Serializable, ToClientMessage {
 
     private final List<Card> hand;
 
+    /**
+     * Constructor
+     * @param hand the hand to send
+     */
     public InitialHandMessage(List<Card> hand){
         this.hand = hand;
     }

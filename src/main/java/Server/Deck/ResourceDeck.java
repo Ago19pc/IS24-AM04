@@ -19,8 +19,12 @@ import static Server.Enums.DeckPosition.*;
  * Class for the Resource cards Deck
  */
 public class ResourceDeck implements Deckable {
-    protected final List<ResourceCard> cards;
+    private final List<ResourceCard> cards;
     private final Map<DeckPosition, ResourceCard> boardCards;
+
+    /**
+     * Constructor. Creates the cards, shuffles them and moves the first two to the board
+     */
     public ResourceDeck(){
         this.boardCards = new HashMap<>();
         this.cards = new ArrayList<>();

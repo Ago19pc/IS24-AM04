@@ -23,6 +23,11 @@ import java.util.Map;
 public class DrawCardState implements ServerState{
     private Controller controller;
     private GameModel gameModel;
+    /**
+     * Constructor
+     * @param controller the controller
+     * @param gameModel the game model
+     */
     public DrawCardState(Controller controller, GameModel gameModel){
         this.controller = controller;
         this.gameModel = gameModel;

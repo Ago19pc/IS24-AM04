@@ -9,7 +9,10 @@ import java.io.Serializable;
  */
 public class PlayerDisconnectedMessage implements Serializable, ToClientMessage{
     private final String playerName;
-
+    /**
+     * Constructor
+     * @param playerName the name of the player who disconnected
+     */
     public PlayerDisconnectedMessage(String playerName) {
         this.playerName = playerName;
     }
