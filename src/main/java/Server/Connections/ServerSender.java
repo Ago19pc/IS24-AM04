@@ -8,6 +8,9 @@ import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 
+/**
+ * This class is used to send messages to a single socket client
+ */
 public class ServerSender {
     private final ObjectOutputStream out;
 

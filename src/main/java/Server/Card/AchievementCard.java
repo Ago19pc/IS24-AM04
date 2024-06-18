@@ -2,6 +2,13 @@ package Server.Card;
 
 import Server.Enums.Face;
 
+import java.util.Map;
+
+/**
+ * This class represents achievement cards. They are composed of an AchievementFrontFace and an EmptyCardFace
+ * @see AchievementFrontFace
+ * @see EmptyCardFace
+ */
 public class AchievementCard implements Card {
     private final AchievementFrontFace frontFace;
     private final EmptyCardFace backFace;
@@ -13,6 +20,7 @@ public class AchievementCard implements Card {
      * Constructor for the AchievementCard
      * @param frontFace the front face
      * @param backFace the back face
+     * @param imageURI the image URI
      */
     public AchievementCard(AchievementFrontFace frontFace, EmptyCardFace backFace, String imageURI) {
         this.frontFace = frontFace;
@@ -20,24 +28,21 @@ public class AchievementCard implements Card {
         this.imageURI = imageURI;
     }
 
-    /**
-     * Returns the face of the card
-     * @param face to return
-     * @return CardFace the face of the card
-     */
     public CardFace getFace(Face face) {
         return face == Face.FRONT ? frontFace : backFace;
     }
 
     /**
-     * Returns the corner face of the card
-     * @param face to return
-     * @return CornerCardFace the face of the card
+     * @throws UnsupportedOperationException because achievement cards do not have corner faces
      */
     public CornerCardFace getCornerFace(Face face) throws UnsupportedOperationException {
         throw new UnsupportedOperationException("Achievement cards do not have corner faces");
     }
 
+    /**
+     * Returns a string representation of the achievement card
+     * @return a string representation of the achievement card
+     */
     public String toString(){
         return "Puoi ottenere " + frontFace.getScore() + " punti completando i seguenti requisiti: " + frontFace.getScoreRequirements();
     }

@@ -2,6 +2,9 @@ package Server.Messages;
 
 import java.io.Serializable;
 
+/**
+ * Message to inform the client that a player has reconnected
+ */
 public class ReconnectionNameMessage implements ToClientMessage, Serializable {
     private final String name;
 

@@ -4,6 +4,9 @@ import Client.Controller.ClientController;
 
 import java.io.Serializable;
 
+/**
+ * Message to inform the client that he needs to set his name before he can play
+ */
 public class NameNotYetSetMessage implements Serializable, ToClientMessage{
     public NameNotYetSetMessage() {
     }

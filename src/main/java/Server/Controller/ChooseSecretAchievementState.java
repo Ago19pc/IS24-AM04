@@ -17,6 +17,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Class for the state where players choose their secret achievement
+ */
 public class ChooseSecretAchievementState implements ServerState{
     private Controller controller;
     private GameModel gameModel;
@@ -42,21 +45,6 @@ public class ChooseSecretAchievementState implements ServerState{
             controller.shufflePlayerList();
             controller.nextTurn();
         }
-    }
-
-    @Override
-    public void setPlayerColor() {
-
-    }
-
-    @Override
-    public void setSecretObjectiveCard() {
-
-    }
-
-    @Override
-    public void setStartingCard() {
-
     }
 
     @Override

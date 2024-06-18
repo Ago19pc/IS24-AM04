@@ -6,6 +6,10 @@ import Server.Player.Player;
 import java.io.Serializable;
 import java.util.List;
 
+/**
+ * Message to inform the client that a new player has joined the game
+
+ */
 public class NewPlayerMessage implements Serializable, ToClientMessage {
 
     private final List<String> playerNames;

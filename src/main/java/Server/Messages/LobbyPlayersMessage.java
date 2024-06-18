@@ -7,6 +7,9 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Message to send the client the info of the players in the lobby. Used both for the new game lobby and the saved game lobby
+ */
 public class LobbyPlayersMessage implements Serializable, ToClientMessage {
     private final List<String> playerNames;
     private final Map<String, Color> playerColors;

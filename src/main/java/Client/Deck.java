@@ -6,20 +6,37 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * This class represents the deck of cards as viewed by the client. It is different from the deck of cards on the server.
+ * @see Server.Deck
+ * @param <T> the type of cards
+ */
 public class Deck<T> implements Serializable {
     private int deckSize;
     private List<T> boardCards;
 
+    /**
+     * Constructor using boardCards
+     * @param boardCards List of Boardcards
+     */
     public Deck(List<T> boardCards) {
         this.deckSize = 38;
         this.boardCards = boardCards;
     }
 
+    /**
+     * Constructor using boardCards and custom deck size. Used for saved games and reconnecting to a game.
+     * @param deckSize the deck size
+     * @param boardCards List of Boardcards
+     */
     public Deck(int deckSize, List<T> boardCards) {
         this.deckSize = deckSize;
         this.boardCards = boardCards;
     }
 
+    /**
+     * Constructor that initializes the deck with an empty list of board cards
+     */
     public Deck() {
         this.deckSize = 38;
         this.boardCards = new ArrayList<>();

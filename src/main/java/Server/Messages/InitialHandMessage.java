@@ -6,6 +6,9 @@ import Server.Card.Card;
 import java.io.Serializable;
 import java.util.List;
 
+/**
+ * Message to send the client their initial hand
+ */
 public class InitialHandMessage implements Serializable, ToClientMessage {
 
     private final List<Card> hand;

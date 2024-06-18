@@ -8,6 +8,9 @@ import Server.Enums.Decks;
 import java.io.Serializable;
 import java.util.List;
 
+/**
+ * Message to inform the client that another player has drawn a card
+ */
 public class OtherPlayerDrawCardMessage implements Serializable, ToClientMessage {
 
     private final String name;

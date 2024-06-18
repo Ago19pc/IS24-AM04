@@ -4,6 +4,9 @@ import Client.Controller.ClientController;
 
 import java.io.Serializable;
 
+/**
+ * Message to inform the client that another player has received his initial hand
+ */
 public class OtherPlayerInitialHandMessage implements Serializable, ToClientMessage {
     private final String name;
     public OtherPlayerInitialHandMessage(String name){

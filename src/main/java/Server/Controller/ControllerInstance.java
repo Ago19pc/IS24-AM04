@@ -20,6 +20,9 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.util.*;
 
+/**
+ * This is the implementation of the controller interface. It manages the game flow and the game model.
+ */
 public class ControllerInstance implements Controller{
     private GameModel gameModel;
     private final GeneralServerConnectionHandler connectionHandler;
@@ -27,6 +30,10 @@ public class ControllerInstance implements Controller{
     private Map<Player, List<AchievementCard>> givenSecretObjectiveCards = new HashMap<>();
     private ServerState gameState;
 
+    /**
+     * Asks whether the user wants to start a new game or load a saved game and initializes the game model
+     * @param connectionHandler the connection handler
+     */
     public ControllerInstance(GeneralServerConnectionHandler connectionHandler) {
         this.connectionHandler = connectionHandler;
         this.gameModel = new GameModelInstance();
@@ -49,7 +56,8 @@ public class ControllerInstance implements Controller{
 
     @Override
     public void addPlayer(String name, String clientID) throws TooManyPlayersException, AlreadyStartedException, IllegalArgumentException {
-        gameState.addPlayer(name, clientID);
+    if(connectionHandler.isIdConnectedToName(clientID)) throw new IllegalArgumentException("Player already connected");
+    gameState.addPlayer(name, clientID);
     }
     @Override
     public void addSavedPlayer(String clientId, String name) throws AlreadyStartedException, IllegalArgumentException, PlayerNotFoundByNameException {
@@ -78,20 +86,14 @@ public class ControllerInstance implements Controller{
         return gameModel.getPlayerList();
     }
 
-    /**
-     * Shuffles the player list and sends the new order to all players
-     */
+
     public void shufflePlayerList() {
         gameModel.shufflePlayerList();
         PlayerOrderMessage playerOrderMessage = new PlayerOrderMessage(gameModel.getPlayerList().stream().map(Player::getName).toList());
         connectionHandler.sendAllMessage(playerOrderMessage);
     }
 
-    /**
-     * Starts the game by creating the decks and giving the starting cards to the players
-     * @throws TooFewElementsException if there are not enough players or not all players are ready
-     * @throws AlreadySetException if the decks are already set
-     */
+
     public void start() throws TooFewElementsException, AlreadySetException {
         if(gameModel.getPlayerList().size() < 2){
             throw new TooFewElementsException("Not enough players");
@@ -241,11 +243,7 @@ public class ControllerInstance implements Controller{
         }
     }
 
-    /**
-     * Gives the initial hand to the players
-     * @throws AlreadySetException if the initial hand is already given
-     * @throws AlreadyFinishedException if the deck is empty
-     */
+
     public void giveInitialHand() throws AlreadySetException, AlreadyFinishedException{
         for(Player player : getPlayerList()){
             Card card1 = gameModel.getResourceDeck().popCard(DeckPosition.DECK);
@@ -271,9 +269,7 @@ public class ControllerInstance implements Controller{
 
     }
 
-    /**
-     * Sets the next turn
-     */
+
     public void nextTurn(){
         if(gameModel.getActivePlayerIndex() == -1){ //sets active player as the first player. If it's not the first turn this is not valid
             if(gameModel.getTurn() != 0){
@@ -349,10 +345,7 @@ public class ControllerInstance implements Controller{
         gameState.drawCard(player, deckPosition, deck);
     }
 
-    /**
-     * Starts the end game phase
-     * @throws AlreadySetException if the end game phase is already set
-     */
+
     public void endGame() throws AlreadySetException {
         gameModel.setEndGamePhase();
         //if it's the last player to play, the extra round starts immediately
@@ -363,54 +356,56 @@ public class ControllerInstance implements Controller{
         connectionHandler.sendAllMessage(endGamePhaseMessage);
     }
 
-    /**
-     * Computes the leaderboard and sends it to all players
-     * @throws AlreadyFinishedException if there aren't achievement cards to pop
-     */
+
     public void computeLeaderboard() throws AlreadyFinishedException {
         changeState(new LeaderboardState(this));
         AchievementDeck achievementDeck = gameModel.getAchievementDeck();
-        AchievementCard commonAchievement1 = achievementDeck.popCard(DeckPosition.FIRST_CARD);
-        AchievementCard commonAchievement2 = achievementDeck.popCard(DeckPosition.SECOND_CARD);
-        List<Player> playerlist = getPlayerList();
-        Map<String, Integer> playerCardPoints = new HashMap<>();
-        Map<String, Integer> playerAchievementPoints = new HashMap<>();
-        for (Player player : playerlist) {
-            int cardPoints = player.getPoints();
-            playerCardPoints.put(player.getName(), cardPoints);
-            Manuscript manuscript = player.getManuscript();
-            int achievementPoints = manuscript.calculatePoints(commonAchievement1);
-            achievementPoints += manuscript.calculatePoints(commonAchievement2);
-            achievementPoints += manuscript.calculatePoints(player.getSecretObjective());
-            playerAchievementPoints.put(player.getName(), achievementPoints);
+        try {
+            AchievementCard commonAchievement1 = achievementDeck.popCard(DeckPosition.FIRST_CARD);
+            AchievementCard commonAchievement2 = achievementDeck.popCard(DeckPosition.SECOND_CARD);
+            List<Player> playerlist = getPlayerList();
+            Map<String, Integer> playerCardPoints = new HashMap<>();
+            Map<String, Integer> playerAchievementPoints = new HashMap<>();
+            for (Player player : playerlist) {
+                int cardPoints = player.getPoints();
+                playerCardPoints.put(player.getName(), cardPoints);
+                Manuscript manuscript = player.getManuscript();
+                int achievementPoints = manuscript.calculatePoints(commonAchievement1);
+                achievementPoints += manuscript.calculatePoints(commonAchievement2);
+                achievementPoints += manuscript.calculatePoints(player.getSecretObjective());
+                playerAchievementPoints.put(player.getName(), achievementPoints);
+            }
+            LinkedHashMap<String, Integer> leaderboardMap = new LinkedHashMap<>();//linkedhashmap keeps order of insertion which will be the player order
+            for (int i = 0; i < playerlist.size(); i++) {
+                List<String> playersWithMaxPoints = new ArrayList<>();
+                playerCardPoints.forEach((player, points) -> {
+                    if (playersWithMaxPoints.isEmpty()) {
+                        playersWithMaxPoints.add(player);
+                    } else if (Objects.equals(points, Collections.max(playerCardPoints.values())) ){
+                        playersWithMaxPoints.add(player);
+                    } else if (points > Collections.max(playerCardPoints.values())) {
+                        playersWithMaxPoints.clear();
+                        playersWithMaxPoints.add(player);
+                    }
+                });
+                String firstPlayer = playerAchievementPoints.entrySet().stream()
+                        .filter(entry -> playersWithMaxPoints.contains(entry.getKey()))
+                        .max(Map.Entry.comparingByValue()).get().getKey();
+                leaderboardMap.put(firstPlayer, playerCardPoints.get(firstPlayer) + playerAchievementPoints.get(firstPlayer));
+                playerCardPoints.remove(firstPlayer);
+                playerAchievementPoints.remove(firstPlayer);
+            }
+            LeaderboardMessage leaderboardMessage = new LeaderboardMessage(leaderboardMap);
+            connectionHandler.sendAllMessage(leaderboardMessage);
+            clear();
+        } catch (AlreadyFinishedException e) {
+            e.printStackTrace();
         }
-        LinkedHashMap<String, Integer> leaderboardMap = new LinkedHashMap<>();//linkedhashmap keeps order of insertion which will be the player order
-        for(int i = 0; i < playerlist.size(); i++){
-            List<String> playersWithMaxPoints = new ArrayList<>();
-            playerCardPoints.forEach((player, points) -> {
-                if(playersWithMaxPoints.isEmpty()){
-                    playersWithMaxPoints.add(player);
-                }
-                else if(Objects.equals(points, Collections.max(playerCardPoints.values()))){
-                    playersWithMaxPoints.add(player);
-                }
-                else if(points > Collections.max(playerCardPoints.values())){
-                    playersWithMaxPoints.clear();
-                    playersWithMaxPoints.add(player);
-                }
-            });
-            String firstPlayer = playerAchievementPoints.entrySet().stream()
-                    .filter(entry -> playersWithMaxPoints.contains(entry.getKey()))
-                    .max(Map.Entry.comparingByValue()).get().getKey();
-            leaderboardMap.put(firstPlayer, playerCardPoints.get(firstPlayer) + playerAchievementPoints.get(firstPlayer));
-            playerCardPoints.remove(firstPlayer);
-            playerAchievementPoints.remove(firstPlayer);
-        }
-        LeaderboardMessage leaderboardMessage = new LeaderboardMessage(leaderboardMap);
-        connectionHandler.sendAllMessage(leaderboardMessage);
-        clear();
     }
 
+    /**
+     * Clears the game model and prepares for a new game
+     */
     private void clear() {
         gameModel = new GameModelInstance();
         givenStartingCards = new HashMap<>();
@@ -496,10 +491,7 @@ public class ControllerInstance implements Controller{
         }
         throw new PlayerNotFoundByNameException("Player not found");
     }
-    /**
-     * get the ConncectionHandler
-     * @return connectionHandler the conncectionHandler
-     */
+
     public GeneralServerConnectionHandler getConnectionHandler() {
         return this.connectionHandler;
     }

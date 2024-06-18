@@ -1,4 +1,4 @@
-package run;
+package Interface;
 
 import Client.Controller.ClientController;
 import Client.Controller.ClientControllerInstance;
@@ -8,6 +8,9 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 
+/**
+ * This class is responsible for starting the GUI.
+ */
 public class MainGUI extends Application {
     private static ClientController controller;
     private static GUI gui;

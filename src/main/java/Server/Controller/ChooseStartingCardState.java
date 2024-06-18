@@ -17,6 +17,10 @@ import Server.Player.Player;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Class for the state where players choose their starting card
+
+ */
 public class ChooseStartingCardState implements ServerState{
     private Controller controller;
     private GameModel gameModel;
@@ -46,21 +50,6 @@ public class ChooseStartingCardState implements ServerState{
                 //do nothing as it's normal that it's already set
             }
         }
-    }
-
-    @Override
-    public void setPlayerColor() {
-
-    }
-
-    @Override
-    public void setSecretObjectiveCard() {
-
-    }
-
-    @Override
-    public void setStartingCard() {
-
     }
 
     @Override

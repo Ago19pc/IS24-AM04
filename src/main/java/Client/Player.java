@@ -6,6 +6,10 @@ import Server.Manuscript.Manuscript;
 
 import java.io.Serializable;
 
+/**
+ * This class represents the player as viewed by the client. It is different from the player on the server.
+ * @see Server.Player
+ */
 public class Player implements Serializable {
     private final String name;
     private int manuscriptPoints;
@@ -17,6 +21,10 @@ public class Player implements Serializable {
 
     private Manuscript manuscript;
 
+    /**
+     * Deafult constructor
+     * @param name the name of the player
+     */
     public Player(String name) {
         this.name = name;
         this.manuscriptPoints = 0;
@@ -26,6 +34,15 @@ public class Player implements Serializable {
         this.ready = false;
     }
 
+    /**
+     * Custom constructor. Used in saved games and when reconnecting to a game.
+     * @param name the name of the player
+     * @param points the total points of the player
+     * @param handSize the size of the hand of the player
+     * @param active the active status of the player
+     * @param color the color of the player
+     * @param manuscript the manuscript of the player
+     */
     public Player(String name, int points, int handSize, boolean active, Color color, Manuscript manuscript) {
         this.name = name;
         this.manuscriptPoints = points;
@@ -157,7 +174,10 @@ public class Player implements Serializable {
     public void addCardToManuscript(int x, int y, CornerCardFace cardFace, int turn) {
         manuscript.addCard(x, y, cardFace, turn);
     }
-
+    /**
+     * Gets the manuscript of the player
+     * @return manuscript the manuscript of the player
+     */
     public Manuscript getManuscript() {
         return manuscript;
     }

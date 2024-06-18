@@ -12,6 +12,9 @@ import java.util.*;
 import static java.lang.Math.abs;
 import static java.lang.Math.min;
 
+/**
+ * Class that represents the manuscript
+ */
 public class Manuscript implements Serializable {
     private final Graph graph;
     private final Map<Symbol, Integer> activeSymbols;
@@ -29,21 +32,18 @@ public class Manuscript implements Serializable {
     /**
      * Update the symbol count for the manuscript
      * @param cardFace the card face that will be added
+     * @throws IllegalArgumentException if the card is not in the manuscript
      */
-    private void updateSymbolCount(CornerCardFace cardFace) throws IllegalArgumentException{
+    private void updateSymbolCount(CornerCardFace cardFace){
         Map<CardCorners, CornerCardFace> cardsUnder = graph.getCardsUnder(cardFace);
-        try {
-            for(CardCorners corner : cardsUnder.keySet()) {
-                CornerCardFace neighbor = cardsUnder.get(corner);
-                Symbol symbol = neighbor.getCornerSymbols().get(corner.getOppositeCorner());
-                activeSymbols.put(symbol, activeSymbols.get(symbol) - 1);
-            }
+        for(CardCorners corner : cardsUnder.keySet()) {
+            CornerCardFace neighbor = cardsUnder.get(corner);
+            Symbol symbol = neighbor.getCornerSymbols().get(corner.getOppositeCorner());
+            activeSymbols.put(symbol, activeSymbols.get(symbol) - 1);
+        }
 
-            for(Symbol symbol : cardFace.getCenterSymbols()){
-                activeSymbols.put(symbol, activeSymbols.get(symbol) + 1);
-            }
-        } catch (Exception e){
-            //do nothing
+        for(Symbol symbol : cardFace.getCenterSymbols()){
+            activeSymbols.put(symbol, activeSymbols.get(symbol) + 1);
         }
         for(CardCorners corner : cardFace.getCornerSymbols().keySet()){
             Symbol symbol = cardFace.getCornerSymbols().get(corner);
@@ -56,9 +56,9 @@ public class Manuscript implements Serializable {
      * @param xcoordinate where to add the card (x)
      * @param ycoordinate where to add the card (y)
      * @param cardFace which face to add
-     * @param turn the turn the card was placed
+     * @param turn the current turn
      */
-    public void addCard(int xcoordinate, int ycoordinate, CornerCardFace cardFace, int turn) throws IllegalArgumentException{
+    public void addCard(int xcoordinate, int ycoordinate, CornerCardFace cardFace, int turn){
         cardFace.setXCoord(xcoordinate);
         cardFace.setYCoord(ycoordinate);
         Map<CardCorners, CornerCardFace> positions = new HashMap<>();
@@ -89,7 +89,7 @@ public class Manuscript implements Serializable {
     }
 
     /**
-     * @return GraphNode the root of the manuscript
+     * @return the number of a specific symbol in the manuscript
      */
     public int getSymbolCount(Symbol symbol) {
         return this.activeSymbols.get(symbol);
@@ -97,7 +97,7 @@ public class Manuscript implements Serializable {
     /**
      * Calculates the points given by an achievement card
      * @param achievementCard the achievement card to calculate points for
-     * @return int the points given by the achievement card
+     * @return the points given by the achievement card
      */
     public int calculatePoints(AchievementCard achievementCard) {
         Map<Symbol, Integer> scoreRequirements = achievementCard.getFace(Face.FRONT).getScoreRequirements();
@@ -318,7 +318,7 @@ public class Manuscript implements Serializable {
     /**
      * Get all cards under a certain card
      * @param cardFace the card face to get the cards under
-     * @return Map<CardCorners, CornerCardFace> the cards under the card
+     * @return the cards under the card
      * @throws IllegalArgumentException if the card is not in the manuscript
      */
     public Map<CardCorners, CornerCardFace> getCardsUnder(CornerCardFace cardFace) throws IllegalArgumentException{
@@ -393,6 +393,10 @@ public class Manuscript implements Serializable {
         return true;
     }
 
+    /**
+     * Get all cards in the manuscript
+     * @return the cards in the manuscript, as a list of CornerCardFace
+     */
     public List<CornerCardFace> getAllCards() {
         return graph.getAllCards();
     }

@@ -9,29 +9,43 @@ import Server.Exception.TooManyPlayersException;
 import java.io.Serializable;
 import java.rmi.RemoteException;
 
+/**
+ * Message to ask the server to add a player with a certain name and to notify the client if the name has been set correctly
+ */
 public class PlayerNameMessage implements ToClientMessage, ToServerMessage, Serializable {
     private String name;
-    private final boolean confirmation;
+    private boolean confirmation;
     private String id;
 
+    /**
+     * ToClient constructor
+     * @param name the name of the player
+     * @param confirmation true if the name was set, false otherwise
+     */
     public PlayerNameMessage(String name, Boolean confirmation) {
         this.name = name;
         this.confirmation = confirmation;
     }
 
-    public PlayerNameMessage(String name, Boolean confirmation, String id) {
+    /**
+     * ToServer constructor
+     * @param name the name of the player
+     * @param id the id of the client
+     */
+    public PlayerNameMessage(String name, String id) {
         this.name = name;
-        this.confirmation = confirmation;
         this.id = id;
     }
 
-    public PlayerNameMessage(Boolean confirmation){this.confirmation = confirmation;}
-
+    /**
+     * Asks the server controller to add a player with a certain name
+     * @param controller the controller where the message will be executed
+     */
     @Override
     public void serverExecute(Controller controller){
 
         try {
-            controller.getConnectionHandler().setName(this.name, this.id);
+            controller.addPlayer(this.name, this.id);
         } catch (IllegalArgumentException e) {
             InvalidNameMessage message = new InvalidNameMessage();
             try{
@@ -63,6 +77,10 @@ public class PlayerNameMessage implements ToClientMessage, ToServerMessage, Seri
 
     }
 
+    /**
+     * Notifies the client with the outcome of his request
+     * @param controller the controller where the message will be executed
+     */
     @Override
     public void clientExecute(ClientController controller) {
         controller.setName(confirmation);

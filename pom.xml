@@ -141,10 +141,10 @@
                 <version>0.0.8</version>
                 <executions>
                     <execution>
-                        <!-- Default configuration for running with: mvn clean javafx:run -->
+                        <!-- Default configuration for running with: mvn clean javafx:Interface -->
                         <id>default-main</id>
                         <configuration>
-                            <mainClass>it.am04.demo1/theMain</mainClass>
+                            <mainClass>it.am04.demo1/Client.Interface.theMain</mainClass>
                             <launcher>app</launcher>
                             <jlinkZipName>app</jlinkZipName>
                             <jlinkImageName>app</jlinkImageName>

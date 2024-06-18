@@ -1,4 +1,4 @@
-package run;
+package Interface;
 
 import Server.Card.AchievementCard;
 import Server.Enums.Decks;
@@ -12,6 +12,10 @@ import javafx.scene.image.ImageView;
 
 import java.util.List;
 
+/**
+ * This class is responsible for the logic of the scene where the player chooses the secret achievement card.
+
+ */
 public class ChooseSecretCardController extends SceneController {
     @FXML
     public Button confirmButton;

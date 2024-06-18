@@ -40,6 +40,10 @@ public class ServerConnectionHandlerRMI implements ServerConnectionHandler, Remo
 
     private int port;
 
+    /**
+     * Standard constructor
+     * Asks for the port to start the rmi server on and starts it on that port, or the next available one
+     */
     public ServerConnectionHandlerRMI() {
         askForPort();
         while (!startServer(port)) {
@@ -49,7 +53,10 @@ public class ServerConnectionHandlerRMI implements ServerConnectionHandler, Remo
         System.out.println("[RMI] Server avviato sulla porta: " + port);
 
     }
-
+    /**
+     * Debug constructor
+     * @param debugMode if true, the server will start on port 1235, or the next available one
+     */
     public ServerConnectionHandlerRMI(boolean debugMode) {
         if (debugMode) {
             port = 1235;
@@ -64,13 +71,12 @@ public class ServerConnectionHandlerRMI implements ServerConnectionHandler, Remo
     }
 
     /**
-     * Starts the server on the specified port.
+     * Starts the RMI server on the specified port.
      * If the port is not available will try the following one, and so on until it finds one.
      * If non is found will return false.
      * @param port the port to start the server on
      * @return true if started successfully
      */
-
     private boolean startServer(int port) {
         try {
             String ip;
@@ -106,6 +112,9 @@ public class ServerConnectionHandlerRMI implements ServerConnectionHandler, Remo
         }
     }
 
+    /**
+     * Asks the user for the port to start the server on
+     */
     private void askForPort() {
         System.out.println("[RMI] Inserire la porta su cui avviare il server: ");
         Scanner scanner = new Scanner(System.in);
@@ -129,11 +138,6 @@ public class ServerConnectionHandlerRMI implements ServerConnectionHandler, Remo
         return stub;
     }
 
-    /**
-     * Send a message to all the clients
-     *
-     * @param message the message to send
-     */
     @Override
     public void sendAllMessage(ToClientMessage message) {
         pingAll();
@@ -150,11 +154,6 @@ public class ServerConnectionHandlerRMI implements ServerConnectionHandler, Remo
         }
     }
 
-    /**
-     * Send a message to a specific client
-     * @param id the name of the client to send the message to
-     * @param message the message to send
-     */
     public void sendMessage(ToClientMessage message, String id) {
         ping(id);
         try{
@@ -165,11 +164,7 @@ public class ServerConnectionHandlerRMI implements ServerConnectionHandler, Remo
         }
     }
 
-    /**
-     * Execute a message
-     *
-     * @param message the message to execute
-     */
+
     @Override
     public void executeMessage(ToServerMessage message) {
         synchronized (controller) {
@@ -178,23 +173,15 @@ public class ServerConnectionHandlerRMI implements ServerConnectionHandler, Remo
         }
     }
 
-    /**
-     * Kill a client
-     *
-     * @param id the id of the client to kill
-     */
+
     @Override
-    public void killClient(String id) {
+    public void killClient(String id){
 
         clients.remove(id);
         System.out.println("Client killed. Sending message");
 
     }
 
-    @Override
-    public void setName(String name, String clientID) throws IllegalArgumentException, TooManyPlayersException, AlreadyStartedException {
-        controller.addPlayer(name, clientID);
-    }
 
     public LobbyPlayersMessage join(int rmi_port) throws RemoteException, NotBoundException {
         Random rand = new Random();
@@ -257,14 +244,10 @@ public class ServerConnectionHandlerRMI implements ServerConnectionHandler, Remo
 
     /**
      * Checks for an association between an id and a ClientConnectionHandler
-     * @param id the id of the client
-     * @return true if client id is present
+     * @param id the id to check
+     * @return true if the association exists, false otherwise
      */
     public boolean isClientAvailable(String id) {
         return clients.containsKey(id);
-    }
-
-    public void changeId(String oldId, String newId) {
-        clients.remove(oldId);
     }
 }

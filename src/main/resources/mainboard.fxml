@@ -18,7 +18,7 @@
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="768.0"
             prefWidth="1024.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="run.MainBoardSceneController">
+            fx:controller="Interface.MainBoardSceneController">
     <TabPane fx:id="tabPane" layoutX="300.0" prefHeight="500.0" prefWidth="724.0" tabClosingPolicy="UNAVAILABLE"
              AnchorPane.leftAnchor="300.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
         <Tab text="You">

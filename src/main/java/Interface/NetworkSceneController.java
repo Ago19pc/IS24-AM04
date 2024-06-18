@@ -1,9 +1,11 @@
-package run;
+package Interface;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.RadioButton;
-
+/**
+ * This class is responsible for the logic of the scene where the player chooses the connection method.
+ */
 public class NetworkSceneController extends SceneController{
     public RadioButton rmi_radio_button, socket_radio_button;
     public Button next_button;

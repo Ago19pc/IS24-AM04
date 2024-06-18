@@ -1,4 +1,4 @@
-package run;
+package Interface;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -7,7 +7,10 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.Pane;
 
+/**
+ * This class is responsible for the logic of the scene where the player chooses the name and sets ready (in order to reconnect to a game).
 
+ */
 public class NameReadySceneController extends SceneController{
 
     @FXML

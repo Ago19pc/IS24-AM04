@@ -1,4 +1,4 @@
-package run;
+package Interface;
 
 import Server.Card.Card;
 import Server.Card.CornerCardFace;
@@ -14,6 +14,9 @@ import Server.Enums.Face;
 import static Server.Enums.Face.BACK;
 import static Server.Enums.Face.FRONT;
 
+/**
+ * This class is responsible for the logic of the scene where the player chooses the starting card face.
+ */
 public class ChooseStartingCardController extends SceneController {
     @FXML
     public Button confirmButton;

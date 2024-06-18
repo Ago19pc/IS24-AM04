@@ -16,7 +16,9 @@ import Server.Player.PlayerInstance;
 import java.io.*;
 import java.util.*;
 
-
+/**
+ * Implementation of the GameModel interface
+ */
 public class GameModelInstance implements GameModel{
     private ResourceDeck resourceDeck;
     private GoldDeck goldDeck;
@@ -131,65 +133,49 @@ public class GameModelInstance implements GameModel{
         playerList.add(playerInstance);
     }
 
-    /**
-     * Adds 1 to turn
-     */
+
     @Override
     public void nextTurn() {
         this.turn++;
     }
 
-    /**
-     * @return ResourceDeck the resource deck
-     */
+
     @Override
     public ResourceDeck getResourceDeck() {
         return this.resourceDeck;
     }
 
-    /**
-     * @return GoldDeck the gold deck
-     */
+
     @Override
     public GoldDeck getGoldDeck() {
         return this.goldDeck;
     }
 
-    /**
-     * @return AchievementDeck the achievement deck
-     */
+
     @Override
     public AchievementDeck getAchievementDeck() {
         return this.achievementDeck;
     }
 
-    /**
-     * @return List<StartingCard> the starting cards
-     */
+
     @Override
     public List<StartingCard> getStartingCards() {
         return this.startingCards;
     }
 
-    /**
-     * @return int the turn
-     */
+
     @Override
     public int getTurn() {
         return this.turn;
     }
 
-    /**
-     * @return boolean true if the game is in the end game phase
-     */
+
     @Override
     public boolean isEndGamePhase() {
         return this.isEndGamePhase;
     }
 
-    /**
-     * Set the game to the end game phase
-     */
+
     @Override
     public void setEndGamePhase() throws AlreadySetException {
         if(isEndGamePhase){

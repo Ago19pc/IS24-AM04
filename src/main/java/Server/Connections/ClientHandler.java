@@ -7,6 +7,12 @@ import Server.Messages.ToClientMessage;
 import java.io.IOException;
 import java.net.Socket;
 
+/**
+ * This class is used to represent socket clients in the server. It manages the using the sender and receiver classes.
+ * It is created by the ServerConnectionHandlerSOCKET when a new client connects.
+ * @see ServerSender
+ * @see ServerReceiver
+ */
 public class ClientHandler extends Thread {
     private final Socket socket;
     private final ServerConnectionHandlerSOCKET connectionHandler;
@@ -77,6 +83,7 @@ public class ClientHandler extends Thread {
 
     /**
      * Returns the associated ServerConnectionHandler
+     * @return the ServerConnectionHandler
      */
     public ServerConnectionHandlerSOCKET getServerConnectionHandler() {
         return this.connectionHandler;
@@ -84,6 +91,7 @@ public class ClientHandler extends Thread {
 
     /**
      * Returns the receiver of this client
+     * @return the receiver
      */
     public ServerReceiver getReceiver() {
         return this.receiver;
@@ -97,12 +105,23 @@ public class ClientHandler extends Thread {
         return this.socket.getInetAddress().getHostAddress();
     }
 
+    /**
+     * get this client's port
+     * @return the client's port
+     */
     public int getSocketPort() {
         return this.socket.getPort();
     }
 
-
+    /**
+     * checks if the client is online
+     * @return true if the socket is connected, false otherwise
+     */
     public boolean isOnline() {return this.socket.isConnected();}
+    /**
+     * checks if the client is closed
+     * @return true if the socket is closed, false otherwise
+     */
     public boolean isClosed() {return this.socket.isClosed();}
     }
 

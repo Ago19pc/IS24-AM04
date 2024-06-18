@@ -7,6 +7,9 @@ import Server.Card.ResourceCard;
 import java.io.Serializable;
 import java.util.List;
 
+/**
+ * Message to send the client the starting deck data
+ */
 public class StartGameMessage implements Serializable, ToClientMessage {
     private final List<GoldCard> goldBoardCards;
     private final List<ResourceCard> resourceBoardCards;

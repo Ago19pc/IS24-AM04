@@ -5,6 +5,9 @@ import Server.Card.CornerCardFace;
 
 import java.io.Serializable;
 
+/**
+ * Message to inform the client that a player has placed a card on the board
+ */
 public class OtherPlayerPlayCardMessage implements Serializable, ToClientMessage {
     final String playerName;
     final CornerCardFace placedCardFace;

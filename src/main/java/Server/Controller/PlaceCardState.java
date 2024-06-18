@@ -17,6 +17,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+/**
+ * Class for the state where players place their cards
+ */
 public class PlaceCardState implements ServerState{
     private Controller controller;
     private GameModel gameModel;
@@ -45,21 +48,6 @@ public class PlaceCardState implements ServerState{
                 e.printStackTrace();
             }
         }
-    }
-
-    @Override
-    public void setPlayerColor() {
-
-    }
-
-    @Override
-    public void setSecretObjectiveCard() {
-
-    }
-
-    @Override
-    public void setStartingCard() {
-
     }
 
     @Override

@@ -5,6 +5,10 @@ import Server.Messages.ToServerMessage;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 
+/**
+ * This class is responsible for sending messages to the server on a socket client.
+ */
+
 public class ClientSender{
 
     private ObjectOutputStream out;
@@ -27,7 +31,7 @@ public class ClientSender{
 
     /**
      * Sends a message to the server.
-     * @param message String, the message to send.
+     * @param message the message to send.
      */
     public void sendMessage(ToServerMessage message) throws IOException {
         out.writeObject(message);

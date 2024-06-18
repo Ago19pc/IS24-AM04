@@ -1,25 +1,33 @@
 package theMain;
 
 import Server.Main;
-import run.MainCLI;
-import run.MainGUI;
+import Interface.MainCLI;
+import Interface.MainGUI;
 
 import java.rmi.RemoteException;
 import java.util.Scanner;
 
 
-
+/**
+ * Main class of the game
+ */
 public class main {
 
     private static final Scanner scanner = new Scanner(System.in);
 
+    /**
+     * Starts the game
+     * @param args the arguments
+     */
     public static void main(String[] args) {
         System.out.println("----------[WELCOME TO CODEX NATURALIS]----------");
         System.out.println("[CODEXBOT]: Hi, what would you like to be? Host or Client?");
         procedure();
     }
 
-
+    /**
+     * Asks the user if he wants to be the host or the client, then starts what he chose
+     */
     private static void procedure() {
         System.out.println("[CODEXBOT]: Type 'host' to be the host or 'client' to be the client.");
         System.out.println("[CODEXBOT]: Type 'gclient' to be the client with GUI or 'tclient' to be the client with TUI.");

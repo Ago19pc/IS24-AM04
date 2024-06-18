@@ -6,6 +6,9 @@ import Server.Card.AchievementCard;
 import java.io.Serializable;
 import java.util.List;
 
+/**
+ * This message is used to send the achievement cards to the client
+ */
 public class AchievementCardsMessage implements Serializable, ToClientMessage {
 
     private final List<AchievementCard> secretCards;

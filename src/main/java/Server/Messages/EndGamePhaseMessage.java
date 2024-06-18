@@ -4,6 +4,9 @@ import Client.Controller.ClientController;
 
 import java.io.Serializable;
 
+/**
+ * This message is used to inform the client that the end game phase has started
+ */
 public class EndGamePhaseMessage implements Serializable, ToClientMessage {
 
     public EndGamePhaseMessage() {

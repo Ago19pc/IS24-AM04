@@ -10,6 +10,9 @@ import Server.Player.Player;
 
 import java.io.Serializable;
 
+/**
+ * Message to ask the server to set a player as ready or not ready and to notify the clients that a player is ready or not ready
+ */
 public class ReadyStatusMessage implements Serializable, ToClientMessage, ToServerMessage {
     private final boolean ready;
     private final String nameOrId;
@@ -18,6 +21,11 @@ public class ReadyStatusMessage implements Serializable, ToClientMessage, ToServ
         this.ready = isReady;
         this.nameOrId = nameOrId;
     }
+
+    /**
+     * Asks the server controller to set a player as ready or not ready
+     * @param controller the controller where the message will be executed
+     */
     @Override
     public void serverExecute(Controller controller) {
         String playerName = "";
@@ -48,6 +56,10 @@ public class ReadyStatusMessage implements Serializable, ToClientMessage, ToServ
 
     }
 
+    /**
+     * Notifies the clients that a player is ready or not ready
+     * @param controller the controller where the message will be executed
+     */
     @Override
     public void clientExecute(ClientController controller) {
         controller.updatePlayerReady(this.ready, this.nameOrId);

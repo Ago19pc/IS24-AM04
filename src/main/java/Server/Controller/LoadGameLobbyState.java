@@ -15,7 +15,10 @@ import Server.Player.Player;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+/**
+ * Class for the state where the saved game lobby is
 
+ */
 public class LoadGameLobbyState implements ServerState{
     private GeneralServerConnectionHandler connectionHandler;
     private GameModel gameModel;
@@ -100,21 +103,6 @@ public class LoadGameLobbyState implements ServerState{
     @Override
     public void removePlayer(Player player) {
         //do nothing
-    }
-
-    @Override
-    public void setPlayerColor() {
-
-    }
-
-    @Override
-    public void setSecretObjectiveCard() {
-
-    }
-
-    @Override
-    public void setStartingCard() {
-
     }
 
     @Override

@@ -12,53 +12,64 @@ import Server.Manuscript.Manuscript;
 import java.io.Serializable;
 import java.util.List;
 
+/**
+ * Interface for a player
+ */
 public interface Player extends Serializable {
     /**
      * Add a card to the player's hand
      * @param card the card to add
+     * @throws TooManyElementsException if the player's hand is full
      */
     void addCardToHand(Card card) throws TooManyElementsException;
 
     /**
      * Remove a card from the player's hand
      * @param position the position card to remove
+     * @throws IndexOutOfBoundsException if the hand does not have the position
      */
     void removeCardFromHand(int position) throws IndexOutOfBoundsException, TooFewElementsException;
 
     /**
      * Returns the player's hand
-     * @return List<Card> the player's hand
+     * @return the player's hand
      */
     List<Card> getHand();
 
     /**
-     * @return Manuscript the player's manuscript
+     * Returns the player's manuscript
+     * @return the player's manuscript
      */
     Manuscript getManuscript();
 
     /**
-     * @return String the player's name
+     * Returns the player's name
+     * @return the player's name
      */
     String getName();
 
     /**
-     * @return Color the player's color
+     * Returns the player's color
+     * @return the player's color
      */
     Color getColor();
 
     /**
-     * @return AchievementCard the player's secret objective
+     * Returns the player's secret objective
+     * @return the player's secret objective
      */
     AchievementCard getSecretObjective();
 
     /**
-     * @return int the player's points
+     * Returns the player's points
+     * @return the player's points
      */
     int getPoints();
 
     /**
      * Set the player's secret objective
      * @param achievementCard the secret objective card
+     * @throws AlreadySetException if the secret objective has already been set
      */
     void setSecretObjective(AchievementCard achievementCard) throws AlreadySetException;
 
@@ -78,16 +89,19 @@ public interface Player extends Serializable {
      * Initialize the player's manuscript
      * @param startingCard the manuscript's starting card
      * @param face the face of the starting card
+     * @throws AlreadySetException if the manuscript has already been set
      */
     void initializeManuscript(Card startingCard, Face face) throws AlreadySetException;
 
 
     /**
      * Sets a player ready status
+     * @param ready the player's ready status
      */
     void setReady(boolean ready);
 
     /**
+     * Returns the player's ready status
      * @return boolean the player's ready status
      */
     boolean isReady();

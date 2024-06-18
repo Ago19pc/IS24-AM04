@@ -8,6 +8,9 @@ import Server.Player.Player;
 
 import java.io.Serializable;
 
+/**
+ * Message to ask the server to place a card
+ */
 public class PlayCardMessage implements Serializable, ToServerMessage{
     private final String id;
     private final int cardNumber;

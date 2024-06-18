@@ -6,6 +6,10 @@ import Server.Enums.Symbol;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * This class represents the front face of resource cards. Gold front faces extend this class
+ * @see GoldFrontFace
+ */
 public class ResourceFrontFace extends CornerCardFace {
     private final int score;
     private final Symbol kingdom;
@@ -23,10 +27,7 @@ public class ResourceFrontFace extends CornerCardFace {
         this.kingdom = kingdom;
     }
 
-    /**
-     * Returns the score
-     * @return int the score
-     */
+
     public int getScore() throws UnsupportedOperationException{
         return score;
     }
@@ -34,22 +35,32 @@ public class ResourceFrontFace extends CornerCardFace {
     public Symbol getKingdom() throws UnsupportedOperationException{
         return kingdom;
     }
-
+    /**
+     * @throws UnsupportedOperationException because resource cards do not have score requirements
+     */
     @Override
     public Map<Symbol, Integer> getScoreRequirements() throws UnsupportedOperationException {
         throw new UnsupportedOperationException("Resource cards do not have score requirements");
     }
-
+    /**
+     * @throws UnsupportedOperationException because resource cards do not have placement requirements
+     */
     @Override
     public Map<Symbol, Integer> getPlacementRequirements() throws UnsupportedOperationException{
         throw new UnsupportedOperationException("Resource cards do not have placement requirements");
     }
-
+    /**
+     * @throws UnsupportedOperationException because front faces of resource cards do not have center symbols
+     */
     @Override
     public List<Symbol> getCenterSymbols() throws UnsupportedOperationException{
         throw new UnsupportedOperationException("Resource cards do not have center symbols");
     }
 
+    /**
+     * Returns a string representation of the card
+     * @return a string representation of the card
+     */
     @Override
     public String toString() {
         String toReturn = "Regno: " + kingdom;

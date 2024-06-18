@@ -1,4 +1,4 @@
-package run;
+package Interface;
 
 import Client.Controller.ClientController;
 import Server.Card.Card;
@@ -16,7 +16,7 @@ import java.util.Map;
 import java.util.ResourceBundle;
 
 /**
- * Interface for SceneController
+ * Abstract class for SceneController, which contains the scene logic
  */
 public abstract class SceneController implements Initializable {
     protected ClientController controller;
@@ -30,6 +30,7 @@ public abstract class SceneController implements Initializable {
      * @param controller the ClientController
      * @param stage the stage
      * @param sceneMap the map of scenes
+     * @param sceneControllerMap the map that links scene names to scene controllers
      */
     public void setAll(ClientController controller, Stage stage, Map<SceneName, Scene> sceneMap, Map<SceneName,SceneController> sceneControllerMap) {
         this.controller = controller;
@@ -38,8 +39,16 @@ public abstract class SceneController implements Initializable {
         this.sceneControllerMap = sceneControllerMap;
     }
 
+    /**
+     * Initializes the controller
+     * @param url the url for relative paths
+     * @param resourceBundle the resources used to initialize the controller
+     */
     public void initialize(URL url, ResourceBundle resourceBundle) {}
 
+    /**
+     * Sets up the scene by doing initial operations
+     */
     public void setup(){}
     /**
      * Returns the image of the card

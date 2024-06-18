@@ -11,6 +11,9 @@ import Server.Player.Player;
 import java.io.Serializable;
 import java.util.Objects;
 
+/**
+ * Message to ask the server to set the color and to notify the client that a player has set his color
+ */
 public class PlayerColorMessage implements Serializable, ToClientMessage, ToServerMessage {
 
     private String name;
@@ -18,17 +21,32 @@ public class PlayerColorMessage implements Serializable, ToClientMessage, ToServ
     private boolean confirmation;
     private String id;
 
+    /**
+     * ToServer constructor
+     * @param color the color the player wants to set
+     * @param id  the id of the client
+     */
     public PlayerColorMessage(Color color, String id){
         this.color = color;
         this.id = id;
     }
 
+    /**
+     * ToClient constructor
+     * @param confirmation true if the color was set, false otherwise
+     * @param name the name of the player
+     * @param color the color the player set
+     */
     public PlayerColorMessage(Boolean confirmation, String name, Color color){
         this.confirmation = confirmation;
         this.name = name;
         this.color = color;
     }
 
+    /**
+     * Asks the server controller to set the color of the player
+     * @param controller the controller where the message will be executed
+     */
     @Override
     public void serverExecute(Controller controller){
         String playerName = "";
@@ -54,6 +72,10 @@ public class PlayerColorMessage implements Serializable, ToClientMessage, ToServ
         }
     }
 
+    /**
+     * Notifies the client controller that a player has set his color
+     * @param controller the controller where the message will be executed
+     */
     @Override
     public void clientExecute(ClientController controller) {
         if(!Objects.equals(this.name, controller.getMyName())){

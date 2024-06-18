@@ -12,8 +12,7 @@ import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 
 /**
- * This class handles the connection between the client and the server using RMI
- * The ClientConnectionHandlerRMI port is set to 1100
+ * This class handles the connection between the client and the server using RMI.
  */
 public class ClientConnectionHandlerRMI implements ClientConnectionHandler {
     Registry serverRegistry;
@@ -27,36 +26,35 @@ public class ClientConnectionHandlerRMI implements ClientConnectionHandler {
 
     /**
      * Sets the port for the RMI connection
-     * @param rmi_port, the port
-     * @throws RemoteException like all RMI stuff
+     * @param rmi_port the port
      */
-    public ClientConnectionHandlerRMI(int rmi_port) throws RemoteException {
+    public ClientConnectionHandlerRMI(int rmi_port){
         this.rmi_client_port = rmi_port;
     }
 
+    /**
+     * Sets the server to connect to using host name
+     *
+     * @param server_rmi_host the host to connect to
+     */
     public void setServer(String server_rmi_host, int serverPort) throws RemoteException {
         serverRegistry = LocateRegistry.getRegistry(server_rmi_host, serverPort);
         try {
             server = (ServerConnectionHandler) serverRegistry.lookup("ServerConnectionHandler");
         } catch (Exception e) {
-            System.out.println("[RMI] Error with registryLookup");
+            System.out.println("[RMI] Error with registryLookup: " + e.getMessage());
         }
 
     }
 
     /**
-     * Sets the controller
-     * @param controller the ClientController
+     * Sets the controller. It is used to execute incoming messages
+     *
+     * @param controller the controller to use
      */
     public void setController(ClientController controller) {
         this.controller = controller;
     }
-
-    /**
-     * Send a message to the server
-     *
-     * @param message the message to send
-     */
 
     @Override
     public void sendMessage(ToServerMessage message) {
@@ -67,44 +65,43 @@ public class ClientConnectionHandlerRMI implements ClientConnectionHandler {
         try {
             server.executeMessage(message);
         } catch (RemoteException e) {
-            System.err.println("Error while sending message to the server");
+            System.err.println("Error while sending message to the server" + e.getMessage());
         }
     }
-    /**
-     * Execute a message
-     *
-     * @param message the message to execute
-     */
     @Override
     public void executeMessage(ToClientMessage message)  {
         message.clientExecute(controller);
     }
 
     /**
-     * Save the server in the local variable
+     * Sets the server to connect to using a ServerConnectionHandler
+     *
+     * @param server the server to connect to
      */
     public void setServer(ServerConnectionHandler server) {
         this.server = server;
     }
 
     /**
-     * For the ping returns true
+     * @return true because this is an RMI connection
+     * @see ClientConnectionHandler
      */
+    @Override
     public boolean ping() {
         return true;
     }
 
     /**
-     * Get the RMI client port
-     * @return the RMI client port
+     * Gets the client port used for the RMI connection
+     * @return the client port
      */
     public int getRmi_client_port() {
         return rmi_client_port;
     }
 
     /**
-     * Set the RMI client port
-     * @param rmi_client_port the port of RMI client
+     * Starts the RMI service on the given port. If the port is already in use, it will try the next one.
+     * @param rmi_client_port the client port
      */
     public void setRmi_client_port(int rmi_client_port) {
         this.rmi_client_port = rmi_client_port;

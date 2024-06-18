@@ -8,6 +8,9 @@ import java.util.Map;
 
 import static Server.Enums.Symbol.EMPTY;
 
+/**
+ * This class represents the back face of gold and resource cards
+ */
 public class RegularBackFace extends CornerCardFace {
     private final List<Symbol> centerSymbols;
     private final Symbol kingdom;
@@ -27,34 +30,41 @@ public class RegularBackFace extends CornerCardFace {
         this.kingdom = centerSymbols.getFirst();
     }
 
-    /**
-     * Returns the center symbols
-     * @return List<Symbol> the center symbols
-     */
+
     public List<Symbol> getCenterSymbols() throws UnsupportedOperationException{
         return centerSymbols;
     }
 
-    /**
-     * Returns the kingdom symbol
-     * @return Symbol the kingdom symbol
-     */
+
     public Symbol getKingdom() throws UnsupportedOperationException{
         return kingdom;
     }
+    /**
+     * @throws UnsupportedOperationException because regular back card faces do not have score requirements
+     */
     @Override
     public Map<Symbol, Integer> getScoreRequirements() throws UnsupportedOperationException{
         throw new UnsupportedOperationException("Regular cards do not have score requirements");
     }
+    /**
+     * @throws UnsupportedOperationException because regular back card faces do not have placement requirements
+     */
     @Override
     public Map<Symbol, Integer> getPlacementRequirements() throws UnsupportedOperationException{
         throw new UnsupportedOperationException("Regular cards do not have placement requirements");
     }
+    /**
+     * @throws UnsupportedOperationException because regular back card faces do not have a score
+     */
     @Override
     public int getScore() throws UnsupportedOperationException{
         throw new UnsupportedOperationException("Regular cards do not have scores");
     }
 
+    /**
+     * Gets a string representation of the card face
+     * @return the string representation
+     */
     public String toString() {
         String toReturn = "Regno: " + kingdom;
         toReturn += "\n" + super.toString() + "\n";

@@ -8,12 +8,16 @@ import Server.Enums.CardCorners;
 import Server.Enums.DeckPosition;
 import Server.Enums.Symbol;
 import Server.Exception.AlreadyFinishedException;
+import Server.Exception.IncorrectDeckPositionException;
 
 import java.io.*;
 import java.util.*;
 
 import static Server.Enums.DeckPosition.*;
 
+/**
+ * Class for the Resource cards Deck
+ */
 public class ResourceDeck implements Deckable {
     protected final List<ResourceCard> cards;
     private final Map<DeckPosition, ResourceCard> boardCards;
@@ -31,19 +35,6 @@ public class ResourceDeck implements Deckable {
             System.err.println("Error while moving cards to the board, generating resource deck");
         }
     }
-    public ResourceDeck(Boolean test){
-        this.boardCards = new HashMap<>();
-        this.cards = new ArrayList<>();
-        boardCards.put(FIRST_CARD, null);
-        boardCards.put(SECOND_CARD, null);
-        createCards();
-        try {
-            moveCardToBoard(FIRST_CARD);
-            moveCardToBoard(SECOND_CARD);
-        } catch (Exception e) {
-            System.err.println("Error while moving cards to the board, generating resource deck");
-        }
-    }
 
     /**
      * Shuffle the deck
@@ -54,6 +45,7 @@ public class ResourceDeck implements Deckable {
     }
 
     /**
+     * Moves a card from the deck to the board
      * @param where_to the position to add the card to
      */
     public void moveCardToBoard(DeckPosition where_to) {
@@ -64,12 +56,17 @@ public class ResourceDeck implements Deckable {
             } catch (AlreadyFinishedException e) {
                 cardToMove = null;
             }
-            addCard(cardToMove, where_to);
+            try {
+                addCard(cardToMove, where_to);
+            } catch (IncorrectDeckPositionException e) {
+                e.printStackTrace();
+            }
         }
     }
 
     /**
-     * @return Card the card from the position
+     * Gets the board cards (common achievements)
+     * @return a map linking board positions to the cards
      */
     public Map<DeckPosition, ResourceCard> getBoardCard() {
         Map<DeckPosition, ResourceCard> boardCardsToReturn = new HashMap<>();
@@ -80,10 +77,7 @@ public class ResourceDeck implements Deckable {
         return boardCardsToReturn;
     }
 
-    /**
-     * @param position the position pop the card from
-     * @return Card the popped card
-     */
+
     public ResourceCard popCard(DeckPosition position) throws  AlreadyFinishedException{
 
             if (position == DECK) {
@@ -105,19 +99,15 @@ public class ResourceDeck implements Deckable {
 
     }
 
-    /**
-     * @return boolean true if the deck is empty (and there are no board cards)
-     */
+
     public boolean isEmpty() {
         return cards.isEmpty() && boardCards.get(FIRST_CARD) == null && boardCards.get(SECOND_CARD) == null;
     }
 
-    /**
-     * Add card to the board in the specified position
-     * @param card card to add
-     * @param position position to add the card to
-     */
-    public void addCard(Card card, DeckPosition position) {
+
+    public void addCard(Card card, DeckPosition position) throws IncorrectDeckPositionException {
+        if (position == DECK)
+            throw new IncorrectDeckPositionException("Cannot add card to the deck, only to FIST_CARD or SECOND_CARD.");
         if (position != DECK)
             boardCards.put(position, (ResourceCard) card);
     }
@@ -130,6 +120,7 @@ public class ResourceDeck implements Deckable {
     }
 
     /**
+     * Returns the number of cards in the deck
      * @return int the number of cards in the deck
      */
     public int getNumberOfCards() {
