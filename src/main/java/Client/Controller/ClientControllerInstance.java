@@ -268,7 +268,7 @@ public class ClientControllerInstance implements ClientController {
     @Override
     public void askSetName(String name) {
         this.proposedName = name;
-        PlayerNameMessage playerNameMessage = new PlayerNameMessage(proposedName, true, id);
+        PlayerNameMessage playerNameMessage = new PlayerNameMessage(proposedName, id);
         clientConnectionHandler.sendMessage(playerNameMessage);
     }
 
@@ -330,15 +330,6 @@ public class ClientControllerInstance implements ClientController {
     }
 
     //ui getters
-
-    /**
-     * Index of the secretAchievementCard chosen
-     * @return the index
-     */
-    @Override
-    public int getIndexofSecretAchievement() {
-        return indexofSecretAchievement;
-    }
 
     /**
      * Getter for the name
@@ -785,15 +776,11 @@ public class ClientControllerInstance implements ClientController {
 
     /**
      * Sets the secret card to player
-     * @param name the name of the player
      * @param chosenCard the index of the card chosen
      */
     @Override
-    public void setSecretCard(String name, int chosenCard){
-        if (name.equals(myName)){
-            indexofSecretAchievement = chosenCard;
-            setSecretCard(name);
-        }
+    public void setSecretCard(int chosenCard){
+        indexofSecretAchievement = chosenCard;
     }
 
     /**
@@ -1043,5 +1030,10 @@ public class ClientControllerInstance implements ClientController {
     @Override
     public void gameAlreadyFinished() {
         ui.gameAlreadyFinished();
+    }
+
+    @Override
+    public int getIndexofSecretAchievement() {
+        return indexofSecretAchievement;
     }
 }

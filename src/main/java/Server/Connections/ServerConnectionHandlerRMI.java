@@ -243,8 +243,4 @@ public class ServerConnectionHandlerRMI implements ServerConnectionHandler, Remo
     public boolean isClientAvailable(String id) {
         return clients.containsKey(id);
     }
-
-    public void changeId(String oldId, String newId) {
-        clients.remove(oldId);
-    }
 }

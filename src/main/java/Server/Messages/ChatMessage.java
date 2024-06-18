@@ -8,6 +8,7 @@ import Server.Exception.PlayerNotInAnyServerConnectionHandlerException;
 import Server.Player.Player;
 
 import java.io.Serializable;
+import java.rmi.RemoteException;
 
 /**
  * This message is used to send a message to the chat and update the clients
@@ -27,7 +28,7 @@ public class ChatMessage implements Serializable, ToServerMessage, ToClientMessa
      */
     @Override
     public void serverExecute(Controller controller) {
-        String playerName;
+        String playerName = "";
         try {
             playerName = controller.getConnectionHandler().getPlayerNameByID(this.nameOrId);
             Player player = controller.getPlayerByName(playerName);
@@ -38,7 +39,7 @@ public class ChatMessage implements Serializable, ToServerMessage, ToClientMessa
                 controller.getConnectionHandler().getServerConnectionHandler(nameOrId).sendMessage(message, nameOrId);
             } catch (PlayerNotInAnyServerConnectionHandlerException exception) {
                 System.out.println("Player not found");
-            } catch (java.rmi.RemoteException exception) {
+            } catch (RemoteException exception) {
                 System.out.println("Remote exception");
             }
         } catch (IllegalArgumentException e) {

@@ -461,4 +461,10 @@ public interface ClientController {
      * Displays that the game has already finished
      */
     void gameAlreadyFinished();
+
+    /**
+     * Gets the index of the secret achievement card the player has chosen
+     * @return the index
+     */
+    int getIndexofSecretAchievement();
 }

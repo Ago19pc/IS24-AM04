@@ -14,7 +14,7 @@ import java.rmi.RemoteException;
  */
 public class PlayerNameMessage implements ToClientMessage, ToServerMessage, Serializable {
     private String name;
-    private final boolean confirmation;
+    private boolean confirmation;
     private String id;
 
     /**

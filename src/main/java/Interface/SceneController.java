@@ -44,7 +44,7 @@ public abstract class SceneController implements Initializable {
      * @param url the url for relative paths
      * @param resourceBundle the resources used to initialize the controller
      */
-    public void initialize(URL url, ResourceBundle resourceBundle) {
+    public void initialize(URL url, ResourceBundle resourceBundle) {}
 
     public void setup(){}
     /**

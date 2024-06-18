@@ -49,7 +49,7 @@ public interface ServerConnectionHandler extends Remote {
      * @param id the name id the client to check
      */
     boolean isClientAvailable(String id) throws RemoteException;
-    void setName(String name, String clientID) throws RemoteException, IllegalArgumentException, TooManyPlayersException, AlreadyStartedException;
+
     /**
      * Get all the ids of the clients connected with this connection type
      * @return a list of all the ids of the clients connected
@@ -72,6 +72,4 @@ public interface ServerConnectionHandler extends Remote {
      * @return the message with the required client data
      */
     LobbyPlayersMessage join(int rmi_port) throws RemoteException, NotBoundException;
-
-    void changeId(String oldId, String newId) throws RemoteException;
 }

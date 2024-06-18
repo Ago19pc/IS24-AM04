@@ -162,11 +162,7 @@ public class ControllerInstance implements Controller{
                 break;
             case PLACE_CARD, DRAW_CARD:
                 if(getPlayerList().size() == 1){
-                    try{
-                        computeLeaderboard();
-                    } catch (AlreadyFinishedException e) {
-                        System.err.println("Error while computing leaderboard");
-                    }
+                    computeLeaderboard();
                 }
                 break;
             default:
@@ -392,12 +388,8 @@ public class ControllerInstance implements Controller{
         //if it is end game and all players have played also an extra round, calculate leaderboard
         if(gameModel.isEndGamePhase() && gameModel.getActivePlayerIndex() == getPlayerList().size() - 1 ){
             if(gameModel.isLastRound()){
-                try{
-                    computeLeaderboard();
-                    return;
-                } catch (AlreadyFinishedException e) {
-                    System.err.println("Error while computing leaderboard");
-                }
+                computeLeaderboard();
+                return;
             } else {
                 gameModel.setLastRound(true);
             }
