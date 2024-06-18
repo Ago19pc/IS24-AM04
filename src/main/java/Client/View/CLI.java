@@ -2,10 +2,13 @@ package Client.View;
 
 import Client.Controller.ClientController;
 import Client.Player;
+import Interface.MainBoardSceneController;
+import Interface.SceneName;
 import Server.Card.AchievementCard;
 import Server.Card.Card;
 import Server.Card.CornerCardFace;
 import Server.Chat.Message;
+import Client.View.StartingCardChoiceState;
 import Server.Enums.*;
 import Server.Exception.PlayerNotFoundByNameException;
 
@@ -16,11 +19,18 @@ import java.util.*;
 public class CLI extends Thread implements UI {
     private final ClientController controller;
     private final Scanner in = new Scanner(System.in);
-
+    private CLIState scene;
 
     public CLI(ClientController controller){
         System.out.println("Avvio gioco...");
         this.controller = controller;
+    }
+
+    /**
+     * Changes the scene of the CLI
+     */
+    public void changeScene(CLIState scene) {
+        this.scene = scene;
     }
 
     /**
@@ -41,223 +51,53 @@ public class CLI extends Thread implements UI {
     }
 
     /**
-     * Runs CLI thread: reads input from the console and calls the decoding method
+     * Runs CLI thread: Initializes the scene then reads input from the console and calls the decoding method
      */
     public void run(){
-        askConnectionMode();
-        printOnNewLine("> Digita \"help\" per la lista dei comandi");
-        printPromptLine();
+        changeScene(new NetworkState(this));
         while(true){
             String[] args = in.nextLine().split(" ");
-            decode(args);
+            scene.decode(args);
         }
     }
 
     public void askConnectionMode(){
         printOnNewLine("Vuoi connetterti tramite RMI o SOCKET?");
         printPromptLine();
-        String connectionMode = in.nextLine().toUpperCase();
-        if(connectionMode.equals("RMI")) {
-            controller.setRMIMode(true);
-        } else if (connectionMode.equals("SOCKET")) {
-            controller.setRMIMode(false);
-        } else {
-            printOnNewLine("Modalità di connessione non valida.");
-            askConnectionMode();
-        }
-        printPromptLine();
     }
 
     /**
-     * Decodes the input from the console and calls the corresponding method in the controller
+     * Sets the controller's RMI mode to the specified value and goes to join scene
+     * @param rmimode true to set RMI mode, false to set SOCKET mode
      */
-    public void decode(String[] args){
-        switch(args[0]){
-            case "help":
-                printOnNewLine("-------------------");
-                printOnNewLine(" Lista dei comandi");
-                printOnNewLine("-------------------");
-                printOnNewLine("");
-                printOnNewLine("  help: mostra la lista dei comandi");
-                printOnNewLine("");
-                printOnNewLine("  join <ip> <porta>: si connette al server con l'indirizzo ip e la porta specificati");
-                printOnNewLine("");
-                printOnNewLine("  setName <nome>: imposta il nome del giocatore e entra in partita");
-                printOnNewLine("");
-                printOnNewLine("  setColor <colore>: imposta il colore del giocatore");
-                printOnNewLine("  I colori disponibili sono: RED, YELLOW, BLUE, GREEN");
-                printOnNewLine("");
-                printOnNewLine("  ready: mettiti pronto per iniziare la partita");
-                printOnNewLine("");
-                printOnNewLine("  chat <messaggio>: invia un messaggio nella chat");
-                printOnNewLine("");
-                printOnNewLine("  chooseFace <faccia>: scegli la faccia della carta selezionata");
-                printOnNewLine("  Le facce disponibili sono: FRONT, BACK");
-                printOnNewLine("");
-                printOnNewLine("  chooseCard <numero>: scegli il numero della carta da selezizonare. Se vuoi la prima carta digita 1, etc.");
-                printOnNewLine("");
-                printOnNewLine("  printHand: mostra le carte nella tua mano");
-                printOnNewLine("");
-                printOnNewLine("  placeCard <faccia> <x> <y>: piazza la carta selezionata nella posizione x, y");
-                printOnNewLine("  Le facce disponibili sono: FRONT, BACK");
-                printOnNewLine("");
-                printOnNewLine("  drawCard <mazzo> (opzionale <posizione a terra>): pesca una carta dal mazzo specificato. Se <posizione a terra> è specificata, pesca la carta dalla posizione specificata, altrimenti pesca dal mazzo");
-                printOnNewLine("  I mazzi disponibili sono: GOLD, RESOURCE");
-                printOnNewLine("  Le posizioni a terra disponibili sono: 1, 2");
-                printOnNewLine("");
-                printOnNewLine("  reconnect <id>: si riconnette alla partita in corso come giocatore con l'id specificato");
-                printOnNewLine("");
-                printOnNewLine("  connect <name>: si riconnette alla partita salvata come giocatore con il nome specificato");
-                printOnNewLine("");
-                printPromptLine();
-                break;
-            case "join":
-                if (args.length != 3) {
-                    printOnNewLine("Utilizzo corretto: join <ip> <porta>");
-                    return;
-                }
-                controller.joinServer(args[1], Integer.parseInt(args[2]));
-                break;
-            case "setName":
-                if(args.length != 2){
-                    printOnNewLine("Utilizzo corretto: setName <nome>");
-                    return;
-                }
-                controller.askSetName(args[1]);
-                break;
-            case "setColor":
-                if(args.length != 2){
-                    printOnNewLine("Utilizzo corretto: setColor <colore>");
-                    return;
-                }
-                controller.askSetColor(args[1]);
-                break;
-            case "ready":
-                controller.setReady();
-                break;
-            case "chat":
-                String message = "";
-                for(int i = 1; i < args.length; i++){
-                    message += args[i] + " ";
-                }
-                controller.sendChatMessage(message);
-                break;
-            case "chooseFace":
-                if(args.length != 2){
-                    printOnNewLine("Utilizzo corretto: chooseFace <faccia>");
-                    return;
-                }
-                if(!args[1].equalsIgnoreCase("FRONT") && !args[1].equalsIgnoreCase("BACK")){
-                    printOnNewLine("Faccia non valida. Le facce disponibili sono: FRONT, BACK");
-                    return;
-                }
-                if (Objects.requireNonNull(controller.getGameState()) == GameState.CHOOSE_STARTING_CARD) {
-                    Face chosenFace = Face.valueOf(args[1].toUpperCase());
-                    controller.chooseStartingCardFace(chosenFace);
-                } else {
-                    printOnNewLine("C'è un tempo e un luogo per ogni cosa! Ma non ora...");
-                }
-                break;
-            case "chooseCard":
-                if(args.length != 2){
-                    printOnNewLine("Utilizzo corretto: chooseCard <numero>");
-                    return;
-                }
-                int cardNumber = Integer.parseInt(args[1]) - 1;
-                switch(controller.getGameState()){
-                    case CHOOSE_SECRET_ACHIEVEMENT:
-                        if(cardNumber < 0 || cardNumber > 1){
-                            printOnNewLine("Numero non valido. Scegli 0 o 1");
-                            return;
-                        }
-                        controller.chooseSecretAchievement(cardNumber);
-                        break;
-                    case PLACE_CARD:
-                        controller.setChosenHandCard(cardNumber);
-                        printOnNewLine("Carta selezionata: " + controller.getHand().get(cardNumber));
-                        break;
-                    default:
-                        printOnNewLine("C'è un tempo e un luogo per ogni cosa! Ma non ora...");
-                }
-                break;
-            case "printHand":
-                displayHand();
-                break;
-            case "placeCard":
-                if(args.length != 4){
-                    printOnNewLine("Utilizzo corretto: placeCard <faccia> <x> <y>");
-                    return;
-                }
-                if(controller.getChosenHandCard() == null){
-                    printOnNewLine("Devi selezionare una carta della tua mano");
-                    printPromptLine();
-                    return;
-                }
-                if(!args[1].equalsIgnoreCase("FRONT") && !args[1].equalsIgnoreCase("BACK")){
-                    printOnNewLine("Faccia non valida. Le facce disponibili sono: FRONT, BACK");
-                    return;
-                }
-                int x = Integer.parseInt(args[2]);
-                int y = Integer.parseInt(args[3]);
-                Face face = Face.valueOf(args[1].toUpperCase());
-                controller.askPlayCard(controller.getChosenHandCard(), face, x, y);
-                break;
-            case "drawCard":
-                if(args.length < 2 || args.length > 3){
-                    printOnNewLine("Utilizzo corretto: drawCard <mazzo> (opzionale <posizione a terra>)");
-                    return;
-                }
-                DeckPosition position = DeckPosition.DECK;
-                if(args.length == 3){
-                    if(args[2].equals("1")){
-                        position = DeckPosition.FIRST_CARD;
-                    } else if(args[2].equals("2")){
-                        position = DeckPosition.SECOND_CARD;
-                    } else {
-                        printOnNewLine("Posizione non valida. Le posizioni a terra disponibili sono: 1, 2");
-                        return;
-                    }
-                }
-                if(!args[1].equalsIgnoreCase("GOLD") && !args[1].equalsIgnoreCase("RESOURCE")){
-                    printOnNewLine("Mazzo non valido. I mazzi disponibili sono: GOLD, RESOURCE");
-                    return;
-                }
-                Decks deck = Decks.valueOf(args[1].toUpperCase());
-                controller.askDrawCard(deck, position);
-                break;
-            case "reconnect":
-                if(args.length != 2){
-                    printOnNewLine("Utilizzo corretto: reconnect <id>");
-                    return;
-                }
-                controller.reconnect(args[1]);
-                break;
-            case "connect":
-                if(args.length != 2){
-                    printOnNewLine("Utilizzo corretto: connect <name>");
-                    return;
-                }
-                controller.joinSavedGame(args[1]);
-                break;
-            default:
-                printOnNewLine("Comando non valido. Digita \"help\" per la lista dei comandi");
-                printPromptLine();
-        }
+    public void setRMIMode(boolean rmimode) {
+        controller.setRMIMode(rmimode);
+        changeScene(new JoinState(this));
+    }
+
+    /**
+     * Joins the server with the specified ip and port
+     */
+    public void joinServer(String ip, int port) {
+        controller.joinServer(ip, port);
     }
 
     // Successful actions
 
     public void nameChanged(){
-        printOnNewLine("Sei entrato in partita. Il tuo nome è: " + controller.getMyName());
-        printPromptLine();
+        if(controller.isSavedGame()){
+            printOnNewLine("Sei entrato in partita");
+        } else {
+            changeScene(new SetColorState(this, controller));
+        }
     }
     public void colorChanged() {
         printOnNewLine("Il tuo colore è stato cambiato con successo. Ora sei " + controller.getMyColor());
+        printOnNewLine("Quando sei pronto, inserisci 'pronto'");
         printPromptLine();
     }
     public void successfulConnection(){
         printOnNewLine("Connessione avvenuta con successo al server");
-        printPromptLine();
     }
     public void displayNewCardInHand(){
         Card newCard = controller.getHand().getLast();
@@ -390,12 +230,11 @@ public class CLI extends Thread implements UI {
         printPromptLine();
     }
     public void chooseSecretAchievement(List<AchievementCard> possibleAchievements){
-        printOnNewLine("Scegli un obiettivo segreto: \n");
+        printOnNewLine("Puoi Scegliere un obiettivo segreto tra: \n");
         for (int i = 0; i < possibleAchievements.size(); i++) {
             System.out.println("    " + i + ": " + possibleAchievements.get(i));
         }
-        printPromptLine();
-        //todo: add selection
+        changeScene(new SecretCardChoiceState(this, controller));
     }
     public void endGameStarted(){
         printOnNewLine("La partita sta per finire");
@@ -451,7 +290,7 @@ public class CLI extends Thread implements UI {
         for (int i = 0; i < controller.getPlayerNames().size(); i++) {
             System.out.print(" " + i + ": " + controller.getPlayerNames());
         }
-        printPromptLine();
+        changeScene(new GameState(this, controller));
     }
     public void displayBoardCards(){
         printOnNewLine("Le carte a terra sono: \n");
@@ -466,24 +305,16 @@ public class CLI extends Thread implements UI {
         printPromptLine();
     }
     public void chooseStartingCardFace(Card card){
-        printOnNewLine("Scegli la faccia della carta iniziale: \n" + card);
-        printPromptLine();
+        printOnNewLine("La tua carta iniziale è: ");
+        printOnNewLine(card.toString());
+        changeScene(new StartingCardChoiceState(this, controller));
     }
     public void doFirst(Actions action){
         printOnNewLine("Devi prima " + action);
         printPromptLine();
     }
     public void displayLobby(){
-        printOnNewLine("I giocatori sono: ");
-        for (Player player : controller.getPlayers()) {
-            System.out.print("    " + player.getName() + " - " + player.getColor() + " - ");
-            if(player.isReady()){
-                System.out.print("Pronto");
-            } else {
-                System.out.print("Non pronto");
-            }
-        }
-        printPromptLine();
+        changeScene(new SetNameState(this, controller));
     }
     public void displayPlayerPoints(String playerName) throws PlayerNotFoundByNameException {
         Player player = controller.getPlayerByName(playerName);
@@ -516,8 +347,7 @@ public class CLI extends Thread implements UI {
     }
 
     public void displayId(){
-        printOnNewLine("Il tuo id è: " + controller.getMyId());
-        printPromptLine();
+        printOnNewLine("Il tuo id è: " + controller.getMyId() + ". Salvalo per riconnetterti");
     }
 
     public void idNotInGame(){
@@ -593,7 +423,6 @@ public class CLI extends Thread implements UI {
     }
 
     public void displayGameInfo(){
-        nameChanged();
         displayId();
         displayCommonAchievements();
         displayDeckSizes();
@@ -604,6 +433,18 @@ public class CLI extends Thread implements UI {
         displayPlayerInfo();
         displayChat();
         displayGameState();
+        switch (controller.getGameState()) {
+            case CHOOSE_STARTING_CARD:
+                changeScene(new StartingCardChoiceState(this, controller));
+                break;
+            case CHOOSE_SECRET_ACHIEVEMENT:
+                if (controller.getSecretAchievement() == null)
+                    chooseSecretAchievement(controller.getPotentialSecretAchievements());
+                changeScene(new SecretCardChoiceState(this, controller));
+                break;
+            default:
+                changeScene(new GameState(this, controller));
+        }
     }
 
     public void gameAlreadyFinished() {
