@@ -2,15 +2,14 @@ package Server.Messages;
 
 import Client.Controller.ClientController;
 import Server.Card.AchievementCard;
-import Server.Exception.ClientExecuteNotCallableException;
 
 import java.io.Serializable;
 import java.util.List;
 
 public class AchievementCardsMessage implements Serializable, ToClientMessage {
 
-    private List<AchievementCard> secretCards;
-    private List<AchievementCard> commonCards;
+    private final List<AchievementCard> secretCards;
+    private final List<AchievementCard> commonCards;
     public AchievementCardsMessage(List<AchievementCard> secretCards, List<AchievementCard> commonCards){
         this.secretCards = secretCards;
         this.commonCards = commonCards;

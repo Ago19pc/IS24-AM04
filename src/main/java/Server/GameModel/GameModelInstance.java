@@ -13,9 +13,7 @@ import Server.Exception.AlreadySetException;
 import Server.Player.Player;
 import Server.Player.PlayerInstance;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
+import java.io.*;
 import java.util.*;
 
 
@@ -60,16 +58,16 @@ public class GameModelInstance implements GameModel{
      * Generate the starting cards
      */
     private void generateStartingCards() {
-        File fileFRONT;
-        File fileBACK;
+        InputStream fileFRONT;
+        InputStream fileBACK;
         BufferedReader readerFRONT;
         BufferedReader readerBACK;
 
         try {
-            fileFRONT = new File(getClass().getResource("/images/StartingCardsFRONT.txt").toURI());
-            fileBACK = new File(getClass().getResource("/images/StartingCardsBACK.txt").toURI());
-            readerFRONT = new BufferedReader(new FileReader(fileFRONT));
-            readerBACK = new BufferedReader(new FileReader(fileBACK));
+            fileFRONT = getClass().getResourceAsStream("/images/StartingCardsFRONT.txt");
+            fileBACK = getClass().getResourceAsStream("/images/StartingCardsBACK.txt");
+            readerFRONT = new BufferedReader(new InputStreamReader(fileFRONT));
+            readerBACK = new BufferedReader(new InputStreamReader(fileBACK));
         
         
 
@@ -88,9 +86,6 @@ public class GameModelInstance implements GameModel{
                 List<Symbol> centerSymbols = new ArrayList<>();
                 for (int i = 0; i < partsF.length; i++) {
                     if (i < 4) {
-                        //System.out.print(CardCorners.values()[i]);
-                        //System.out.print(" ");
-                        //System.out.println(Symbol.valueOf(partsF[i]));
                         cornerSymbolsF.put(CardCorners.values()[i], Symbol.valueOf(partsF[i]));
                     }
                     else centerSymbols.add(Symbol.valueOf(partsF[i]));
@@ -110,19 +105,14 @@ public class GameModelInstance implements GameModel{
                 startingCards.add(card);
             }
         } catch (Exception e) {
-            System.out.println("An error occurred while generating starting cards");
-            e.printStackTrace();
+            System.err.println("An error occurred while generating starting cards");
         }
         Collections.shuffle(startingCards);
     
     }
 
     public List<Player> getPlayerList() {
-        List<Player> playerListToReturn = new ArrayList<>();
-        for (PlayerInstance player : playerList) {
-            playerListToReturn.add((Player) player);
-        }
-        return playerListToReturn;
+        return new ArrayList<>(playerList);
     }
     public void setPlayerList(List<Player> playerList) {
         this.playerList.clear();

@@ -1,10 +1,8 @@
 package Server.Messages;
 
 import Client.Controller.ClientController;
-import Server.Card.Card;
 import Server.Card.GoldCard;
 import Server.Card.ResourceCard;
-import Server.Exception.ClientExecuteNotCallableException;
 
 import java.io.Serializable;
 import java.util.List;

@@ -6,6 +6,7 @@ import Server.Enums.Color;
 import Server.Enums.GameState;
 import Server.Exception.*;
 import Server.Messages.*;
+import Server.Player.Player;
 
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -18,7 +19,7 @@ public class ServerConnectionHandlerSOCKET extends Thread implements ServerConne
     /**
      * The String is the ID
      */
-    private Map<ClientHandler, String> clients;
+    private final Map<ClientHandler, String> clients;
     private int port;
 
     private Controller controller;
@@ -28,7 +29,7 @@ public class ServerConnectionHandlerSOCKET extends Thread implements ServerConne
     /**
      * Create the server socket
      */
-    public ServerConnectionHandlerSOCKET() throws IOException {
+    public ServerConnectionHandlerSOCKET() {
         this.clients = new HashMap<>();
         askForPort();
         while (!startServer(port)) {
@@ -67,12 +68,9 @@ public class ServerConnectionHandlerSOCKET extends Thread implements ServerConne
      * Accept new connections and create a new ClientHandler thread for each one
      */
     public void run() {
-        Thread.UncaughtExceptionHandler h = new Thread.UncaughtExceptionHandler() {
-            @Override
-            public void uncaughtException(Thread th, Throwable ex) {
-                System.out.println("[Socket] ServerConnectionHandler gestore eccezioni thread figli: " + ex);
-                th.interrupt();
-            }
+        Thread.UncaughtExceptionHandler h = (th, ex) -> {
+            System.out.println("[Socket] ServerConnectionHandler gestore eccezioni thread figli: " + ex);
+            th.interrupt();
         };
         try {
             while (true) {
@@ -92,7 +90,7 @@ public class ServerConnectionHandlerSOCKET extends Thread implements ServerConne
                 controller.getPlayerList().forEach(p -> playerReady.put(p.getName(), p.isReady()));
                 Boolean isSavedGame = controller.isInSavedGameLobby();
                 LobbyPlayersMessage message = new LobbyPlayersMessage(
-                        controller.getPlayerList().stream().map(p -> p.getName()).toList(),
+                        controller.getPlayerList().stream().map(Player::getName).toList(),
                         playerColors,
                         playerReady,
                         id,
@@ -100,9 +98,8 @@ public class ServerConnectionHandlerSOCKET extends Thread implements ServerConne
                 );
                 t.sendMessage(message);
             }
-        } catch (Exception e) {
-            e.printStackTrace();
-            System.out.println("[Socket] EDDIO SOLO SA PERCHE");
+        } catch (IOException | RuntimeException e) {
+            System.err.println("[Socket] Errore nel main loop del ServerConnectionHandlerSOCKET");
         }
     }
 
@@ -139,14 +136,19 @@ public class ServerConnectionHandlerSOCKET extends Thread implements ServerConne
     private void askForPort() {
         Scanner inputReader = new Scanner(System.in);
         System.out.println("[Socket] Ciao, su quale porta vuoi avviare il server?");
-        this.port = inputReader.nextInt();
+        try {
+            this.port = inputReader.nextInt();
+        } catch (InputMismatchException e) {
+            System.out.println("[Socket] Inserisci un numero valido");
+            askForPort();
+        }
     }
 
     /**
      * Kill a ClientHandler thread
      * @param id the name of the client thread to kill
      */
-    public void killClient(String id) throws PlayerNotFoundByNameException, AlreadyFinishedException {
+    public void killClient(String id) {
         ClientHandler target = clients.entrySet().stream()
                 .filter(entry -> entry.getValue().equals(id))
                 .toList().getFirst().getKey();
@@ -174,7 +176,6 @@ public class ServerConnectionHandlerSOCKET extends Thread implements ServerConne
             if(c.isClosed()) continue;
             String clientId = clients.get(c);
             if(!controller.getConnectionHandler().isInDisconnectedList(clientId)){
-                System.out.println("Sending message to " + c.getSocketAddress() + " - id " + clients.get(c));
                 c.sendMessage(message);
             }
         }

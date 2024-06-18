@@ -5,7 +5,6 @@ import Server.Card.*;
 import Server.Chat.Message;
 import Server.Connections.GeneralServerConnectionHandler;
 import Server.Deck.AchievementDeck;
-import Server.Deck.ResourceDeck;
 import Server.Enums.*;
 import Server.Exception.*;
 import Server.GameModel.GameModel;
@@ -19,9 +18,7 @@ import com.google.gson.Gson;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
-import java.io.IOException;
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class ControllerInstance implements Controller{
     private GameModel gameModel;
@@ -38,14 +35,10 @@ public class ControllerInstance implements Controller{
         System.out.println("Vuoi iniziare una nuova partita (n) o caricare una partita salvata (l)?");
         String input = inputReader.nextLine();
         if(input.equals("l")){
-            try {
-                loadGame();
-                System.out.println("Partita caricata. I giocatori sono:");
-                for (Player p : gameModel.getPlayerList()){
-                    System.out.println(p.getName());
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
+            loadGame();
+            System.out.println("Partita caricata. I giocatori sono:");
+            for (Player p : gameModel.getPlayerList()){
+                System.out.println(p.getName());
             }
         }
     }
@@ -117,9 +110,9 @@ public class ControllerInstance implements Controller{
                         gameModel.getGoldDeck().getBoardCard().get(DeckPosition.SECOND_CARD)
                 ),
                 List.of(
-                        (ResourceCard) gameModel.getResourceDeck().getTopCardNoPop(),
-                        (ResourceCard) gameModel.getResourceDeck().getBoardCard().get(DeckPosition.FIRST_CARD),
-                        (ResourceCard) gameModel.getResourceDeck().getBoardCard().get(DeckPosition.SECOND_CARD)
+                        gameModel.getResourceDeck().getTopCardNoPop(),
+                        gameModel.getResourceDeck().getBoardCard().get(DeckPosition.FIRST_CARD),
+                        gameModel.getResourceDeck().getBoardCard().get(DeckPosition.SECOND_CARD)
                 )
         );
         connectionHandler.sendAllMessage(startGameMessage);
@@ -187,7 +180,7 @@ public class ControllerInstance implements Controller{
         if(gameModel.getTurn() > 1){
             throw new AlreadyStartedException("Game already started");
         }
-        AchievementCard card = (AchievementCard) givenSecretObjectiveCards.get(player).get(cardNumber);
+        AchievementCard card = givenSecretObjectiveCards.get(player).get(cardNumber);
         player.setSecretObjective(card);
         SetSecretCardMessage setSecretCardMessage = new SetSecretCardMessage(player.getName());
         connectionHandler.sendAllMessage(setSecretCardMessage);
@@ -235,9 +228,9 @@ public class ControllerInstance implements Controller{
                                 gameModel.getGoldDeck().getBoardCard().get(DeckPosition.SECOND_CARD)
                         ),
                         List.of(
-                                (ResourceCard) gameModel.getResourceDeck().getTopCardNoPop(),
-                                (ResourceCard) gameModel.getResourceDeck().getBoardCard().get(DeckPosition.FIRST_CARD),
-                                (ResourceCard) gameModel.getResourceDeck().getBoardCard().get(DeckPosition.SECOND_CARD)
+                                gameModel.getResourceDeck().getTopCardNoPop(),
+                                gameModel.getResourceDeck().getBoardCard().get(DeckPosition.FIRST_CARD),
+                                gameModel.getResourceDeck().getBoardCard().get(DeckPosition.SECOND_CARD)
                         )
                 );
                 connectionHandler.sendAllMessage(startGameMessage);
@@ -295,7 +288,7 @@ public class ControllerInstance implements Controller{
                     computeLeaderboard();
                     return;
                 } catch (AlreadyFinishedException e) {
-                    e.printStackTrace();
+                    System.err.println("Error while computing leaderboard");
                 }
             } else {
                 gameModel.setLastRound(true);
@@ -320,11 +313,7 @@ public class ControllerInstance implements Controller{
             changeState(new PlaceCardState(this, gameModel));
         } while (!isOnline(getPlayerList().get(gameModel.getActivePlayerIndex())));//if the player is not online skips to the next one
         gameModel.nextTurn();
-        try{
-            saveGame();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        saveGame();
         NewTurnMessage newTurnMessage = new NewTurnMessage(getPlayerList().get(gameModel.getActivePlayerIndex()).getName(), gameModel.getTurn());
         connectionHandler.sendAllMessage(newTurnMessage);
     }
@@ -402,7 +391,7 @@ public class ControllerInstance implements Controller{
                 if(playersWithMaxPoints.isEmpty()){
                     playersWithMaxPoints.add(player);
                 }
-                else if(points == Collections.max(playerCardPoints.values())){
+                else if(Objects.equals(points, Collections.max(playerCardPoints.values()))){
                     playersWithMaxPoints.add(player);
                 }
                 else if(points > Collections.max(playerCardPoints.values())){
@@ -475,7 +464,7 @@ public class ControllerInstance implements Controller{
         return messages;
     }
 
-    public void saveGame() throws IOException {
+    public void saveGame() {
         try {
             Gson gson = new Gson();
             File file = new File(getClass().getResource("/saves/game.json").toURI());
@@ -483,11 +472,11 @@ public class ControllerInstance implements Controller{
             gson.toJson(gameModel, fileWriter);
             fileWriter.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            System.err.println("Error while saving game");
         }
     }
 
-    public void loadGame() throws IOException {
+    public void loadGame() {
         try {
             Gson gson = new Gson();
             File file = new File(getClass().getResource("/saves/game.json").toURI());
@@ -496,7 +485,7 @@ public class ControllerInstance implements Controller{
             fileReader.close();
             changeState(new LoadGameLobbyState(connectionHandler, gameModel, this));
         } catch (Exception e) {
-            e.printStackTrace();
+            System.err.println("Error while loading game");
         }
     }
 
@@ -520,22 +509,20 @@ public class ControllerInstance implements Controller{
     public void printData() {
         System.out.println("----------");
         System.out.println("Players:");
-        this.gameModel.getPlayerList().stream().forEach(p -> System.out.print(p.getName() + " " + p.getColor() + " " + p.isReady() +  ", "));
+        this.gameModel.getPlayerList().forEach(p -> System.out.print(p.getName() + " " + p.getColor() + " " + p.isReady() +  ", "));
         System.out.println("\n");
     }
 
     public void reactToDisconnection(String id){
-        String playerName = "";
+        String playerName;
         try {
             if(getPlayerByName(connectionHandler.getPlayerNameByID(id)) == null){ //this means the client is not a player
                 try {
                     connectionHandler.getServerConnectionHandler(id).killClient(id);
                 } catch (PlayerNotInAnyServerConnectionHandlerException e) {
-                    System.out.println("Player not found in any server connection handler, PLAYER NOT REMOVED!");
-                    e.printStackTrace();
+                    System.err.println("Player not found in any server connection handler, PLAYER NOT REMOVED!");
                 } catch (Exception e){
-                    System.out.println("Exception, PLAYER NOT REMOVED!");
-                    e.printStackTrace();
+                    System.err.println("Exception, PLAYER NOT REMOVED!");
                 }
                 return;
             }
@@ -543,11 +530,9 @@ public class ControllerInstance implements Controller{
             try {
                 connectionHandler.getServerConnectionHandler(id).killClient(id);
             } catch (PlayerNotInAnyServerConnectionHandlerException e2) {
-                System.out.println("Player not found in any server connection handler, PLAYER NOT REMOVED!");
-                e2.printStackTrace();
+                System.err.println("Player not found in any server connection handler, PLAYER NOT REMOVED!");
             } catch (Exception e1){
-                System.out.println("Exception, PLAYER NOT REMOVED!");
-                e1.printStackTrace();
+                System.err.println("Exception, PLAYER NOT REMOVED!");
             }
             return;
         }

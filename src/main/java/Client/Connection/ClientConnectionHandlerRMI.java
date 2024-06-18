@@ -25,20 +25,29 @@ public class ClientConnectionHandlerRMI implements ClientConnectionHandler {
     private ClientController controller;
     int rmi_client_port;
 
+    /**
+     * Sets the port for the RMI connection
+     * @param rmi_port, the port
+     * @throws RemoteException like all RMI stuff
+     */
     public ClientConnectionHandlerRMI(int rmi_port) throws RemoteException {
         this.rmi_client_port = rmi_port;
     }
 
-    public void setServer(String server_rmi_host) throws RemoteException {
-        serverRegistry = LocateRegistry.getRegistry(server_rmi_host, 1099);
+    public void setServer(String server_rmi_host, int serverPort) throws RemoteException {
+        serverRegistry = LocateRegistry.getRegistry(server_rmi_host, serverPort);
         try {
             server = (ServerConnectionHandler) serverRegistry.lookup("ServerConnectionHandler");
         } catch (Exception e) {
-            e.printStackTrace();
+            System.out.println("[RMI] Error with registryLookup");
         }
 
     }
 
+    /**
+     * Sets the controller
+     * @param controller the ClientController
+     */
     public void setController(ClientController controller) {
         this.controller = controller;
     }
@@ -47,20 +56,18 @@ public class ClientConnectionHandlerRMI implements ClientConnectionHandler {
      * Send a message to the server
      *
      * @param message the message to send
-     * @throws IOException
      */
 
     @Override
-    public void sendMessage(ToServerMessage message) throws IOException {
+    public void sendMessage(ToServerMessage message) {
         if (server == null) {
             System.err.println("Server connection is not initialized!");
             return;
         }
         try {
-            System.out.println("Sending message to server 2");
             server.executeMessage(message);
         } catch (RemoteException e) {
-            e.printStackTrace();
+            System.err.println("Error while sending message to the server");
         }
     }
     /**
@@ -73,22 +80,36 @@ public class ClientConnectionHandlerRMI implements ClientConnectionHandler {
         message.clientExecute(controller);
     }
 
+    /**
+     * Save the server in the local variable
+     */
     public void setServer(ServerConnectionHandler server) {
         this.server = server;
     }
 
+    /**
+     * For the ping returns true
+     */
     public boolean ping() {
         return true;
     }
 
+    /**
+     * Get the RMI client port
+     * @return the RMI client port
+     */
     public int getRmi_client_port() {
         return rmi_client_port;
     }
 
+    /**
+     * Set the RMI client port
+     * @param rmi_client_port the port of RMI client
+     */
     public void setRmi_client_port(int rmi_client_port) {
         this.rmi_client_port = rmi_client_port;
         try {
-            stub = (ClientConnectionHandler) UnicastRemoteObject.exportObject((ClientConnectionHandler) this, rmi_client_port);
+            stub = (ClientConnectionHandler) UnicastRemoteObject.exportObject(this, rmi_client_port);
             registry = LocateRegistry.createRegistry(rmi_client_port);
             registry.rebind("ClientConnectionHandler", stub);
             System.out.println("[RMI] Service started on port: " + rmi_client_port);

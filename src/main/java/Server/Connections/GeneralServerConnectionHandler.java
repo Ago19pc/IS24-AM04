@@ -5,7 +5,6 @@ import Server.Exception.*;
 import Server.Messages.RemovedPlayerMessage;
 import Server.Messages.ToClientMessage;
 
-import java.io.IOException;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -13,15 +12,15 @@ import java.util.List;
 import java.util.Map;
 
 public class GeneralServerConnectionHandler {
-    private ServerConnectionHandlerSOCKET serverConnectionHandlerSOCKET;
-    private ServerConnectionHandlerRMI serverConnectionHandlerRMI;
+    private final ServerConnectionHandlerSOCKET serverConnectionHandlerSOCKET;
+    private final ServerConnectionHandlerRMI serverConnectionHandlerRMI;
     /**
      * Map<Id, Name>
      */
-    private Map<String, String> playerID = new HashMap<>();
+    private final Map<String, String> playerID = new HashMap<>();
     private final List<String> disconnectedPlayerIds = new ArrayList<>();
 
-    public GeneralServerConnectionHandler() throws IOException {
+    public GeneralServerConnectionHandler() {
         serverConnectionHandlerRMI = new ServerConnectionHandlerRMI();
         serverConnectionHandlerSOCKET = new ServerConnectionHandlerSOCKET();
         PingPong pingPong = new PingPong(this);
@@ -48,11 +47,9 @@ public class GeneralServerConnectionHandler {
         try{
             getServerConnectionHandler(id).killClient(id);
         } catch (PlayerNotInAnyServerConnectionHandlerException e) {
-            System.out.println("Player not found in any server connection handler, PLAYER NOT REMOVED!");
-            e.printStackTrace();
+            System.err.println("Player not found in any server connection handler, PLAYER NOT REMOVED!");
         } catch (Exception e){
-            System.out.println("Exception, PLAYER NOT REMOVED!");
-            e.printStackTrace();
+            System.err.println("Exception, PLAYER NOT REMOVED!");
         }
         disconnectedPlayerIds.remove(id);
         playerID.remove(id);
@@ -99,7 +96,6 @@ public class GeneralServerConnectionHandler {
     }
 
     public void sendAllMessage(ToClientMessage message) {
-        System.out.println("Sending message to all clients");
         serverConnectionHandlerSOCKET.sendAllMessage(message);
         serverConnectionHandlerRMI.sendAllMessage(message);
     }
@@ -113,11 +109,9 @@ public class GeneralServerConnectionHandler {
             }
             getServerConnectionHandler(id).sendMessage(message, id);
         } catch (PlayerNotInAnyServerConnectionHandlerException e) {
-            System.out.println("Player not found in any server connection handler, MESSAGE NOT SENT!");
-            e.printStackTrace();
+            System.err.println("Player not found in any server connection handler, MESSAGE NOT SENT!");
         } catch (RemoteException e) {
-            System.out.println("Remote exception, MESSAGE NOT SENT!");
-            e.printStackTrace();
+            System.err.println("Remote exception, MESSAGE NOT SENT!");
         }
     }
 
@@ -163,11 +157,9 @@ public class GeneralServerConnectionHandler {
         try{
             getServerConnectionHandler(idToRemove).changeId(idToRemove, id);
         } catch (PlayerNotInAnyServerConnectionHandlerException e) {
-            System.out.println("Player not found in any server connection handler, ID NOT CHANGED!");
-            e.printStackTrace();
+            System.err.println("Player not found in any server connection handler, ID NOT CHANGED!");
         } catch (RemoteException e) {
-            System.out.println("Remote exception, ID NOT CHANGED!");
-            e.printStackTrace();
+            System.err.println("Remote exception, ID NOT CHANGED!");
         }
     }
 

@@ -10,24 +10,23 @@ import java.io.Serializable;
 import java.rmi.RemoteException;
 
 public class SetSecretCardMessage implements Serializable, ToClientMessage, ToServerMessage {
-    private String name;
-    private Integer chosenCard;
-    private String id;
-    public SetSecretCardMessage(int chosenCard, String id){
+    private final Integer chosenCard;
+    private final String idOrName;
+    public SetSecretCardMessage(int chosenCard, String idOrName){
         this.chosenCard = chosenCard;
-        this.id = id;
+        this.idOrName = idOrName;
     }
     public SetSecretCardMessage(String player){
-        this.name = player;
+        this.idOrName = player;
         this.chosenCard = null;
     }
 
     @Override
     public void clientExecute(ClientController controller){
         if(chosenCard == null){
-            controller.setSecretCard(name);
+            controller.setSecretCard(idOrName);
         } else {
-            controller.setSecretCard(name, chosenCard);
+            controller.setSecretCard(idOrName, chosenCard);
         }
     }
 
@@ -35,7 +34,7 @@ public class SetSecretCardMessage implements Serializable, ToClientMessage, ToSe
     public void serverExecute(Controller controller) {
         String playerName = "";
         try {
-            playerName = controller.getConnectionHandler().getPlayerNameByID(this.id);
+            playerName = controller.getConnectionHandler().getPlayerNameByID(this.idOrName);
             Player player = controller.getPlayerByName(playerName);
             if(chosenCard < 0 || chosenCard > 1){
                 InvalidCardMessage invalidCardMessage = new InvalidCardMessage(Actions.SECRET_ACHIEVEMENT_CHOICE);
@@ -44,9 +43,8 @@ public class SetSecretCardMessage implements Serializable, ToClientMessage, ToSe
             controller.setSecretObjectiveCard(player, chosenCard);
         } catch (PlayerNotFoundByNameException e) {
             NameNotYetSetMessage message = new NameNotYetSetMessage();
-            e.printStackTrace();
             try{
-                controller.getConnectionHandler().getServerConnectionHandler(id).sendMessage(message, id);
+                controller.getConnectionHandler().getServerConnectionHandler(idOrName).sendMessage(message, idOrName);
             } catch (PlayerNotInAnyServerConnectionHandlerException exception) {
                 System.out.println("Player not found");
             } catch (RemoteException exception) {

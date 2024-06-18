@@ -1,7 +1,7 @@
 package Server.Connections;
 
 public class PingPong extends Thread{
-    private GeneralServerConnectionHandler connectionHandler;
+    private final GeneralServerConnectionHandler connectionHandler;
 
     public PingPong(GeneralServerConnectionHandler connectionHandler) {
         this.connectionHandler = connectionHandler;

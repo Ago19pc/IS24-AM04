@@ -2,8 +2,6 @@ package Server.Card;
 
 import Server.Enums.Face;
 
-import java.util.Map;
-
 public class AchievementCard implements Card {
     private final AchievementFrontFace frontFace;
     private final EmptyCardFace backFace;

@@ -11,8 +11,8 @@ import Server.Player.Player;
 import java.io.Serializable;
 
 public class ReadyStatusMessage implements Serializable, ToClientMessage, ToServerMessage {
-    private boolean ready;
-    private String nameOrId;
+    private final boolean ready;
+    private final String nameOrId;
 
     public ReadyStatusMessage(boolean isReady, String nameOrId) {
         this.ready = isReady;

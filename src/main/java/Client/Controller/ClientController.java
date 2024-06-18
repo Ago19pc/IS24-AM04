@@ -1,6 +1,5 @@
 package Client.Controller;
 
-import Client.Connection.GeneralClientConnectionHandler;
 import Client.Deck;
 import Client.Player;
 import Client.View.UI;
@@ -8,625 +7,177 @@ import Server.Card.*;
 import Server.Chat.Chat;
 import Server.Chat.Message;
 import Server.Enums.*;
-import Server.Exception.ClientExecuteNotCallableException;
 import Server.Exception.PlayerNotFoundByNameException;
-import Server.Messages.*;
 
-import java.io.IOException;
-import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
-import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-public class ClientController {
-    private GeneralClientConnectionHandler clientConnectionHandler;
-    private UI ui;
-    private boolean rmiMode = false;
+public interface ClientController {
+    void main(UI ui) throws RemoteException;
 
-    //cards not owned by player info
-    private List<AchievementCard> commonAchievements;
-    private Deck<GoldCard> goldDeck;
-    private Deck<ResourceCard> resourceDeck;
+    boolean isSavedGame();
 
-    //player info
-    private String myName;
-    private AchievementCard secretAchievement;
-    private List<Card> hand = new ArrayList<>();
+    void setName(String name);
 
-    private String id;
+    List<AchievementCard> getPotentialSecretAchievements();
 
-    //other game info
-    private int turn = 0;
-    private List<Color> unavaiableColors = new ArrayList<>();
-    private Chat chat = new Chat();
-    private List<Player> players = new ArrayList<>();
-    private GameState gameState;
+    void setChosenHandCard(Integer chosenHandCard);
 
-    //temp stuff
-    private String proposedName;
-    private Color proposedColor;
-    private int indexofSecretAchievement;
-    private List<AchievementCard> potentialSecretAchievements;
-    private Integer chosenHandCard;
-    private Boolean isSavedGame;
+    Integer getChosenHandCard();
 
-    public void main(UI ui) throws RemoteException {
-        this.ui = ui;
-        this.gameState = GameState.LOBBY;
-    }
+    Player getPlayerByName(String name) throws PlayerNotFoundByNameException;
 
-    public boolean isSavedGame() {
-        return isSavedGame;
-    }
+    Color getMyColor();
 
-    public void setName(String name) {
-        this.myName = name;
-    }
-    public List<AchievementCard> getPotentialSecretAchievements() {
-        return potentialSecretAchievements;
-    }
-    public void setChosenHandCard(Integer chosenHandCard) {
-        this.chosenHandCard = chosenHandCard;
-    }
+    String getMyId();
 
-    public Integer getChosenHandCard() {
-        return chosenHandCard;
-    }
+    void setMyColor(Color color);
 
-    //helper methods
-    public Player getPlayerByName(String name) throws PlayerNotFoundByNameException {
-        for (Player p : this.players){
-            if (p.getName().equals(name)) return p;
-        }
-        throw new PlayerNotFoundByNameException(name);
-    }
-    public Color getMyColor() {
-        Color myColor = null;
-        try {
-            myColor = getPlayerByName(myName).getColor();
-        } catch (PlayerNotFoundByNameException e) {
-            e.printStackTrace();
-        }
-        return myColor;
-    }
-    public String getMyId() {
-        return id;
-    }
-    public void setMyColor(Color color) {
-        try {
-            getPlayerByName(myName).setColor(color);
-        } catch (PlayerNotFoundByNameException e) {
-            e.printStackTrace();
-        }
-    }
-    public void setId(String id) {
-        this.id = id;
-    }
+    void setId(String id);
 
-    //ui actions
-    public void reconnect(String newId) {
-        System.out.println("Reconnecting");
-        ReconnectionMessage message = new ReconnectionMessage(id, newId);
-        System.out.println("Sending message");
-        clientConnectionHandler.sendMessage(message);
-    }
-    public void joinSavedGame(String name) {
-        SavedGameMessage savedGameMessage = new SavedGameMessage(id, name);
-        clientConnectionHandler.sendMessage(savedGameMessage);
-    }
-    public void joinServer(String ip, int port) {
-        try {
-            clientConnectionHandler = new GeneralClientConnectionHandler(this, rmiMode);
-        } catch (RemoteException e) {
-            throw new RuntimeException(e);
-        }
-        System.out.println("Joining server");
-        try{
-            clientConnectionHandler.setSocket(ip, port);
-            ui.successfulConnection();
-        } catch (IOException | NotBoundException e){
-            ui.connectionFailed();
-        } catch (ClientExecuteNotCallableException e) {
-            throw new RuntimeException(e);
-        } catch (PlayerNotFoundByNameException e) {
-            throw new RuntimeException(e);
-        }
-    }
-    public void setReady() {
-        if (myName == null || getMyColor() == null) {
-            ui.needNameOrColor();
-            return;
-        }
-        ReadyStatusMessage readyStatusMessage = new ReadyStatusMessage(true, id);
-        try {
-            clientConnectionHandler.sendMessage(readyStatusMessage);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-    public void askSetColor(String color) {
-        if (this.myName == null) {
-            ui.needName();
-            return;
-        }
-        Color castedColor;
-        try {
-            castedColor = Color.valueOf(color.toUpperCase());
-            if (unavaiableColors.contains(castedColor)){
-                ui.unavailableColor();
-                return;
-            }
-        } catch (IllegalArgumentException e) {
-            ui.invalidColor();
-            return;
-        }
-        proposedColor = castedColor;
-        PlayerColorMessage playerColorMessage = new PlayerColorMessage(castedColor, id);
-        try {
-            clientConnectionHandler.sendMessage(playerColorMessage);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-    public void sendChatMessage (String message){
-        if (myName == null) {
-            ui.needName();
-            return;
-        }
-        ChatMessage chatMessage = new ChatMessage(message, id);
-        clientConnectionHandler.sendMessage(chatMessage);
-    }
-    public void askSetName(String name) {
-        this.proposedName = name;
-        PlayerNameMessage playerNameMessage = new PlayerNameMessage(proposedName, true, id);
-        try {
-            clientConnectionHandler.sendMessage(playerNameMessage);
-        } catch (Exception e) {
-            ui.nameChangeFailed();
-        }
-    }
-    public void setRMIMode(boolean rmi) {
-        this.rmiMode = rmi;
-    }
-    public void chooseStartingCardFace(Face face) {
-        SetStartingCardMessage startingCardMessage = new SetStartingCardMessage(face, id);
-        try {
-            clientConnectionHandler.sendMessage(startingCardMessage);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-    public void chooseSecretAchievement(int index) {
+    void reconnect(String newId);
 
-        this.indexofSecretAchievement = index;
-        SetSecretCardMessage secretAchievementMessage = new SetSecretCardMessage(index, id);
-        try {
-            clientConnectionHandler.sendMessage(secretAchievementMessage);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-    public void askPlayCard(int cardNumber, Face face, int x, int y) {
-        chosenHandCard = cardNumber;
-        PlayCardMessage placeCardMessage = new PlayCardMessage(id, cardNumber, face, x, y);
-        try {
-            clientConnectionHandler.sendMessage(placeCardMessage);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-    public void askDrawCard(Decks deck, DeckPosition deckPosition) {
-        DrawCardMessage drawCardMessage = new DrawCardMessage(deckPosition, deck, id);
-        try {
-            clientConnectionHandler.sendMessage(drawCardMessage);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
+    void joinSavedGame(String name);
 
-    //ui getters
-    public String getMyName() {
-        return myName;
-    }
-    public List<Player> getPlayers() {
-        return players;
-    }
-    public GameState getGameState() {
-        return gameState;
-    }
-    /**
-     * Gets the available colors
-     * @return list of available colors
-     */
-    public List<Color> getAvailableColors(){
-        List<Color> availableColors = new ArrayList<>();
-        for (Color c : Color.values()){
-            if (!unavaiableColors.contains(c)){
-                availableColors.add(c);
-            }
-        }
-        return availableColors;
-    }
-    public List<Card> getHand() {
-        return hand;
-    }
-    public List<AchievementCard> getCommonAchievements() {
-        return commonAchievements;
-    }
-    public Map<String, Integer> getLeaderboard(){
-        Map<String, Integer> leaderboard = new LinkedHashMap<>(); //linkedhashmap keeps order of insertion which will be the player order
-        List<Player> orderedPlayers = players.stream().sorted((p1, p2) -> {
-            if(p1.getPoints() == p2.getPoints())
-                return p2.getAchievementPoints() - p1.getAchievementPoints();
-            return p2.getPoints() - p1.getPoints();
-        }).toList();
-        for (Player p : orderedPlayers){
-            leaderboard.put(p.getName(), p.getPoints());
-        }
-        return leaderboard;
-    }
-    public int getDeckSize(Decks deck){
-        return switch (deck) {
-            case GOLD -> goldDeck.getDeckSize();
-            case RESOURCE -> resourceDeck.getDeckSize();
-            default -> 0;
-        };
-    }
-    public List<Card> getBoardCards(Decks deck){
-        List<Card> boardCards = new ArrayList<>();
-        switch (deck){
-            case GOLD:
-                for (GoldCard c : goldDeck.getBoardCards()){
-                    boardCards.add(c);
-                }
-            case RESOURCE:
-                for (ResourceCard c : resourceDeck.getBoardCards()){
-                    boardCards.add(c);
-                }
-        }
-        return boardCards;
-    }
-    public Player getActivePlayer(){
-        for (Player p : players){
-            if (p.isActive()) return p;
-        }
-        return null;
-    }
-    public int getTurn() {
-        return turn;
-    }
-    public List<String> getPlayerNames(){
-        List<String> playerNames = new ArrayList<>();
-        for (Player p : players){
-            playerNames.add(p.getName());
-        }
-        return playerNames;
-    }
+    void joinServer(String ip, int port);
 
-    //methods called by incoming messages
-    public void loadLobbyInfo(String id, List<String> playerNames, Map<String, Color> playerColors, Map<String, Boolean> playerReady, Boolean isSavedGame) {
-        this.isSavedGame = isSavedGame;
-        setId(id);
-        ui.displayId();
-        for (String name : playerNames){
-            Player p = new Player(name);
-            p.setColor(playerColors.get(name));
-            p.setReady(playerReady.get(name));
-            players.add(p);
-        }
-        ui.displayLobby();
-    }
-    public void giveAchievementCards(List<AchievementCard> secretCards, List<AchievementCard> commonCards) {
-        gameState = GameState.CHOOSE_SECRET_ACHIEVEMENT;
-        commonAchievements = new ArrayList<>();
-        potentialSecretAchievements = secretCards;
-        for (Card c : commonCards){
-            commonAchievements.add((AchievementCard) c);
-        }
-        ui.displayCommonAchievements();
-        ui.chooseSecretAchievement(secretCards);
-    }
-    public void achievementDeckDrawInvalid() {
-        ui.cantDrawAchievementCards();
-    }
-    public void alreadyDone(Actions action) {
-        ui.alreadyDone(action);
-    }
-    public void cardNotPlaceable() {
-        ui.cardNotPlaceable();
-    }
-    public void addChatMessage(Message message){
-        chat.addMessage(message);
-        ui.chat(message);
-    }
-    public void chatMessageIsEmpty() {
-        ui.chatMessageIsEmpty();
-    }
-    public void colorNotYetSet() {
-        ui.needColor();
-    }
-    public void giveDrawnCard(Card drawnCard) {
-        hand.add((ResourceCard) drawnCard);
-        ui.displayNewCardInHand();
-    }
-    public void emptyDeck() {
-        ui.deckIsEmpty();
-    }
-    public void setEndGame() {
-        ui.endGameStarted();
-    }
-    public void gameAlreadyStarted() {
-        ui.gameAlreadyStarted();
-    }
-    public void gameNotYetStarted() {
-        ui.gameNotYetStarted();
-    }
-    public void giveInitialHand(List<Card> hand) {
-        for (Card c : hand){
-            this.hand.add((ResourceCard) c);
-        }
-        ui.displayHand();
-    }
-    public void invalidCard(Actions cardType) {
-        ui.invalidCardForAction(cardType);
-    }
-    public void displayLeaderboard(LinkedHashMap<String, Integer> playerPoints) {
-        gameState = GameState.LEADERBOARD;
-        for (String name : playerPoints.keySet()){
-            try {
-                getPlayerByName(name).setAchievementPoints(playerPoints.get(name) - getPlayerByName(name).getPoints());
-            } catch (PlayerNotFoundByNameException e) {
-                throw new RuntimeException(e);
-            }
-        }
-        ui.displayLeaderboard(playerPoints);
-    }
-    public void nameNotYetSet() {
-        ui.needName();
-    }
-    public void newPlayer(List<String> playerNames) {
-        Player newPlayer = new Player(playerNames.getLast());
-        players.add(newPlayer);
-        ui.displayNewPlayer();
-    }
-    public void notYetGivenCard(Actions type) {
-        ui.notYetGivenCard(type);
-    }
-    public void notYourTurn() {
-        ui.notYourTurn();
-    }
-    public void newTurn(String activePlayerName, int turnNumber) {
-        if(!gameState.equals(GameState.LEADERBOARD)) {
-            gameState = GameState.PLACE_CARD;
-            turn = turnNumber;
-            for (Player p : players) {
-                p.setActive(p.getName().equals(activePlayerName));
-            }
-            ui.newTurn();
-        }
-    }
-    public void drawOtherPlayer(String name, Decks deckFrom, DeckPosition drawPosition, List<Card> newBoardCards){
-        switch (deckFrom){
-            case GOLD:
-                goldDeck.setBoardCards(newBoardCards);
-                goldDeck.setDeckSize(goldDeck.getDeckSize() - 1);
-                break;
-            case RESOURCE:
-                resourceDeck.setBoardCards(newBoardCards);
-                resourceDeck.setDeckSize(resourceDeck.getDeckSize() - 1);
-                break;
-        }
-        try{
-            getPlayerByName(name).setHandSize(getPlayerByName(name).getHandSize() + 1);
-            ui.otherPlayerDraw(name, deckFrom, drawPosition);
-        } catch (PlayerNotFoundByNameException e) {
-            throw new RuntimeException(e);
-        }
-    }
-    public void giveOtherPlayerInitialHand(String name){
-        try {
-            Player p = getPlayerByName(name);
-            p.setHandSize(3);
-            if (resourceDeck == null || goldDeck == null){
-                resourceDeck = new Deck<ResourceCard>();
-                goldDeck = new Deck<GoldCard>();
-            }
-            resourceDeck.setDeckSize(resourceDeck.getDeckSize() - 2);
-            goldDeck.setDeckSize(goldDeck.getDeckSize() - 1);
-            ui.otherPlayerInitialHand(name);
-        } catch (PlayerNotFoundByNameException e) {
-            throw new RuntimeException(e);
-        }
-    }
-    public void setColor(boolean confirmation, Color color){
-        if(confirmation){
-            setMyColor(color);
-            ui.colorChanged();
-        } else {
-            ui.colorChangeFailed();
-        }
-    }
-    /**
-     * Updates the player with the new color and tells the user which players have which colors
-     */
-    public void updatePlayerColors(Color color, String name) {
-        try {
-            getPlayerByName(name).setColor(color);
-            ui.displayPlayerColors();
-        } catch (PlayerNotFoundByNameException e) {
-            throw new RuntimeException(e);
-        }
-    }
-    public void setName(Boolean confirmation){
-        if(confirmation){
-            this.myName = this.proposedName;
-            ui.nameChanged(myName);
-        } else {
-            ui.nameChangeFailed();
-        }
-    }
-    /**
-     * Updates the player with the new ready status
-     * @param ready new ready status
-     * @param name name of the player
-     */
-    public void updatePlayerReady(boolean ready, String name) {
-        try {
-            getPlayerByName(name).setReady(ready);
-            ui.updateReady(name, ready);
-        } catch (PlayerNotFoundByNameException e) {
-            throw new RuntimeException(e);
-        }
-    }
-    public void setSecretCard(String name) {
-        System.out.println("myname " + myName);
-        if (name.equals(myName)){
-            secretAchievement = potentialSecretAchievements.get(indexofSecretAchievement);
-        }
-        potentialSecretAchievements.stream().forEach(System.out::println);
-        System.out.println(indexofSecretAchievement + " index " + secretAchievement + " secret");
-        System.out.println("Secret achievement chosen in ClientController");
-        ui.secretAchievementChosen(name);
-    }
-    public void setSecretCard(String name, int chosenCard){
-        if (name.equals(myName)){
-            indexofSecretAchievement = chosenCard;
-            setSecretCard(name);
-        }
-    }
-    public void startingCardChosen(String name, CornerCardFace startingFace) {
-        try{
-            getPlayerByName(name).initializeManuscript(startingFace);
-            ui.startingCardChosen(name);
-        } catch (PlayerNotFoundByNameException e) {
-            throw new RuntimeException(e);
-        }
-    }
-    public void startGame(List<GoldCard> goldBoardCards, List<ResourceCard> resourceBoardCards){
-        ui.gameStarted();
-        goldDeck = new Deck<>(goldBoardCards);
-        resourceDeck = new Deck<>(resourceBoardCards);
-        ui.displayBoardCards();
-    }
-    public void updatePlayerOrder(List<String> playerNames){
-        List<Player> newPlayerList = new ArrayList<>();
-        try {
-            for (String name : playerNames) {
-                newPlayerList.add(getPlayerByName(name));
-            }
-            players = newPlayerList;
-            gameState = GameState.PLACE_CARD;
-            ui.displayPlayerOrder();
-        } catch (PlayerNotFoundByNameException e) {
-            throw new RuntimeException(e);
-        }
-    }
-    public void giveStartingCard(Card card) {
-        gameState = GameState.CHOOSE_STARTING_CARD;
-        ui.chooseStartingCardFace(card);
-    }
-    public void toDoFirst(Actions actionToDo) {
-        ui.doFirst(actionToDo);
-    }
-    public void placeCard(String playerName, CornerCardFace placedCardFace, int x, int y, int points){
-        try{
-            getPlayerByName(playerName).addManuscriptPoints(points);
-            getPlayerByName(playerName).addCardToManuscript(x, y, placedCardFace, turn);
-            getPlayerByName(playerName).setHandSize(getPlayerByName(playerName).getHandSize() - 1);
-            // RIMUOVI LA CARTA DALLA MANO SE IL PLAYER SONO IO
-            if (playerName.equals(myName)) {
-                hand.remove(chosenHandCard.intValue());
-            }
-            setChosenHandCard(null);
-            ui.cardPlaced(playerName, placedCardFace, x, y);
-            if(points > 0){
-                ui.displayPlayerPoints(playerName);
-            }
-            gameState = GameState.DRAW_CARD;
-        } catch (PlayerNotFoundByNameException e) {
-            throw new RuntimeException(e);
-        }
-    }
+    void setReady();
 
-    public void playerDisconnected(String playerName) {
-        ui.playerDisconnected(playerName);
-    }
+    void askSetColor(String color);
 
-    public void invalidName() {
-        ui.nameChangeFailed();
-    }
-    public void tooManyPlayers() {
-        ui.tooManyPlayers();
-    }
+    void sendChatMessage(String message);
 
-    public void playerRemoved(String name) {
-        players = players.stream().filter(p -> !p.getName().equals(name)).toList();
-        ui.playerRemoved(name);
-    }
+    void askSetName(String name);
 
-    public void otherPlayerReconnected(String name) {
-        ui.otherPlayerReconnected(name);
-    }
+    void setRMIMode(boolean rmi);
 
-    public void idNotInGame(){
-        ui.idNotInGame();
-    }
+    void chooseStartingCardFace(Face face);
 
-    public void playerAlreadyPlaying(){
-        ui.playerAlreadyPlaying();
-    }
+    void chooseSecretAchievement(int index);
 
-    public AchievementCard getSecretAchievement() {
-        return secretAchievement;
-    }
+    void askPlayCard(int cardNumber, Face face, int x, int y);
 
-    public List<Message> getChat() {
-        return chat.getMessages();
-    }
+    void askDrawCard(Decks deck, DeckPosition deckPosition);
 
-    public void setGameInfo(String id, List<AchievementCard> commonAchievements, Deck<GoldCard> goldDeck, Deck<ResourceCard> resourceDeck, String name, AchievementCard secretAchievement, List<Card> hand, int turn, List<Player> players, Chat chat, GameState gameState) {
+    int getIndexofSecretAchievement();
 
+    String getMyName();
 
-        this.id = id;
-        this.commonAchievements = commonAchievements;
-        this.goldDeck = goldDeck;
-        this.resourceDeck = resourceDeck;
-        this.myName = name;
-        this.secretAchievement = secretAchievement;
-        this.hand = hand;
-        this.turn = turn;
-        this.players = players;
-        this.chat = chat;
-        this.gameState = gameState;
-        this.unavaiableColors = new ArrayList<>();
-        for (Player p : players){
-            unavaiableColors.add(p.getColor());
-        }
-        System.out.println("Game info set");
-        ui.displayGameInfo();
-    }
+    List<Player> getPlayers();
 
-    public void loadGame(List<AchievementCard> commonAchievements, Deck<GoldCard> goldDeck, Deck<ResourceCard> resourceDeck, AchievementCard secretAchievement, List<Card> hand, int turn, List<Player> players, Chat chat, String name) {
-        this.commonAchievements = commonAchievements;
-        this.goldDeck = goldDeck;
-        this.resourceDeck = resourceDeck;
-        this.secretAchievement = secretAchievement;
-        this.hand = hand;
-        this.turn = turn;
-        this.players = players;
-        this.chat = chat;
-        this.gameState = GameState.PLACE_CARD;
-        this.myName = name;
-        this.unavaiableColors = new ArrayList<>();
-        for (Player p : players){
-            unavaiableColors.add(p.getColor());
-        }
-        ui.displayGameInfo();
-    }
+    GameState getGameState();
 
-    public void gameAlreadyFinished() {
-        ui.gameAlreadyFinished();
-    }
+    List<Color> getAvailableColors();
+
+    List<Card> getHand();
+
+    List<AchievementCard> getCommonAchievements();
+
+    Map<String, Integer> getLeaderboard();
+
+    int getDeckSize(Decks deck);
+
+    List<Card> getBoardCards(Decks deck);
+
+    Player getActivePlayer();
+
+    int getTurn();
+
+    List<String> getPlayerNames();
+
+    void loadLobbyInfo(String id, List<String> playerNames, Map<String, Color> playerColors, Map<String, Boolean> playerReady, Boolean isSavedGame);
+
+    void giveAchievementCards(List<AchievementCard> secretCards, List<AchievementCard> commonCards);
+
+    void achievementDeckDrawInvalid();
+
+    void alreadyDone(Actions action);
+
+    void cardNotPlaceable();
+
+    void addChatMessage(Message message);
+
+    void chatMessageIsEmpty();
+
+    void colorNotYetSet();
+
+    void giveDrawnCard(Card drawnCard);
+
+    void emptyDeck();
+
+    void setEndGame();
+
+    void gameAlreadyStarted();
+
+    void gameNotYetStarted();
+
+    void giveInitialHand(List<Card> hand);
+
+    void invalidCard(Actions cardType);
+
+    void displayLeaderboard(LinkedHashMap<String, Integer> playerPoints);
+
+    void nameNotYetSet();
+
+    void newPlayer(List<String> playerNames);
+
+    void notYetGivenCard(Actions type);
+
+    void notYourTurn();
+
+    void newTurn(String activePlayerName, int turnNumber);
+
+    void drawOtherPlayer(String name, Decks deckFrom, DeckPosition drawPosition, List<Card> newBoardCards);
+
+    void giveOtherPlayerInitialHand(String name);
+
+    void setColor(boolean confirmation, Color color);
+
+    void updatePlayerColors(Color color, String name);
+
+    void setName(Boolean confirmation);
+
+    void updatePlayerReady(boolean ready, String name);
+
+    void setSecretCard(String name);
+
+    void setSecretCard(String name, int chosenCard);
+
+    void startingCardChosen(String name, CornerCardFace startingFace);
+
+    void startGame(List<GoldCard> goldBoardCards, List<ResourceCard> resourceBoardCards);
+
+    void updatePlayerOrder(List<String> playerNames);
+
+    void giveStartingCard(Card card);
+
+    void toDoFirst(Actions actionToDo);
+
+    void placeCard(String playerName, CornerCardFace placedCardFace, int x, int y, int points);
+
+    void playerDisconnected(String playerName);
+
+    void invalidName();
+
+    void tooManyPlayers();
+
+    void playerRemoved(String name);
+
+    void otherPlayerReconnected(String name);
+
+    void idNotInGame();
+
+    void playerAlreadyPlaying();
+
+    AchievementCard getSecretAchievement();
+
+    List<Message> getChat();
+
+    void setGameInfo(String id, List<AchievementCard> commonAchievements, Deck<GoldCard> goldDeck, Deck<ResourceCard> resourceDeck, String name, AchievementCard secretAchievement, List<Card> hand, int turn, List<Player> players, Chat chat, GameState gameState);
+
+    void loadGame(List<AchievementCard> commonAchievements, Deck<GoldCard> goldDeck, Deck<ResourceCard> resourceDeck, AchievementCard secretAchievement, List<Card> hand, int turn, List<Player> players, Chat chat, GameState gameState, String name);
+
+    void gameAlreadyFinished();
 }

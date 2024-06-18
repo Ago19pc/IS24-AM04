@@ -10,13 +10,13 @@ import Server.Player.Player;
 import java.io.Serializable;
 
 public class ChatMessage implements Serializable, ToServerMessage, ToClientMessage {
-    private String message;
-    private String nameOrId;
+    private final String message;
+    private final String nameOrId;
 
     /**
      * Constructor for the ChatMessage, which is the message used to update the chat
-     * @param message
-     * @param player
+     * @param message the message to be sent
+     * @param player the player who sent the message
      */
     public ChatMessage(String message, String player){
         this.message = message;
@@ -25,7 +25,7 @@ public class ChatMessage implements Serializable, ToServerMessage, ToClientMessa
 
     @Override
     public void serverExecute(Controller controller) {
-        String playerName = "";
+        String playerName;
         try {
             playerName = controller.getConnectionHandler().getPlayerNameByID(this.nameOrId);
             Player player = controller.getPlayerByName(playerName);
@@ -39,11 +39,7 @@ public class ChatMessage implements Serializable, ToServerMessage, ToClientMessa
             } catch (java.rmi.RemoteException exception) {
                 System.out.println("Remote exception");
             }
-        } catch (IllegalArgumentException e) {
-            ChatMessageIsEmptyMessage chatMessageIsEmptyMessage = new ChatMessageIsEmptyMessage();
-            controller.getConnectionHandler().sendMessage(chatMessageIsEmptyMessage, playerName);
         }
-
     }
 
     @Override

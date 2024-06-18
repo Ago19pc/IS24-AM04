@@ -14,7 +14,7 @@ import java.util.Objects;
 public class PlayerColorMessage implements Serializable, ToClientMessage, ToServerMessage {
 
     private String name;
-    private Color color;
+    private final Color color;
     private boolean confirmation;
     private String id;
 

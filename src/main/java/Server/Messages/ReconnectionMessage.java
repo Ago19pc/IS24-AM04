@@ -20,7 +20,7 @@ import java.rmi.RemoteException;
 import java.util.List;
 
 public class ReconnectionMessage implements Serializable, ToClientMessage, ToServerMessage {
-    private String id;
+    private final String id;
     private String newId;
     private List<AchievementCard> commonAchievements;
     private Deck<GoldCard> goldDeck;
@@ -65,28 +65,28 @@ public class ReconnectionMessage implements Serializable, ToClientMessage, ToSer
             try {
                 controller.getConnectionHandler().getServerConnectionHandler(id).sendMessage(message, id);
             } catch (PlayerNotInAnyServerConnectionHandlerException | RemoteException playerNotInAnyServerConnectionHandlerException) {
-                playerNotInAnyServerConnectionHandlerException.printStackTrace();
+                System.err.println("Player not found in any server connection handler (ReconnectionMessage serverExecute)");
             }
         } catch (AlreadySetException e) {
             PlayerAlreadyPlayingMessage message = new PlayerAlreadyPlayingMessage();
             try {
                 controller.getConnectionHandler().getServerConnectionHandler(id).sendMessage(message, id);
             } catch (PlayerNotInAnyServerConnectionHandlerException | RemoteException playerNotInAnyServerConnectionHandlerException) {
-                playerNotInAnyServerConnectionHandlerException.printStackTrace();
+                System.err.println("Player not found in any server connection handler (ReconnectionMessage serverExecute)");
             }
         } catch (NotYetStartedException e) {
             GameNotYetStartedMessage message = new GameNotYetStartedMessage();
             try {
                 controller.getConnectionHandler().getServerConnectionHandler(id).sendMessage(message, id);
             } catch (PlayerNotInAnyServerConnectionHandlerException | RemoteException playerNotInAnyServerConnectionHandlerException) {
-                playerNotInAnyServerConnectionHandlerException.printStackTrace();
+                System.err.println("Player not found in any server connection handler (ReconnectionMessage serverExecute)");
             }
         } catch (AlreadyFinishedException e) {
             GameAlreadyFinishedMessage message = new GameAlreadyFinishedMessage();
             try {
                 controller.getConnectionHandler().getServerConnectionHandler(id).sendMessage(message, id);
             } catch (PlayerNotInAnyServerConnectionHandlerException | RemoteException playerNotInAnyServerConnectionHandlerException) {
-                playerNotInAnyServerConnectionHandlerException.printStackTrace();
+                System.err.println("Player not found in any server connection handler (ReconnectionMessage serverExecute)");
             }
         }
     }

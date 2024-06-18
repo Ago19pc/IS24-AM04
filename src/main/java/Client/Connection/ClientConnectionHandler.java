@@ -11,19 +11,19 @@ public interface ClientConnectionHandler extends Remote {
     /**
      * Send a message to the server
      * @param message the message to send
-     * @throws IOException
+     * @throws IOException when the message can't be sent
      */
-    public void sendMessage(ToServerMessage message) throws IOException, RemoteException;
+    void sendMessage(ToServerMessage message) throws IOException;
 
     /**
      * Execute a message
      * @param message the message to execute
      */
-    public void executeMessage(ToClientMessage message) throws RemoteException;
+    void executeMessage(ToClientMessage message) throws RemoteException;
 
     /**
      * Ping the server
-     * @throws RemoteException
+     * @throws RemoteException like all RMI stuff
      */
-    public boolean ping() throws RemoteException;
+    boolean ping() throws RemoteException;
 }

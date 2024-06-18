@@ -3,6 +3,7 @@ package Server.Card;
 import Server.Enums.CardCorners;
 import Server.Enums.Symbol;
 
+
 import java.util.List;
 import java.util.Map;
 
@@ -48,14 +49,50 @@ public class GoldFrontFace extends ResourceFrontFace {
 
     @Override
     public String toString() {
-        String toReturn =   "----------\n" +
-                            "|" + getCornerSymbols().get(CardCorners.TOP_LEFT) + "        " + getCornerSymbols().get(CardCorners.TOP_RIGHT) + "|\n" +
-                            "|" + "        |\n" +
-                            "|" + "    "  + getKingdom() + "    |\n" +
-                            "|" + "        |\n" +
-                            "|" + getCornerSymbols().get(CardCorners.BOTTOM_LEFT) + "        " + getCornerSymbols().get(CardCorners.BOTTOM_RIGHT) + "|\n" +
-                            "----------\n";
+        //
+        String boundaries = "-".repeat(29);
+        boundaries += "\n";
+        String upper = String.format("|%9s|%7s|%9s|\n", getCornerSymbols().get(CardCorners.TOP_LEFT), scoreReqForPrint(), getCornerSymbols().get(CardCorners.TOP_RIGHT));
+        String middle = String.format("|%27s|\n", getKingdom());
+        String lower = String.format("|%9s|%7s|%9s|\n", getCornerSymbols().get(CardCorners.BOTTOM_LEFT), placeReqForPrint(), getCornerSymbols().get(CardCorners.BOTTOM_RIGHT));
 
-        return toReturn;
+        return boundaries + upper + middle + lower + boundaries;
+    }
+
+    private String placeReqForPrint() {
+        StringBuilder toRet = new StringBuilder();
+
+        for (Symbol s : placementRequirements.keySet()){
+            if (placementRequirements.get(s) != 0) {
+                if (!toRet.isEmpty()) {
+                    toRet.append(" ");
+                }
+                toRet.append(s.toChar()).append("-").append(placementRequirements.get(s));
+            }
+        }
+
+        return toRet.toString();
+    }
+
+    private String scoreReqForPrint() {
+        StringBuilder toRet = new StringBuilder();
+        toRet.append(getScore());
+        for (Symbol s: scoreRequirements.keySet()){
+            if (scoreRequirements.get(s) != 0) {
+                if (!toRet.isEmpty()) {
+                    toRet.append(" ");
+                }
+                toRet.append(s.toChar()).append("-").append(scoreRequirements.get(s));
+            }
+        }
+
+        if (toRet.isEmpty()) {
+            toRet.append(" ".repeat(placeReqForPrint().length()));
+        }
+        if (toRet.length() < placeReqForPrint().length()) {
+            toRet.append(" ".repeat(placeReqForPrint().length() - toRet.length()));
+        }
+
+        return toRet.toString();
     }
 }

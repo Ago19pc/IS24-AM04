@@ -1,8 +1,6 @@
 package Client.Connection;
 
 import Client.Controller.ClientController;
-import Server.Exception.ClientExecuteNotCallableException;
-import Server.Exception.PlayerNotFoundByNameException;
 import Server.Messages.ToClientMessage;
 import Server.Messages.ToServerMessage;
 
@@ -16,7 +14,7 @@ public class ClientConnectionHandlerSOCKET extends Thread implements ClientConne
     private Socket clientSocket;
     public ClientSender sender;
     public ClientReceiver receiver;
-    private ClientController controller;
+    private final ClientController controller;
 
 
     /**
@@ -59,30 +57,26 @@ public class ClientConnectionHandlerSOCKET extends Thread implements ClientConne
      * Sets the socket for the receiver
      * @param host the ip address of the server
      * @param port the port of the server
-     * @throws IOException
+     * @throws IOException when problems when setting Socket
      */
     public void setSocket(String host, int port) throws IOException {
         this.clientSocket = new Socket(host, port);
         try {
             this.sender.setOutputBuffer(new ObjectOutputStream(clientSocket.getOutputStream()));
             this.receiver = new ClientReceiver(clientSocket, controller);
-            Thread.UncaughtExceptionHandler h = new Thread.UncaughtExceptionHandler() {
-                @Override
-                public void uncaughtException(Thread th, Throwable ex) {
-                    System.out.println("Uncaught exception: " + ex);
-                    ex.printStackTrace();
-                    try {
-                        clientSocket.close();
+            Thread.UncaughtExceptionHandler h = (th, ex) -> {
+                System.err.println("Uncaught exception: " + ex);
+                try {
+                    clientSocket.close();
 
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
+                } catch (IOException e) {
+                    System.err.println("Error while closing the socket");
                 }
             };
             receiver.setUncaughtExceptionHandler(h);
             receiver.start();
         } catch (Exception e) {
-            e.printStackTrace();
+            System.err.println("Error while setting the socket");
         }
 
 
@@ -116,8 +110,8 @@ public class ClientConnectionHandlerSOCKET extends Thread implements ClientConne
 
     /**
      * Sends a message to the server
-     * @param message    e the message to send
-     * @throws IOException
+     * @param message e the message to send
+     * @throws IOException if problems present when sending message
      */
     public void sendMessage(ToServerMessage message) throws IOException {
         sender.sendMessage(message);
@@ -127,13 +121,17 @@ public class ClientConnectionHandlerSOCKET extends Thread implements ClientConne
 
     /**
      * Stops the connection, interrupts the sender and receiver threads and closes the socket
-     * @throws IOException
+     * @throws IOException when problems with closing socket
      */
     public void stopConnection() throws IOException {
         receiver.interrupt();
         clientSocket.close();
     }
 
+    /**
+     * Executes a message
+     * @param message the message to execute
+     */
     public void executeMessage(ToClientMessage message) {
         message.clientExecute(controller);
     }
@@ -142,7 +140,7 @@ public class ClientConnectionHandlerSOCKET extends Thread implements ClientConne
     /**
      * This function is not used but is required by the interface
      * @return false
-     * @throws RemoteException
+     * @throws RemoteException like all RMI stuff
      */
     @Override
     public boolean ping() throws RemoteException {
