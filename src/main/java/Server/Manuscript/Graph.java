@@ -16,8 +16,8 @@ import java.util.stream.Collectors;
  */
 public class Graph implements Serializable {
     private final CornerCardFace root;
-    private List<CornerCardFace> containedCards;
-    private List<Map<CardCorners, CornerCardFace>> cardNeighbors;
+    private final List<CornerCardFace> containedCards;
+    private final List<Map<CardCorners, CornerCardFace>> cardNeighbors;
     /**
      * Constructor for the Graph. Sets the root, creates the card map, and adds the starting card
      * @param startingCardFace the starting card face

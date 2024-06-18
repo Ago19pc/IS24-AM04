@@ -34,39 +34,39 @@ public class main {
         System.out.println("[CODEXBOT]: Type 'exit' to exit the game.");
         System.out.print("> ");
         String input = scanner.nextLine();
-        if (input.equals("host")) {
-            Main.main();
-        } else if (input.equals("client")) {
-            System.out.println("[CODEXBOT]: You are now a client.");
-            System.out.println("[CODEXBOT]: Would you like to go GUI (g) or TUI (t)?");
-            System.out.print("> ");
-            String guiOrTui = scanner.nextLine();
-            if (guiOrTui.equals("g")) {
-                MainGUI.main();
-            } else {
+        switch (input) {
+            case "host" -> Main.main();
+            case "client" -> {
+                System.out.println("[CODEXBOT]: You are now a client.");
+                System.out.println("[CODEXBOT]: Would you like to go GUI (g) or TUI (t)?");
+                System.out.print("> ");
+                String guiOrTui = scanner.nextLine();
+                if (guiOrTui.equals("g")) {
+                    MainGUI.main();
+                } else {
+                    try {
+                        MainCLI.main();
+                    } catch (RemoteException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+            }
+            case "exit" -> {
+                System.out.println("[CODEXBOT]: Goodbye!");
+                System.exit(0);
+            }
+            case "gclient" -> MainGUI.main();
+            case "tclient" -> {
                 try {
                     MainCLI.main();
                 } catch (RemoteException e) {
                     throw new RuntimeException(e);
                 }
             }
-        } else if (input.equals("exit")) {
-            System.out.println("[CODEXBOT]: Goodbye!");
-            System.exit(0);
-        } else if (input.equals("gclient")){
-            MainGUI.main();
-        } else if (input.equals("tclient")) {
-            try {
-                MainCLI.main();
-            } catch (RemoteException e) {
-                throw new RuntimeException(e);
+            default -> {
+                System.out.println("[CODEXBOT]: Invalid input. Please try again.");
+                procedure();
             }
-        } else
-
-        {
-            System.out.println("[CODEXBOT]: Invalid input. Please try again.");
-            procedure();
-
         }
     }
 

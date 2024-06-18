@@ -12,7 +12,7 @@ import java.net.Socket;
  * This class is used to send messages to a single socket client
  */
 public class ServerSender {
-    private ObjectOutputStream out;
+    private final ObjectOutputStream out;
 
     public ServerSender(Socket clientSocket) throws IOException {
         out = new ObjectOutputStream(clientSocket.getOutputStream());
@@ -26,8 +26,7 @@ public class ServerSender {
         try{
             out.writeObject(message);
         } catch (IOException e) {
-            System.out.println("Error sending message to client");
-            e.printStackTrace();
+            System.err.println("Error sending message to client");
         }
     }
 }

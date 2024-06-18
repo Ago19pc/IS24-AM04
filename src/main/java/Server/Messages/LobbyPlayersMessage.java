@@ -11,12 +11,12 @@ import java.util.Map;
  * Message to send the client the info of the players in the lobby. Used both for the new game lobby and the saved game lobby
  */
 public class LobbyPlayersMessage implements Serializable, ToClientMessage {
-    private List<String> playerNames;
-    private Map<String, Color> playerColors;
-    private Map<String, Boolean> playerReady;
+    private final List<String> playerNames;
+    private final Map<String, Color> playerColors;
+    private final Map<String, Boolean> playerReady;
 
-    private String id;
-    private Boolean isSavedGame;
+    private final String id;
+    private final Boolean isSavedGame;
 
     public LobbyPlayersMessage(List<String> playerNames, Map<String, Color> playerColors, Map<String, Boolean> playerReady, String id, Boolean isSavedGame) {
         this.playerNames = playerNames;

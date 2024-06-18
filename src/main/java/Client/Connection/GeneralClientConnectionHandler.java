@@ -15,8 +15,8 @@ import java.rmi.RemoteException;
 public class GeneralClientConnectionHandler {
     private ClientConnectionHandlerSOCKET clientConnectionHandlerSOCKET;
     private ClientConnectionHandlerRMI clientConnectionHandlerRMI;
-    private ClientController controller;
-    private boolean trueifRMI = false;
+    private final ClientController controller;
+    private final boolean trueifRMI;
 
     /**
      * Standard constructor.
@@ -34,37 +34,9 @@ public class GeneralClientConnectionHandler {
         }
     }
 
-    /**
-     * Fast constructor. For testing purposes only.
-     * @param controller the client controller
-     * @param trueifRMI true if the connection is RMI, false if it is SOCKET
-     * @param debugMode if true, the client connects automatically either to RMI-localhost:1099 or to SOCKET-localhost:1234
-     */
-    public GeneralClientConnectionHandler(ClientController controller, boolean trueifRMI, boolean debugMode) {
-        this.trueifRMI = trueifRMI;
-        this.controller = controller;
-        if(!trueifRMI){
-            clientConnectionHandlerSOCKET = new ClientConnectionHandlerSOCKET(debugMode, controller);
-        } else {
-            try {
-                setSocket("localhost", 1099);
-            } catch (NotBoundException e) {
-                throw new RuntimeException(e);
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        }
-
-    }
-
-    /**
-     * Connects to the server specified
-     * @param server_host the server hostname
-     * @param server_port the server port
-     */
-    public void setSocket(String server_host, int server_port) throws IOException, NotBoundException {
+    public void setSocket(String server_host, int server_port) throws NotBoundException, IOException {
         if(trueifRMI) {
-            clientConnectionHandlerRMI.setServer(server_host);
+            clientConnectionHandlerRMI.setServer(server_host, server_port);
             clientConnectionHandlerRMI.setController(controller);
             LobbyPlayersMessage lobby = clientConnectionHandlerRMI.server.join(clientConnectionHandlerRMI.rmi_client_port);
             lobby.clientExecute(controller);
@@ -74,7 +46,9 @@ public class GeneralClientConnectionHandler {
 
     }
 
-    //todo: ADD JAVADOC
+    /**
+     * Starts the connection (for socket only)
+     */
     public void start() {
         if (!trueifRMI) {
             clientConnectionHandlerSOCKET.start();
@@ -87,18 +61,45 @@ public class GeneralClientConnectionHandler {
      */
     public void sendMessage(ToServerMessage message){
         if(trueifRMI) {
-            try {
-                System.out.println("Sending message to server");
-                clientConnectionHandlerRMI.sendMessage(message);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            clientConnectionHandlerRMI.sendMessage(message);
         } else {
             try {
                 clientConnectionHandlerSOCKET.sendMessage(message);
             } catch (IOException e) {
-                e.printStackTrace();
+                System.err.println("[SOCKET] Error while sending message to the server");
             }
         }
+    }
+
+    /**
+     * @return true if the client is connected to the server
+     */
+    public boolean isConnectedToServer() {
+        if(trueifRMI) {
+            return clientConnectionHandlerRMI != null;
+        } else {
+            return clientConnectionHandlerSOCKET.sender.getOutputBuffer() == null;
+        }
+    }
+
+    /**
+     * @return the client connection handler RMI
+     */
+    public ClientConnectionHandlerRMI getClientConnectionHandlerRMI() {
+        return clientConnectionHandlerRMI;
+    }
+
+    /**
+     * @return the client connection handler SOCKET
+     */
+    public ClientConnectionHandlerSOCKET getClientConnectionHandlerSOCKET() {
+        return clientConnectionHandlerSOCKET;
+    }
+
+    /**
+     * @return true if the client is using RMI
+     */
+    public boolean getTrueIfRMI() {
+        return trueifRMI;
     }
 }

@@ -8,6 +8,9 @@ public class NetworkSceneController extends SceneController{
     public RadioButton rmi_radio_button, socket_radio_button;
     public Button next_button;
 
+    /**
+     * Set the connection method to RMI
+     */
     @FXML
     public void setRMI(){
         rmi_radio_button.setSelected(true);
@@ -17,6 +20,9 @@ public class NetworkSceneController extends SceneController{
         controller.setRMIMode(true);
     }
 
+    /**
+     * Set the connection method to Socket
+     */
     @FXML
     public void setSocket(){
         rmi_radio_button.setSelected(false);
@@ -26,6 +32,9 @@ public class NetworkSceneController extends SceneController{
         controller.setRMIMode(false);
     }
 
+    /**
+     * Go to the next scene
+     */
     @FXML
     public void select_connection_method(){
         stage.setScene(sceneMap.get(SceneName.JOIN));

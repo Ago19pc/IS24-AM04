@@ -19,7 +19,7 @@ public interface Deckable {
      * @return the card from the position
      * @throws AlreadyFinishedException if the deck is empty in the selected position
      */
-    public Card popCard(DeckPosition position) throws AlreadyFinishedException;
+    Card popCard(DeckPosition position) throws AlreadyFinishedException;
 
     /**
      * Checks if the deck is empty
@@ -34,11 +34,11 @@ public interface Deckable {
      * @throws IncorrectDeckPositionException if the position is not in the board (i.e. the deck itself)
      * @see DeckPosition
      */
-     public void addCard(Card card, DeckPosition position) throws IncorrectDeckPositionException;
+    void addCard(Card card, DeckPosition position) throws IncorrectDeckPositionException;
 
     /**
      * Returns the card on top of the deck without removing it
      * @return the card on top of the deck
      */
-     public Card getTopCardNoPop();
+     Card getTopCardNoPop();
 }

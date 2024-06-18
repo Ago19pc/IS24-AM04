@@ -5,7 +5,6 @@ import Server.Card.*;
 import Server.Chat.Message;
 import Server.Connections.GeneralServerConnectionHandler;
 import Server.Deck.AchievementDeck;
-import Server.Deck.ResourceDeck;
 import Server.Enums.*;
 import Server.Exception.*;
 import Server.GameModel.GameModel;
@@ -19,9 +18,7 @@ import com.google.gson.Gson;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
-import java.io.IOException;
 import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * This is the implementation of the controller interface. It manages the game flow and the game model.
@@ -44,15 +41,11 @@ public class ControllerInstance implements Controller{
         System.out.println("Vuoi iniziare una nuova partita (n) o caricare una partita salvata (l)?");
         String input = inputReader.nextLine();
         if(input.equals("l")){
-            try {
-                loadGame();
-                gameState = GameState.LOAD_GAME_LOBBY;
-                System.out.println("Partita caricata. I giocatori sono:");
-                for (Player p : gameModel.getPlayerList()){
-                    System.out.println(p.getName());
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
+            loadGame();
+            gameState = GameState.LOAD_GAME_LOBBY;
+            System.out.println("Partita caricata. I giocatori sono:");
+            for (Player p : gameModel.getPlayerList()){
+                System.out.println(p.getName());
             }
         }
     }
@@ -64,6 +57,7 @@ public class ControllerInstance implements Controller{
     for (Player p : gameModel.getPlayerList()){
         if (p.getName().equals(player.getName())) throw new IllegalArgumentException("Player with same name already exists");
     }
+    if( name.isBlank() ) throw new IllegalArgumentException("Name cannot be empty");
     if(gameModel.getPlayerList().size()<4) {
         gameModel.addPlayer(player);
         connectionHandler.addPlayerByID(name, clientID);
@@ -91,7 +85,7 @@ public class ControllerInstance implements Controller{
         connectionHandler.sendMessage(playerNameMessage, name);
         NewPlayerMessage playerMessage = new NewPlayerMessage(gameModel.getPlayerList());
         connectionHandler.sendAllMessage(playerMessage);
-        Boolean allSet = true;
+        boolean allSet = true;
         for (Player p : gameModel.getPlayerList()){
             if (!connectionHandler.isNameConnectedToId(p.getName())){
                 allSet = false;
@@ -103,11 +97,11 @@ public class ControllerInstance implements Controller{
             List<AchievementCard> commonAchievementCards = new ArrayList<>();
             commonAchievementCards.add(gameModel.getAchievementDeck().getBoardCard().get(DeckPosition.FIRST_CARD));
             commonAchievementCards.add(gameModel.getAchievementDeck().getBoardCard().get(DeckPosition.SECOND_CARD));
-            Deck<GoldCard> goldDeck = new Deck<GoldCard>(
+            Deck<GoldCard> goldDeck = new Deck<>(
                     gameModel.getGoldDeck().getNumberOfCards(),
                     new ArrayList<>(List.of(gameModel.getGoldDeck().getTopCardNoPop(), gameModel.getGoldDeck().getBoardCard().get(DeckPosition.FIRST_CARD), gameModel.getGoldDeck().getBoardCard().get(DeckPosition.SECOND_CARD)))
             );
-            Deck<ResourceCard> resourceDeck = new Deck<ResourceCard>(
+            Deck<ResourceCard> resourceDeck = new Deck<>(
                     gameModel.getResourceDeck().getNumberOfCards(),
                     new ArrayList<>(List.of(gameModel.getResourceDeck().getTopCardNoPop(), gameModel.getResourceDeck().getBoardCard().get(DeckPosition.FIRST_CARD), gameModel.getResourceDeck().getBoardCard().get(DeckPosition.SECOND_CARD)))
             );
@@ -167,7 +161,13 @@ public class ControllerInstance implements Controller{
                 }
                 break;
             case PLACE_CARD, DRAW_CARD:
-                computeLeaderboard();
+                if(getPlayerList().size() == 1){
+                    try{
+                        computeLeaderboard();
+                    } catch (AlreadyFinishedException e) {
+                        System.err.println("Error while computing leaderboard");
+                    }
+                }
                 break;
             default:
                 break;
@@ -223,9 +223,9 @@ public class ControllerInstance implements Controller{
                         gameModel.getGoldDeck().getBoardCard().get(DeckPosition.SECOND_CARD)
                 ),
                 List.of(
-                        (ResourceCard) gameModel.getResourceDeck().getTopCardNoPop(),
-                        (ResourceCard) gameModel.getResourceDeck().getBoardCard().get(DeckPosition.FIRST_CARD),
-                        (ResourceCard) gameModel.getResourceDeck().getBoardCard().get(DeckPosition.SECOND_CARD)
+                        gameModel.getResourceDeck().getTopCardNoPop(),
+                        gameModel.getResourceDeck().getBoardCard().get(DeckPosition.FIRST_CARD),
+                        gameModel.getResourceDeck().getBoardCard().get(DeckPosition.SECOND_CARD)
                 )
         );
         connectionHandler.sendAllMessage(startGameMessage);
@@ -288,7 +288,7 @@ public class ControllerInstance implements Controller{
         if(gameModel.getTurn() > 1){
             throw new AlreadyStartedException("Game already started");
         }
-        AchievementCard card = (AchievementCard) givenSecretObjectiveCards.get(player).get(cardNumber);
+        AchievementCard card = givenSecretObjectiveCards.get(player).get(cardNumber);
         player.setSecretObjective(card);
         SetSecretCardMessage setSecretCardMessage = new SetSecretCardMessage(player.getName());
         connectionHandler.sendAllMessage(setSecretCardMessage);
@@ -336,9 +336,9 @@ public class ControllerInstance implements Controller{
                                 gameModel.getGoldDeck().getBoardCard().get(DeckPosition.SECOND_CARD)
                         ),
                         List.of(
-                                (ResourceCard) gameModel.getResourceDeck().getTopCardNoPop(),
-                                (ResourceCard) gameModel.getResourceDeck().getBoardCard().get(DeckPosition.FIRST_CARD),
-                                (ResourceCard) gameModel.getResourceDeck().getBoardCard().get(DeckPosition.SECOND_CARD)
+                                gameModel.getResourceDeck().getTopCardNoPop(),
+                                gameModel.getResourceDeck().getBoardCard().get(DeckPosition.FIRST_CARD),
+                                gameModel.getResourceDeck().getBoardCard().get(DeckPosition.SECOND_CARD)
                         )
                 );
                 connectionHandler.sendAllMessage(startGameMessage);
@@ -392,8 +392,12 @@ public class ControllerInstance implements Controller{
         //if it is end game and all players have played also an extra round, calculate leaderboard
         if(gameModel.isEndGamePhase() && gameModel.getActivePlayerIndex() == getPlayerList().size() - 1 ){
             if(gameModel.isLastRound()){
-                computeLeaderboard();
-                return;
+                try{
+                    computeLeaderboard();
+                    return;
+                } catch (AlreadyFinishedException e) {
+                    System.err.println("Error while computing leaderboard");
+                }
             } else {
                 gameModel.setLastRound(true);
             }
@@ -417,11 +421,7 @@ public class ControllerInstance implements Controller{
             gameState = GameState.PLACE_CARD;
         } while (!isOnline(getPlayerList().get(gameModel.getActivePlayerIndex())));//if the player is not online skips to the next one
         gameModel.nextTurn();
-        try{
-            saveGame();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        saveGame();
         NewTurnMessage newTurnMessage = new NewTurnMessage(getPlayerList().get(gameModel.getActivePlayerIndex()).getName(), gameModel.getTurn());
         connectionHandler.sendAllMessage(newTurnMessage);
     }
@@ -450,22 +450,21 @@ public class ControllerInstance implements Controller{
             throw new TooFewElementsException("Already played");
         }
         player.removeCardFromHand(position);
-        int cardPoints;
+        int cardPoints = 0;
         int obtainedPoints = 0;
         try {
             cardPoints = cardFace.getScore();
         } catch (UnsupportedOperationException e) {
-            if (e.getMessage() == "Regular cards do not have scores") ;
-            cardPoints = 0;
+            if (Objects.equals(e.getMessage(), "Regular cards do not have scores")) {
+                cardPoints = 0;
+            }
         }
-        Map<Symbol, Integer> scoreRequirements;
+        Map<Symbol, Integer> scoreRequirements = null;
         try {
             scoreRequirements = cardFace.getScoreRequirements();
         } catch (UnsupportedOperationException e) {
-            if (e.getMessage() == "Regular cards do not have score requirements") ;
-            scoreRequirements = null;
+            // Already handled by initializing scoreRequirements to null
         }
-        System.out.println("ScoreRequirements " + scoreRequirements + "Player " + player.getName() + " CardPoints " + cardPoints);
         if (scoreRequirements != null) {
             Symbol requiredSymbol = (Symbol) scoreRequirements.keySet().toArray()[0];
             int i = 0;
@@ -475,19 +474,15 @@ public class ControllerInstance implements Controller{
                 }
                 i++;
             }
-            /*System.out.println("///////////////////////////");
-            System.out.println("RequiredSymbol " + requiredSymbol);
-            System.out.println("///////////////////////////");*/
             int requiredQuantity = scoreRequirements.get(requiredSymbol);
-            System.out.println("RequiredQuantity " + requiredQuantity);
             int actualQuantity;
             if (requiredSymbol == Symbol.COVERED_CORNER) {
-                actualQuantity = player.getManuscript().getCardsUnder(cardFace).size();
+                actualQuantity = player.getManuscript().getNeighbors(xCoord, yCoord).size();
             } else {
                 actualQuantity = player.getManuscript().getSymbolCount(requiredSymbol);
                 Symbol finalRequiredSymbol = requiredSymbol;
                 int quantityOnCard = cardFace.getCornerSymbols().entrySet().stream()
-                        .filter(entry -> entry.getValue() == finalRequiredSymbol).collect(Collectors.toList()).size();
+                        .filter(entry -> entry.getValue() == finalRequiredSymbol).toList().size();
                 actualQuantity += quantityOnCard;
             }
             //System.out.println("RequiredSymbols " + requiredSymbol + " ScoreRequirements" + scoreRequirements);
@@ -496,9 +491,11 @@ public class ControllerInstance implements Controller{
                 player.addPoints(obtainedPoints);
             } else {
                 player.addPoints(cardPoints);
+                obtainedPoints = cardPoints;
             }
         } else {
             player.addPoints(cardPoints);
+            obtainedPoints = cardPoints;
         }
         player.getManuscript().addCard(xCoord, yCoord, cardFace, getTurn());
         OtherPlayerPlayCardMessage otherPlayerPlayCardMessage = new OtherPlayerPlayCardMessage(
@@ -532,9 +529,7 @@ public class ControllerInstance implements Controller{
                 drawnCard = gameModel.getGoldDeck().popCard(deckPosition);
                 player.addCardToHand(drawnCard);
             }
-            default -> {
-                throw new IllegalArgumentException("Invalid deck");
-            }
+            default -> throw new IllegalArgumentException("Invalid deck");
         }
         DrawCardMessage drawCardMessage = new DrawCardMessage(drawnCard);
         connectionHandler.sendMessage(drawCardMessage, player.getName());
@@ -601,7 +596,7 @@ public class ControllerInstance implements Controller{
                 playerCardPoints.forEach((player, points) -> {
                     if (playersWithMaxPoints.isEmpty()) {
                         playersWithMaxPoints.add(player);
-                    } else if (points == Collections.max(playerCardPoints.values())) {
+                    } else if (Objects.equals(points, Collections.max(playerCardPoints.values())) ){
                         playersWithMaxPoints.add(player);
                     } else if (points > Collections.max(playerCardPoints.values())) {
                         playersWithMaxPoints.clear();
@@ -630,6 +625,7 @@ public class ControllerInstance implements Controller{
         gameModel = new GameModelInstance();
         givenStartingCards = new HashMap<>();
         givenSecretObjectiveCards = new HashMap<>();
+        gameState = GameState.LOBBY;
     }
 
     public void setReady(Player player) throws MissingInfoException, AlreadyStartedException {
@@ -679,7 +675,7 @@ public class ControllerInstance implements Controller{
         return messages;
     }
 
-    public void saveGame() throws IOException {
+    public void saveGame() {
         try {
             Gson gson = new Gson();
             File file = new File(getClass().getResource("/saves/game.json").toURI());
@@ -687,11 +683,11 @@ public class ControllerInstance implements Controller{
             gson.toJson(gameModel, fileWriter);
             fileWriter.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            System.err.println("Error while saving game");
         }
     }
 
-    public void loadGame() throws IOException {
+    public void loadGame() {
         try {
             Gson gson = new Gson();
             File file = new File(getClass().getResource("/saves/game.json").toURI());
@@ -699,7 +695,7 @@ public class ControllerInstance implements Controller{
             gameModel = gson.fromJson(fileReader, GameModelInstance.class);
             fileReader.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            System.err.println("Error while loading game");
         }
     }
 
@@ -720,22 +716,20 @@ public class ControllerInstance implements Controller{
     public void printData() {
         System.out.println("----------");
         System.out.println("Players:");
-        this.gameModel.getPlayerList().stream().forEach(p -> System.out.print(p.getName() + " " + p.getColor() + " " + p.isReady() +  ", "));
+        this.gameModel.getPlayerList().forEach(p -> System.out.print(p.getName() + " " + p.getColor() + " " + p.isReady() +  ", "));
         System.out.println("\n");
     }
 
     public void reactToDisconnection(String id){
-        String playerName = "";
+        String playerName;
         try {
             if(getPlayerByName(connectionHandler.getPlayerNameByID(id)) == null){ //this means the client is not a player
                 try {
                     connectionHandler.getServerConnectionHandler(id).killClient(id);
                 } catch (PlayerNotInAnyServerConnectionHandlerException e) {
-                    System.out.println("Player not found in any server connection handler, PLAYER NOT REMOVED!");
-                    e.printStackTrace();
+                    System.err.println("Player not found in any server connection handler, PLAYER NOT REMOVED!");
                 } catch (Exception e){
-                    System.out.println("Exception, PLAYER NOT REMOVED!");
-                    e.printStackTrace();
+                    System.err.println("Exception, PLAYER NOT REMOVED!");
                 }
                 return;
             }
@@ -743,11 +737,9 @@ public class ControllerInstance implements Controller{
             try {
                 connectionHandler.getServerConnectionHandler(id).killClient(id);
             } catch (PlayerNotInAnyServerConnectionHandlerException e2) {
-                System.out.println("Player not found in any server connection handler, PLAYER NOT REMOVED!");
-                e2.printStackTrace();
+                System.err.println("Player not found in any server connection handler, PLAYER NOT REMOVED!");
             } catch (Exception e1){
-                System.out.println("Exception, PLAYER NOT REMOVED!");
-                e1.printStackTrace();
+                System.err.println("Exception, PLAYER NOT REMOVED!");
             }
             return;
         }
@@ -774,10 +766,7 @@ public class ControllerInstance implements Controller{
                 break;
             default: //here we could be at secret or starting cardd choice or in game: we wait a minute to see if the player reconnects and after that we remove the player
                 switch (gameState) {
-                    case CHOOSE_SECRET_ACHIEVEMENT:
-                        new DisconnectionTimer(this, connectionHandler, id, 60);
-                        break;
-                    case CHOOSE_STARTING_CARD:
+                    case CHOOSE_SECRET_ACHIEVEMENT, CHOOSE_STARTING_CARD:
                         new DisconnectionTimer(this, connectionHandler, id, 60);
                         break;
                     case PLACE_CARD, DRAW_CARD:
@@ -789,7 +778,7 @@ public class ControllerInstance implements Controller{
                                         try {
                                             drawCard(getPlayerByName(playerName), DeckPosition.DECK, Decks.RESOURCE);
                                         } catch (TooManyElementsException | InvalidMoveException | AlreadyFinishedException | NotYetStartedException e) {
-                                            e.printStackTrace();
+                                            System.err.println("Error while drawing card for offline player");
                                         } catch (PlayerNotFoundByNameException e) {
                                             throw new RuntimeException(e);
                                         }
@@ -797,7 +786,7 @@ public class ControllerInstance implements Controller{
                                         try {
                                             drawCard(getPlayerByName(playerName), DeckPosition.FIRST_CARD, Decks.RESOURCE);
                                         } catch (TooManyElementsException | InvalidMoveException | AlreadyFinishedException | NotYetStartedException e) {
-                                            e.printStackTrace();
+                                            System.err.println("Error while drawing card for offline player");
                                         } catch (PlayerNotFoundByNameException e) {
                                             throw new RuntimeException(e);
                                         }
@@ -807,7 +796,7 @@ public class ControllerInstance implements Controller{
                                         } catch (TooManyElementsException | InvalidMoveException |
                                                  AlreadyFinishedException | NotYetStartedException |
                                                  PlayerNotFoundByNameException e) {
-                                            e.printStackTrace();
+                                            System.err.println("Error while drawing card for offline player");
                                         }
                                     }
                                 } else if(!gameModel.getGoldDeck().isEmpty()){
@@ -817,7 +806,7 @@ public class ControllerInstance implements Controller{
                                         } catch (TooManyElementsException | InvalidMoveException |
                                                  AlreadyFinishedException | NotYetStartedException |
                                                  PlayerNotFoundByNameException e) {
-                                            e.printStackTrace();
+                                            System.err.println("Error while drawing card for offline player");
                                         }
                                     } else if (gameModel.getGoldDeck().getBoardCard().get(DeckPosition.FIRST_CARD) != null){
                                         try {
@@ -825,7 +814,7 @@ public class ControllerInstance implements Controller{
                                         } catch (TooManyElementsException | InvalidMoveException |
                                                  AlreadyFinishedException | NotYetStartedException |
                                                  PlayerNotFoundByNameException e) {
-                                            e.printStackTrace();
+                                            System.err.println("Error while drawing card for offline player");
                                         }
                                     } else{
                                         try {
@@ -833,7 +822,7 @@ public class ControllerInstance implements Controller{
                                         } catch (TooManyElementsException | InvalidMoveException |
                                                  AlreadyFinishedException | NotYetStartedException |
                                                  PlayerNotFoundByNameException e) {
-                                            e.printStackTrace();
+                                            System.err.println("Error while drawing card for offline player");
                                         }
                                     }
                                 } else {
@@ -877,10 +866,6 @@ public class ControllerInstance implements Controller{
                 connectionHandler.sendMessage(reconnectionNameMessage, playerName);
                 StartingCardsMessage startingCardsMessage = new StartingCardsMessage(givenStartingCards.get(player));
                 connectionHandler.sendMessage(startingCardsMessage, playerName);
-                if(player.getManuscript() != null){
-                    SetStartingCardMessage setStartingCardMessage = new SetStartingCardMessage(playerName, player.getManuscript().getCardByCoord(0, 0));
-                    connectionHandler.sendMessage(setStartingCardMessage, playerName);
-                }
                 StartGameMessage startGameMessage = new StartGameMessage(
                         List.of(
                                 gameModel.getGoldDeck().getTopCardNoPop(),
@@ -888,7 +873,7 @@ public class ControllerInstance implements Controller{
                                 gameModel.getGoldDeck().getBoardCard().get(DeckPosition.SECOND_CARD)
                         ),
                         List.of(
-                                (ResourceCard)gameModel.getResourceDeck().getTopCardNoPop(),
+                                gameModel.getResourceDeck().getTopCardNoPop(),
                                 gameModel.getResourceDeck().getBoardCard().get(DeckPosition.FIRST_CARD),
                                 gameModel.getResourceDeck().getBoardCard().get(DeckPosition.SECOND_CARD)
                         )
@@ -913,7 +898,7 @@ public class ControllerInstance implements Controller{
                                 gameModel.getGoldDeck().getBoardCard().get(DeckPosition.SECOND_CARD)
                         ),
                         List.of(
-                                (ResourceCard) gameModel.getResourceDeck().getTopCardNoPop(),
+                                gameModel.getResourceDeck().getTopCardNoPop(),
                                 gameModel.getResourceDeck().getBoardCard().get(DeckPosition.FIRST_CARD),
                                 gameModel.getResourceDeck().getBoardCard().get(DeckPosition.SECOND_CARD)
                         )
@@ -935,13 +920,17 @@ public class ControllerInstance implements Controller{
                 commonAchievements.add(gameModel.getAchievementDeck().getBoardCard().get(DeckPosition.SECOND_CARD));
                 AchievementCardsMessage achievementCardsMessage = new AchievementCardsMessage(secretObjectiveCards, commonAchievements);
                 connectionHandler.sendMessage(achievementCardsMessage, playerName);
-                if(player.getSecretObjective() != null){
-                    SetSecretCardMessage setSecretCardMessage = new SetSecretCardMessage(player.getName());
-                    connectionHandler.sendMessage(setSecretCardMessage, playerName);
-                }
                 for(Player p: getPlayerList()){
-                    SetSecretCardMessage setSecretCardMessage = new SetSecretCardMessage(p.getName());
-                    connectionHandler.sendMessage(setSecretCardMessage, playerName);
+                    if(p.getSecretObjective() != null) {
+                        SetSecretCardMessage setSecretCardMessage;
+                        if(Objects.equals(p.getName(), playerName)){
+                            int chosenCardIndex = givenSecretObjectiveCards.get(p).indexOf(p.getSecretObjective());
+                            setSecretCardMessage = new SetSecretCardMessage(chosenCardIndex, p.getName());
+                        } else {
+                            setSecretCardMessage = new SetSecretCardMessage(p.getName());
+                        }
+                        connectionHandler.sendMessage(setSecretCardMessage, playerName);
+                    }
                 }
                 break;
             default:
@@ -951,13 +940,13 @@ public class ControllerInstance implements Controller{
                 List<AchievementCard> commonAchievementCards = new ArrayList<>();
                 commonAchievementCards.add(gameModel.getAchievementDeck().getBoardCard().get(DeckPosition.FIRST_CARD));
                 commonAchievementCards.add(gameModel.getAchievementDeck().getBoardCard().get(DeckPosition.SECOND_CARD));
-                Deck<GoldCard> goldDeck = new Deck<GoldCard>(
+                Deck<GoldCard> goldDeck = new Deck<>(
                         gameModel.getGoldDeck().getNumberOfCards(),
-                        new ArrayList<>(List.of(gameModel.getGoldDeck().getTopCardNoPop() ,gameModel.getGoldDeck().getBoardCard().get(DeckPosition.FIRST_CARD), gameModel.getGoldDeck().getBoardCard().get(DeckPosition.SECOND_CARD)))
+                        new ArrayList<>(List.of(gameModel.getGoldDeck().getTopCardNoPop(), gameModel.getGoldDeck().getBoardCard().get(DeckPosition.FIRST_CARD), gameModel.getGoldDeck().getBoardCard().get(DeckPosition.SECOND_CARD)))
                 );
-                Deck<ResourceCard> resourceDeck = new Deck<ResourceCard>(
+                Deck<ResourceCard> resourceDeck = new Deck<>(
                         gameModel.getResourceDeck().getNumberOfCards(),
-                        new ArrayList<>(List.of((ResourceCard) gameModel.getResourceDeck().getTopCardNoPop() ,gameModel.getResourceDeck().getBoardCard().get(DeckPosition.FIRST_CARD), gameModel.getResourceDeck().getBoardCard().get(DeckPosition.SECOND_CARD)))
+                        new ArrayList<>(List.of(gameModel.getResourceDeck().getTopCardNoPop(), gameModel.getResourceDeck().getBoardCard().get(DeckPosition.FIRST_CARD), gameModel.getResourceDeck().getBoardCard().get(DeckPosition.SECOND_CARD)))
                 );
                 List<Client.Player> playerList = new ArrayList<>();
                 for (Player p : gameModel.getPlayerList()){

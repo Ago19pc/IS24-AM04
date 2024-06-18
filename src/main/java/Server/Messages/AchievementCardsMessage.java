@@ -11,8 +11,8 @@ import java.util.List;
  */
 public class AchievementCardsMessage implements Serializable, ToClientMessage {
 
-    private List<AchievementCard> secretCards;
-    private List<AchievementCard> commonCards;
+    private final List<AchievementCard> secretCards;
+    private final List<AchievementCard> commonCards;
     public AchievementCardsMessage(List<AchievementCard> secretCards, List<AchievementCard> commonCards){
         this.secretCards = secretCards;
         this.commonCards = commonCards;

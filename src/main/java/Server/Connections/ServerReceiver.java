@@ -14,12 +14,12 @@ import java.net.SocketException;
  * This class is used to receive messages from a single socket client
  */
 public class ServerReceiver extends Thread {
-    private Socket clientSocket;
-    private ObjectInputStream in;
-    private ClientHandler clientHandler;
-    private Controller controller;
+    private final Socket clientSocket;
+    private final ObjectInputStream in;
+    private final ClientHandler clientHandler;
+    private final Controller controller;
 
-    private ServerConnectionHandlerSOCKET serverConnectionHandler;
+    private final ServerConnectionHandlerSOCKET serverConnectionHandler;
 
 
     public ServerReceiver(ClientHandler clientHandler, Socket clientSocket, Controller controller) throws IOException {
@@ -56,11 +56,9 @@ public class ServerReceiver extends Thread {
                     System.out.println();
                     break;
                 } catch (Exception e2) {
-                    e2.printStackTrace();
                     throw new RuntimeException(e2);
                 }
             } catch (Exception e) {
-                e.printStackTrace();
                 throw new RuntimeException(e);
             }
         }

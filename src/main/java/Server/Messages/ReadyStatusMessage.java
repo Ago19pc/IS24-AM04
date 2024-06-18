@@ -14,8 +14,8 @@ import java.io.Serializable;
  * Message to ask the server to set a player as ready or not ready and to notify the clients that a player is ready or not ready
  */
 public class ReadyStatusMessage implements Serializable, ToClientMessage, ToServerMessage {
-    private boolean ready;
-    private String nameOrId;
+    private final boolean ready;
+    private final String nameOrId;
 
     public ReadyStatusMessage(boolean isReady, String nameOrId) {
         this.ready = isReady;

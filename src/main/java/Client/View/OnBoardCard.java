@@ -1,6 +1,5 @@
 package Client.View;
 
-import Server.Enums.CardCorners;
 import javafx.fxml.FXML;
 import javafx.scene.Group;
 import javafx.scene.control.Button;
@@ -11,19 +10,29 @@ import Interface.MainBoardSceneController;
 import java.util.ArrayList;
 import java.util.List;
 
-
+/**
+ * This class is responsible for the visualization of the card on the screen.
+ * It's just a simpler way to handle images and buttons all together.
+ */
 public class OnBoardCard {
     @FXML
-    public ImageView image;
+    public final ImageView image;
     @FXML
-    public Button TOP_LEFT, TOP_RIGHT, BOTTOM_LEFT, BOTTOM_RIGHT;
+    public final Button TOP_LEFT;
+    @FXML
+    public final Button TOP_RIGHT;
+    @FXML
+    public final Button BOTTOM_LEFT;
+    @FXML
+    public final Button BOTTOM_RIGHT;
 
-    public static List<OnBoardCard> onBoardCards = new ArrayList<>();
-    public int x,y;
+    public static final List<OnBoardCard> onBoardCards = new ArrayList<>();
+    public final int x;
+    public final int y;
 
-    private MainBoardSceneController sceneController;
+    private final MainBoardSceneController sceneController;
 
-    public OnBoardCard (Image image, int x, int y, CardCorners occupied, MainBoardSceneController sceneController) {
+    public OnBoardCard (Image image, int x, int y, MainBoardSceneController sceneController) {
         this.sceneController = sceneController;
         this.x = x;
         this.y = y;
@@ -47,16 +56,7 @@ public class OnBoardCard {
         this.image.setFitWidth(143);
         this.image.setLayoutX(x * 143 - x * 35);
         this.image.setLayoutY(y * 100 - y * 159);
-        //La prossima volta guarda qui
-        /*if (occupied == CardCorners.TOP_LEFT) {
-            TOP_LEFT.setDisable(true);
-        } else if (occupied == CardCorners.TOP_RIGHT) {
-            TOP_RIGHT.setDisable(true);
-        } else if (occupied == CardCorners.BOTTOM_LEFT) {
-            BOTTOM_LEFT.setDisable(true);
-        } else if (occupied == CardCorners.BOTTOM_RIGHT) {
-            BOTTOM_RIGHT.setDisable(true);
-        }*/
+
 
         TOP_LEFT.setPrefHeight(41);
         TOP_LEFT.setPrefWidth(35);
@@ -89,6 +89,11 @@ public class OnBoardCard {
 
     }
 
+    /**
+     * This method places the card on the board.
+     * This is to be used only to place on the board of the player who is running the application.
+     * @param yourManuscript the group where the card will be placed
+     */
     public void place(Group yourManuscript) {
         yourManuscript.getChildren().add(image);
         yourManuscript.getChildren().add(TOP_LEFT);
@@ -99,47 +104,30 @@ public class OnBoardCard {
 
     }
 
-    public void otherPlace(Group otherManuscript)
-    {
-        otherManuscript.getChildren().add(image);
-        otherManuscript.getChildren().add(TOP_LEFT);
-        otherManuscript.getChildren().add(TOP_RIGHT);
-        otherManuscript.getChildren().add(BOTTOM_LEFT);
-        otherManuscript.getChildren().add(BOTTOM_RIGHT);
-        onBoardCards.add(this);
-
-        onBoardCards.stream().filter(c -> (c.x == x - 1 || c.x == x + 1) && (c.y == y - 1 || c.y == y + 1)).forEach(c -> {
-            if (c.x == x - 1 && c.y == y - 1) {
-                c.BOTTOM_RIGHT.setDisable(true);
-            } else if (c.x == x + 1 && c.y == y - 1) {
-                c.BOTTOM_LEFT.setDisable(true);
-            } else if (c.x == x - 1 && c.y == y + 1) {
-                c.TOP_RIGHT.setDisable(true);
-            } else if (c.x == x + 1 && c.y == y + 1) {
-                c.TOP_LEFT.setDisable(true);
-            }
-        });
-
-        for (OnBoardCard c : OnBoardCard.onBoardCards) {
-            c.TOP_LEFT.setStyle("-fx-background-color: transparent; -fx-border-width: 0;");
-            c.TOP_RIGHT.setStyle("-fx-background-color: transparent; -fx-border-width: 0;");
-            c.BOTTOM_LEFT.setStyle("-fx-background-color: transparent; -fx-border-width: 0;");
-            c.BOTTOM_RIGHT.setStyle("-fx-background-color: transparent; -fx-border-width: 0;");
-        }
-    }
-
+    /**
+     * Places the selected card on the topleft corner of this cards
+     */
     void playCardTopLeft() {
         sceneController.placeCard(x - 1, y + 1);
     }
 
+    /**
+     * Places the selected card on the topright corner of this cards
+     */
     void playCardTopRight() {
         sceneController.placeCard(x + 1, y + 1);
     }
 
+    /**
+     * Places the selected card on the bottomleft corner of this cards
+     */
     void playCardBottomLeft() {
         sceneController.placeCard(x - 1, y - 1);
     }
 
+    /**
+     * Places the selected card on the bottomright corner of this cards
+     */
     void playCardBottomRight() {
         sceneController.placeCard(x + 1, y - 1);
     }

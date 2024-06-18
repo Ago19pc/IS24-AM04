@@ -9,9 +9,7 @@ import Server.Enums.Symbol;
 import Server.Exception.AlreadyFinishedException;
 import Server.Exception.IncorrectDeckPositionException;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
+import java.io.*;
 import java.util.*;
 
 import static Server.Enums.DeckPosition.*;
@@ -21,7 +19,7 @@ import static Server.Enums.DeckPosition.*;
  * In this deck, the board cards are the common achievements
  */
 public class AchievementDeck implements Deckable{
-    protected List<AchievementCard> cards;
+    protected final List<AchievementCard> cards;
     private final Map<DeckPosition, AchievementCard> boardCards;
 
     public AchievementDeck(){
@@ -35,7 +33,20 @@ public class AchievementDeck implements Deckable{
             moveCardToBoard(FIRST_CARD);
             moveCardToBoard(SECOND_CARD);
         } catch (Exception e) {
-            e.printStackTrace();
+            System.err.println("Error while moving cards to the board (AchievementDeck)");
+        }
+    }
+    public AchievementDeck(Boolean test){
+        this.boardCards = new HashMap<>();
+        this.cards = new ArrayList<>();
+        boardCards.put(FIRST_CARD, null);
+        boardCards.put(SECOND_CARD, null);
+        createCards();
+        try {
+            moveCardToBoard(FIRST_CARD);
+            moveCardToBoard(SECOND_CARD);
+        } catch (Exception e) {
+            System.err.println("Error while moving cards to the board (AchievementDeck)");
         }
     }
 
@@ -82,15 +93,15 @@ public class AchievementDeck implements Deckable{
      * generate the cards
      */
     private void createCards() {
-        File fileFRONT;
+        InputStream fileFRONT;
         
         BufferedReader readerFRONT;
         
 
         try {
-            fileFRONT = new File(getClass().getResource("/images/AchievementFrontFace.txt").toURI());
-            
-            readerFRONT = new BufferedReader(new FileReader(fileFRONT));
+            fileFRONT = getClass().getResourceAsStream("/images/AchievementFrontFace.txt");
+
+            readerFRONT = new BufferedReader(new InputStreamReader(fileFRONT));
             
         
         
@@ -126,8 +137,7 @@ public class AchievementDeck implements Deckable{
                 this.cards.add(card);
             }
         } catch (Exception e) {
-            System.out.println("An error occurred while generating cards");
-            e.printStackTrace();
+            System.err.println("An error occurred while generating cards (AchievementDeck)");
         }
             
 
@@ -138,12 +148,12 @@ public class AchievementDeck implements Deckable{
         if(position == DECK){
             if(cards.isEmpty())
                 throw new AlreadyFinishedException("Achievement Deck is empty");
-            return (AchievementCard) cards.remove(0);
+            return cards.removeFirst();
         } else {
             if (boardCards.get(position) == null) {
                 throw new AlreadyFinishedException("No card in the specified position");
             }
-            return (AchievementCard) getBoardCard().get(position);
+            return getBoardCard().get(position);
         }
     }
 
@@ -164,7 +174,7 @@ public class AchievementDeck implements Deckable{
     public Card getTopCardNoPop() {
         if(cards.isEmpty())
             return null;
-        return cards.get(0);
+        return cards.getFirst();
     }
 
     /**

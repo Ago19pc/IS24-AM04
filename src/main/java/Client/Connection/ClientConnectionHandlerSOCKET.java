@@ -17,7 +17,7 @@ public class ClientConnectionHandlerSOCKET extends Thread implements ClientConne
     private Socket clientSocket;
     public ClientSender sender;
     public ClientReceiver receiver;
-    private ClientController controller;
+    private final ClientController controller;
 
 
     /**
@@ -63,29 +63,26 @@ public class ClientConnectionHandlerSOCKET extends Thread implements ClientConne
      * Connects to a server
      * @param host the ip address of the server
      * @param port the port of the server
+     * @throws IOException when problems when setting Socket
      */
     public void setSocket(String host, int port) throws IOException {
         this.clientSocket = new Socket(host, port);
         try {
             this.sender.setOutputBuffer(new ObjectOutputStream(clientSocket.getOutputStream()));
             this.receiver = new ClientReceiver(clientSocket, controller);
-            Thread.UncaughtExceptionHandler h = new Thread.UncaughtExceptionHandler() {
-                @Override
-                public void uncaughtException(Thread th, Throwable ex) {
-                    System.out.println("Uncaught exception: " + ex);
-                    ex.printStackTrace();
-                    try {
-                        clientSocket.close();
+            Thread.UncaughtExceptionHandler h = (th, ex) -> {
+                System.err.println("Uncaught exception: " + ex);
+                try {
+                    clientSocket.close();
 
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
+                } catch (IOException e) {
+                    System.err.println("Error while closing the socket");
                 }
             };
             receiver.setUncaughtExceptionHandler(h);
             receiver.start();
         } catch (Exception e) {
-            e.printStackTrace();
+            System.err.println("Error while setting the socket");
         }
 
 
@@ -93,7 +90,10 @@ public class ClientConnectionHandlerSOCKET extends Thread implements ClientConne
 
 
 
-    //todo: add javadoc
+    /**
+     * Run method
+     * Waits for the receiver to terminate
+     */
     public void run() {
         while(receiver == null){
             try {
@@ -118,6 +118,7 @@ public class ClientConnectionHandlerSOCKET extends Thread implements ClientConne
 
     /**
      * Stops the connection, interrupts the sender and receiver threads and closes the socket
+     * @throws IOException when problems with closing socket
      */
     public void stopConnection() throws IOException {
         receiver.interrupt();

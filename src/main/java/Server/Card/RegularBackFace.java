@@ -27,7 +27,7 @@ public class RegularBackFace extends CornerCardFace {
                 CardCorners.BOTTOM_RIGHT, EMPTY,
                 CardCorners.BOTTOM_LEFT, EMPTY));
         this.centerSymbols = centerSymbols;
-        this.kingdom = centerSymbols.get(0);
+        this.kingdom = centerSymbols.getFirst();
     }
 
 

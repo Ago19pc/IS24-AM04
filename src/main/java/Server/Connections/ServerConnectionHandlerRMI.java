@@ -3,20 +3,15 @@ package Server.Connections;
 import Client.Connection.ClientConnectionHandler;
 import Server.Controller.Controller;
 import Server.Enums.Color;
-import Server.Exception.AlreadyFinishedException;
-import Server.Exception.AlreadyStartedException;
-import Server.Exception.PlayerNotFoundByNameException;
-import Server.Exception.TooManyPlayersException;
 import Server.Enums.GameState;
 import Server.Exception.*;
 import Server.Messages.LobbyPlayersMessage;
-import Server.Messages.PlayerDisconnectedMessage;
 import Server.Messages.ToClientMessage;
 import Server.Messages.ToServerMessage;
+import Server.Player.Player;
 
 import java.net.InetAddress;
 import java.net.NetworkInterface;
-import java.net.UnknownHostException;
 import java.rmi.NotBoundException;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
@@ -39,22 +34,19 @@ public class ServerConnectionHandlerRMI implements ServerConnectionHandler, Remo
     /**
      * String is the ID
      */
-    Map<String, ClientConnectionHandler> clients = new HashMap<>();
+    final Map<String, ClientConnectionHandler> clients = new HashMap<>();
 
     Controller controller;
 
     private int port;
     //todo add javadoc
     public ServerConnectionHandlerRMI() {
-        startServer(1099);
-        /*
         askForPort();
         while (!startServer(port)) {
             System.out.println("[RMI] Porta già in uso, provo la successiva...");
             port++;
         }
         System.out.println("[RMI] Server avviato sulla porta: " + port);
-        */
 
     }
     //todo add javadoc
@@ -72,14 +64,16 @@ public class ServerConnectionHandlerRMI implements ServerConnectionHandler, Remo
     }
 
     /**
-     * Starts the RMI server
-     * @param port
-     * @return true if the server started successfully, false otherwise
+     * Starts the RMI server on the specified port.
+     * If the port is not available will try the following one, and so on until it finds one.
+     * If non is found will return false.
+     * @param port the port to start the server on
+     * @return true if started successfully
      */
     private boolean startServer(int port) {
         try {
             String ip;
-            try { //todo. @ago19 questa è una soliuzione temporanea per ottenere l'ip del server
+            try {
                 Enumeration<NetworkInterface> interfaces = NetworkInterface.getNetworkInterfaces();
                 while (interfaces.hasMoreElements()) {
                     NetworkInterface iface = interfaces.nextElement();
@@ -92,7 +86,7 @@ public class ServerConnectionHandlerRMI implements ServerConnectionHandler, Remo
                         InetAddress addr = addresses.nextElement();
                         ip = addr.getHostAddress();
                         if(ip.contains(":")) continue;
-                        System.setProperty("java.rmi.server.hostname", ip);;
+                        System.setProperty("java.rmi.server.hostname", ip);
                         System.out.println(iface.getDisplayName() + " " + ip);
                     }
                 }
@@ -102,13 +96,11 @@ public class ServerConnectionHandlerRMI implements ServerConnectionHandler, Remo
 
             System.out.println("Server hostname is " + System.getProperty("java.rmi.server.hostname"));
             stub = (ServerConnectionHandler) UnicastRemoteObject.exportObject( this, port);
-            registry = LocateRegistry.createRegistry(1099);
+            registry = LocateRegistry.createRegistry(port);
             registry.rebind("ServerConnectionHandler", stub);
-            System.out.println("[RMI] Server avviato sulla porta: " + port);
             return true;
         } catch (RemoteException e) {
-            e.printStackTrace();
-            System.out.println("[RMI] Errore durante l'avvio del server RMI");
+            System.err.println("[RMI] Errore durante l'avvio del server RMI");
             return false;
         }
     }
@@ -169,7 +161,6 @@ public class ServerConnectionHandlerRMI implements ServerConnectionHandler, Remo
     @Override
     public void executeMessage(ToServerMessage message) {
         synchronized (controller) {
-            System.out.println("Executing message");
             message.serverExecute(controller);
             controller.notifyAll();
         }
@@ -189,7 +180,7 @@ public class ServerConnectionHandlerRMI implements ServerConnectionHandler, Remo
         Random rand = new Random();
         rand.setSeed(System.currentTimeMillis());
         String id = rand.nextInt(9999) + "-" + rand.nextInt(9999) + "-" + rand.nextInt(9999);
-        Registry clientRegistry = null;
+        Registry clientRegistry;
         try {
             clientRegistry = LocateRegistry.getRegistry(getClientHost(), rmi_port);
 
@@ -210,14 +201,13 @@ public class ServerConnectionHandlerRMI implements ServerConnectionHandler, Remo
         Map<String, Boolean> playerReady = new HashMap<>();
         controller.getPlayerList().forEach(p -> playerReady.put(p.getName(), p.isReady()));
         Boolean isSavedGame = controller.getGameState().equals(GameState.LOAD_GAME_LOBBY);
-        LobbyPlayersMessage message = new LobbyPlayersMessage(
-                controller.getPlayerList().stream().map(p -> p.getName()).toList(),
+        return new LobbyPlayersMessage(
+                controller.getPlayerList().stream().map(Player::getName).toList(),
                 playerColors,
                 playerReady,
                 id,
                 isSavedGame
         );
-        return message;
     }
 
     /**
@@ -240,9 +230,7 @@ public class ServerConnectionHandlerRMI implements ServerConnectionHandler, Remo
      */
     public void pingAll() {
         Map<String, ClientConnectionHandler> allClients = new HashMap<>(clients);
-        allClients = allClients.entrySet().stream().filter(entry -> {
-            return !controller.getConnectionHandler().isInDisconnectedList(entry.getKey());
-        }).collect(HashMap::new, (m, v) -> m.put(v.getKey(), v.getValue()), HashMap::putAll);
+        allClients = allClients.entrySet().stream().filter(entry -> !controller.getConnectionHandler().isInDisconnectedList(entry.getKey())).collect(HashMap::new, (m, v) -> m.put(v.getKey(), v.getValue()), HashMap::putAll);
         System.out.println("Pinging all clients. They are: " + allClients.keySet());
         allClients.keySet().forEach(this::ping);
     }
@@ -254,5 +242,9 @@ public class ServerConnectionHandlerRMI implements ServerConnectionHandler, Remo
      */
     public boolean isClientAvailable(String id) {
         return clients.containsKey(id);
+    }
+
+    public void changeId(String oldId, String newId) {
+        clients.remove(oldId);
     }
 }

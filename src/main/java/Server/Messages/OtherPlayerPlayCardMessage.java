@@ -9,11 +9,11 @@ import java.io.Serializable;
  * Message to inform the client that a player has placed a card on the board
  */
 public class OtherPlayerPlayCardMessage implements Serializable, ToClientMessage {
-    String playerName;
-    CornerCardFace placedCardFace;
-    int x;
-    int y;
-    int obtainedPoints;
+    final String playerName;
+    final CornerCardFace placedCardFace;
+    final int x;
+    final int y;
+    final int obtainedPoints;
 
     public OtherPlayerPlayCardMessage(String playerName, CornerCardFace placedCardFace, int x, int y, int obtainedPoints) {
         this.playerName = playerName;

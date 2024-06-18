@@ -6,7 +6,6 @@ import Server.Card.ResourceCard;
 import Server.Enums.Color;
 import Server.Enums.Face;
 import Server.Exception.AlreadySetException;
-import Server.Exception.TooFewElementsException;
 import Server.Exception.TooManyElementsException;
 import Server.Manuscript.Manuscript;
 
@@ -50,11 +49,7 @@ public class PlayerInstance implements Player {
 
     @Override
     public List<Card> getHand() {
-        List<Card> handToReturn = new LinkedList<>();
-        for(ResourceCard card : handCards){
-            handToReturn.add((Card) card);
-        }
-        return handToReturn;
+        return new LinkedList<>(handCards);
     }
 
 

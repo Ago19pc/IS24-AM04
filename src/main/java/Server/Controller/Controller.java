@@ -22,7 +22,7 @@ public interface Controller {
      * @throws IllegalArgumentException if the name is already taken
      * @throws AlreadyStartedException if the game has already started
      */
-    public void addPlayer(String name, String clientID) throws TooManyPlayersException, IllegalArgumentException, AlreadyStartedException;
+    void addPlayer(String name, String clientID) throws TooManyPlayersException, IllegalArgumentException, AlreadyStartedException;
 
 
     /**
@@ -30,20 +30,24 @@ public interface Controller {
      * @param player the player
      * @throws IllegalArgumentException if the player is not in the list
      */
-    public void removePlayer(Player player) throws IllegalArgumentException;
+    void removePlayer(Player player) throws IllegalArgumentException;
     /**
      * returns the list of players in the game
      * @return the list of players
      */
-    public List<Player> getPlayerList();
+    List<Player> getPlayerList();
 
     /**
      * Reacts to the disconnection of a client, setting the player offline.
      * @param id the id of the client
      */
-    public void setOffline(String id);
+    void setOffline(String id);
 
-    public GameState getGameState();
+    /**
+     * Gets the current phase of the game
+     * @return the game state
+     */
+    GameState getGameState();
 
     /**
      * set the player color
@@ -52,27 +56,27 @@ public interface Controller {
      * @throws IllegalArgumentException if the color is already taken
      * @throws AlreadyStartedException if the game has already started
      */
-    public void setPlayerColor(Color color, Player player) throws IllegalArgumentException, AlreadyStartedException;
+    void setPlayerColor(Color color, Player player) throws IllegalArgumentException, AlreadyStartedException;
     /**
      * sets a player ready status to ready
      * @param player the player
      * @throws MissingInfoException if the player does not have a color
      * @throws AlreadyStartedException if the game has already started
      */
-    public void setReady(Player player) throws MissingInfoException, AlreadyStartedException;
+    void setReady(Player player) throws MissingInfoException, AlreadyStartedException;
     /**
      * sets a player status to not ready
      * @param player the player
      * @throws MissingInfoException if the player does not have a color
      * @throws AlreadyStartedException if the game has already started
      */
-    public void setNotReady(Player player) throws MissingInfoException, AlreadyStartedException;
+    void setNotReady(Player player) throws MissingInfoException, AlreadyStartedException;
     /**
      * returns a player's ready status
      * @param player the player
      * @return boolean true if the player is ready
      */
-    public boolean isReady(Player player);
+    boolean isReady(Player player);
     /**
      * sets a player's secret achievement card
      * @param player the player
@@ -81,7 +85,7 @@ public interface Controller {
      * @throws MissingInfoException if the player was not given the choice of secret achievement
      * @throws AlreadyStartedException if the game has already started
      */
-    public void setSecretObjectiveCard(Player player, int cardNumber) throws AlreadySetException, MissingInfoException, AlreadyStartedException;
+    void setSecretObjectiveCard(Player player, int cardNumber) throws AlreadySetException, MissingInfoException, AlreadyStartedException;
     /**
      * set starting card
      * @param player the player
@@ -90,20 +94,20 @@ public interface Controller {
      * @throws AlreadyStartedException if the game has already started
      * @throws MissingInfoException if the player was not given the starting card
      */
-    public void setStartingCard(Player player, Face face) throws AlreadySetException, AlreadyStartedException, MissingInfoException;
+    void setStartingCard(Player player, Face face) throws AlreadySetException, AlreadyStartedException, MissingInfoException;
 
     //GAME FLOW METHODS
     /**
      * returns the current turn number
      * @return the current turn
      */
-    public int getTurn();
+    int getTurn();
     /**
      * checks the online status of a player
      * @param player the player
      * @return true if the player is online
      */
-    public boolean isOnline(Player player);
+    boolean isOnline(Player player);
 
     //PLAYER ACTIONS
     /**
@@ -116,7 +120,7 @@ public interface Controller {
      * @throws TooFewElementsException if the player has already placed a card during the turn
      * @throws InvalidMoveException if it's not the player's turn or the placement is not valid
      */
-    public void playCard(Player player, int position, int xCoord, int yCoord, Face face) throws TooFewElementsException, InvalidMoveException;
+    void playCard(Player player, int position, int xCoord, int yCoord, Face face) throws TooFewElementsException, InvalidMoveException;
 
     /**
      * draw a card from one of the decks
@@ -128,7 +132,7 @@ public interface Controller {
      * @throws AlreadyFinishedException if the deck has no cards
      * @throws NotYetStartedException if the game has not yet started
      */
-    public void drawCard(Player player, DeckPosition deckposition, Decks deck) throws TooManyElementsException, InvalidMoveException, AlreadyFinishedException, NotYetStartedException;
+    void drawCard(Player player, DeckPosition deckposition, Decks deck) throws TooManyElementsException, InvalidMoveException, AlreadyFinishedException, NotYetStartedException;
 
     //CHAT METHODS
     /**
@@ -137,24 +141,24 @@ public interface Controller {
      * @param player the player who sent the message
      * @throws IllegalArgumentException if the message is empty
      */
-    public void addMessage(String message, Player player) throws IllegalArgumentException;
+    void addMessage(String message, Player player) throws IllegalArgumentException;
 
     /**
      * Gets all the messages in the chat
      * @return the chat messages
      */
-    public List<Message> getChatMessages();
+    List<Message> getChatMessages();
 
     //SAVED GAMES METHODS
     /**
      * saves a game to a json file
      */
-    public void saveGame() throws IOException;
+    void saveGame() throws IOException;
 
     /**
      * loads a game from a json file
      */
-    public void loadGame() throws IOException;
+    void loadGame() throws IOException;
 
     /**
      * Returns the player instance associated with the name
@@ -162,19 +166,19 @@ public interface Controller {
      * @return the Player instance associated with the name
      * @throws PlayerNotFoundByNameException if there is no player with that name
      */
-    public Player getPlayerByName(String name) throws PlayerNotFoundByNameException;
+    Player getPlayerByName(String name) throws PlayerNotFoundByNameException;
 
     /**
      * returns the connection handler
      * @return the ServerConnectionHandler
      */
-    public GeneralServerConnectionHandler getConnectionHandler();
+    GeneralServerConnectionHandler getConnectionHandler();
 
 
     /**
      * Prints some data
      */
-    public void printData();
+    void printData();
 
     /**
      * Reacts to the disconnection of a player, handling its possible removal from the game
@@ -182,7 +186,7 @@ public interface Controller {
      * @throws AlreadyFinishedException if the game is already finished
      * @throws PlayerNotFoundByNameException if there is no player with that name
      */
-    public void reactToDisconnection(String id) throws AlreadyFinishedException, PlayerNotFoundByNameException;
+    void reactToDisconnection(String id) throws AlreadyFinishedException, PlayerNotFoundByNameException;
 
     /**
      * Reconnects a player to the game
@@ -193,7 +197,7 @@ public interface Controller {
      * @throws NotYetStartedException if the game has not yet started
      * @throws AlreadyFinishedException if the game is already finished
      */
-    public void reconnect(String newId, String oldId) throws IllegalArgumentException, AlreadySetException, NotYetStartedException, AlreadyFinishedException;
+    void reconnect(String newId, String oldId) throws IllegalArgumentException, AlreadySetException, NotYetStartedException, AlreadyFinishedException;
 
     /**
      * Connects a player to a loaded game
@@ -203,6 +207,6 @@ public interface Controller {
      * @throws IllegalArgumentException if the player is already connected
      * @throws PlayerNotFoundByNameException if there is no player with that name
      */
-    public void addSavedPlayer(String id, String name) throws AlreadyStartedException, IllegalArgumentException, PlayerNotFoundByNameException;
+    void addSavedPlayer(String id, String name) throws AlreadyStartedException, IllegalArgumentException, PlayerNotFoundByNameException;
 }
 

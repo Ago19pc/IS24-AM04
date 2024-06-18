@@ -13,8 +13,8 @@ import java.io.Serializable;
  * This message is used to send a message to the chat and update the clients
  */
 public class ChatMessage implements Serializable, ToServerMessage, ToClientMessage {
-    private String message;
-    private String nameOrId;
+    private final String message;
+    private final String nameOrId;
 
     public ChatMessage(String message, String player){
         this.message = message;
@@ -27,7 +27,7 @@ public class ChatMessage implements Serializable, ToServerMessage, ToClientMessa
      */
     @Override
     public void serverExecute(Controller controller) {
-        String playerName = "";
+        String playerName;
         try {
             playerName = controller.getConnectionHandler().getPlayerNameByID(this.nameOrId);
             Player player = controller.getPlayerByName(playerName);

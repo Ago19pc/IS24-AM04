@@ -12,7 +12,7 @@ import Server.Exception.PlayerNotFoundByNameException;
 import java.util.*;
 
 public class CLI extends Thread implements UI {
-    private ClientController controller;
+    private final ClientController controller;
     private final Scanner in = new Scanner(System.in);
 
 
@@ -144,17 +144,15 @@ public class CLI extends Thread implements UI {
                     printOnNewLine("Utilizzo corretto: chooseFace <faccia>");
                     return;
                 }
-                if(!args[1].toUpperCase().equals("FRONT") && !args[1].toUpperCase().equals("BACK")){
+                if(!args[1].equalsIgnoreCase("FRONT") && !args[1].equalsIgnoreCase("BACK")){
                     printOnNewLine("Faccia non valida. Le facce disponibili sono: FRONT, BACK");
                     return;
                 }
-                switch(controller.getGameState()){
-                    case CHOOSE_STARTING_CARD:
-                        Face chosenFace = Face.valueOf(args[1].toUpperCase());
-                        controller.chooseStartingCardFace(chosenFace);
-                        break;
-                    default:
-                        printOnNewLine("C'è un tempo e un luogo per ogni cosa! Ma non ora...");
+                if (Objects.requireNonNull(controller.getGameState()) == GameState.CHOOSE_STARTING_CARD) {
+                    Face chosenFace = Face.valueOf(args[1].toUpperCase());
+                    controller.chooseStartingCardFace(chosenFace);
+                } else {
+                    printOnNewLine("C'è un tempo e un luogo per ogni cosa! Ma non ora...");
                 }
                 break;
             case "chooseCard":
@@ -192,7 +190,7 @@ public class CLI extends Thread implements UI {
                     printPromptLine();
                     return;
                 }
-                if(!args[1].toUpperCase().equals("FRONT") && !args[1].toUpperCase().equals("BACK")){
+                if(!args[1].equalsIgnoreCase("FRONT") && !args[1].equalsIgnoreCase("BACK")){
                     printOnNewLine("Faccia non valida. Le facce disponibili sono: FRONT, BACK");
                     return;
                 }
@@ -624,7 +622,7 @@ public class CLI extends Thread implements UI {
 
     /**
      * Asks the user to choose the starting card
-     * @param card
+     * @param card the card
      */
     public void chooseStartingCardFace(Card card){
         printOnNewLine("Scegli la faccia della carta iniziale: \n" + card);
@@ -668,9 +666,9 @@ public class CLI extends Thread implements UI {
 
     /**
      * Shows that a player has placed a card
-     * @param playerName
-     * @param x
-     * @param y
+     * @param playerName the player that placed the card
+     * @param x the x coord
+     * @param y the y coord
      */
     public void cardPlaced(String playerName, CornerCardFace cornerCardFace, int x, int y) {
         printOnNewLine(playerName + " ha piazzato una carta in posizione " + x + ", " + y);
