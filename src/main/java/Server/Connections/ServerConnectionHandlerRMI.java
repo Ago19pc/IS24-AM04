@@ -200,7 +200,7 @@ public class ServerConnectionHandlerRMI implements ServerConnectionHandler, Remo
         });
         Map<String, Boolean> playerReady = new HashMap<>();
         controller.getPlayerList().forEach(p -> playerReady.put(p.getName(), p.isReady()));
-        Boolean isSavedGame = controller.getGameState().equals(GameState.LOAD_GAME_LOBBY);
+        Boolean isSavedGame = controller.isInSavedGameLobby();
         return new LobbyPlayersMessage(
                 controller.getPlayerList().stream().map(Player::getName).toList(),
                 playerColors,

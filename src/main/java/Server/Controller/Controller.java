@@ -14,6 +14,8 @@ import java.util.List;
  */
 public interface Controller {
 
+    void changeState(ServerState state);
+
     /**
      * Adds a player to the game
      * @param name the player name
@@ -42,12 +44,6 @@ public interface Controller {
      * @param id the id of the client
      */
     void setOffline(String id);
-
-    /**
-     * Gets the current phase of the game
-     * @return the game state
-     */
-    GameState getGameState();
 
     /**
      * set the player color
@@ -208,5 +204,19 @@ public interface Controller {
      * @throws PlayerNotFoundByNameException if there is no player with that name
      */
     void addSavedPlayer(String id, String name) throws AlreadyStartedException, IllegalArgumentException, PlayerNotFoundByNameException;
+
+    void shufflePlayerList();
+
+    void nextTurn();
+
+    void giveInitialHand() throws AlreadySetException, AlreadyFinishedException;
+
+    void computeLeaderboard() throws AlreadyFinishedException;
+
+    void endGame() throws AlreadySetException;
+
+    void start() throws TooFewElementsException, AlreadySetException;
+
+    boolean isInSavedGameLobby();
 }
 
