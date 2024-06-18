@@ -77,6 +77,6 @@ public class SavedGameMessage implements Serializable, ToServerMessage, ToClient
 
     @Override
     public void clientExecute(ClientController controller) {
-        controller.loadGame(commonAchievements, goldDeck, resourceDeck, secretAchievement, hand, turn, players, chat, name);
+        controller.loadGame(commonAchievements, goldDeck, resourceDeck, secretAchievement, hand, turn, players, chat, GameState.PLACE_CARD, name);
     }
 }

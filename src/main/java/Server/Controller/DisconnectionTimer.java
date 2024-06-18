@@ -26,7 +26,7 @@ public class DisconnectionTimer {
         }
         @Override
         public void run() {
-            if(!connectionHandler.isInDisconnectedList(id) || controller.getGameState() == GameState.LOBBY || controller.getGameState() == GameState.LOAD_GAME_LOBBY) {
+            if(!connectionHandler.isInDisconnectedList(id)) {
                 t.cancel();
             }
         }
