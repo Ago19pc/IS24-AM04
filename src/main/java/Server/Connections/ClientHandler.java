@@ -20,8 +20,6 @@ public class ClientHandler extends Thread {
     private final ServerReceiver receiver ;
 
 
-    final ClientHandler me = this;
-
     /**
      * Constructor
      * @param connectionHandler the ServerConnectionHandler that created this ClientHandler
@@ -35,7 +33,7 @@ public class ClientHandler extends Thread {
         this.connectionHandler = connectionHandler;
         UncaughtExceptionHandler h = (th, ex) -> {
             System.out.println("Exception, killing ClientHandler Thread " + ex);
-            connectionHandler.killClient(connectionHandler.getThreadName(me));
+            connectionHandler.killClient(connectionHandler.getThreadName(this));
 
         };
         try {

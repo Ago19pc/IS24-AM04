@@ -10,8 +10,13 @@ import java.util.List;
  * This message is used to send the achievement cards to the client
  */
 public class AchievementCardsMessage implements Serializable, ToClientMessage {
-
+    /**
+     * The list of secret achievement cards from which the player can choose
+     */
     private final List<AchievementCard> secretCards;
+    /**
+     * The list of common achievement cards
+     */
     private final List<AchievementCard> commonCards;
 
     /**

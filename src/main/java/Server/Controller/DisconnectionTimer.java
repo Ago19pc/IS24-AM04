@@ -11,6 +11,9 @@ import java.util.TimerTask;
  * This class is used to manage the timer for the disconnection of a player.
  */
 public class DisconnectionTimer {
+    /**
+     * The timer
+     */
     Timer t;
 
     /**
@@ -32,6 +35,12 @@ public class DisconnectionTimer {
     class CheckOnlineTask extends TimerTask {
         private GeneralServerConnectionHandler connectionHandler;
         private String id;
+
+        /**
+         * Constructor
+         * @param connectionHandler the connection handler
+         * @param id the id of the player of which to check the online status
+         */
         public CheckOnlineTask(GeneralServerConnectionHandler connectionHandler, String id) {
             this.connectionHandler = connectionHandler;
             this.id = id;
@@ -54,6 +63,13 @@ public class DisconnectionTimer {
         private Controller controller;
         private GeneralServerConnectionHandler connectionHandler;
         private String id;
+
+        /**
+         * Constructor
+         * @param controller the controller
+         * @param connectionHandler the connection handler
+         * @param id the id of the player to remove
+         */
         public DisconnectionTask(Controller controller, GeneralServerConnectionHandler connectionHandler, String id) {
             this.controller = controller;
             this.connectionHandler = connectionHandler;

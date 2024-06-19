@@ -27,17 +27,26 @@ import static java.rmi.server.RemoteServer.getClientHost;
  * This class handles the connection between the server and the clients using RMI
  */
 public class ServerConnectionHandlerRMI implements ServerConnectionHandler, Remote {
-
+    /**
+     * The server connection handler to be exported
+     */
     ServerConnectionHandler stub;
+    /**
+     * The server registry
+     */
     Registry registry;
 
     /**
      * String is the ID
      */
     final Map<String, ClientConnectionHandler> clients = new HashMap<>();
-
+    /**
+     * The controller of the server
+     */
     Controller controller;
-
+    /**
+     * The port on which the server is running
+     */
     private int port;
 
     /**

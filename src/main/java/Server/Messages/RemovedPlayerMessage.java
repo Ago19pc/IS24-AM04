@@ -8,6 +8,9 @@ import java.io.Serializable;
  * Message to inform the client that a player has been removed
  */
 public class RemovedPlayerMessage implements ToClientMessage, Serializable {
+    /**
+     * The name of the player who has been removed
+     */
     private final String name;
     /**
      * Constructor

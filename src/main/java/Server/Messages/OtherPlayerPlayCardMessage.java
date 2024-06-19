@@ -9,10 +9,25 @@ import java.io.Serializable;
  * Message to inform the client that a player has placed a card on the board
  */
 public class OtherPlayerPlayCardMessage implements Serializable, ToClientMessage {
+    /**
+     * The name of the player who placed the card
+     */
     final String playerName;
+    /**
+     * The face of the card that was placed
+     */
     final CornerCardFace placedCardFace;
+    /**
+     * The x coordinate of the position where the card was placed
+     */
     final int x;
+    /**
+     * The y coordinate of the position where the card was placed
+     */
     final int y;
+    /**
+     * The points obtained by the player by placing the card
+     */
     final int obtainedPoints;
 
     /**

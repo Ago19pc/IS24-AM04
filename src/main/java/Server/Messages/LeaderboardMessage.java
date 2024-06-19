@@ -9,7 +9,9 @@ import java.util.LinkedHashMap;
  * Message to send the client the leaderboard
  */
 public class LeaderboardMessage implements Serializable, ToClientMessage {
-
+    /**
+     * The leaderboard to send. It is a map with the player names as keys and their points as values, sorted by order of winning
+     */
     private final LinkedHashMap<String, Integer> playerPoints;
 
     /**

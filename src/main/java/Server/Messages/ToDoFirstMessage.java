@@ -8,6 +8,9 @@ import java.io.Serializable;
  * Message to inform the client that he has to do something before doing what he tried to do
  */
 public class ToDoFirstMessage implements Serializable, ToClientMessage {
+    /**
+     * The action to do first
+     */
     private final Actions actionToDo;
     /**
      * Constructor

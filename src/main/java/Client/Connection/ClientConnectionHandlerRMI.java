@@ -15,13 +15,29 @@ import java.rmi.server.UnicastRemoteObject;
  * This class handles the connection between the client and the server using RMI.
  */
 public class ClientConnectionHandlerRMI implements ClientConnectionHandler {
+    /**
+     * The server registry
+     */
     Registry serverRegistry;
+    /**
+     * The server connection handler
+     */
     ServerConnectionHandler server;
-
+    /**
+     * The client registry
+     */
     Registry registry;
+    /**
+     * The client connection handler to be exported
+     */
     ClientConnectionHandler stub;
-
+    /**
+     * The client controller
+     */
     private ClientController controller;
+    /**
+     * The client port used for the RMI connection
+     */
     int rmi_client_port;
 
     /**

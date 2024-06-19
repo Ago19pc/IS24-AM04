@@ -20,16 +20,45 @@ import java.util.List;
  * Message to ask the server to join a saved game and to notify the client with the game data
  */
 public class SavedGameMessage implements Serializable, ToServerMessage, ToClientMessage {
+    /**
+     * The id of the client
+     */
     private final String id;
+    /**
+     * The name of the player the client reconnects to
+     */
     private final String name;
-
+    /**
+     * The common achievements
+     */
     private List<AchievementCard> commonAchievements;
+    /**
+     * The gold deck
+     */
     private Deck<GoldCard> goldDeck;
+    /**
+     * The resource deck
+     */
     private Deck<ResourceCard> resourceDeck;
+    /**
+     * The secret achievement of the player
+     */
     private AchievementCard secretAchievement;
+    /**
+     * The hand of the player
+     */
     private List<Card> hand;
+    /**
+     * The current game turn
+     */
     private int turn;
+    /**
+     * The list of players
+     */
     private List<Player> players;
+    /**
+     * The chat messages
+     */
     private Chat chat;
 
     /**

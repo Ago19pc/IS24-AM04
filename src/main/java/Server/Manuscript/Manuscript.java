@@ -16,7 +16,13 @@ import static java.lang.Math.min;
  * Class that represents the manuscript
  */
 public class Manuscript implements Serializable {
+    /**
+     * The graph of cards in the manuscript
+     */
     private final Graph graph;
+    /**
+     * A map containing for each symbol its corresponding number in the manuscript
+     */
     private final Map<Symbol, Integer> activeSymbols;
 
     /**

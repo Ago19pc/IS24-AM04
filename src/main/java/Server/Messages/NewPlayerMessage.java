@@ -11,7 +11,9 @@ import java.util.List;
 
  */
 public class NewPlayerMessage implements Serializable, ToClientMessage {
-
+    /**
+     * The list of player names with the new player added
+     */
     private final List<String> playerNames;
     /**
      * Constructor

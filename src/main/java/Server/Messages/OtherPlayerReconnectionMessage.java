@@ -8,6 +8,9 @@ import java.io.Serializable;
  * Message to inform the client that another player has reconnected
  */
 public class OtherPlayerReconnectionMessage implements Serializable, ToClientMessage {
+    /**
+     * The name of the player who reconnected
+     */
     private final String name;
     /**
      * Constructor

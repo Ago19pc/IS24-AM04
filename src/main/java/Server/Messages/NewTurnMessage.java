@@ -6,7 +6,13 @@ import java.io.Serializable;
  * Message to inform the client that a new turn has started
  */
 public class NewTurnMessage implements Serializable, ToClientMessage{
+    /**
+     * The name of the active player
+     */
     private final String activePlayerName;
+    /**
+     * The current turn number
+     */
     private final int turnNumber;
     /**
      * Constructor

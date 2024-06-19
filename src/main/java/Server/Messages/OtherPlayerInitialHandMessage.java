@@ -8,6 +8,9 @@ import java.io.Serializable;
  * Message to inform the client that another player has received his initial hand
  */
 public class OtherPlayerInitialHandMessage implements Serializable, ToClientMessage {
+    /**
+     * The name of the player who received their initial hand
+     */
     private final String name;
     /**
      * Constructor

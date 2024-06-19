@@ -10,7 +10,9 @@ import java.util.List;
  * Message to send the client their initial hand
  */
 public class InitialHandMessage implements Serializable, ToClientMessage {
-
+    /**
+     * The player hand
+     */
     private final List<Card> hand;
 
     /**
