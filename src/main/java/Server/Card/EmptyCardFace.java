@@ -11,6 +11,9 @@ import java.util.Map;
  * This is the class from which all card faces inherit. It is also used to represent achievement cards' back faces
  */
 public class EmptyCardFace implements CardFace, Serializable {
+    /**
+     * The URI of the image of the card
+     */
     private final String imageURI;
 
     /**

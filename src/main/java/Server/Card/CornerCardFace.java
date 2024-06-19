@@ -12,9 +12,21 @@ import java.util.Map;
  * This class is the one from which all the corner card faces inherit. It is also used to represent the back face of starting cards
  */
 public class CornerCardFace extends EmptyCardFace implements Serializable {
+    /**
+     * The corner symbols of the card
+     */
     private final Map<CardCorners, Symbol> cornerSymbols;
+    /**
+     * The turn in which the card was placed
+     */
     private int placementTurn;
+    /**
+     * The x coordinate of the card
+     */
     private int xCoord;
+    /**
+     * The y coordinate of the card
+     */
     private int yCoord;
 
 

@@ -28,7 +28,7 @@ public interface Player extends Serializable {
      * @param position the position card to remove
      * @throws IndexOutOfBoundsException if the hand does not have the position
      */
-    void removeCardFromHand(int position) throws IndexOutOfBoundsException, TooFewElementsException;
+    void removeCardFromHand(int position) throws IndexOutOfBoundsException;
 
     /**
      * Returns the player's hand

@@ -23,6 +23,7 @@ public interface ClientController {
     /**
      * Initializes the controller
      * @param ui the ui to assign to the controller
+     * @throws RemoteException if the controller can't be initialized
      */
     void main(UI ui) throws RemoteException;
     /**

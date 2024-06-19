@@ -7,8 +7,17 @@ import java.sql.Timestamp;
  * This class is used to represent messages
  */
 public class Message implements Serializable {
+    /**
+     * The message text
+     */
     private final String message;
+    /**
+     * The name of the sender
+     */
     private final String name;
+    /**
+     * The timestamp of the message
+     */
     private final Timestamp timestamp;
 
     /**

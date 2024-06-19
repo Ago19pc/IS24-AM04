@@ -5,6 +5,9 @@ import java.io.Serializable;
  * Message to inform the client that he cannot do what he tried to do because the game hasn't yet started
  */
 public class GameNotYetStartedMessage implements Serializable, ToClientMessage {
+    /**
+     * Constructor
+     */
     public GameNotYetStartedMessage() {
     }
     @Override

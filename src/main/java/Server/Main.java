@@ -8,6 +8,11 @@ import Server.Controller.ControllerInstance;
  * Main class of the server
  */
 public class Main {
+    /**
+        * Constructor
+     */
+    public Main() {
+    }
 
     /**
      * Main method of the server

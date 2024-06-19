@@ -4,7 +4,14 @@ package Server.Enums;
  * Contains the faces of a card
  */
 public enum Face {
-    FRONT, BACK;
+    /**
+     * The front face of the card
+     */
+    FRONT,
+    /**
+     * The back face of the card
+     */
+    BACK;
 
     /**
      * Returns the opposite face of the card

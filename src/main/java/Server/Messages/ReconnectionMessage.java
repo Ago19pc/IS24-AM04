@@ -23,17 +23,53 @@ import java.util.List;
  * Message to ask the server to reconnect and to notify the reconnecting client with the game data
  */
 public class ReconnectionMessage implements Serializable, ToClientMessage, ToServerMessage {
+    /**
+     * If the message is sent to the server, the id is the current id of the client, if the message is sent to the client, the id is the new id to set
+     */
     private final String id;
+    /**
+     * The id of the player the client wants to reconnect with
+     */
     private String newId;
+    /**
+     * The common achievements
+     */
     private List<AchievementCard> commonAchievements;
+    /**
+     * The gold deck
+     */
     private Deck<GoldCard> goldDeck;
+    /**
+     * The resource deck
+     */
     private Deck<ResourceCard> resourceDeck;
+    /**
+     * The name of the player the client joined as
+     */
     private String name;
+    /**
+     * The secret achievement of the player
+     */
     private AchievementCard secretAchievement;
+    /**
+     * The hand of the player
+     */
     private List<Card> hand;
+    /**
+     * The current game turn
+     */
     private int turn;
+    /**
+     * The list of players in the game
+     */
     private List<Player> players;
+    /**
+     * The chat messages
+     */
     private Chat chat;
+    /**
+     * The current game state
+     */
     private GameState gameState;
 
     /**

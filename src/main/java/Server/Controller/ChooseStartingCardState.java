@@ -25,6 +25,11 @@ public class ChooseStartingCardState implements ServerState{
     private Controller controller;
     private GameModel gameModel;
 
+    /**
+     * Constructor for the class
+     * @param controller the controller
+     * @param gameModel the game model
+     */
     public ChooseStartingCardState(Controller controller, GameModel gameModel){
         this.controller = controller;
         this.gameModel = gameModel;

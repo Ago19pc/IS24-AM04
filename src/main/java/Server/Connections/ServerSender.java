@@ -13,7 +13,12 @@ import java.net.Socket;
  */
 public class ServerSender {
     private final ObjectOutputStream out;
-
+    /**
+     * Constructor for the ServerSender
+     *
+     * @param clientSocket the client socket
+     * @throws IOException if an I/O error occurs when creating the output stream
+     */
     public ServerSender(Socket clientSocket) throws IOException {
         out = new ObjectOutputStream(clientSocket.getOutputStream());
     }

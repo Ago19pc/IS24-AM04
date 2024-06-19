@@ -9,6 +9,9 @@ import java.io.Serializable;
 
  */
 public class NotYourTurnMessage implements Serializable, ToClientMessage{
+    /**
+     * Constructor
+     */
     public NotYourTurnMessage() {
     }
     @Override

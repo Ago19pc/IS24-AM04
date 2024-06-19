@@ -64,8 +64,11 @@ public interface ServerState {
     void reactToDisconnection(String id);
     /**
      * Reconnects a player to the game
-     * @param newId the id of the client who is reconnecting
-     * @param oldId the id of the player the client is reconnecting as
+     * @param oldId the id of the client who is reconnecting
+     * @param newId the id of the player the client is reconnecting as
+     * @param player the player object of the player the client is reconnecting as
+     * @param givenSecretObjectiveCards the secret objective cards given to each player
+     * @param givenStartingCards the starting cards given to each player
      * @throws NotYetStartedException if the game has not yet started
      * @throws AlreadyFinishedException if the game is already finished
      */

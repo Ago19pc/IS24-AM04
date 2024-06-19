@@ -10,8 +10,13 @@ import java.util.List;
  * Chat class to store messages
  */
 public class Chat implements Serializable {
+    /**
+     * List of messages in the chat
+     */
     private final List<Message> messages;
-
+    /**
+     * Constructor. Creates an empty list of messages
+     */
     public Chat(){
         this.messages = new LinkedList<>();
     }

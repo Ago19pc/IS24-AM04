@@ -16,9 +16,21 @@ import java.rmi.RemoteException;
  * This message is used to draw a card from a deck and to give the drawn card to the client who drew it
  */
 public class DrawCardMessage implements Serializable, ToServerMessage, ToClientMessage {
+    /**
+     * The deck where the card is drawn from
+     */
     private Decks from;
+    /**
+     * The position of the deck where the card is drawn
+     */
     private DeckPosition deckPosition;
+    /**
+     * The card that is drawn
+     */
     private Card drawnCard;
+    /**
+     * The id of the player who draws the card
+     */
     private String id;
 
     /**

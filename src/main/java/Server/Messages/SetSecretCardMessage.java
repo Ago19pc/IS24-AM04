@@ -13,7 +13,13 @@ import java.rmi.RemoteException;
  * Message to ask the server to set a player's secret card and to notify the clients that a player's secret card has been set
  */
 public class SetSecretCardMessage implements Serializable, ToClientMessage, ToServerMessage {
+    /**
+     * The index representing the card chosen by the player
+     */
     private final Integer chosenCard;
+    /**
+     * The id of the client who chose the secret card, or the name of the player who chose the secret card
+     */
     private final String idOrName;
     /**
      * ToServer constructor and ToClient constructor for the client who chose the secret card

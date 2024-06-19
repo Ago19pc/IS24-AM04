@@ -14,6 +14,7 @@ public class GoldCard extends ResourceCard implements Card{
      * Constructor for the GoldCard
      * @param frontFace the front face
      * @param backFace the back face
+     * @param imageURI the image URI
      */
     public GoldCard(GoldFrontFace frontFace, RegularBackFace backFace, String imageURI) {
         super(frontFace, backFace, imageURI);

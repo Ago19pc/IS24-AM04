@@ -9,9 +9,25 @@ import java.util.Objects;
  * This class is responsible for the logic of the scene where the player joins the server.
  */
 public class JoinSceneController extends SceneController{
+    /**
+     * The text field for the ip
+     */
     public TextField text_ip;
+    /**
+     * The text field for the port
+     */
     public TextField text_Port;
+    /**
+     * The join button
+     */
     public Button join_Button;
+
+    /**
+     * Constructor
+     */
+    public JoinSceneController() {
+        super();
+    }
 
     /**
      * Handles the join button click event

@@ -16,10 +16,19 @@ import static java.lang.Math.min;
  * Class that represents the manuscript
  */
 public class Manuscript implements Serializable {
+    /**
+     * The graph of cards in the manuscript
+     */
     private final Graph graph;
+    /**
+     * A map containing for each symbol its corresponding number in the manuscript
+     */
     private final Map<Symbol, Integer> activeSymbols;
 
-
+    /**
+     * Constructor. Creates the graph and initializes the active symbols
+     * @param cardFace the card face to add to the manuscript
+     */
     public Manuscript(CornerCardFace cardFace){
         graph = new Graph(cardFace);
         activeSymbols = new HashMap<>();
@@ -89,6 +98,8 @@ public class Manuscript implements Serializable {
     }
 
     /**
+     * Get the active number of a symbol in the manuscript
+     * @param symbol the symbol to get the count of
      * @return the number of a specific symbol in the manuscript
      */
     public int getSymbolCount(Symbol symbol) {
@@ -323,19 +334,6 @@ public class Manuscript implements Serializable {
      */
     public Map<CardCorners, CornerCardFace> getCardsUnder(CornerCardFace cardFace) throws IllegalArgumentException{
         return this.graph.getCardsUnder(cardFace);
-    }
-
-    public Map<CardCorners, CornerCardFace> getNeighbors(int x, int y){
-        Map<CardCorners, CornerCardFace> neighbors = new HashMap<>();
-        if(getCardByCoord(x-1, y+1) != null)
-            neighbors.put(CardCorners.TOP_LEFT, getCardByCoord(x-1, y+1));
-        if(getCardByCoord(x+1, y+1) != null)
-            neighbors.put(CardCorners.TOP_RIGHT, getCardByCoord(x+1, y+1));
-        if(getCardByCoord(x-1, y-1) != null)
-            neighbors.put(CardCorners.BOTTOM_LEFT, getCardByCoord(x-1, y-1));
-        if(getCardByCoord(x+1, y-1) != null)
-            neighbors.put(CardCorners.BOTTOM_RIGHT, getCardByCoord(x+1, y-1));
-        return neighbors;
     }
 
     /**

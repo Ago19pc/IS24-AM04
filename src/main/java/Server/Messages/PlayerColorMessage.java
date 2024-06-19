@@ -15,10 +15,21 @@ import java.util.Objects;
  * Message to ask the server to set the color and to notify the client that a player has set his color
  */
 public class PlayerColorMessage implements Serializable, ToClientMessage, ToServerMessage {
-
+    /**
+     * The name of the player
+     */
     private String name;
+    /**
+     * The color the player sets
+     */
     private final Color color;
+    /**
+     * True if the color was set, false otherwise
+     */
     private boolean confirmation;
+    /**
+     * The id of the client
+     */
     private String id;
 
     /**

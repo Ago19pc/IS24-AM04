@@ -22,6 +22,7 @@ public class GeneralClientConnectionHandler {
      * Standard constructor.
      * @param controller the client controller
      * @param trueifRMI true if the connection is RMI, false if it is SOCKET. The corrisponding ClientConnectionHandler is created.
+     * @throws RemoteException if the connection is RMI and there is a problem with the RMI connection
      */
     public GeneralClientConnectionHandler(ClientController controller, boolean trueifRMI) throws RemoteException {
         this.trueifRMI = trueifRMI;
@@ -38,6 +39,8 @@ public class GeneralClientConnectionHandler {
      * Connects to the server
      * @param server_host the server host name
      * @param server_port the server port
+     * @throws NotBoundException if the connection is RMI and the server is not bound
+     * @throws IOException if there is a problem with the connection
      */
     public void setSocket(String server_host, int server_port) throws NotBoundException, IOException {
         if(trueifRMI) {
@@ -77,6 +80,7 @@ public class GeneralClientConnectionHandler {
     }
 
     /**
+     * Checks if the client is connected to the server
      * @return true if the client is connected to the server
      */
     public boolean isConnectedToServer() {
@@ -88,6 +92,7 @@ public class GeneralClientConnectionHandler {
     }
 
     /**
+     * Gets the RMI client connection handler
      * @return the client connection handler RMI
      */
     public ClientConnectionHandlerRMI getClientConnectionHandlerRMI() {
@@ -95,6 +100,7 @@ public class GeneralClientConnectionHandler {
     }
 
     /**
+     * Gets the SOCKET client connection handler
      * @return the client connection handler SOCKET
      */
     public ClientConnectionHandlerSOCKET getClientConnectionHandlerSOCKET() {
@@ -102,6 +108,7 @@ public class GeneralClientConnectionHandler {
     }
 
     /**
+     * Checks if the client is using RMI
      * @return true if the client is using RMI
      */
     public boolean getTrueIfRMI() {

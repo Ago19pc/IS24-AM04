@@ -16,13 +16,38 @@ import java.util.List;
  * Implementation of the Player interface
  */
 public class PlayerInstance implements Player {
+    /**
+     * The secret objective of the player
+     */
     private AchievementCard secretObjective;
+    /**
+     * The hand of the player
+     */
     private final List<ResourceCard> handCards;
+    /**
+     * The color of the player
+     */
     private Color color;
+    /**
+     * The name of the player
+     */
     private final String name;
+    /**
+     * The points of the player
+     */
     private int points;
+    /**
+     * The manuscript of the player
+     */
     private Manuscript manuscript;
+    /**
+     * The ready status of the player
+     */
     private boolean ready;
+    /**
+     * Constructor
+     * @param name the name of the player
+     */
     public PlayerInstance(String name) {
         this.name = name;
         this.handCards = new LinkedList<>();

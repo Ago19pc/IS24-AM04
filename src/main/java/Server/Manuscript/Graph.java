@@ -15,8 +15,17 @@ import java.util.stream.Collectors;
  * Class that represents a graph of cards
  */
 public class Graph implements Serializable {
+    /**
+     * The root of the graph
+     */
     private final CornerCardFace root;
+    /**
+     * A list of all the cards in the graph
+     */
     private final List<CornerCardFace> containedCards;
+    /**
+     * A list of maps that represent the neighbors of each card. For each card, the map contains the corner and the card that is connected to that corner
+     */
     private final List<Map<CardCorners, CornerCardFace>> cardNeighbors;
     /**
      * Constructor for the Graph. Sets the root, creates the card map, and adds the starting card

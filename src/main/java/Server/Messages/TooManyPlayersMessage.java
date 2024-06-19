@@ -8,6 +8,10 @@ import java.io.Serializable;
  * Message to inform the client that there are too many players in the game, so he cannot join
  */
 public class TooManyPlayersMessage implements ToClientMessage, Serializable {
+    /**
+     * Constructor
+     */
+    public TooManyPlayersMessage() {}
 
     @Override
     public void clientExecute(ClientController controller){
