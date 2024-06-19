@@ -38,7 +38,7 @@ public class StartingCard implements Card, Serializable {
      * @return a string representation of the starting card
      */
     public String toString(){
-        return "Carta iniziale: \n Faccia anteriore: " + frontFace.toString() + "\n Faccia posteriore: " + backFace.toString();
+        return "Carta iniziale: \n Faccia anteriore: \n" + frontFace.toString() + "\n Faccia posteriore: \n" + backFace.toString();
     }
 
     public String getImageURI() {

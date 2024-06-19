@@ -93,7 +93,7 @@ public class ColorReadySceneController extends  SceneController{
      * This method is called when the server accepts the color request
      */
     public void setColorConfirm() {
-        controller.askSetColor(color.toString());
+        controller.askSetColor(color);
     }
 
 

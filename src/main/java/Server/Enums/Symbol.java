@@ -44,4 +44,31 @@ public enum Symbol {
             default -> ' ';
         };
     }
+
+    /**
+     * Returns a short string representation of the symbol
+     * @return a short string representation of the symbol
+     */
+    public String toString(){
+        return switch (this) {
+            case ANIMAL -> "\uD83D\uDC3A";
+            case FUNGUS -> "\uD83C\uDF44";
+            case PLANT -> "\uD83C\uDF32";
+            case BUG -> "\uD83E\uDD8B";
+            case QUILL -> "\uD83E\uDEB6";
+            case BOTTLE -> "⚗\uFE0F";
+            case PARCHMENT -> "\uD83D\uDCDC";
+            case EMPTY -> " ";
+            case NONE -> "NO";
+            case COVERED_CORNER -> "XX";
+            case PATTERN1F -> "1F";
+            case PATTERN1A -> "1A";
+            case PATTERN2P -> "2P";
+            case PATTERN2B -> "2B";
+            case PATTERN3 -> "3";
+            case PATTERN4 -> "4";
+            case PATTERN5 -> "5";
+            case PATTERN6 -> "6";
+        };
+    }
 }

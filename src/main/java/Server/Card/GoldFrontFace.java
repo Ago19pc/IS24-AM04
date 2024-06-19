@@ -51,11 +51,11 @@ public class GoldFrontFace extends ResourceFrontFace {
     @Override
     public String toString() {
         //
-        String boundaries = "-".repeat(29);
+        String boundaries = "-".repeat(32);
         boundaries += "\n";
-        String upper = String.format("|%9s|%7s|%9s|\n", getCornerSymbols().get(CardCorners.TOP_LEFT), scoreReqForPrint(), getCornerSymbols().get(CardCorners.TOP_RIGHT));
-        String middle = String.format("|%27s|\n", getKingdom());
-        String lower = String.format("|%9s|%7s|%9s|\n", getCornerSymbols().get(CardCorners.BOTTOM_LEFT), placeReqForPrint(), getCornerSymbols().get(CardCorners.BOTTOM_RIGHT));
+        String upper = String.format("|%-9s|%10s|%9s|\n", getCornerSymbols().get(CardCorners.TOP_LEFT), scoreReqForPrint(), getCornerSymbols().get(CardCorners.TOP_RIGHT));
+        String middle = String.format("|%30s|\n", "REGNO: " + getKingdom());
+        String lower = String.format("|%-9s|%10s|%9s|\n", getCornerSymbols().get(CardCorners.BOTTOM_LEFT), placeReqForPrint(), getCornerSymbols().get(CardCorners.BOTTOM_RIGHT));
 
         return boundaries + upper + middle + lower + boundaries;
     }
@@ -72,7 +72,9 @@ public class GoldFrontFace extends ResourceFrontFace {
                 if (!toRet.isEmpty()) {
                     toRet.append(" ");
                 }
-                toRet.append(s.toChar()).append("-").append(placementRequirements.get(s));
+                for(int i = 0; i < placementRequirements.get(s); i++) {
+                    toRet.append(s.toString()).append("");
+                }
             }
         }
 
@@ -90,7 +92,9 @@ public class GoldFrontFace extends ResourceFrontFace {
                 if (!toRet.isEmpty()) {
                     toRet.append(" ");
                 }
-                toRet.append(s.toChar()).append("-").append(scoreRequirements.get(s));
+                for(int i = 0; i < scoreRequirements.get(s); i++) {
+                    toRet.append(s.toString()).append("");
+                }
             }
         }
 

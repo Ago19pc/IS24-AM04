@@ -43,7 +43,11 @@ public class Manuscript implements Serializable {
         }
 
         for(Symbol symbol : cardFace.getCenterSymbols()){
-            activeSymbols.put(symbol, activeSymbols.get(symbol) + 1);
+            try{
+                activeSymbols.put(symbol, activeSymbols.get(symbol) + 1);
+            } catch (UnsupportedOperationException e){
+                //do nothing
+            }
         }
         for(CardCorners corner : cardFace.getCornerSymbols().keySet()){
             Symbol symbol = cardFace.getCornerSymbols().get(corner);

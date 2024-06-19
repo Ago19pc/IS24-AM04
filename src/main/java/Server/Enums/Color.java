@@ -5,5 +5,18 @@ package Server.Enums;
 
  */
 public enum Color {
-    RED, YELLOW, BLUE, GREEN
+    RED, YELLOW, BLUE, GREEN;
+
+    /**
+     * Returns the string representation of the color
+     * @return the string representation of the color
+     */
+    public String toString() {
+        return switch (this) {
+            case RED -> "Rosso";
+            case YELLOW -> "Giallo";
+            case BLUE -> "Blu";
+            case GREEN -> "Verde";
+        };
+    }
 }

@@ -5,6 +5,7 @@ import Server.Enums.Symbol;
 
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import static Server.Enums.Symbol.EMPTY;
 
@@ -66,9 +67,11 @@ public class RegularBackFace extends CornerCardFace {
      * @return the string representation
      */
     public String toString() {
-        String toReturn = "Regno: " + kingdom;
-        toReturn += "\n" + super.toString() + "\n";
-        toReturn += "Simboli centrali: " + centerSymbols;
-        return toReturn;
+        String boundaries = "-".repeat(32);
+        boundaries += "\n";
+        String upper = String.format("|%-9s|%10s|%9s|\n", getCornerSymbols().get(CardCorners.TOP_LEFT), " ", getCornerSymbols().get(CardCorners.TOP_RIGHT));
+        String middle = String.format("|%20s|%9s|\n", centerSymbols.stream().map(Symbol::toString).collect(Collectors.joining(" ")), "REGNO: " + getKingdom().toString());
+        String lower = String.format("|%-9s|%10s|%9s|\n", getCornerSymbols().get(CardCorners.BOTTOM_LEFT), " ", getCornerSymbols().get(CardCorners.BOTTOM_RIGHT));
+        return boundaries + upper + middle + lower + boundaries;
     }
 }

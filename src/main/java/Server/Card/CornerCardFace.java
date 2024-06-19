@@ -7,6 +7,7 @@ import java.io.Serializable;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * This class is the one from which all the corner card faces inherit. It is also used to represent the back face of starting cards
@@ -104,6 +105,11 @@ public class CornerCardFace extends EmptyCardFace implements Serializable {
      * @return the string representation
      */
     public String toString(){
-        return getCornerSymbols().toString();
+        String boundaries = "-".repeat(32);
+        boundaries += "\n";
+        String upper = String.format("|%-9s|%10s|%9s|\n", getCornerSymbols().get(CardCorners.TOP_LEFT), " ", getCornerSymbols().get(CardCorners.TOP_RIGHT));
+        String middle = String.format("|%30s|\n", " ");
+        String lower = String.format("|%-9s|%10s|%9s|\n", getCornerSymbols().get(CardCorners.BOTTOM_LEFT), " ", getCornerSymbols().get(CardCorners.BOTTOM_RIGHT));
+        return boundaries + upper + middle + lower + boundaries;
     }
 }

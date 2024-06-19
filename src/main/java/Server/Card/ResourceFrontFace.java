@@ -63,9 +63,12 @@ public class ResourceFrontFace extends CornerCardFace {
      */
     @Override
     public String toString() {
-        String toReturn = "Regno: " + kingdom;
-        toReturn += "\n" + super.toString() + "\n";
-        toReturn += "Punti: " + score;
-        return toReturn;
+        String boundaries = "-".repeat(32);
+        boundaries += "\n";
+        String upper = String.format("|%-9s|%10s|%9s|\n", getCornerSymbols().get(CardCorners.TOP_LEFT), score != 0 ? score : " ", getCornerSymbols().get(CardCorners.TOP_RIGHT));
+        String middle = String.format("|%30s|\n", "REGNO: " + getKingdom());
+        String lower = String.format("|%-9s|%10s|%9s|\n", getCornerSymbols().get(CardCorners.BOTTOM_LEFT), " ", getCornerSymbols().get(CardCorners.BOTTOM_RIGHT));
+
+        return boundaries + upper + middle + lower + boundaries;
     }
 }

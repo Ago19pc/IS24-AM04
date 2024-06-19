@@ -114,7 +114,7 @@ public class GameModelInstance implements GameModel{
     }
 
     public List<Player> getPlayerList() {
-        return new ArrayList<>(playerList);
+        return new LinkedList<>(playerList);
     }
     public void setPlayerList(List<Player> playerList) {
         this.playerList.clear();

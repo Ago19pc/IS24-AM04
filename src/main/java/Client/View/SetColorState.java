@@ -1,6 +1,7 @@
 package Client.View;
 
 import Client.Controller.ClientController;
+import Server.Enums.Color;
 
 /**
  * This class represents the state of the game where the player has to set his color and ready status.
@@ -32,16 +33,16 @@ public class SetColorState implements CLIState{
         } else {
             switch (args[0]) {
                 case "1":
-                    controller.askSetColor("RED");
+                    controller.askSetColor(Color.RED);
                     break;
                 case "2":
-                    controller.askSetColor("BLUE");
+                    controller.askSetColor(Color.BLUE);
                     break;
                 case "3":
-                    controller.askSetColor("GREEN");
+                    controller.askSetColor(Color.GREEN);
                     break;
                 case "4":
-                    controller.askSetColor("YELLOW");
+                    controller.askSetColor(Color.YELLOW);
                     break;
                 case "pronto":
                     controller.setReady();

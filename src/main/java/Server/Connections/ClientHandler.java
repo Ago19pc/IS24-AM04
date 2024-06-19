@@ -36,7 +36,7 @@ public class ClientHandler extends Thread {
         UncaughtExceptionHandler h = (th, ex) -> {
             System.out.println("Exception, killing ClientHandler Thread " + ex);
             connectionHandler.killClient(connectionHandler.getThreadName(me));
-
+            ex.printStackTrace();
         };
         try {
             sender = new ServerSender(this.socket);

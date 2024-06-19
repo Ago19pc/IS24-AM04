@@ -196,9 +196,9 @@ public class CLI extends Thread implements UI {
         printPromptLine();
     }
     public void displayPlayerColors(){
-        printOnNewLine("I giocatori hanno i seguenti colori: \n");
+        printOnNewLine("Ora i giocatori hanno questi colori: \n");
         for (Player player : controller.getPlayers()) {
-            System.out.println("    " + player.getName() + ": " + player.getColor());
+            System.out.println("    " + player.getName() + ": " + (player.getColor() != null ? player.getColor().toString() : "nessun colore"));
         }
         printPromptLine();
     }
@@ -256,8 +256,11 @@ public class CLI extends Thread implements UI {
         printPromptLine();
     }
     public void displayNewPlayer(){
-        printOnNewLine("E' entrato un nuovo giocatore: " + controller.getPlayers().getLast().getName());
-        printPromptLine();
+        String newPlayerName = controller.getPlayers().getLast().getName();
+        if(!Objects.equals(newPlayerName, controller.getMyName())){
+            printOnNewLine("E' entrato un nuovo giocatore: " + newPlayerName);
+            printPromptLine();
+        }
     }
     public void otherPlayerDraw(String name, Decks deckFrom, DeckPosition position){
         printOnNewLine(name + " ha pescato una carta dalla posizione " + position + " del mazzo " + deckFrom);
@@ -282,8 +285,7 @@ public class CLI extends Thread implements UI {
         printPromptLine();
     }
     public void gameStarted(){
-        printOnNewLine("La partita è iniziata!");
-        printPromptLine();
+        printOnNewLine("Tutti i giocatori sono pronti! Inizia la partita...");
     }
     public void displayPlayerOrder(){
         printOnNewLine("L'ordine dei giocatori è:");
@@ -293,15 +295,16 @@ public class CLI extends Thread implements UI {
         changeScene(new GameState(this, controller));
     }
     public void displayBoardCards(){
-        printOnNewLine("Le carte a terra sono: \n");
-        printOnNewLine("MAZZO ORO: \n");
-        for (Card card : controller.getBoardCards(Decks.GOLD)) {
-            System.out.println("    " + card);
-        }
-        printOnNewLine("MAZZO RISORSA: \n");
-        for (Card card : controller.getBoardCards(Decks.RESOURCE)) {
-            System.out.println("    " + card);
-        }
+        printOnNewLine("MAZZO ORO:");
+        printOnNewLine("La carta in cima al mazzo è: \n" + controller.getBoardCards(Decks.GOLD).getFirst().getFace(Face.BACK));
+        printOnNewLine("Le carte a terra sono: ");
+        printOnNewLine(controller.getBoardCards(Decks.GOLD).get(1).toString());
+        printOnNewLine(controller.getBoardCards(Decks.GOLD).get(2).toString());
+        printOnNewLine("MAZZO RISORSA:");
+        printOnNewLine("La carta in cima al mazzo è: \n" + controller.getBoardCards(Decks.RESOURCE).getFirst().getFace(Face.BACK));
+        printOnNewLine("Le carte a terra sono: ");
+        printOnNewLine(controller.getBoardCards(Decks.RESOURCE).get(1).toString());
+        printOnNewLine(controller.getBoardCards(Decks.RESOURCE).get(2).toString());
         printPromptLine();
     }
     public void chooseStartingCardFace(Card card){
