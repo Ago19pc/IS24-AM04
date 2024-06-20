@@ -107,4 +107,23 @@ public class AchievementFrontFace extends EmptyCardFace {
         throw new UnsupportedOperationException("Achievement cards do not have kingdoms");
     }
 
+    /**
+     * Returns a string representation of the score requirements
+     * @return the string
+     */
+    public String scoreReqForPrint() {
+        StringBuilder toRet = new StringBuilder();
+        for (Symbol s: scoreRequirements.keySet()){
+            if (scoreRequirements.get(s) != 0) {
+                if (!toRet.isEmpty()) {
+                    toRet.append(" ");
+                }
+                for(int i = 0; i < scoreRequirements.get(s); i++) {
+                    toRet.append(s.toString()).append("");
+                }
+            }
+        }
+        return toRet.toString();
+    }
+
 }

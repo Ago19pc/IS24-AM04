@@ -30,7 +30,7 @@ public class GameState implements CLIState{
                 cli.printOnNewLine("");
                 cli.printOnNewLine("  chooseCard <numero>: scegli il numero della carta da selezizonare. Se vuoi la prima carta digita 1, etc.");
                 cli.printOnNewLine("");
-                cli.printOnNewLine("  printHand: mostra le carte nella tua mano");
+                cli.printOnNewLine("  hand: mostra le carte nella tua mano");
                 cli.printOnNewLine("");
                 cli.printOnNewLine("  placeCard <faccia> <x> <y>: piazza la carta selezionata nella posizione x, y");
                 cli.printOnNewLine("  Le facce disponibili sono: FRONT, BACK");
@@ -38,6 +38,8 @@ public class GameState implements CLIState{
                 cli.printOnNewLine("  drawCard <mazzo> (opzionale <posizione a terra>): pesca una carta dal mazzo specificato. Se <posizione a terra> è specificata, pesca la carta dalla posizione specificata, altrimenti pesca dal mazzo");
                 cli.printOnNewLine("  I mazzi disponibili sono: GOLD, RESOURCE");
                 cli.printOnNewLine("  Le posizioni a terra disponibili sono: 1, 2");
+                cli.printOnNewLine("");
+                cli.printOnNewLine("  manuscript (opzionale <giocatore>): Mostra il manoscritto di <giocatore>, partendo dalla posizione 0,0. Se <giocatore> non è specificato, mostra il tuo manoscritto");
                 cli.printOnNewLine("");
                 cli.printPromptLine();
                 break;
@@ -63,7 +65,7 @@ public class GameState implements CLIState{
                         cli.printOnNewLine("C'è un tempo e un luogo per ogni cosa! Ma non ora...");
                 }
                 break;
-            case "printHand":
+            case "hand":
                 cli.displayHand();
                 break;
             case "placeCard":
@@ -108,6 +110,17 @@ public class GameState implements CLIState{
                 Decks deck = Decks.valueOf(args[1].toUpperCase());
                 controller.askDrawCard(deck, position);
                 break;
+        case "manuscript":
+            if(args.length > 2){
+                cli.printOnNewLine("Utilizzo corretto: manuscript (opzionale <giocatore>)");
+                return;
+            }
+            if(args.length == 1){
+                cli.displayManuscript(controller.getMyName());
+            } else {
+                cli.displayManuscript(args[1]);
+            }
+            break;
             default:
                 cli.printOnNewLine("Comando non valido. Digita <help> per visualizzare i comandi disponibili.");
                 cli.printPromptLine();

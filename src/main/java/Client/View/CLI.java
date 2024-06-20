@@ -6,6 +6,7 @@ import Interface.MainBoardSceneController;
 import Interface.SceneName;
 import Server.Card.AchievementCard;
 import Server.Card.Card;
+import Server.Card.CardFace;
 import Server.Card.CornerCardFace;
 import Server.Chat.Message;
 import Client.View.StartingCardChoiceState;
@@ -225,14 +226,14 @@ public class CLI extends Thread implements UI {
     public void displayCommonAchievements(){
         printOnNewLine("Gli obiettivi comuni sono: \n");
         for (int i = 0; i < controller.getCommonAchievements().size(); i++) {
-            System.out.println("    " + i + ": " + controller.getCommonAchievements().get(i));
+            System.out.println("    - " + controller.getCommonAchievements().get(i));
         }
         printPromptLine();
     }
     public void chooseSecretAchievement(List<AchievementCard> possibleAchievements){
-        printOnNewLine("Puoi Scegliere un obiettivo segreto tra: \n");
+        printOnNewLine("Scegli un obiettivo segreto: \n");
         for (int i = 0; i < possibleAchievements.size(); i++) {
-            System.out.println("    " + i + ": " + possibleAchievements.get(i));
+            System.out.println("    " + (i + 1) + ": " + possibleAchievements.get(i));
         }
         changeScene(new SecretCardChoiceState(this, controller));
     }
@@ -269,7 +270,7 @@ public class CLI extends Thread implements UI {
         printPromptLine();
     }
     public void newTurn(){
-        printOnNewLine("E' il turno " + controller.getTurn() + ". Tocca a " + controller.getActivePlayer());
+        printOnNewLine("E' il turno " + controller.getTurn() + ". Tocca a " + controller.getActivePlayer().getName());
         printPromptLine();
     }
     public void otherPlayerInitialHand(String name){
@@ -290,7 +291,7 @@ public class CLI extends Thread implements UI {
     public void displayPlayerOrder(){
         printOnNewLine("L'ordine dei giocatori è:");
         for (int i = 0; i < controller.getPlayerNames().size(); i++) {
-            System.out.print(" " + i + ": " + controller.getPlayerNames());
+            System.out.print(" " + (i + 1) + ": " + controller.getPlayerNames().get(i));
         }
         changeScene(new GameState(this, controller));
     }
@@ -384,7 +385,7 @@ public class CLI extends Thread implements UI {
      * Displays the turn number
      */
     public void displayTurn(){
-        printOnNewLine("E' il turno " + controller.getTurn() + ". Tocca a " + controller.getActivePlayer());
+        printOnNewLine("E' il turno " + controller.getTurn() + ". Tocca a " + controller.getActivePlayer().getName());
         printPromptLine();
     }
 
@@ -393,7 +394,14 @@ public class CLI extends Thread implements UI {
      * @param playerName the name of the player
      */
     public void displayManuscript(String playerName){
-        printOnNewLine(playerName + "ha un manoscritto");
+        printOnNewLine("Manoscritto di " + playerName + ", in posizione 0,0:");
+        try{
+            CardFace cardToDisplay = controller.getPlayerByName(playerName).getManuscript().getCardByCoord(0, 0);
+            printOnNewLine(cardToDisplay.toString());
+        } catch (PlayerNotFoundByNameException e){
+            printOnNewLine("Il giocatore specificato non esiste");
+        }
+        printPromptLine();
     }
 
     /**
