@@ -4,6 +4,7 @@ import Client.Controller.ClientController;
 import Server.Card.Card;
 import Server.Card.CardFace;
 import Server.Enums.Face;
+import javafx.application.Platform;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
 import javafx.scene.control.TextField;
@@ -80,7 +81,9 @@ public abstract class SceneController implements Initializable {
      * This method is called when the player wants to send a message in the chat
      */
     public void sendMessages() {
-        controller.sendChatMessage(messageToSend.getText());
+        if (messageToSend.getText().equals("pasqualino")){
+            Platform.runLater(() -> ((MainBoardSceneController) sceneControllerMap.get(SceneName.GAME)).pasqualino());
+        } else controller.sendChatMessage(messageToSend.getText());
     }
 
 }

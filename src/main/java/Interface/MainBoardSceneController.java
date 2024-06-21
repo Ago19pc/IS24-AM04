@@ -14,7 +14,9 @@ import javafx.fxml.FXML;
 import javafx.scene.Group;
 import javafx.scene.control.*;
 import javafx.scene.effect.Glow;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.AnchorPane;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -517,6 +519,18 @@ public class MainBoardSceneController extends SceneController {
             Player4.setText("");
         }
 
+    }
+
+    public void pasqualino() {
+        Tab tab = new Tab("Squadra Genew");
+        AnchorPane pane = new AnchorPane();
+        ImageView image = new ImageView(getClass().getResource("/images/otherImages/uovadipasqua.jpg").toExternalForm());
+        image.setPreserveRatio(false);
+        image.setFitWidth(400);
+        image.setFitHeight(300);
+        pane.getChildren().add(image);
+        tab.setContent(pane);
+        tabPane.getTabs().add(tab);
     }
 
 
