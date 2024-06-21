@@ -690,8 +690,6 @@ public class ClientControllerInstance implements ClientController {
     @Override
     public void setGameInfo(String id, List<AchievementCard> commonAchievements, Deck<GoldCard> goldDeck, Deck<ResourceCard> resourceDeck, String name, AchievementCard secretAchievement, List<Card> hand, int turn, List<Player> players, Chat chat, GameState gameState) {
 
-
-        this.id = id;
         this.commonAchievements = commonAchievements;
         this.goldDeck = goldDeck;
         this.resourceDeck = resourceDeck;
