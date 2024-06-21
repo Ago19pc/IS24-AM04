@@ -501,6 +501,13 @@ public class GUI implements UI{
 
     @Override
     public void playerDisconnected(String playerName) {
+        Platform.runLater(() -> {
+            ((ColorReadySceneController) sceneControllerMap.get(SceneName.SETCOLOR)).chat_messages.getItems().add( playerName + " left the match ");
+            ((NameReadySceneController) sceneControllerMap.get(SceneName.SETNAME)).chat_message.getItems().add( playerName + " left the match ");
+            ((ChooseSecretCardController) sceneControllerMap.get(SceneName.SECRETCARDCHOICE)).chat_message.getItems().add( playerName + " left the match ");
+            ((ChooseStartingCardController) sceneControllerMap.get(SceneName.STARTINGCARDCHOICE)).chat_message.getItems().add( playerName + " left the match ");
+            ((MainBoardSceneController) sceneControllerMap.get(SceneName.GAME)).chatMessages.getItems().add( playerName + " left the match ");
+        });
         System.out.println("Player disconnected");
     }
 
