@@ -525,6 +525,11 @@ public class GUI implements UI{
 
     @Override
     public void playerRemoved(String name) {
+        Platform.runLater(()->{
+            ((ColorReadySceneController) sceneControllerMap.get(SceneName.SETCOLOR)).list_Player.getItems().stream().filter(s -> s.contains(name)).findFirst().ifPresent(s -> ((ColorReadySceneController) sceneControllerMap.get(SceneName.SETCOLOR)).list_Player.getItems().remove(s));
+            ((NameReadySceneController) sceneControllerMap.get(SceneName.SETNAME)).list_Player.getItems().stream().filter(s -> s.contains(name)).findFirst().ifPresent(s -> ((NameReadySceneController) sceneControllerMap.get(SceneName.SETNAME)).list_Player.getItems().remove(s));
+            ((NameReadySceneController) sceneControllerMap.get(SceneName.SETNAME)).cloneListView(((ColorReadySceneController) sceneControllerMap.get(SceneName.SETCOLOR)).list_Player);
+        });
         System.out.println("Player removed");
     }
 
