@@ -1,18 +1,22 @@
 package Server.Controller;
 
-import Client.Deck;
-import Server.Card.*;
+import Server.Card.AchievementCard;
+import Server.Card.Card;
+import Server.Card.CornerCardFace;
+import Server.Card.StartingCard;
 import Server.Chat.Message;
 import Server.Connections.GeneralServerConnectionHandler;
 import Server.Deck.AchievementDeck;
-import Server.Enums.*;
+import Server.Enums.Color;
+import Server.Enums.DeckPosition;
+import Server.Enums.Decks;
+import Server.Enums.Face;
 import Server.Exception.*;
 import Server.GameModel.GameModel;
 import Server.GameModel.GameModelInstance;
 import Server.Manuscript.Manuscript;
 import Server.Messages.*;
 import Server.Player.Player;
-import Server.Player.PlayerInstance;
 import com.google.gson.Gson;
 
 import java.io.File;
@@ -49,7 +53,12 @@ public class ControllerInstance implements Controller{
             }
         }
     }
-
+    public ControllerInstance(GeneralServerConnectionHandler connectionHandler, boolean test) {
+        this.connectionHandler = connectionHandler;
+        this.gameModel = new GameModelInstance();
+        changeState(new LobbyState(this.gameModel, this.connectionHandler, this));
+        connectionHandler.setController(this,true);
+    }
     public void changeState(ServerState state){
         gameState = state;
     }
