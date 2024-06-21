@@ -56,6 +56,8 @@ public class ControllerInstance implements Controller{
     public ControllerInstance(GeneralServerConnectionHandler connectionHandler, boolean test) {
         this.connectionHandler = connectionHandler;
         this.gameModel = new GameModelInstance();
+        changeState(new LobbyState(this.gameModel, this.connectionHandler, this));
+        connectionHandler.setController(this,true);
     }
     public void changeState(ServerState state){
         gameState = state;
