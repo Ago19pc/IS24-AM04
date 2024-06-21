@@ -17,7 +17,7 @@ public class TestDeck {
     @Test
     public void TestAchievementDeck() throws AlreadyFinishedException {
         Boolean test = true;
-        AchievementDeck achievementDeck = new AchievementDeck(test);
+        AchievementDeck achievementDeck = new AchievementDeck();
         assertEquals (14, achievementDeck.getNumberOfCards());
         Map<Symbol,Integer> scoreRequirements = new HashMap<>();
         Map<Symbol,Integer> scoreRequirements1 = new HashMap<>();
@@ -54,7 +54,7 @@ public class TestDeck {
     @Test
     public void TestResourceDeck() throws AlreadyFinishedException{
         Boolean test = true;
-        ResourceDeck resourceDeck = new ResourceDeck(test);
+        ResourceDeck resourceDeck = new ResourceDeck();
         assertEquals (38, resourceDeck.getNumberOfCards());
         Map<CardCorners, Symbol> cornerSymbols = new HashMap<>();
         cornerSymbols.put(CardCorners.TOP_LEFT, Symbol.EMPTY);
@@ -84,7 +84,7 @@ public class TestDeck {
     @Test
     public void TestGoldDeck() throws AlreadyFinishedException {
         Boolean test = true;
-        GoldDeck goldDeck = new GoldDeck(test);
+        GoldDeck goldDeck = new GoldDeck();
         Map<CardCorners, Symbol> cornerSymbols = new HashMap<>();
         cornerSymbols.put(CardCorners.TOP_LEFT, Symbol.PARCHMENT);
         cornerSymbols.put(CardCorners.TOP_RIGHT, Symbol.EMPTY);
