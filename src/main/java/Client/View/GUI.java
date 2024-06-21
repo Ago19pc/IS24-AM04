@@ -391,8 +391,6 @@ public class GUI implements UI{
     @Override
     public void secretAchievementChosen(String name) {
         Platform.runLater(() -> {
-            System.out.println("Secret achievement chosen name : "+ name);
-            System.out.println("Secret achievement chosen achievement : "+ controller.getSecretAchievement());
             if (name.equals(controller.getMyName())){
                 ((ChooseSecretCardController) sceneControllerMap.get(SceneName.SECRETCARDCHOICE)).confirmation();
                 ((MainBoardSceneController) sceneControllerMap.get(SceneName.GAME)).setSecretCard(controller.getSecretAchievement());
