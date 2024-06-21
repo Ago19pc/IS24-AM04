@@ -215,5 +215,10 @@ public class ServerConnectionHandlerSOCKET extends Thread implements ServerConne
     public LobbyPlayersMessage join(int rmi_port) throws RemoteException {
         return null;
     }
+
+    @Override
+    public boolean ping() throws RemoteException {
+        return false;
+    }
 }
 

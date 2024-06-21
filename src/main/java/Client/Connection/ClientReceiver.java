@@ -20,13 +20,9 @@ public class ClientReceiver extends Thread {
      * @param clientSocket the socket to receive messages from
      * @param controller the controller to use. This is used to execute incoming messages
      * @throws IOException if the socket can't be opened
-     * @throws IllegalArgumentException if the socket is not open. This is used to prevent the RMI port from being used which would deadlock the client
      */
-    public ClientReceiver(Socket clientSocket, ClientController controller) throws IOException, IllegalArgumentException {
+    public ClientReceiver(Socket clientSocket, ClientController controller) throws IOException{
         this.controller = controller;
-        if(clientSocket.getInputStream().available() == 0){
-            throw new IllegalArgumentException("This is not an open socket. Make sure this is not the RMI port");
-        }
         in = new ObjectInputStream(clientSocket.getInputStream());
     }
 
@@ -44,9 +40,8 @@ public class ClientReceiver extends Thread {
                 packet.clientExecute(this.controller);
             } catch (IOException | ClassNotFoundException e) {
                 System.out.println("Server Disconnected");
-                throw new RuntimeException("Error reading from socket", e);
+                controller.serverDisconnected();
             }
-
         }
     }
 }

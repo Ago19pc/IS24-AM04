@@ -469,4 +469,9 @@ public interface ClientController {
      * @return the index
      */
     int getIndexofSecretAchievement();
+
+    /**
+     * Reacts to server disconnection
+     */
+    void serverDisconnected();
 }

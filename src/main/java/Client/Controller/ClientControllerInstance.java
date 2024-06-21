@@ -149,8 +149,9 @@ public class ClientControllerInstance implements ClientController {
         try{
             clientConnectionHandler.setSocket(ip, port);
             ui.successfulConnection();
-        } catch (IOException | NotBoundException | NullPointerException | IllegalArgumentException e){
+        } catch (IOException | NotBoundException | NullPointerException e){
             ui.connectionFailed();
+            e.printStackTrace();
         }
     }
 
@@ -735,5 +736,11 @@ public class ClientControllerInstance implements ClientController {
     @Override
     public int getIndexofSecretAchievement() {
         return indexofSecretAchievement;
+    }
+
+    @Override
+    public void serverDisconnected() {
+        clientConnectionHandler.serverDisconnected();
+        ui.serverDisconnected();
     }
 }

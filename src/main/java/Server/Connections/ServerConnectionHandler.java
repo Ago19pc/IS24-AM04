@@ -81,4 +81,11 @@ public interface ServerConnectionHandler extends Remote {
      * @throws NotBoundException when the server is not bound
      */
     LobbyPlayersMessage join(int rmi_port) throws RemoteException, NotBoundException;
+
+    /**
+     * Responds to a ping from a client
+     * @return true if everything is fine
+     * @Throws RemoteException when failing to respond to the ping
+     */
+    boolean ping() throws RemoteException;
 }

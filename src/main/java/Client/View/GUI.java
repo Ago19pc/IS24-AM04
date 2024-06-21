@@ -630,6 +630,11 @@ public class GUI implements UI{
         // todo: implement this
     }
 
+    @Override
+    public void serverDisconnected() {
+        //todo: implement this
+    }
+
     /**
      * Generate a manuscript based on its data
      */
