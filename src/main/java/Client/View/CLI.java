@@ -534,4 +534,9 @@ public class CLI extends Thread implements UI {
         printOnNewLine("La partita è già finita");
         printPromptLine();
     }
+
+    @Override
+    public void serverDisconnected() {
+        changeScene(new JoinState(this));
+    }
 }

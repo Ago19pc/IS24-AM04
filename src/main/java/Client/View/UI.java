@@ -318,4 +318,9 @@ public interface UI {
      * Informs the user that the game has already finished
      */
     void gameAlreadyFinished();
+
+    /**
+     * Informs the user that the server has disconnected
+     */
+    void serverDisconnected();
 }

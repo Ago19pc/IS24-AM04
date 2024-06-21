@@ -226,6 +226,11 @@ public class ServerConnectionHandlerRMI implements ServerConnectionHandler, Remo
         );
     }
 
+    @Override
+    public boolean ping() throws RemoteException {
+        return true;
+    }
+
     /**
      * Pings a client. If it fails, sets the client as offline
      * @param id the id of the client to check
