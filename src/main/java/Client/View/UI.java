@@ -220,7 +220,7 @@ public interface UI {
     void startingCardChosen(String name);
 
     /**
-     * Informs the user that the game has started
+     * Informs the user that all the players have joined
      */
     void gameStarted();
 

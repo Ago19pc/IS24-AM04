@@ -124,7 +124,6 @@ public class ClientConnectionHandlerRMI implements ClientConnectionHandler {
             stub = (ClientConnectionHandler) UnicastRemoteObject.exportObject(this, rmi_client_port);
             registry = LocateRegistry.createRegistry(rmi_client_port);
             registry.rebind("ClientConnectionHandler", stub);
-            System.out.println("[RMI] Service started on port: " + rmi_client_port);
         } catch (Exception e) {
             System.out.println("[RMI] Error with selected port trying with next one...");
             setRmi_client_port(rmi_client_port + 1);
