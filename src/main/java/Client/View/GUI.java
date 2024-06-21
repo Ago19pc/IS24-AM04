@@ -119,7 +119,11 @@ public class GUI implements UI{
                 String name = controller.getPlayers().get(i).getName();
                 String color = controller.getPlayers().get(i).getColor() == null ? "No Color" : controller.getPlayers().get(i).getColor().toString();
                 String ready = controller.getPlayers().get(i).isReady() ? "Ready" : "Not Ready";
-                ((NameReadySceneController) sceneControllerMap.get(SceneName.SETNAME)).list_Player.getItems().set(i, name + "   " + color + "   " + ready);
+                try {
+                    ((NameReadySceneController) sceneControllerMap.get(SceneName.SETNAME)).list_Player.getItems().set(i, name + "   " + color + "   " + ready);
+                } catch (IndexOutOfBoundsException e) {
+                    ((NameReadySceneController) sceneControllerMap.get(SceneName.SETNAME)).list_Player.getItems().add(name + "   " + color + "   " + ready);
+                }
             }
             stage.setScene(getScene(SceneName.SETNAME));
             stage.show();
@@ -330,6 +334,12 @@ public class GUI implements UI{
     @Override
     public void displayLeaderboard(LinkedHashMap<String, Integer> playerPoints) {
         Platform.runLater(() -> {
+
+            if (!stage.getScene().equals(getScene(SceneName.GAME))){
+                sceneControllerMap.get(SceneName.GAME).setup();
+                stage.setScene(getScene(SceneName.GAME));
+            }
+
             ((MainBoardSceneController) sceneControllerMap.get(SceneName.GAME)).updateLeaderBoard();
             ((MainBoardSceneController) sceneControllerMap.get(SceneName.GAME)).tabPane.getTabs().forEach(tab -> {
                 if (!tab.getText().equals("LeaderBoard")) {
@@ -381,8 +391,6 @@ public class GUI implements UI{
     @Override
     public void secretAchievementChosen(String name) {
         Platform.runLater(() -> {
-            System.out.println("Secret achievement chosen name : "+ name);
-            System.out.println("Secret achievement chosen achievement : "+ controller.getSecretAchievement());
             if (name.equals(controller.getMyName())){
                 ((ChooseSecretCardController) sceneControllerMap.get(SceneName.SECRETCARDCHOICE)).confirmation();
                 ((MainBoardSceneController) sceneControllerMap.get(SceneName.GAME)).setSecretCard(controller.getSecretAchievement());

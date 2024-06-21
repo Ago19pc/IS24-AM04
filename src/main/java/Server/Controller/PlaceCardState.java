@@ -46,11 +46,7 @@ public class PlaceCardState implements ServerState{
     @Override
     public void removePlayer(Player player) {
         if(controller.getPlayerList().size() == 1){
-            try{
-                controller.computeLeaderboard();
-            } catch (AlreadyFinishedException e) {
-                e.printStackTrace();
-            }
+            controller.disconnectionLeaderboard();
         }
     }
 
@@ -131,6 +127,7 @@ public class PlaceCardState implements ServerState{
         if(activePlayerName.equals(playerName)) {
             controller.nextTurn();
         }
+        new DisconnectionTimer(controller, controller.getConnectionHandler(), id, 180);
     }
 
     @Override

@@ -386,7 +386,23 @@ public class ControllerInstance implements Controller{
             clear();
         } catch (AlreadyFinishedException e) {
             e.printStackTrace();
+        } finally {
+            System.out.println("Leaderboard computed, game finished. Bye bye");
+            System.exit(0);
         }
+    }
+
+    public void disconnectionLeaderboard() {
+        changeState(new LeaderboardState(this));
+        LinkedHashMap<String, Integer> leaderboardMap = new LinkedHashMap<>();
+        for (Player player : getPlayerList()) {
+            leaderboardMap.put(player.getName(), player.getPoints());
+        }
+        LeaderboardMessage leaderboardMessage = new LeaderboardMessage(leaderboardMap);
+        connectionHandler.sendAllMessage(leaderboardMessage);
+        clear();
+        System.out.println("Leaderboard computed, game finished because only one player left. Bye bye");
+        System.exit(0);
     }
 
     /**
@@ -492,7 +508,6 @@ public class ControllerInstance implements Controller{
     }
 
     public void reactToDisconnection(String id){
-        String playerName;
         try {
             if(getPlayerByName(connectionHandler.getPlayerNameByID(id)) == null){ //this means the client is not a player
                 try {
@@ -517,7 +532,7 @@ public class ControllerInstance implements Controller{
         gameState.reactToDisconnection(id);
     }
 
-        public void reconnect(String oldId, String newId) throws IllegalArgumentException, AlreadySetException, NotYetStartedException, AlreadyFinishedException {
+    public void reconnect(String oldId, String newId) throws IllegalArgumentException, AlreadySetException, NotYetStartedException, AlreadyFinishedException {
         System.out.println("Reconnecting player" + oldId + " with new id (id of previous player) " + newId);
         System.out.println(connectionHandler.getDisconnectedList());
         if(!connectionHandler.isInDisconnectedList(newId)){

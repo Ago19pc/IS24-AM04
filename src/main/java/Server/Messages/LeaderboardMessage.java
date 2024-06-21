@@ -19,6 +19,7 @@ public class LeaderboardMessage implements Serializable, ToClientMessage {
      * @param playerPoints the leaderboard to send
      */
     public LeaderboardMessage(LinkedHashMap<String, Integer> playerPoints){
+
         this.playerPoints = playerPoints;
     }
 
