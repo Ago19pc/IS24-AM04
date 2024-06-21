@@ -115,6 +115,7 @@ public interface ClientController {
     void askSetName(String name);
     /**
      * Sets the RMI mode of the client: true if the client is in RMI mode, false if it is in Socket mode.
+     * After setting the mode, the client will create the connection handler for the selected mode
      * @param rmi the mode to set
      */
     void setRMIMode(boolean rmi);

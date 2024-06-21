@@ -19,12 +19,12 @@ import java.util.ResourceBundle;
  * Abstract class for SceneController, which contains the scene logic
  */
 public abstract class SceneController implements Initializable {
-    private ClientController controller;
-    private Stage stage;
-    private Map<SceneName, Scene> sceneMap;
+    ClientController controller;
+    Stage stage;
+    Map<SceneName, Scene> sceneMap;
     private SceneController sceneController;
     private Map<SceneName,SceneController> sceneControllerMap = new HashMap<>();
-    private TextField messageToSend;
+    public TextField messageToSend;
     /**
      * Constructor
      */

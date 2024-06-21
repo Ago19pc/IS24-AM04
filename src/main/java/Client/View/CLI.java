@@ -120,7 +120,12 @@ public class CLI extends Thread implements UI {
                     printOnNewLine("Utilizzo corretto: join <ip> <porta>");
                     return;
                 }
-                controller.joinServer(args[1], Integer.parseInt(args[2]));
+                try {
+                    controller.joinServer(args[1], Integer.parseInt(args[2]));
+                } catch (NumberFormatException e) {
+                    printOnNewLine("La porta deve essere un numero");
+                    return;
+                }
                 break;
             case "setName":
                 if(args.length != 2){

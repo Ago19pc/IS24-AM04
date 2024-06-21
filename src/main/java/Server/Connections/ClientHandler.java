@@ -36,14 +36,9 @@ public class ClientHandler extends Thread {
             connectionHandler.killClient(connectionHandler.getThreadName(this));
 
         };
-        try {
-            sender = new ServerSender(this.socket);
-            receiver = new ServerReceiver(this, this.socket, controller);
-            receiver.setUncaughtExceptionHandler(h);
-        } catch (Exception e) {
-            System.out.println("LOL2");
-            throw e;
-        }
+        sender = new ServerSender(this.socket);
+        receiver = new ServerReceiver(this, this.socket, controller);
+        receiver.setUncaughtExceptionHandler(h);
     }
 
 

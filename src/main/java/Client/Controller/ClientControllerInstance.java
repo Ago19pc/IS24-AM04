@@ -146,15 +146,10 @@ public class ClientControllerInstance implements ClientController {
 
     @Override
     public void joinServer(String ip, int port) {
-        try {
-            clientConnectionHandler = new GeneralClientConnectionHandler(this, rmiMode);
-        } catch (RemoteException e) {
-            throw new RuntimeException(e);
-        }
         try{
             clientConnectionHandler.setSocket(ip, port);
             ui.successfulConnection();
-        } catch (IOException | NotBoundException e){
+        } catch (IOException | NotBoundException | NullPointerException | IllegalArgumentException e){
             ui.connectionFailed();
         }
     }
@@ -216,6 +211,11 @@ public class ClientControllerInstance implements ClientController {
     @Override
     public void setRMIMode(boolean rmi) {
         this.rmiMode = rmi;
+        try {
+            clientConnectionHandler = new GeneralClientConnectionHandler(this, rmiMode);
+        } catch (RemoteException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override

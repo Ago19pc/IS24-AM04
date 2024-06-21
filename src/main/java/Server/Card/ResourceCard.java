@@ -11,11 +11,11 @@ public class ResourceCard implements Card {
     /**
      * The front face of the card
      */
-    private final ResourceFrontFace frontFace;
+    final ResourceFrontFace frontFace;
     /**
      * The back face of the card
      */
-    private final RegularBackFace backFace;
+    final RegularBackFace backFace;
     /**
      * The URI of the image of the card
      */
