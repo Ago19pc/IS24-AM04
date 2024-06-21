@@ -40,6 +40,20 @@ public class AchievementDeck implements Deckable{
         }
     }
 
+    public AchievementDeck(Boolean test){
+        this.boardCards = new HashMap<>();
+        this.cards = new ArrayList<>();
+        boardCards.put(FIRST_CARD, null);
+        boardCards.put(SECOND_CARD, null);
+        createCards();
+        try {
+            moveCardToBoard(FIRST_CARD);
+            moveCardToBoard(SECOND_CARD);
+        } catch (Exception e) {
+            System.err.println("Error while moving cards to the board (AchievementDeck)");
+        }
+    }
+
     /**
      * Shuffle the deck
      */
