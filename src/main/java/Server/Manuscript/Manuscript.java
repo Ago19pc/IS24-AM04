@@ -50,13 +50,12 @@ public class Manuscript implements Serializable {
             Symbol symbol = neighbor.getCornerSymbols().get(corner.getOppositeCorner());
             activeSymbols.put(symbol, activeSymbols.get(symbol) - 1);
         }
-
-        for(Symbol symbol : cardFace.getCenterSymbols()){
-            try{
+        try {
+            for (Symbol symbol : cardFace.getCenterSymbols()) {
                 activeSymbols.put(symbol, activeSymbols.get(symbol) + 1);
-            } catch (UnsupportedOperationException e){
-                //do nothing
             }
+        } catch (UnsupportedOperationException e) {
+            //do nothing since not all cards have center symbols
         }
         for(CardCorners corner : cardFace.getCornerSymbols().keySet()){
             Symbol symbol = cardFace.getCornerSymbols().get(corner);

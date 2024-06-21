@@ -9,6 +9,7 @@ import Server.Messages.*;
 import Server.Player.Player;
 
 import java.io.IOException;
+import java.io.StreamCorruptedException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.rmi.RemoteException;
@@ -74,32 +75,37 @@ public class ServerConnectionHandlerSOCKET extends Thread implements ServerConne
         };
         try {
             while (true) {
-                Socket client = this.socket.accept();
-                System.out.println("[Socket] Nuova connessione accettata");
-                ClientHandler t = new ClientHandler(this, client, controller);
-                Random rand = new Random();
-                rand.setSeed(System.currentTimeMillis());
-                String id = rand.nextInt(9999) + "-" + rand.nextInt(9999) + "-" + rand.nextInt(9999);
-                clients.put(t, id);
-                t.setUncaughtExceptionHandler(h);
-                t.start();
-                //immediately send the lobby players message
-                Map<String, Color> playerColors = new HashMap<>();
-                controller.getPlayerList().forEach(p -> playerColors.put(p.getName(), p.getColor()));
-                Map<String, Boolean> playerReady = new HashMap<>();
-                controller.getPlayerList().forEach(p -> playerReady.put(p.getName(), p.isReady()));
-                Boolean isSavedGame = controller.isInSavedGameLobby();
-                LobbyPlayersMessage message = new LobbyPlayersMessage(
-                        controller.getPlayerList().stream().map(Player::getName).toList(),
-                        playerColors,
-                        playerReady,
-                        id,
-                        isSavedGame
-                );
-                t.sendMessage(message);
+                try {
+                    Socket client = this.socket.accept();
+                    ClientHandler t = new ClientHandler(this, client, controller);
+                    System.out.println("[Socket] Nuova connessione accettata");
+                    Random rand = new Random();
+                    rand.setSeed(System.currentTimeMillis());
+                    String id = rand.nextInt(9999) + "-" + rand.nextInt(9999) + "-" + rand.nextInt(9999);
+                    clients.put(t, id);
+                    t.setUncaughtExceptionHandler(h);
+                    t.start();
+                    //immediately send the lobby players message
+                    Map<String, Color> playerColors = new HashMap<>();
+                    controller.getPlayerList().forEach(p -> playerColors.put(p.getName(), p.getColor()));
+                    Map<String, Boolean> playerReady = new HashMap<>();
+                    controller.getPlayerList().forEach(p -> playerReady.put(p.getName(), p.isReady()));
+                    Boolean isSavedGame = controller.isInSavedGameLobby();
+                    LobbyPlayersMessage message = new LobbyPlayersMessage(
+                            controller.getPlayerList().stream().map(Player::getName).toList(),
+                            playerColors,
+                            playerReady,
+                            id,
+                            isSavedGame
+                    );
+                    t.sendMessage(message);
+                } catch (StreamCorruptedException e) {
+                    System.out.println("[Socket] Connessione corrotta. Probabilmente un client RMI ha tentato di connettersi sulla porta socket");
+                }
             }
         } catch (IOException | RuntimeException e) {
             System.err.println("[Socket] Errore nel main loop del ServerConnectionHandlerSOCKET");
+            e.printStackTrace();
         }
     }
 

@@ -26,6 +26,7 @@ public class Main {
             connectionHandler.start();
         } catch (Exception e) {
             System.err.println("Ops. Qualcosa è andato storto.");
+            e.printStackTrace();
         }
 
         System.out.println("Avvio controller");

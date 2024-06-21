@@ -6,6 +6,7 @@ import Server.Messages.ToClientMessage;
 import Server.Messages.ToServerMessage;
 
 import java.io.IOException;
+import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
@@ -54,15 +55,11 @@ public class ClientConnectionHandlerRMI implements ClientConnectionHandler {
      * @param server_rmi_host the host to connect to
      * @param serverPort the port to connect to
      * @throws RemoteException if the server can't be found
+     * @throws NotBoundException if the server is not bound (e.g. trying to connect to a server's socket port)
      */
-    public void setServer(String server_rmi_host, int serverPort) throws RemoteException {
+    public void setServer(String server_rmi_host, int serverPort) throws RemoteException, NotBoundException {
         serverRegistry = LocateRegistry.getRegistry(server_rmi_host, serverPort);
-        try {
-            server = (ServerConnectionHandler) serverRegistry.lookup("ServerConnectionHandler");
-        } catch (Exception e) {
-            System.out.println("[RMI] Error with registryLookup: " + e.getMessage());
-        }
-
+        server = (ServerConnectionHandler) serverRegistry.lookup("ServerConnectionHandler");
     }
 
     /**
