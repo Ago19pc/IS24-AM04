@@ -5,7 +5,22 @@ package Server.Enums;
 
  */
 public enum Color {
-    RED, YELLOW, BLUE, GREEN;
+    /**
+     * Red color for the player
+     */
+    RED,
+    /**
+     * Yellow color for the player
+     */
+    YELLOW,
+    /**
+     * Blue color for the player
+     */
+    BLUE,
+    /**
+     * Green color for the player
+     */
+    GREEN;
 
     /**
      * Returns the string representation of the color

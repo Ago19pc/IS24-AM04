@@ -14,9 +14,21 @@ import java.io.Serializable;
  * Message to ask the server to set a player's starting card and to notify the clients that a player's starting card has been set
  */
 public class SetStartingCardMessage implements Serializable, ToClientMessage, ToServerMessage {
+    /**
+     * The chosen face
+     */
     private Face face;
+    /**
+     * The name of the player who chose the starting card
+     */
     private String name;
+    /**
+     * The starting face of the player
+     */
     private CornerCardFace startingFace;
+    /**
+     * The id of the client
+     */
     private String id;
 
     /**

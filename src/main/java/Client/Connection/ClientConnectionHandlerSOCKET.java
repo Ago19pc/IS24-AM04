@@ -15,7 +15,13 @@ import java.rmi.RemoteException;
  */
 public class ClientConnectionHandlerSOCKET extends Thread implements ClientConnectionHandler {
     private Socket clientSocket;
+    /**
+     * The sender of this client
+     */
     public ClientSender sender;
+    /**
+     * The receiver of this client
+     */
     public ClientReceiver receiver;
     private final ClientController controller;
 

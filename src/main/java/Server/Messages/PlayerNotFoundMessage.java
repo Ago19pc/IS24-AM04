@@ -8,6 +8,9 @@ import java.io.Serializable;
  * Message to inform the client that a player does not exist. Called when the client tries to reconnect to an id whose player does not exist
  */
 public class PlayerNotFoundMessage implements Serializable, ToClientMessage {
+    /**
+     * Constructor
+     */
     public PlayerNotFoundMessage() {
     }
     @Override

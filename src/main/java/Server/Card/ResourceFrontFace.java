@@ -11,7 +11,13 @@ import java.util.Map;
  * @see GoldFrontFace
  */
 public class ResourceFrontFace extends CornerCardFace {
+    /**
+     * The score given by the card
+     */
     private final int score;
+    /**
+     * The kingdom symbol of the card
+     */
     private final Symbol kingdom;
 
     /**
@@ -20,6 +26,7 @@ public class ResourceFrontFace extends CornerCardFace {
      * @param imageURI the URI of the image
      * @param cornerSymbols the corner symbols
      * @param score the score
+     * @param kingdom the kingdom symbol
      */
     public ResourceFrontFace(String imageURI, Map<CardCorners, Symbol> cornerSymbols, int score, Symbol kingdom) {
         super(imageURI, cornerSymbols);

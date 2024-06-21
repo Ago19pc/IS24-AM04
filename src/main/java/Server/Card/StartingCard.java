@@ -10,15 +10,24 @@ import java.io.Serializable;
  * @see CornerCardFace
  */
 public class StartingCard implements Card, Serializable {
+    /**
+     * The front face of the card
+     */
     private final StartingFrontFace frontFace;
+    /**
+     * The back face of the card
+     */
     private final CornerCardFace backFace;
-
+    /**
+     * The URI of the image of the card
+     */
     private final String imageURI;
 
     /**
      * Constructor for the StartingCard
      * @param frontFace the front face
      * @param backFace the back face
+     * @param imageURI the image URI
      */
     public StartingCard(StartingFrontFace frontFace, CornerCardFace backFace, String imageURI) {
         this.frontFace = frontFace;

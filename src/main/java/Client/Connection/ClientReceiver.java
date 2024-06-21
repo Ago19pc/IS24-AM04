@@ -15,7 +15,12 @@ public class ClientReceiver extends Thread {
 
     private final ClientController controller;
 
-
+    /**
+     * Constructor
+     * @param clientSocket the socket to receive messages from
+     * @param controller the controller to use. This is used to execute incoming messages
+     * @throws IOException if the socket can't be opened
+     */
     public ClientReceiver(Socket clientSocket, ClientController controller) throws IOException {
         this.controller = controller;
         in = new ObjectInputStream(clientSocket.getInputStream());

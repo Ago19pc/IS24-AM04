@@ -14,6 +14,11 @@ import java.util.Scanner;
 public class main {
 
     private static final Scanner scanner = new Scanner(System.in);
+    /**
+        * Constructor
+     */
+    public main() {
+    }
 
     /**
      * Starts the game

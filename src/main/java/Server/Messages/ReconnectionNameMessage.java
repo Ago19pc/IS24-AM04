@@ -6,8 +6,14 @@ import java.io.Serializable;
  * Message to inform the client that a player has reconnected
  */
 public class ReconnectionNameMessage implements ToClientMessage, Serializable {
+    /**
+     * The name of the player who reconnected
+     */
     private final String name;
-
+    /**
+     * Constructor
+     * @param name the name of the player who reconnected
+     */
     public ReconnectionNameMessage(String name) {
         this.name = name;
     }

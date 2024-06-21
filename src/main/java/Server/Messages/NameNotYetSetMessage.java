@@ -8,6 +8,9 @@ import java.io.Serializable;
  * Message to inform the client that he needs to set his name before he can play
  */
 public class NameNotYetSetMessage implements Serializable, ToClientMessage{
+    /**
+     * Constructor
+     */
     public NameNotYetSetMessage() {
     }
 

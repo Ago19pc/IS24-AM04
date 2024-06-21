@@ -15,23 +15,52 @@ import java.util.List;
  * It's just a simpler way to handle images and buttons all together.
  */
 public class OnBoardCard {
+    /**
+     * Image of the card
+     */
     @FXML
     public final ImageView image;
+    /**
+     * Button to select the top left corner of the card
+     */
     @FXML
     public final Button TOP_LEFT;
+    /**
+     * Button to select the top right corner of the card
+     */
     @FXML
     public final Button TOP_RIGHT;
+    /**
+     * Button to select the bottom left corner of the card
+     */
     @FXML
     public final Button BOTTOM_LEFT;
+    /**
+     * Button to select the bottom right corner of the card
+     */
     @FXML
     public final Button BOTTOM_RIGHT;
-
+    /**
+     * List of cards on the manuscript
+     */
     public static final List<OnBoardCard> onBoardCards = new ArrayList<>();
+    /**
+     * The x coordinate of the card
+     */
     public final int x;
+    /**
+     * The y coordinate of the card
+     */
     public final int y;
 
     private final MainBoardSceneController sceneController;
-
+    /**
+     * Constructor
+     * @param image the image of the card
+     * @param x the x coordinate of the card
+     * @param y the y coordinate of the card
+     * @param sceneController the controller of the scene
+     */
     public OnBoardCard (Image image, int x, int y, MainBoardSceneController sceneController) {
         this.sceneController = sceneController;
         this.x = x;

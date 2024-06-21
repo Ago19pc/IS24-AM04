@@ -10,9 +10,17 @@ import java.util.Map;
  * @see EmptyCardFace
  */
 public class AchievementCard implements Card {
+    /**
+     * The front face of the card. It contains the score and the requirements to obtain it
+     */
     private final AchievementFrontFace frontFace;
+    /**
+     * The back face of the card. It's empty
+     */
     private final EmptyCardFace backFace;
-
+    /**
+     * The URI of the image of the card
+     */
     private final String imageURI;
 
 

@@ -18,17 +18,41 @@ import static Server.Enums.Face.FRONT;
  * This class is responsible for the logic of the scene where the player chooses the starting card face.
  */
 public class ChooseStartingCardController extends SceneController {
+    /**
+     * The constructor for the class
+     */
+    public ChooseStartingCardController() {}
+    /**
+     * The confirmation button
+     */
     @FXML
     public Button confirmButton;
+    /**
+     * The card images
+     */
     @FXML
     public ImageView firstCard, secondCard, chosenCard;
+    /**
+     * The text for the wait message
+     */
     @FXML
     public Text waitText;
+    /**
+     * The text for the back face
+     */
     public Text backFaceText;
+    /**
+     * The text for the front face
+     */
     public Text frontFaceText;
+    /**
+     * The text for the chosen card
+     */
     public Text chosenCardText;
+    /**
+     * The chat message list
+     */
     public ListView<String> chat_message;
-    public Button sendButton;
     @FXML
     private Face chosenFace;
 

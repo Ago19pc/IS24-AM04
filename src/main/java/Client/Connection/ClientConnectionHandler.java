@@ -24,6 +24,7 @@ public interface ClientConnectionHandler extends Remote {
      * Executes a message
      * This method is called by ServerConnectionHandlerRMI to execute a message on the client side
      * @param message the message to execute
+     * @throws RemoteException if the message can't be executed
      */
     void executeMessage(ToClientMessage message) throws RemoteException;
 

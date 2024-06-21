@@ -19,9 +19,12 @@ import static Server.Enums.DeckPosition.*;
  * In this deck, the board cards are the common achievements
  */
 public class AchievementDeck implements Deckable{
-    protected final List<AchievementCard> cards;
+    private final List<AchievementCard> cards;
     private final Map<DeckPosition, AchievementCard> boardCards;
 
+    /**
+     * Constructor. Creates the cards, Shuffles them and moves the first two (the common achievements) to the board
+     */
     public AchievementDeck(){
         this.boardCards = new HashMap<>();
         this.cards = new ArrayList<>();

@@ -6,6 +6,10 @@ package Server.Connections;
 public class PingPong extends Thread{
     private final GeneralServerConnectionHandler connectionHandler;
 
+    /**
+     * Constructor
+     * @param connectionHandler the connection handler
+     */
     public PingPong(GeneralServerConnectionHandler connectionHandler) {
         this.connectionHandler = connectionHandler;
     }

@@ -4,7 +4,22 @@ package Server.Enums;
  * Contains all the corners of a card
  */
 public enum CardCorners {
-    TOP_LEFT, TOP_RIGHT, BOTTOM_RIGHT, BOTTOM_LEFT;
+    /**
+     * Top left corner
+     */
+    TOP_LEFT,
+    /**
+     * Top right corner
+     */
+    TOP_RIGHT,
+    /**
+     * Bottom right corner
+     */
+    BOTTOM_RIGHT,
+    /**
+     * Bottom left corner
+     */
+    BOTTOM_LEFT;
 
     /**
      * Returns the opposite corner of the card

@@ -11,7 +11,12 @@ import java.rmi.RemoteException;
  */
 public class MainCLI {
     /**
+     * Constructor
+     */
+    public MainCLI() {}
+    /**
      * Main method that starts the CLI
+     * @throws RemoteException if there is an error with the remote connection
      */
     public static void main() throws RemoteException {
         ClientController controller = new ClientControllerInstance();

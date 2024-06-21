@@ -13,6 +13,9 @@ import java.util.stream.Collectors;
  * This class represents the front face of starting cards
  */
 public class StartingFrontFace extends  CornerCardFace implements Serializable {
+    /**
+     * The center symbols of the card
+     */
     private final List<Symbol> centerSymbols;
 
     /**

@@ -24,6 +24,11 @@ public class ChooseSecretAchievementState implements ServerState{
     private Controller controller;
     private GameModel gameModel;
 
+    /**
+     * Constructor for the class
+     * @param controller the controller
+     * @param gameModel the game model
+     */
     public ChooseSecretAchievementState(Controller controller, GameModel gameModel){
         this.controller = controller;
     }

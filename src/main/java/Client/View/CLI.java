@@ -21,7 +21,10 @@ public class CLI extends Thread implements UI {
     private final ClientController controller;
     private final Scanner in = new Scanner(System.in);
     private CLIState scene;
-
+    /**
+     * The constructor for the class
+     * @param controller the controller
+     */
     public CLI(ClientController controller){
         System.out.println("Avvio gioco...");
         this.controller = controller;
@@ -78,6 +81,8 @@ public class CLI extends Thread implements UI {
 
     /**
      * Joins the server with the specified ip and port
+     * @param ip the server ip
+     * @param port the server port
      */
     public void joinServer(String ip, int port) {
         controller.joinServer(ip, port);

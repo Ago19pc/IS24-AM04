@@ -14,6 +14,15 @@ import java.io.IOException;
 public class MainGUI extends Application {
     private static ClientController controller;
     private static GUI gui;
+
+    /**
+     * Constructor
+     */
+    public MainGUI() {}
+
+    /**
+     * Starts the GUI and launches JavaFX
+     */
     public static void main()  {
         controller = new ClientControllerInstance();
         gui = new GUI(controller);

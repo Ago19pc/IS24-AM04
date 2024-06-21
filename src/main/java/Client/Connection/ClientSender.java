@@ -14,6 +14,11 @@ public class ClientSender{
     private ObjectOutputStream out;
 
     /**
+     * Constructor
+     */
+    public ClientSender() {}
+
+    /**
      * Sets this sender's output buffer
      * @param out the output buffer
      */
@@ -32,6 +37,7 @@ public class ClientSender{
     /**
      * Sends a message to the server.
      * @param message the message to send.
+     * @throws IOException if the message can't be sent.
      */
     public void sendMessage(ToServerMessage message) throws IOException {
         out.writeObject(message);

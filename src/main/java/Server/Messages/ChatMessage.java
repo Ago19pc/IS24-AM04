@@ -14,9 +14,20 @@ import java.rmi.RemoteException;
  * This message is used to send a message to the chat and update the clients
  */
 public class ChatMessage implements Serializable, ToServerMessage, ToClientMessage {
+    /**
+     * The text of the message
+     */
     private final String message;
+    /**
+     * The player who sent the message. It's a name for toClient messages and an id for toServer messages
+     */
     private final String nameOrId;
 
+    /**
+     * Constructor. The message needs to contain the text of the message and the player who sent it, as a name or an id
+     * @param message the text of the message
+     * @param player the player who sent the message. It's a name for toClient messages and an id for toServer messages
+     */
     public ChatMessage(String message, String player){
         this.message = message;
         this.nameOrId = player;

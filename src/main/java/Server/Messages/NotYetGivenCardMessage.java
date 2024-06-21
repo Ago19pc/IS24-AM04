@@ -9,7 +9,14 @@ import java.io.Serializable;
  * Message to inform the client that he still needs to receive one or more cards to do what he wants
  */
 public class NotYetGivenCardMessage implements Serializable, ToClientMessage {
+    /**
+     * The type of action that needs a card
+     */
     private final Actions type;
+    /**
+     * Constructor
+     * @param type the type of action that needs a card
+     */
     public NotYetGivenCardMessage(Actions type) {
         this.type = type;
     }

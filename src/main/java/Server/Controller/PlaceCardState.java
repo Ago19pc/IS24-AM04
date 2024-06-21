@@ -23,7 +23,11 @@ import java.util.stream.Collectors;
 public class PlaceCardState implements ServerState{
     private Controller controller;
     private GameModel gameModel;
-
+    /**
+     * Constructor
+     * @param controller the controller
+     * @param gameModel the game model
+     */
     public PlaceCardState(Controller controller, GameModel gameModel){
         this.controller = controller;
         this.gameModel = gameModel;

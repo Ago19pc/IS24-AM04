@@ -31,7 +31,10 @@ public class GameModelInstance implements GameModel{
     private boolean lastRound = false;
     private final List<PlayerInstance> playerList;
 
-
+    /**
+     * Constructor
+     * Initializes data
+     */
     public GameModelInstance() {
         chat = new Chat();
         isEndGamePhase = false;

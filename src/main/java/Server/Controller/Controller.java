@@ -151,11 +151,13 @@ public interface Controller {
     //SAVED GAMES METHODS
     /**
      * saves a game to a json file
+     * @throws IOException if the file can't be saved
      */
     void saveGame() throws IOException;
 
     /**
      * loads a game from a json file
+     * @throws IOException if the file can't be loaded
      */
     void loadGame() throws IOException;
 
@@ -223,6 +225,7 @@ public interface Controller {
     void giveInitialHand() throws AlreadySetException, AlreadyFinishedException;
     /**
      * Computes the leaderboard and sends it to all players
+     * @throws AlreadyFinishedException if the leaderboard is already computed
      */
     void computeLeaderboard() throws AlreadyFinishedException;
     /**

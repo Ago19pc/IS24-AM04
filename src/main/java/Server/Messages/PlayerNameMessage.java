@@ -13,8 +13,17 @@ import java.rmi.RemoteException;
  * Message to ask the server to add a player with a certain name and to notify the client if the name has been set correctly
  */
 public class PlayerNameMessage implements ToClientMessage, ToServerMessage, Serializable {
+    /**
+     * The name to set
+     */
     private String name;
+    /**
+     * True if the name was set, false otherwise
+     */
     private boolean confirmation;
+    /**
+     * The id of the client
+     */
     private String id;
 
     /**

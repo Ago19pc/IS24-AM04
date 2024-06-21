@@ -11,7 +11,13 @@ import java.util.Map;
  * This class represents the front face of gold cards
  */
 public class GoldFrontFace extends ResourceFrontFace {
+    /**
+     * The placement requirements to place the card
+     */
     private final Map<Symbol, Integer> placementRequirements;
+    /**
+     * The score requirements to obtain points with the card
+     */
     private final Map<Symbol, Integer> scoreRequirements;
 
     /**
@@ -22,6 +28,7 @@ public class GoldFrontFace extends ResourceFrontFace {
      * @param score the score
      * @param placementRequirements the placement requirements
      * @param scoreRequirements the score requirements
+     * @param kingdom the kingdom symbol
      */
     public GoldFrontFace(String imageURI, Map<CardCorners, Symbol> cornerSymbols, int score, Map<Symbol, Integer> placementRequirements, Map<Symbol, Integer> scoreRequirements, Symbol kingdom){
         super(imageURI, cornerSymbols, score, kingdom);

@@ -10,7 +10,13 @@ import java.util.Map;
  * This is the class for the front face of achievement cards
  */
 public class AchievementFrontFace extends EmptyCardFace {
+    /**
+     * The score requirements to obtain the achievement
+     */
     private final Map<Symbol, Integer> scoreRequirements;
+    /**
+     * The score given by the achievement
+     */
     private final int score;
 
     /**

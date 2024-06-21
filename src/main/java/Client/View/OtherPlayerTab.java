@@ -11,12 +11,27 @@ import java.util.List;
  * This class is responsible for the visualization of the other player's manuscript.
  */
 public class OtherPlayerTab {
+    /**
+     * Tab of the other player
+     */
     public final Tab tab;
+    /**
+     * Scrollable pane of the images on the tab
+     */
     public final ScrollPane scrollPane;
+    /**
+     * Group of the images on the tab
+     */
     public final Group group;
+    /**
+     * List of cards on the manuscript
+     */
     public final List<OnBoardCard> onBoardCardList = new ArrayList<>();
 
-
+    /**
+     * Constructor
+     * @param playerName the name of the player
+     */
     public OtherPlayerTab(String playerName){
         tab = new Tab(playerName);
         group = new Group();

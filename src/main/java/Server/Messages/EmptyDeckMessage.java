@@ -7,6 +7,9 @@ import java.io.Serializable;
 
  */
 public class EmptyDeckMessage implements Serializable, ToClientMessage {
+    /**
+     * Constructor
+     */
     public EmptyDeckMessage() {
     }
     @Override

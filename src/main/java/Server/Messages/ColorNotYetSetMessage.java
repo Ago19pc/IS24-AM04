@@ -8,7 +8,9 @@ import java.io.Serializable;
  * This message is used to inform the client that he needs to set his color before doing what he tried to do
  */
 public class ColorNotYetSetMessage implements Serializable, ToClientMessage {
-
+    /**
+     * Constructor
+     */
     public ColorNotYetSetMessage() {
     }
 
