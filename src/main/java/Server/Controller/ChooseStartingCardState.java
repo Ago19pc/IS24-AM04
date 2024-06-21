@@ -47,6 +47,12 @@ public class ChooseStartingCardState implements ServerState{
 
     @Override
     public void removePlayer(Player player) {
+
+        if(controller.getPlayerList().size() == 1){
+            controller.disconnectionLeaderboard();
+
+        }
+
         boolean allset = controller.getPlayerList().stream().allMatch(p -> p.getManuscript() != null);
         if(allset){
             try {

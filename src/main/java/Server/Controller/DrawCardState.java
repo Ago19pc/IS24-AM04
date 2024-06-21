@@ -46,11 +46,8 @@ public class DrawCardState implements ServerState{
     @Override
     public void removePlayer(Player player) {
         if(controller.getPlayerList().size() == 1){
-            try{
-                controller.computeLeaderboard();
-            } catch (AlreadyFinishedException e) {
-                e.printStackTrace();
-            }
+            controller.disconnectionLeaderboard();
+
         }
     }
 
