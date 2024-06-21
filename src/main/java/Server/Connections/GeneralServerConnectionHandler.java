@@ -17,8 +17,8 @@ import java.util.Map;
  * It also holds a map between player ids and names and a list of disconnected ids.
  */
 public class GeneralServerConnectionHandler {
-    private final ServerConnectionHandlerSOCKET serverConnectionHandlerSOCKET;
-    private final ServerConnectionHandlerRMI serverConnectionHandlerRMI;
+    private ServerConnectionHandlerSOCKET serverConnectionHandlerSOCKET;
+    private ServerConnectionHandlerRMI serverConnectionHandlerRMI;
     /**
      * Map<Id, Name>
      */
@@ -27,24 +27,8 @@ public class GeneralServerConnectionHandler {
 
     /**
      * Constructor
-     * creates the connection handlers and starts a new ping pong thread
      */
     public GeneralServerConnectionHandler() {
-        serverConnectionHandlerRMI = new ServerConnectionHandlerRMI();
-        serverConnectionHandlerSOCKET = new ServerConnectionHandlerSOCKET();
-        PingPong pingPong = new PingPong(this);
-        pingPong.start();
-    }
-    /**
-     * Debug Constructor
-     * creates the connection handlers and starts a new ping pong thread
-     * @param debugMode if true, the server will start using the default ports
-     */
-    public GeneralServerConnectionHandler(boolean debugMode) {
-        serverConnectionHandlerRMI = new ServerConnectionHandlerRMI(debugMode);
-        serverConnectionHandlerSOCKET = new ServerConnectionHandlerSOCKET(debugMode);
-        PingPong pingPong = new PingPong(this);
-        pingPong.start();
     }
 
     /**
@@ -170,18 +154,23 @@ public class GeneralServerConnectionHandler {
     }
 
     /**
-     * Sets the controller for the connection handlers
+     * Creates the connection handlers and sets their controller
      * @param controller the controller to set
      */
     public void setController(Controller controller) {
-        serverConnectionHandlerSOCKET.setController(controller);
+        serverConnectionHandlerRMI = new ServerConnectionHandlerRMI();
         serverConnectionHandlerRMI.setController(controller);
+        serverConnectionHandlerSOCKET = new ServerConnectionHandlerSOCKET();
+        serverConnectionHandlerSOCKET.setController(controller);
     }
 
     /**
-     * Starts the socket connection handler
+     * Starts the socket connection handler and starts a new ping pong thread
      */
     public void start() {
+
+        PingPong pingPong = new PingPong(this);
+        pingPong.start();
         serverConnectionHandlerSOCKET.start();
     }
 
