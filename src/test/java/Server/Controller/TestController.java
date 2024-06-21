@@ -1,29 +1,13 @@
 package Server.Controller;
 
-import Server.Card.*;
-import Server.Connections.GeneralServerConnectionHandler;
-import Server.Connections.ServerConnectionHandler;
-import Server.Connections.ServerConnectionHandlerSOCKET;
-import Server.Deck.GoldDeck;
-import Server.Deck.ResourceDeck;
-import Server.Enums.*;
-import Server.Exception.*;
-import Server.Player.Player;
-import Server.Player.PlayerInstance;
-import org.junit.jupiter.api.Test;
-
-import java.io.IOException;
-import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.*;
-
-public class TestController {/*
+public class TestController {
+    /*
     @Test
     public void testAddPlayer() throws Exception {
         GeneralServerConnectionHandler connectionHandler = new GeneralServerConnectionHandler(true);
         Controller controller = new ControllerInstance(connectionHandler);
         Player player = new PlayerInstance("player1");
-        controller.addPlayer(player.getName());
+        controller.addPlayer(player.getName(), "1");
         List<Player> playerList = controller.getPlayerList();
         assertEquals(1, playerList.size());
         assertEquals(player, playerList.get(0));
@@ -31,11 +15,11 @@ public class TestController {/*
         Player player3 = new PlayerInstance("player3");
         Player player4 = new PlayerInstance("player4");
         Player player5 = new PlayerInstance("player5");
-        controller.addPlayer(player2.getName());
-        controller.addPlayer(player3.getName());
-        controller.addPlayer(player4.getName());
+        controller.addPlayer(player2.getName(), "2");
+        controller.addPlayer(player3.getName(), "3");
+        controller.addPlayer(player4.getName(), "4");
         TooManyPlayersException exception = assertThrows(TooManyPlayersException.class, () -> {
-            controller.addPlayer(player5.getName());
+            controller.addPlayer(player5.getName(), "5");
         });
         playerList = controller.getPlayerList();
         assertEquals(4, playerList.size());
@@ -47,7 +31,7 @@ public class TestController {/*
         GeneralServerConnectionHandler connectionHandler = new GeneralServerConnectionHandler(true);
         Controller controller = new ControllerInstance(connectionHandler);
         Player player = new PlayerInstance("player1");
-        controller.addPlayer(player.getName());
+        controller.addPlayer(player.getName(), "1");
         List<Player> playerList = controller.getPlayerList();
         assertEquals(1, playerList.size());
         controller.removePlayer(player);
@@ -59,10 +43,10 @@ public class TestController {/*
         GeneralServerConnectionHandler connectionHandler = new GeneralServerConnectionHandler(true);
         Controller controller = new ControllerInstance(connectionHandler);
         Player player = new PlayerInstance("player1");
-        controller.addPlayer(player.getName());
+        controller.addPlayer(player.getName(), "1");
         controller.setPlayerColor(Color.RED, player);
         Player player2 = new PlayerInstance("player2");
-        controller.addPlayer(player2.getName());
+        controller.addPlayer(player2.getName(), "2");
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
             controller.setPlayerColor(Color.RED, player2);
         });

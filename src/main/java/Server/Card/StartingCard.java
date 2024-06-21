@@ -4,16 +4,30 @@ import Server.Enums.Face;
 
 import java.io.Serializable;
 
+/**
+ * This class represents starting cards. They are composed of a StartingFrontFace and a CornerCardFace
+ * @see StartingFrontFace
+ * @see CornerCardFace
+ */
 public class StartingCard implements Card, Serializable {
+    /**
+     * The front face of the card
+     */
     private final StartingFrontFace frontFace;
+    /**
+     * The back face of the card
+     */
     private final CornerCardFace backFace;
-
+    /**
+     * The URI of the image of the card
+     */
     private final String imageURI;
 
     /**
      * Constructor for the StartingCard
      * @param frontFace the front face
      * @param backFace the back face
+     * @param imageURI the image URI
      */
     public StartingCard(StartingFrontFace frontFace, CornerCardFace backFace, String imageURI) {
         this.frontFace = frontFace;
@@ -21,24 +35,17 @@ public class StartingCard implements Card, Serializable {
         this.imageURI = imageURI;
     }
 
-    /**
-     * Returns the face of the card
-     * @param face to return
-     * @return CardFace the face of the card
-     */
     public CardFace getFace(Face face) {
         return face == Face.FRONT ? frontFace : backFace;
     }
 
-    /**
-     * Returns the corner face of the card
-     * @param face to return
-     * @return CornerCardFace the face of the card
-     */
     public CornerCardFace getCornerFace(Face face) throws UnsupportedOperationException{
         return face == Face.FRONT ? frontFace : backFace;
     }
-
+    /**
+     * Returns a string representation of the starting card
+     * @return a string representation of the starting card
+     */
     public String toString(){
         return "Carta iniziale: \n Faccia anteriore: " + frontFace.toString() + "\n Faccia posteriore: " + backFace.toString();
     }

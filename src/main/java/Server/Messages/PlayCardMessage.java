@@ -8,13 +8,39 @@ import Server.Player.Player;
 
 import java.io.Serializable;
 
+/**
+ * Message to ask the server to place a card
+ */
 public class PlayCardMessage implements Serializable, ToServerMessage{
-    private String id;
-    private int cardNumber;
-    private int x;
-    private int y;
-    private Face face;
+    /**
+     * The id of the player who wants to place the card
+     */
+    private final String id;
+    /**
+     * The index in the player hand of the card to place
+     */
+    private final int cardNumber;
+    /**
+     * The x coordinate of the position where the card should be placed
+     */
+    private final int x;
+    /**
+     * The y coordinate of the position where the card should be placed
+     */
+    private final int y;
+    /**
+     * The face of the card that should be placed
+     */
+    private final Face face;
 
+    /**
+     * Constructor
+     * @param id the id of the player who wants to place the card
+     * @param cardNumber the number of the card to place in the player's hand
+     * @param face the face of the card
+     * @param x the x coordinate of the card
+     * @param y the y coordinate of the card
+     */
     public PlayCardMessage(String id, int cardNumber, Face face, int x, int y){
         this.id = id;
         this.cardNumber = cardNumber;

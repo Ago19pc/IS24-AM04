@@ -9,54 +9,60 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
 
-<Pane fx:id="loginScene" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="768.0" prefWidth="1024.0" style="-fx-background-color: eae1b8;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="run.NameReadySceneController">
-   <children>
-      <ImageView fitHeight="776.0" fitWidth="747.0">
-         <image>
-            <Image url="@./images/otherImages/logovuoto.jpg" />
-         </image>
-      </ImageView>
-      <Label fx:id="label_Username" layoutX="44.0" layoutY="273.0" style="-fx-background-color: eae1b8;" text="Username">
-         <font>
-            <Font size="32.0" />
-         </font>
-      </Label>
-      <TextField fx:id="possible_Name" layoutX="224.0" layoutY="265.0" prefHeight="60.0" prefWidth="348.0">
-         <font>
-            <Font size="32.0" />
-         </font>
-      </TextField>
-      <ListView fx:id="list_Player" layoutX="747.0" prefHeight="180.0" prefWidth="277.0" style="-fx-background-color: eae1b8;" />
-      <Button fx:id="confirm_Button" layoutX="581.0" layoutY="260.0" mnemonicParsing="false" onAction="#askSetName" style="-fx-border-width: 3; -fx-border-color: White; -fx-background-color: eae1b8; -fx-border-radius: 3;" text="Confirm">
-         <font>
-            <Font size="32.0" />
-         </font>
-      </Button>
-      <ListView fx:id="chat_message" layoutX="747.0" layoutY="180.0" prefHeight="588.0" prefWidth="277.0" style="-fx-background-color: eae1b8;" />
-      <Label fx:id="labelReconnectionId" layoutX="72.0" layoutY="18.0" style="-fx-background-color: eae1b8; -fx-border-radius: 5; -fx-background-radius: 5;" text="Reconnection id: 3456-7876-5432 save it for reconnection">
-         <font>
-            <Font size="24.0" />
-         </font>
-      </Label>
-      <Label layoutX="356.0" layoutY="345.0" text="Or">
-         <font>
-            <Font size="32.0" />
-         </font>
-      </Label>
-      <TextField fx:id="reconnection_idField" layoutX="224.0" layoutY="435.0" prefHeight="60.0" prefWidth="348.0">
-         <font>
-            <Font size="32.0" />
-         </font>
-      </TextField>
-      <Label fx:id="id_Label" layoutX="102.0" layoutY="445.0" style="-fx-background-color: eae1b8;" text="Id">
-         <font>
-            <Font size="32.0" />
-         </font>
-      </Label>
-      <Button fx:id="confirm_ButtonId" layoutX="581.0" layoutY="432.0" mnemonicParsing="false" onAction="#idLogin" style="-fx-border-width: 3; -fx-border-color: White; -fx-background-color: eae1b8; -fx-border-radius: 3;" text="Confirm">
-         <font>
-            <Font size="32.0" />
-         </font>
-      </Button>
-   </children>
+<Pane fx:id="loginScene" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
+      prefHeight="768.0" prefWidth="1024.0" style="-fx-background-color: eae1b8;" xmlns="http://javafx.com/javafx/21"
+      xmlns:fx="http://javafx.com/fxml/1" fx:controller="Interface.NameReadySceneController">
+   <ImageView fitHeight="776.0" fitWidth="747.0">
+      <Image url="@./images/otherImages/logovuoto.jpg"/>
+   </ImageView>
+   <Label fx:id="label_Username" layoutX="44.0" layoutY="273.0" style="-fx-background-color: eae1b8;" text="Username">
+      <font>
+         <Font size="32.0"/>
+      </font>
+   </Label>
+   <TextField fx:id="possible_Name" layoutX="224.0" layoutY="265.0" prefHeight="60.0" prefWidth="348.0">
+      <font>
+         <Font size="32.0"/>
+      </font>
+   </TextField>
+   <ListView fx:id="list_Player" layoutX="747.0" prefHeight="180.0" prefWidth="277.0"
+             style="-fx-background-color: eae1b8;"/>
+   <Button fx:id="confirm_Button" layoutX="581.0" layoutY="260.0" mnemonicParsing="false" onAction="#askSetName"
+           style="-fx-border-width: 3; -fx-border-color: White; -fx-background-color: eae1b8; -fx-border-radius: 3;"
+           text="Confirm">
+      <font>
+         <Font size="32.0"/>
+      </font>
+   </Button>
+   <ListView fx:id="chat_message" layoutX="747.0" layoutY="180.0" prefHeight="588.0" prefWidth="277.0"
+             style="-fx-background-color: eae1b8;"/>
+   <Label fx:id="labelReconnectionId" layoutX="72.0" layoutY="18.0"
+          style="-fx-background-color: eae1b8; -fx-border-radius: 5; -fx-background-radius: 5;"
+          text="Reconnection id: 3456-7876-5432 save it for reconnection">
+      <font>
+         <Font size="24.0"/>
+      </font>
+   </Label>
+   <Label layoutX="356.0" layoutY="345.0" text="Or">
+      <font>
+         <Font size="32.0"/>
+      </font>
+   </Label>
+   <TextField fx:id="reconnection_idField" layoutX="224.0" layoutY="435.0" prefHeight="60.0" prefWidth="348.0">
+      <font>
+         <Font size="32.0"/>
+      </font>
+   </TextField>
+   <Label layoutX="102.0" layoutY="445.0" style="-fx-background-color: eae1b8;" text="Id">
+      <font>
+         <Font size="32.0"/>
+      </font>
+   </Label>
+   <Button fx:id="confirm_ButtonId" layoutX="581.0" layoutY="432.0" mnemonicParsing="false" onAction="#idLogin"
+           style="-fx-border-width: 3; -fx-border-color: White; -fx-background-color: eae1b8; -fx-border-radius: 3;"
+           text="Confirm">
+      <font>
+         <Font size="32.0"/>
+      </font>
+   </Button>
 </Pane>

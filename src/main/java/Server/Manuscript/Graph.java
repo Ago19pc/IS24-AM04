@@ -11,10 +11,22 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+/**
+ * Class that represents a graph of cards
+ */
 public class Graph implements Serializable {
+    /**
+     * The root of the graph
+     */
     private final CornerCardFace root;
-    private List<CornerCardFace> containedCards;
-    private List<Map<CardCorners, CornerCardFace>> cardNeighbors;
+    /**
+     * A list of all the cards in the graph
+     */
+    private final List<CornerCardFace> containedCards;
+    /**
+     * A list of maps that represent the neighbors of each card. For each card, the map contains the corner and the card that is connected to that corner
+     */
+    private final List<Map<CardCorners, CornerCardFace>> cardNeighbors;
     /**
      * Constructor for the Graph. Sets the root, creates the card map, and adds the starting card
      * @param startingCardFace the starting card face
@@ -36,7 +48,8 @@ public class Graph implements Serializable {
     /**
      * Returns the neighbors of a node
      * @param node the node to get the neighbors of
-     * @return Map<CardCorners, CornerCardFace> the neighbors of the node
+     * @return a map of the neighbors of the node
+     * @throws IllegalArgumentException if the node is not in the graph
      */
     public Map<CardCorners, CornerCardFace> getNeighbors(CornerCardFace node) throws IllegalArgumentException{
         if(!this.containedCards.contains(node)){
@@ -47,9 +60,9 @@ public class Graph implements Serializable {
     /**
      * Returns the neighbors of a node that were placed after the node
      * @param node the node to get the neighbors of
-     * @return Map<CardCorners, CornerCardFace> the neighbors of the node
+     * @return the neighbors of the node
      */
-    public Map<CardCorners, CornerCardFace> getCardsOver(CornerCardFace node) throws IllegalArgumentException{
+    public Map<CardCorners, CornerCardFace> getCardsOver(CornerCardFace node){
         Map<CardCorners, CornerCardFace> cardsOver;
         cardsOver = getNeighbors(node).entrySet().stream()
                 .filter(neighbor -> neighbor.getValue() != null && neighbor.getValue().getPlacementTurn() > node.getPlacementTurn())
@@ -59,9 +72,9 @@ public class Graph implements Serializable {
     /**
      * Returns the neighbors of a node that were placed before the node
      * @param node the node to get the neighbors of
-     * @return Map<CardCorners, CornerCardFace> the neighbors of the node
+     * @return the neighbors of the node
      */
-    public Map<CardCorners, CornerCardFace> getCardsUnder(CornerCardFace node) throws IllegalArgumentException{
+    public Map<CardCorners, CornerCardFace> getCardsUnder(CornerCardFace node){
         Map<CardCorners, CornerCardFace> cardsUnder;
         cardsUnder = getNeighbors(node).entrySet().stream()
                 .filter(neighbor -> neighbor.getValue() != null && neighbor.getValue().getPlacementTurn() < node.getPlacementTurn())
@@ -72,6 +85,7 @@ public class Graph implements Serializable {
     /**
      * Adds a node to the graph and sets the neighbors to null
      * @param node the node to add
+     * @throws IllegalArgumentException if the node is already in the graph
      */
     private void addNode(CornerCardFace node) throws IllegalArgumentException{
         if(this.containedCards.contains(node)){
@@ -91,6 +105,7 @@ public class Graph implements Serializable {
      * @param firstCard the first card
      * @param corner the corner of the first card. It will be the opposite corner of the second card
      * @param secondCard the second card
+     * @throws IllegalArgumentException if at least one of the nodes is not in the graph
      */
     private void addEdge(CornerCardFace firstCard, CardCorners corner, CornerCardFace secondCard) throws IllegalArgumentException{
         if(!this.containedCards.contains(firstCard) || !this.containedCards.contains(secondCard)){
@@ -105,6 +120,7 @@ public class Graph implements Serializable {
      * @param card the card to add
      * @param positions the neighbors of the card
      * @param turnPlaced the turn when the card gets placed
+     * @throws IllegalArgumentException if the card is already in the graph or at least one of the nodes is not in the graph
      */
     public void addCard(CornerCardFace card, Map<CardCorners, CornerCardFace> positions, int turnPlaced) throws IllegalArgumentException{
         if(this.containedCards.contains(card)) {
@@ -127,6 +143,7 @@ public class Graph implements Serializable {
 
     /**
      * Get all cards in a list, a copy of the original list
+     * @return the copied list of all cards
      */
     public List<CornerCardFace> getAllCardsCopy(){
         return new ArrayList<>(this.containedCards);
@@ -134,6 +151,7 @@ public class Graph implements Serializable {
 
     /**
      * Get all cards in a list, the original list
+     * @return the list of all cards
      */
     public List<CornerCardFace> getAllCards() {
         return this.containedCards;

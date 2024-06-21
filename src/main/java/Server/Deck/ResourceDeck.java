@@ -8,17 +8,23 @@ import Server.Enums.CardCorners;
 import Server.Enums.DeckPosition;
 import Server.Enums.Symbol;
 import Server.Exception.AlreadyFinishedException;
+import Server.Exception.IncorrectDeckPositionException;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
+import java.io.*;
 import java.util.*;
 
 import static Server.Enums.DeckPosition.*;
 
+/**
+ * Class for the Resource cards Deck
+ */
 public class ResourceDeck implements Deckable {
-    protected List<ResourceCard> cards;
+    private final List<ResourceCard> cards;
     private final Map<DeckPosition, ResourceCard> boardCards;
+
+    /**
+     * Constructor. Creates the cards, shuffles them and moves the first two to the board
+     */
     public ResourceDeck(){
         this.boardCards = new HashMap<>();
         this.cards = new ArrayList<>();
@@ -30,7 +36,7 @@ public class ResourceDeck implements Deckable {
             moveCardToBoard(FIRST_CARD);
             moveCardToBoard(SECOND_CARD);
         } catch (Exception e) {
-            e.printStackTrace();
+            System.err.println("Error while moving cards to the board, generating resource deck");
         }
     }
 
@@ -43,6 +49,7 @@ public class ResourceDeck implements Deckable {
     }
 
     /**
+     * Moves a card from the deck to the board
      * @param where_to the position to add the card to
      */
     public void moveCardToBoard(DeckPosition where_to) {
@@ -53,30 +60,32 @@ public class ResourceDeck implements Deckable {
             } catch (AlreadyFinishedException e) {
                 cardToMove = null;
             }
-            addCard(cardToMove, where_to);
+            try {
+                addCard(cardToMove, where_to);
+            } catch (IncorrectDeckPositionException e) {
+                e.printStackTrace();
+            }
         }
     }
 
     /**
-     * @return Card the card from the position
+     * Gets the board cards (common achievements)
+     * @return a map linking board positions to the cards
      */
     public Map<DeckPosition, ResourceCard> getBoardCard() {
         Map<DeckPosition, ResourceCard> boardCardsToReturn = new HashMap<>();
-        boardCardsToReturn.put(DECK, (ResourceCard) getTopCardNoPop());
+        boardCardsToReturn.put(DECK, getTopCardNoPop());
         boardCardsToReturn.put(FIRST_CARD, boardCards.get(FIRST_CARD));
         boardCardsToReturn.put(SECOND_CARD, boardCards.get(SECOND_CARD));
 
         return boardCardsToReturn;
     }
 
-    /**
-     * @param position the position pop the card from
-     * @return Card the popped card
-     */
+
     public ResourceCard popCard(DeckPosition position) throws  AlreadyFinishedException{
 
             if (position == DECK) {
-                return (ResourceCard) cards.remove(0);
+                return cards.removeFirst();
             } else {
                 // LA POSIZIONE NON E' DECK
 
@@ -94,19 +103,15 @@ public class ResourceDeck implements Deckable {
 
     }
 
-    /**
-     * @return boolean true if the deck is empty (and there are no board cards)
-     */
+
     public boolean isEmpty() {
         return cards.isEmpty() && boardCards.get(FIRST_CARD) == null && boardCards.get(SECOND_CARD) == null;
     }
 
-    /**
-     * Add card to the board in the specified position
-     * @param card card to add
-     * @param position position to add the card to
-     */
-    public void addCard(Card card, DeckPosition position) {
+
+    public void addCard(Card card, DeckPosition position) throws IncorrectDeckPositionException {
+        if (position == DECK)
+            throw new IncorrectDeckPositionException("Cannot add card to the deck, only to FIST_CARD or SECOND_CARD.");
         if (position != DECK)
             boardCards.put(position, (ResourceCard) card);
     }
@@ -115,10 +120,11 @@ public class ResourceDeck implements Deckable {
     public ResourceCard getTopCardNoPop() {
         if(cards.isEmpty())
             return null;
-        return cards.get(0);
+        return cards.getFirst();
     }
 
     /**
+     * Returns the number of cards in the deck
      * @return int the number of cards in the deck
      */
     public int getNumberOfCards() {
@@ -129,16 +135,16 @@ public class ResourceDeck implements Deckable {
      * generate the cards
      */
     private void createCards() {
-        File fileFRONT;
-        File fileBACK;
+        InputStream fileFRONT;
+        InputStream fileBACK;
         BufferedReader readerFRONT;
         BufferedReader readerBACK;
 
         try {
-            fileFRONT = new File(getClass().getResource("/images/ResourceFrontFace.txt").toURI());
-            fileBACK = new File(getClass().getResource("/images/ResourceBackFace.txt").toURI());
-            readerFRONT = new BufferedReader(new FileReader(fileFRONT));
-            readerBACK = new BufferedReader(new FileReader(fileBACK));
+            fileFRONT = getClass().getResourceAsStream("/images/ResourceFrontFace.txt");
+            fileBACK = getClass().getResourceAsStream("/images/ResourceBackFace.txt");
+            readerFRONT = new BufferedReader(new InputStreamReader(fileFRONT));
+            readerBACK = new BufferedReader(new InputStreamReader(fileBACK));
 
             String lineF;
             int cardNumber = 0;
@@ -154,8 +160,6 @@ public class ResourceDeck implements Deckable {
                 Map<CardCorners, Symbol> cornerSymbolsF = new HashMap<>();
                 int point = 0;
                 for(int i = 0; i < 4; i++){
-                    //System.out.print(CardCorners.values()[i]);
-                    //System.out.println(Symbol.valueOf(partsF[i]));
                     cornerSymbolsF.put(CardCorners.values()[i], Symbol.valueOf(partsF[i]));
                 }
 
@@ -201,8 +205,7 @@ public class ResourceDeck implements Deckable {
                 cardNumber++;
             }
         } catch (Exception e) {
-            System.out.println("An error occurred while generating starting cards");
-            e.printStackTrace();
+            System.err.println("An error occurred while generating starting cards");
         }
 
     }

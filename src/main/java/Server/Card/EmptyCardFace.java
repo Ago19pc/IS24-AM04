@@ -7,7 +7,13 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * This is the class from which all card faces inherit. It is also used to represent achievement cards' back faces
+ */
 public class EmptyCardFace implements CardFace, Serializable {
+    /**
+     * The URI of the image of the card
+     */
     private final String imageURI;
 
     /**
@@ -18,47 +24,52 @@ public class EmptyCardFace implements CardFace, Serializable {
         this.imageURI = imageURI;
     }
 
-    /**
-     * @return String the URI of the image
-     */
+
     @Override
     public String getImageURI() {
         return imageURI;
     }
 
+    /**
+     * @throws UnsupportedOperationException because empty card faces do not have scores
+     */
     public int getScore() throws UnsupportedOperationException {
         throw new UnsupportedOperationException("Empty cards do not have scores");
     }
-
+    /**
+     * @throws UnsupportedOperationException because empty card faces do not have corner symbols
+     */
     public Map<CardCorners, Symbol> getCornerSymbols() throws UnsupportedOperationException {
         throw new UnsupportedOperationException("Empty cards do not have corner symbols");
     }
-
+    /**
+     * @throws UnsupportedOperationException because empty card faces do not have center symbols
+     */
     public List<Symbol> getCenterSymbols() throws UnsupportedOperationException {
         throw new UnsupportedOperationException("Empty cards do not have center symbols");
     }
-
+    /**
+     * @throws UnsupportedOperationException because empty card faces do not have score requirements
+     */
     public Map<Symbol, Integer> getScoreRequirements() throws UnsupportedOperationException {
         throw new UnsupportedOperationException("Empty cards do not have score requirements");
     }
-
+    /**
+     * @throws UnsupportedOperationException because empty card faces do not have placement requirements
+     */
     public Map<Symbol, Integer> getPlacementRequirements() throws UnsupportedOperationException {
         throw new UnsupportedOperationException("Empty cards do not have placement requirements");
     }
 
     /**
-     * Returns the x coordinate of the CardFace
-     *
-     * @return int the x coordinate
+     * @throws UnsupportedOperationException because empty card faces do not have coordinates
      */
     @Override
     public int getXCoord() throws UnsupportedOperationException{
         throw new UnsupportedOperationException("Empty cards do not have coordinates");
     }
     /**
-     * Returns the y coordinate of the CardFace
-     *
-     * @return int the y coordinate
+     * @throws UnsupportedOperationException because empty card faces do not have coordinates
      */
     @Override
     public int getYCoord() throws UnsupportedOperationException{
@@ -66,9 +77,7 @@ public class EmptyCardFace implements CardFace, Serializable {
     }
 
     /**
-     * sets the turn in which the card was placed
-     *
-     * @param placementTurn the placement turn
+        * @throws UnsupportedOperationException because empty card faces do not have placement turns
      */
     @Override
     public void setPlacementTurn(int placementTurn) throws UnsupportedOperationException{
@@ -77,9 +86,7 @@ public class EmptyCardFace implements CardFace, Serializable {
     }
 
     /**
-     * sets the x coordinate of the CardFace
-     *
-     * @param xCoord the x coordinate
+     * @throws UnsupportedOperationException because empty card faces do not have coordinates
      */
     @Override
     public void setXCoord(int xCoord) throws UnsupportedOperationException{
@@ -88,20 +95,22 @@ public class EmptyCardFace implements CardFace, Serializable {
     }
 
     /**
-     * sets the y coordinate of the CardFace
-     *
-     * @param yCoord the y coordinate
+     * @throws UnsupportedOperationException because empty card faces do not have coordinates
      */
     @Override
     public void setYCoord(int yCoord) throws UnsupportedOperationException{
         throw new UnsupportedOperationException("Empty cards do not have coordinates");
 
     }
-
+    /**
+     * @throws UnsupportedOperationException because empty card faces do not have placement turns
+     */
     public int getPlacementTurn() throws UnsupportedOperationException {
         throw new UnsupportedOperationException("Empty cards do not have placement turns");
     }
-
+    /**
+     * @throws UnsupportedOperationException because empty card faces do not have a kingdom
+     */
     public Symbol getKingdom() throws UnsupportedOperationException {
         throw new UnsupportedOperationException("Empty cards do not have kingdoms");
     }

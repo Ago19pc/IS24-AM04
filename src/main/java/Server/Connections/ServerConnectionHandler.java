@@ -14,50 +14,71 @@ import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.util.List;
 
+/**
+ * This interface is used to handle all clients connection of a certain type.
+ */
 public interface ServerConnectionHandler extends Remote {
 
     /**
      * Send a message to all the clients
      * @param message the message to send
+     * @throws RemoteException when failing to send the message
      */
-    public void sendAllMessage(ToClientMessage message) throws RemoteException;
+    void sendAllMessage(ToClientMessage message) throws RemoteException;
 
     /**
      * Send a message to a specific client
      * @param id the name of the client to send the message to
      * @param message the message to send
+     * @throws RemoteException when failing to send the message
      */
-    public void sendMessage(ToClientMessage message, String id) throws RemoteException;
+    void sendMessage(ToClientMessage message, String id) throws RemoteException;
 
     /**
      * Execute a message
      * @param message the message to execute
+     * @throws RemoteException when failing to execute the message
      */
-    public void executeMessage(ToServerMessage message) throws RemoteException;
+    void executeMessage(ToServerMessage message) throws RemoteException;
 
     /**
      * Kill a client
      * @param id the name id the client to kill
+     * @throws RemoteException when failing to kill the client
      */
-    public void killClient(String id) throws RemoteException, PlayerNotFoundByNameException, AlreadyFinishedException;
+    void killClient(String id) throws RemoteException;
 
-    public void setName(String name, String clientID) throws RemoteException, IllegalArgumentException, TooManyPlayersException, AlreadyStartedException;
+    /**
+     * Checks if a client is connected with this connection type
+     * @param id the name id the client to check
+     * @return true if the client is connected with this connection type, false otherwise
+     * @throws RemoteException when failing to check if the client is connected
+     */
+    boolean isClientAvailable(String id) throws RemoteException;
 
-    public boolean isClientAvailable(String id) throws RemoteException;
-
-    public List<String> getAllIds() throws RemoteException;
+    /**
+     * Get all the ids of the clients connected with this connection type
+     * @return a list of all the ids of the clients connected
+     * @throws RemoteException when failing to get the ids
+     */
+    List<String> getAllIds() throws RemoteException;
 
 
 
     /**
      * Set the controller
-     * @param controller
-     * @throws RemoteException
+     * @param controller the controller
+     * @throws RemoteException like all RMI stuff
      */
 
-    public void setController(Controller controller) throws RemoteException;
+    void setController(Controller controller) throws RemoteException;
 
-    public LobbyPlayersMessage join(int rmi_port) throws RemoteException, NotBoundException;
-
-    public void changeId(String oldId, String newId) throws RemoteException;
+    /**
+     * This is used by RMI clients to connect to the server
+     * @param rmi_port the port of the RMI server
+     * @return the message with the required client data
+     * @throws RemoteException when failing to connect
+     * @throws NotBoundException when the server is not bound
+     */
+    LobbyPlayersMessage join(int rmi_port) throws RemoteException, NotBoundException;
 }

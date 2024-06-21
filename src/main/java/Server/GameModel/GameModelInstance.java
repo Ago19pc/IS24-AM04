@@ -13,12 +13,12 @@ import Server.Exception.AlreadySetException;
 import Server.Player.Player;
 import Server.Player.PlayerInstance;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
+import java.io.*;
 import java.util.*;
 
-
+/**
+ * Implementation of the GameModel interface
+ */
 public class GameModelInstance implements GameModel{
     private ResourceDeck resourceDeck;
     private GoldDeck goldDeck;
@@ -31,7 +31,10 @@ public class GameModelInstance implements GameModel{
     private boolean lastRound = false;
     private final List<PlayerInstance> playerList;
 
-
+    /**
+     * Constructor
+     * Initializes data
+     */
     public GameModelInstance() {
         chat = new Chat();
         isEndGamePhase = false;
@@ -60,16 +63,16 @@ public class GameModelInstance implements GameModel{
      * Generate the starting cards
      */
     private void generateStartingCards() {
-        File fileFRONT;
-        File fileBACK;
+        InputStream fileFRONT;
+        InputStream fileBACK;
         BufferedReader readerFRONT;
         BufferedReader readerBACK;
 
         try {
-            fileFRONT = new File(getClass().getResource("/images/StartingCardsFRONT.txt").toURI());
-            fileBACK = new File(getClass().getResource("/images/StartingCardsBACK.txt").toURI());
-            readerFRONT = new BufferedReader(new FileReader(fileFRONT));
-            readerBACK = new BufferedReader(new FileReader(fileBACK));
+            fileFRONT = getClass().getResourceAsStream("/images/StartingCardsFRONT.txt");
+            fileBACK = getClass().getResourceAsStream("/images/StartingCardsBACK.txt");
+            readerFRONT = new BufferedReader(new InputStreamReader(fileFRONT));
+            readerBACK = new BufferedReader(new InputStreamReader(fileBACK));
         
         
 
@@ -88,9 +91,6 @@ public class GameModelInstance implements GameModel{
                 List<Symbol> centerSymbols = new ArrayList<>();
                 for (int i = 0; i < partsF.length; i++) {
                     if (i < 4) {
-                        //System.out.print(CardCorners.values()[i]);
-                        //System.out.print(" ");
-                        //System.out.println(Symbol.valueOf(partsF[i]));
                         cornerSymbolsF.put(CardCorners.values()[i], Symbol.valueOf(partsF[i]));
                     }
                     else centerSymbols.add(Symbol.valueOf(partsF[i]));
@@ -110,19 +110,14 @@ public class GameModelInstance implements GameModel{
                 startingCards.add(card);
             }
         } catch (Exception e) {
-            System.out.println("An error occurred while generating starting cards");
-            e.printStackTrace();
+            System.err.println("An error occurred while generating starting cards");
         }
         Collections.shuffle(startingCards);
     
     }
 
     public List<Player> getPlayerList() {
-        List<Player> playerListToReturn = new ArrayList<>();
-        for (PlayerInstance player : playerList) {
-            playerListToReturn.add((Player) player);
-        }
-        return playerListToReturn;
+        return new ArrayList<>(playerList);
     }
     public void setPlayerList(List<Player> playerList) {
         this.playerList.clear();
@@ -141,65 +136,49 @@ public class GameModelInstance implements GameModel{
         playerList.add(playerInstance);
     }
 
-    /**
-     * Adds 1 to turn
-     */
+
     @Override
     public void nextTurn() {
         this.turn++;
     }
 
-    /**
-     * @return ResourceDeck the resource deck
-     */
+
     @Override
     public ResourceDeck getResourceDeck() {
         return this.resourceDeck;
     }
 
-    /**
-     * @return GoldDeck the gold deck
-     */
+
     @Override
     public GoldDeck getGoldDeck() {
         return this.goldDeck;
     }
 
-    /**
-     * @return AchievementDeck the achievement deck
-     */
+
     @Override
     public AchievementDeck getAchievementDeck() {
         return this.achievementDeck;
     }
 
-    /**
-     * @return List<StartingCard> the starting cards
-     */
+
     @Override
     public List<StartingCard> getStartingCards() {
         return this.startingCards;
     }
 
-    /**
-     * @return int the turn
-     */
+
     @Override
     public int getTurn() {
         return this.turn;
     }
 
-    /**
-     * @return boolean true if the game is in the end game phase
-     */
+
     @Override
     public boolean isEndGamePhase() {
         return this.isEndGamePhase;
     }
 
-    /**
-     * Set the game to the end game phase
-     */
+
     @Override
     public void setEndGamePhase() throws AlreadySetException {
         if(isEndGamePhase){

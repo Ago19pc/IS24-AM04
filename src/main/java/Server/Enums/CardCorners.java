@@ -1,20 +1,37 @@
 package Server.Enums;
 
+/**
+ * Contains all the corners of a card
+ */
 public enum CardCorners {
-    TOP_LEFT, TOP_RIGHT, BOTTOM_RIGHT, BOTTOM_LEFT;
+    /**
+     * Top left corner
+     */
+    TOP_LEFT,
+    /**
+     * Top right corner
+     */
+    TOP_RIGHT,
+    /**
+     * Bottom right corner
+     */
+    BOTTOM_RIGHT,
+    /**
+     * Bottom left corner
+     */
+    BOTTOM_LEFT;
 
+    /**
+     * Returns the opposite corner of the card
+     * @return the opposite corner
+     */
     public CardCorners getOppositeCorner() {
-        switch(this) {
-            case TOP_LEFT:
-                return BOTTOM_RIGHT;
-            case TOP_RIGHT:
-                return BOTTOM_LEFT;
-            case BOTTOM_LEFT:
-                return TOP_RIGHT;
-            case BOTTOM_RIGHT:
-                return TOP_LEFT;
-        }
-        return null;
+        return switch (this) {
+            case TOP_LEFT -> BOTTOM_RIGHT;
+            case TOP_RIGHT -> BOTTOM_LEFT;
+            case BOTTOM_LEFT -> TOP_RIGHT;
+            case BOTTOM_RIGHT -> TOP_LEFT;
+        };
     }
 
 }

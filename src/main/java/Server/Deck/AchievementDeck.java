@@ -9,18 +9,22 @@ import Server.Enums.Symbol;
 import Server.Exception.AlreadyFinishedException;
 import Server.Exception.IncorrectDeckPositionException;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
+import java.io.*;
 import java.util.*;
 
 import static Server.Enums.DeckPosition.*;
 
-
+/**
+ * Class for the Achievement Deck
+ * In this deck, the board cards are the common achievements
+ */
 public class AchievementDeck implements Deckable{
-    protected List<AchievementCard> cards;
+    private final List<AchievementCard> cards;
     private final Map<DeckPosition, AchievementCard> boardCards;
 
+    /**
+     * Constructor. Creates the cards, Shuffles them and moves the first two (the common achievements) to the board
+     */
     public AchievementDeck(){
         this.boardCards = new HashMap<>();
         this.cards = new ArrayList<>();
@@ -32,7 +36,7 @@ public class AchievementDeck implements Deckable{
             moveCardToBoard(FIRST_CARD);
             moveCardToBoard(SECOND_CARD);
         } catch (Exception e) {
-            e.printStackTrace();
+            System.err.println("Error while moving cards to the board (AchievementDeck)");
         }
     }
 
@@ -45,7 +49,9 @@ public class AchievementDeck implements Deckable{
     }
 
     /**
+     * Moves a card from the deck to the board. This is used to set the common achievements.
      * @param where_to the position to add the card to
+     * @throws IncorrectDeckPositionException if the position is not in the board (i.e. the deck itself)
      */
     public void moveCardToBoard(DeckPosition where_to) throws IncorrectDeckPositionException {
         if (where_to == DECK)
@@ -62,7 +68,8 @@ public class AchievementDeck implements Deckable{
     }
 
     /**
-     * @return Card the card from the position
+     * Gets the board cards (common achievements)
+     * @return a map linking board positions to the cards
      */
     public Map<DeckPosition, AchievementCard> getBoardCard() {
         Map<DeckPosition, AchievementCard> boardCardsToReturn = new HashMap<>();
@@ -76,15 +83,15 @@ public class AchievementDeck implements Deckable{
      * generate the cards
      */
     private void createCards() {
-        File fileFRONT;
+        InputStream fileFRONT;
         
         BufferedReader readerFRONT;
         
 
         try {
-            fileFRONT = new File(getClass().getResource("/images/AchievementFrontFace.txt").toURI());
-            
-            readerFRONT = new BufferedReader(new FileReader(fileFRONT));
+            fileFRONT = getClass().getResourceAsStream("/images/AchievementFrontFace.txt");
+
+            readerFRONT = new BufferedReader(new InputStreamReader(fileFRONT));
             
         
         
@@ -120,8 +127,7 @@ public class AchievementDeck implements Deckable{
                 this.cards.add(card);
             }
         } catch (Exception e) {
-            System.out.println("An error occurred while generating cards");
-            e.printStackTrace();
+            System.err.println("An error occurred while generating cards (AchievementDeck)");
         }
             
 
@@ -132,27 +138,21 @@ public class AchievementDeck implements Deckable{
         if(position == DECK){
             if(cards.isEmpty())
                 throw new AlreadyFinishedException("Achievement Deck is empty");
-            return (AchievementCard) cards.remove(0);
+            return cards.removeFirst();
         } else {
             if (boardCards.get(position) == null) {
                 throw new AlreadyFinishedException("No card in the specified position");
             }
-            return (AchievementCard) getBoardCard().get(position);
+            return getBoardCard().get(position);
         }
     }
 
-    /**
-     * @return boolean true if the deck is empty
-     */
+
     public boolean isEmpty() {
         return cards.isEmpty();
     }
 
-    /**
-     * Add card to the board in the specified position
-     * @param card card to add
-     * @param position position to add the card to
-     */
+
     public void addCard(Card card, DeckPosition position) throws IncorrectDeckPositionException {
         if (position == DECK)
             throw new IncorrectDeckPositionException("Cannot add card to the deck, only to FIST_CARD or SECOND_CARD.");
@@ -164,11 +164,12 @@ public class AchievementDeck implements Deckable{
     public Card getTopCardNoPop() {
         if(cards.isEmpty())
             return null;
-        return cards.get(0);
+        return cards.getFirst();
     }
 
     /**
-     * @return int the number of cards in the deck
+     * Get the number of cards in the deck
+     * @return the number of cards in the deck
      */
     public int getNumberOfCards() {
         return cards.size();

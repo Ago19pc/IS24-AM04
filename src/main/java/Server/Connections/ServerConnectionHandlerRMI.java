@@ -3,20 +3,15 @@ package Server.Connections;
 import Client.Connection.ClientConnectionHandler;
 import Server.Controller.Controller;
 import Server.Enums.Color;
-import Server.Exception.AlreadyFinishedException;
-import Server.Exception.AlreadyStartedException;
-import Server.Exception.PlayerNotFoundByNameException;
-import Server.Exception.TooManyPlayersException;
 import Server.Enums.GameState;
 import Server.Exception.*;
 import Server.Messages.LobbyPlayersMessage;
-import Server.Messages.PlayerDisconnectedMessage;
 import Server.Messages.ToClientMessage;
 import Server.Messages.ToServerMessage;
+import Server.Player.Player;
 
 import java.net.InetAddress;
 import java.net.NetworkInterface;
-import java.net.UnknownHostException;
 import java.rmi.NotBoundException;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
@@ -32,19 +27,32 @@ import static java.rmi.server.RemoteServer.getClientHost;
  * This class handles the connection between the server and the clients using RMI
  */
 public class ServerConnectionHandlerRMI implements ServerConnectionHandler, Remote {
-
+    /**
+     * The server connection handler to be exported
+     */
     ServerConnectionHandler stub;
+    /**
+     * The server registry
+     */
     Registry registry;
 
     /**
      * String is the ID
      */
-    Map<String, ClientConnectionHandler> clients = new HashMap<>();
-
+    final Map<String, ClientConnectionHandler> clients = new HashMap<>();
+    /**
+     * The controller of the server
+     */
     Controller controller;
-
+    /**
+     * The port on which the server is running
+     */
     private int port;
 
+    /**
+     * Standard constructor
+     * Asks for the port to start the rmi server on and starts it on that port, or the next available one
+     */
     public ServerConnectionHandlerRMI() {
         askForPort();
         while (!startServer(port)) {
@@ -54,7 +62,10 @@ public class ServerConnectionHandlerRMI implements ServerConnectionHandler, Remo
         System.out.println("[RMI] Server avviato sulla porta: " + port);
 
     }
-
+    /**
+     * Debug constructor
+     * @param debugMode if true, the server will start on port 1235, or the next available one
+     */
     public ServerConnectionHandlerRMI(boolean debugMode) {
         if (debugMode) {
             port = 1235;
@@ -69,15 +80,16 @@ public class ServerConnectionHandlerRMI implements ServerConnectionHandler, Remo
     }
 
     /**
-     * Starts the server
-     * @param port
-     * @return
+     * Starts the RMI server on the specified port.
+     * If the port is not available will try the following one, and so on until it finds one.
+     * If non is found will return false.
+     * @param port the port to start the server on
+     * @return true if started successfully
      */
-
     private boolean startServer(int port) {
         try {
             String ip;
-            try { //todo. @ago19 questa è una soliuzione temporanea per ottenere l'ip del server
+            try {
                 Enumeration<NetworkInterface> interfaces = NetworkInterface.getNetworkInterfaces();
                 while (interfaces.hasMoreElements()) {
                     NetworkInterface iface = interfaces.nextElement();
@@ -90,7 +102,7 @@ public class ServerConnectionHandlerRMI implements ServerConnectionHandler, Remo
                         InetAddress addr = addresses.nextElement();
                         ip = addr.getHostAddress();
                         if(ip.contains(":")) continue;
-                        System.setProperty("java.rmi.server.hostname", ip);;
+                        System.setProperty("java.rmi.server.hostname", ip);
                         System.out.println(iface.getDisplayName() + " " + ip);
                     }
                 }
@@ -104,12 +116,14 @@ public class ServerConnectionHandlerRMI implements ServerConnectionHandler, Remo
             registry.rebind("ServerConnectionHandler", stub);
             return true;
         } catch (RemoteException e) {
-            e.printStackTrace();
-            System.out.println("[RMI] Errore durante l'avvio del server RMI");
+            System.err.println("[RMI] Errore durante l'avvio del server RMI");
             return false;
         }
     }
 
+    /**
+     * Asks the user for the port to start the server on
+     */
     private void askForPort() {
         System.out.println("[RMI] Inserire la porta su cui avviare il server: ");
         Scanner scanner = new Scanner(System.in);
@@ -133,11 +147,6 @@ public class ServerConnectionHandlerRMI implements ServerConnectionHandler, Remo
         return stub;
     }
 
-    /**
-     * Send a message to all the clients
-     *
-     * @param message the message to send
-     */
     @Override
     public void sendAllMessage(ToClientMessage message) {
         pingAll();
@@ -154,11 +163,6 @@ public class ServerConnectionHandlerRMI implements ServerConnectionHandler, Remo
         }
     }
 
-    /**
-     * Send a message to a specific client
-     * @param id the name of the client to send the message to
-     * @param message the message to send
-     */
     public void sendMessage(ToClientMessage message, String id) {
         ping(id);
         try{
@@ -169,43 +173,30 @@ public class ServerConnectionHandlerRMI implements ServerConnectionHandler, Remo
         }
     }
 
-    /**
-     * Execute a message
-     *
-     * @param message the message to execute
-     */
+
     @Override
     public void executeMessage(ToServerMessage message) {
         synchronized (controller) {
-            System.out.println("Executing message");
             message.serverExecute(controller);
             controller.notifyAll();
         }
     }
 
-    /**
-     * Kill a client
-     *
-     * @param id the id of the client to kill
-     */
+
     @Override
-    public void killClient(String id) throws AlreadyFinishedException, PlayerNotFoundByNameException {
+    public void killClient(String id){
 
         clients.remove(id);
         System.out.println("Client killed. Sending message");
 
     }
 
-    @Override
-    public void setName(String name, String clientID) throws IllegalArgumentException, TooManyPlayersException, AlreadyStartedException {
-        controller.addPlayer(name, clientID);
-    }
 
     public LobbyPlayersMessage join(int rmi_port) throws RemoteException, NotBoundException {
         Random rand = new Random();
         rand.setSeed(System.currentTimeMillis());
         String id = rand.nextInt(9999) + "-" + rand.nextInt(9999) + "-" + rand.nextInt(9999);
-        Registry clientRegistry = null;
+        Registry clientRegistry;
         try {
             clientRegistry = LocateRegistry.getRegistry(getClientHost(), rmi_port);
 
@@ -225,15 +216,14 @@ public class ServerConnectionHandlerRMI implements ServerConnectionHandler, Remo
         });
         Map<String, Boolean> playerReady = new HashMap<>();
         controller.getPlayerList().forEach(p -> playerReady.put(p.getName(), p.isReady()));
-        Boolean isSavedGame = controller.getGameState().equals(GameState.LOAD_GAME_LOBBY);
-        LobbyPlayersMessage message = new LobbyPlayersMessage(
-                controller.getPlayerList().stream().map(p -> p.getName()).toList(),
+        Boolean isSavedGame = controller.isInSavedGameLobby();
+        return new LobbyPlayersMessage(
+                controller.getPlayerList().stream().map(Player::getName).toList(),
                 playerColors,
                 playerReady,
                 id,
                 isSavedGame
         );
-        return message;
     }
 
     /**
@@ -256,23 +246,17 @@ public class ServerConnectionHandlerRMI implements ServerConnectionHandler, Remo
      */
     public void pingAll() {
         Map<String, ClientConnectionHandler> allClients = new HashMap<>(clients);
-        allClients = allClients.entrySet().stream().filter(entry -> {
-            return !controller.getConnectionHandler().isInDisconnectedList(entry.getKey());
-        }).collect(HashMap::new, (m, v) -> m.put(v.getKey(), v.getValue()), HashMap::putAll);
+        allClients = allClients.entrySet().stream().filter(entry -> !controller.getConnectionHandler().isInDisconnectedList(entry.getKey())).collect(HashMap::new, (m, v) -> m.put(v.getKey(), v.getValue()), HashMap::putAll);
         System.out.println("Pinging all clients. They are: " + allClients.keySet());
         allClients.keySet().forEach(this::ping);
     }
 
     /**
      * Checks for an association between an id and a ClientConnectionHandler
-     * @param id
-     * @return
+     * @param id the id to check
+     * @return true if the association exists, false otherwise
      */
     public boolean isClientAvailable(String id) {
         return clients.containsKey(id);
-    }
-
-    public void changeId(String oldId, String newId) {
-        clients.remove(oldId);
     }
 }

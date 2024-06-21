@@ -2,7 +2,13 @@ package Server.Messages;
 
 import java.io.Serializable;
 
+/**
+ * This message is used to inform the client that the draw from the achievement deck is invalid
+ */
 public class AchievementDeckDrawInvalidMessage implements Serializable, ToClientMessage{
+    /**
+     * Constructor. It doesn't do anything
+     */
     public AchievementDeckDrawInvalidMessage() {
     }
     @Override

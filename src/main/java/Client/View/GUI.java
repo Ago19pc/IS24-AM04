@@ -14,7 +14,7 @@ import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import run.*;
+import Interface.*;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -22,31 +22,52 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * This class is responsible for the graphical user interface logic of the client side of the application.
+ */
 public class GUI implements UI{
     private static ClientController controller;
-    private static Map<SceneName,Scene> sceneMap = new HashMap<>();
+    private static final Map<SceneName,Scene> sceneMap = new HashMap<>();
     private Stage stage;
-    private Map<SceneName,SceneController> sceneControllerMap = new HashMap<>();
+    private final Map<SceneName,SceneController> sceneControllerMap = new HashMap<>();
 
-
+    /**
+     * Constructor
+     * @param controller the controller
+     */
     public GUI(ClientController controller) {
-        this.controller = controller;
+        GUI.controller = controller;
     }
 
-
+    /**
+     * This method generates a scene from a fxml file, loads the scene controller , and adds the scene to the sceneMap and sceneControllerMap.
+     * @param fxmlPath the path of the fxml file
+     * @param sceneName the name of the scene to generate
+     * @param stage the stage where the scene will be displayed
+     * @throws IOException if the fxml file is not found
+     */
     public void generateScene(String fxmlPath, SceneName sceneName, Stage stage) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(MainGUI.class.getResource(fxmlPath));
         Scene scene = new Scene(fxmlLoader.load());
-        SceneController sceneController = (SceneController) fxmlLoader.getController();
+        SceneController sceneController = fxmlLoader.getController();
         sceneController.setAll(controller, stage, sceneMap, sceneControllerMap);
         sceneMap.put(sceneName, scene);
         sceneControllerMap.put(sceneName, sceneController);
     }
 
+    /**
+     * Gets a scene by its name
+     * @param sceneName the name of the scene
+     * @return the scene
+     */
     public Scene getScene(SceneName sceneName) {
         return sceneMap.get(sceneName);
     }
 
+    /**
+     * Sets the stage
+     * @param stage the stage
+     */
     public void setStage(Stage stage) {
         this.stage = stage;
     }
@@ -59,13 +80,13 @@ public class GUI implements UI{
     }
 
     @Override
-    public void nameChanged(String name) {
+    public void nameChanged() {
         Platform.runLater(() -> {
             if (controller.isSavedGame()) {
                 //todo: implement graphically with another scene
                 System.out.println("WAITING FOR OTHERS, TODO");
             } else {
-                ((ColorReadySceneController) sceneControllerMap.get(SceneName.SETCOLOR)).messageToSend.setPromptText("Scrivi un messaggio!");
+                sceneControllerMap.get(SceneName.SETCOLOR).messageToSend.setPromptText("Scrivi un messaggio!");
                 stage.setScene(getScene(SceneName.SETCOLOR));
                 stage.show();
             }
@@ -107,16 +128,14 @@ public class GUI implements UI{
 
     @Override
     public void displayNewCardInHand() {
-        Platform.runLater(() -> {
-            ((MainBoardSceneController) sceneControllerMap.get(SceneName.GAME)).setHandCards();
-        });
+        Platform.runLater(() -> ((MainBoardSceneController) sceneControllerMap.get(SceneName.GAME)).setHandCards());
     }
 
     @Override
     public void nameChangeFailed() {
         Platform.runLater(() -> {
             ((NameReadySceneController) sceneControllerMap.get(SceneName.SETNAME)).possible_Name.clear();
-            ((NameReadySceneController) sceneControllerMap.get(SceneName.SETNAME)).possible_Name.setPromptText("Nome già esistente");
+            ((NameReadySceneController) sceneControllerMap.get(SceneName.SETNAME)).possible_Name.setPromptText("Nome non valido");
             stage.setScene(getScene(SceneName.SETNAME));
             stage.show();
         });
@@ -191,6 +210,26 @@ public class GUI implements UI{
 
     @Override
     public void chatMessageIsEmpty() {
+        Platform.runLater(() -> {
+            if(sceneMap.get(SceneName.SETCOLOR) == stage.getScene()){
+                sceneControllerMap.get(SceneName.SETCOLOR).messageToSend.clear();
+                sceneControllerMap.get(SceneName.SETCOLOR).messageToSend.setPromptText("Cannot send empty message");
+
+            }
+            if(sceneMap.get(SceneName.SECRETCARDCHOICE) == stage.getScene()){
+                sceneControllerMap.get(SceneName.SECRETCARDCHOICE).messageToSend.clear();
+                sceneControllerMap.get(SceneName.SECRETCARDCHOICE).messageToSend.setPromptText("Cannot send empty message");
+            }
+            if(sceneMap.get(SceneName.STARTINGCARDCHOICE) == stage.getScene()){
+                sceneControllerMap.get(SceneName.STARTINGCARDCHOICE).messageToSend.clear();
+                sceneControllerMap.get(SceneName.STARTINGCARDCHOICE).messageToSend.setPromptText("Cannot send empty message");
+            }
+            if(sceneMap.get(SceneName.GAME) == stage.getScene()){
+                sceneControllerMap.get(SceneName.GAME).messageToSend.clear();
+                sceneControllerMap.get(SceneName.GAME).messageToSend.setPromptText("Cannot send empty message");
+            }
+        });
+
         System.out.println("Chat message is empty");
     }
 
@@ -231,10 +270,7 @@ public class GUI implements UI{
 
     @Override
     public void displayPlayerColors() {
-        Platform.runLater(() -> {
-            listViewSetUpdate();
-
-        });
+        Platform.runLater(this::listViewSetUpdate);
     }
 
     @Override
@@ -258,10 +294,14 @@ public class GUI implements UI{
         Platform.runLater(()->
         {
             ((ColorReadySceneController) sceneControllerMap.get(SceneName.SETCOLOR)).chat_messages.getItems().add( message.getName() + ": "+  message.getMessage());
-            ((ColorReadySceneController) sceneControllerMap.get(SceneName.SETCOLOR)).messageToSend.clear();
+            sceneControllerMap.get(SceneName.SETCOLOR).messageToSend.clear();
             ((NameReadySceneController) sceneControllerMap.get(SceneName.SETNAME)).chat_message.getItems().add( message.getName() + ": "+  message.getMessage());
-
-            //todo: for others scene
+            ((ChooseSecretCardController) sceneControllerMap.get(SceneName.SECRETCARDCHOICE)).chat_message.getItems().add( message.getName() + ": "+  message.getMessage());
+            sceneControllerMap.get(SceneName.SECRETCARDCHOICE).messageToSend.clear();
+            ((ChooseStartingCardController) sceneControllerMap.get(SceneName.STARTINGCARDCHOICE)).chat_message.getItems().add( message.getName() + ": "+  message.getMessage());
+            sceneControllerMap.get(SceneName.STARTINGCARDCHOICE).messageToSend.clear();
+            ((MainBoardSceneController) sceneControllerMap.get(SceneName.GAME)).chatMessages.getItems().add( message.getName() + ": "+  message.getMessage());
+            sceneControllerMap.get(SceneName.GAME).messageToSend.clear();
         });
     }
 
@@ -277,19 +317,27 @@ public class GUI implements UI{
 
     @Override
     public void endGameStarted() {
+        Platform.runLater(() -> ((MainBoardSceneController) sceneControllerMap.get(SceneName.GAME)).endingLabel.setOpacity(1));
         System.out.println("End game started");
     }
 
     @Override
     public void displayHand() {
-        Platform.runLater(() -> {
-            ((MainBoardSceneController) sceneControllerMap.get(SceneName.GAME)).setHandCards();
-        });
+        Platform.runLater(() -> ((MainBoardSceneController) sceneControllerMap.get(SceneName.GAME)).setHandCards());
 
     }
 
     @Override
     public void displayLeaderboard(LinkedHashMap<String, Integer> playerPoints) {
+        Platform.runLater(() -> {
+            ((MainBoardSceneController) sceneControllerMap.get(SceneName.GAME)).updateLeaderBoard();
+            ((MainBoardSceneController) sceneControllerMap.get(SceneName.GAME)).tabPane.getTabs().forEach(tab -> {
+                if (!tab.getText().equals("LeaderBoard")) {
+                    tab.setStyle("-fx-opacity: 0.5;");
+                }
+            });
+
+        });
         System.out.println("Leaderboard displayed");
     }
 
@@ -312,18 +360,16 @@ public class GUI implements UI{
     public void otherPlayerDraw(String name, Decks deckFrom, DeckPosition position) {
         Platform.runLater(() -> {
             ((MainBoardSceneController) sceneControllerMap.get(SceneName.GAME)).setBoardCards(deckFrom);
+            if(deckFrom == Decks.GOLD)
+                ((MainBoardSceneController) sceneControllerMap.get(SceneName.GAME)).decrementGoldDeckCounter();
+            if(deckFrom == Decks.RESOURCE)
+                ((MainBoardSceneController) sceneControllerMap.get(SceneName.GAME)).decrementResourceDeckCounter();
         });
     }
 
     @Override
     public void newTurn() {
-        Platform.runLater(() -> {
-        if (controller.getActivePlayer().getName().equals(controller.getMyName())) {
-            ((MainBoardSceneController) sceneControllerMap.get(SceneName.GAME)).yourTurnText.setVisible(true);
-        } else {
-            ((MainBoardSceneController) sceneControllerMap.get(SceneName.GAME)).yourTurnText.setVisible(false);
-        }
-        });
+        Platform.runLater(() -> ((MainBoardSceneController) sceneControllerMap.get(SceneName.GAME)).yourTurnLabel.setVisible(controller.getActivePlayer().getName().equals(controller.getMyName())));
 
     }
 
@@ -340,6 +386,7 @@ public class GUI implements UI{
             if (name.equals(controller.getMyName())){
                 ((ChooseSecretCardController) sceneControllerMap.get(SceneName.SECRETCARDCHOICE)).confirmation();
                 ((MainBoardSceneController) sceneControllerMap.get(SceneName.GAME)).setSecretCard(controller.getSecretAchievement());
+                sceneControllerMap.get(SceneName.GAME).setup();
                 stage.setScene(getScene(SceneName.GAME));
             }
 
@@ -351,6 +398,7 @@ public class GUI implements UI{
         Platform.runLater(() -> {
             try {
                 if (controller.getMyName().equals(name)) {
+
                     ((ChooseStartingCardController) sceneControllerMap.get(SceneName.STARTINGCARDCHOICE)).confirmation();
                 }
                 ((MainBoardSceneController) sceneControllerMap.get(SceneName.GAME)).updateManuscript(name, controller.getPlayerByName(name).getManuscript().getCardByCoord(0,0),0 ,0);
@@ -372,15 +420,14 @@ public class GUI implements UI{
 
     @Override
     public void displayBoardCards() {
-        Platform.runLater(() -> {
-            ((MainBoardSceneController) sceneControllerMap.get(SceneName.GAME)).updateAllFloorCards();
-        });
+        Platform.runLater(() -> ((MainBoardSceneController) sceneControllerMap.get(SceneName.GAME)).updateAllFloorCards());
     }
 
     @Override
     public void chooseStartingCardFace(Card card) {
         Platform.runLater(() -> {
             ((ChooseStartingCardController) sceneControllerMap.get(SceneName.STARTINGCARDCHOICE)).setUp(card);
+            sceneControllerMap.get(SceneName.GAME).setup();
             stage.setScene(getScene(SceneName.STARTINGCARDCHOICE));
         });
 
@@ -427,9 +474,12 @@ public class GUI implements UI{
     }
 
     @Override
-    public void displayPlayerPoints(String playerName) throws PlayerNotFoundByNameException {
-        System.out.println("Player points displayed");
-        ((MainBoardSceneController) sceneControllerMap.get(SceneName.GAME)).updateLeaderBoard();
+    public void displayPlayerPoints(String playerName) {
+        Platform.runLater(() -> {
+            System.out.println("Player points displayed");
+            ((MainBoardSceneController) sceneControllerMap.get(SceneName.GAME)).updateLeaderBoard();
+        });
+
     }
 
     @Override
@@ -461,9 +511,7 @@ public class GUI implements UI{
 
     @Override
     public void displayId() {
-        Platform.runLater(() -> {
-            ((NameReadySceneController) sceneControllerMap.get(SceneName.SETNAME)).setup();
-        });
+        Platform.runLater(() -> sceneControllerMap.get(SceneName.SETNAME).setup());
 
     }
 
@@ -489,15 +537,14 @@ public class GUI implements UI{
 
     @Override
     public void displayGameInfo() {
-        System.out.println("Game info displayed before platform runlater");
         Platform.runLater(() -> {
             System.out.println("Game info displayed");
             switch (controller.getGameState()) {
                 case LOBBY:
-                    System.out.println("Lobby");
                     throw new RuntimeException("Unexpected game state");
                 case CHOOSE_STARTING_CARD:
                     System.out.println("Choose starting card");
+                    sceneControllerMap.get(SceneName.GAME).setup();
                     stage.setScene(getScene(SceneName.STARTINGCARDCHOICE));
                     stage.show();
                     break;
@@ -505,31 +552,29 @@ public class GUI implements UI{
                     chooseSecretAchievement(controller.getPotentialSecretAchievements());
                     break;
                 default:
-                    System.out.println("Game started! reconnection  19");
                     displayHand();
                     displayBoardCards();
                     displayCommonAchievements();
                     regenerateManuscript();
 
-                    if (controller.getActivePlayer().getName().equals(controller.getMyName())) {
-                        ((MainBoardSceneController) sceneControllerMap.get(SceneName.GAME)).yourTurnText.setVisible(true);
-                    } else {
-                        ((MainBoardSceneController) sceneControllerMap.get(SceneName.GAME)).yourTurnText.setVisible(false);
-                    }
+                    ((MainBoardSceneController) sceneControllerMap.get(SceneName.GAME)).yourTurnLabel.setVisible(controller.getActivePlayer().getName().equals(controller.getMyName()));
 
                     secretAchievementChosen(controller.getMyName());
+                    sceneControllerMap.get(SceneName.GAME).setup();
 
                     stage.setScene(getScene(SceneName.GAME));
                     stage.show();
                     break;
         }
-        System.out.println("Game info displayed 19");
         });
     }
 
 
     // Only GUI methods
 
+    /**
+     * Displays an update on player colors
+     */
     private void listViewSetUpdate() {
         for(int i = 0; i < controller.getPlayers().size(); i++) {
             String name = controller.getPlayers().get(i).getName();
@@ -580,11 +625,14 @@ public class GUI implements UI{
         }
         ((NameReadySceneController) sceneControllerMap.get(SceneName.SETNAME)).cloneListView(((ColorReadySceneController) sceneControllerMap.get(SceneName.SETCOLOR)).list_Player);
     }
-
     public void gameAlreadyFinished() {
         System.out.println("Game already finished");
         // todo: implement this
-         }
+    }
+
+    /**
+     * Generate a manuscript based on its data
+     */
     private void regenerateManuscript()
     {
         try {

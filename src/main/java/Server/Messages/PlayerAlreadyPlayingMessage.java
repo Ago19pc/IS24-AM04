@@ -4,7 +4,13 @@ import Client.Controller.ClientController;
 
 import java.io.Serializable;
 
+/**
+ * Message to inform the client that the player with the name he tried to reconnect to is already playing
+ */
 public class PlayerAlreadyPlayingMessage implements Serializable, ToClientMessage {
+    /**
+     * Constructor
+     */
     public PlayerAlreadyPlayingMessage() {
     }
     @Override

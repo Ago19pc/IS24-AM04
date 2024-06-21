@@ -6,17 +6,48 @@ import Server.Manuscript.Manuscript;
 
 import java.io.Serializable;
 
+/**
+ * This class represents the player as viewed by the client. It is different from the player on the server.
+ * @see Server.Player
+ */
 public class Player implements Serializable {
+    /**
+     * The name of the player
+     */
     private final String name;
+    /**
+     * The number of points the player has earned by placing cards
+     */
     private int manuscriptPoints;
+    /**
+     * The number of points the player has earned by completing achievements
+     */
     private int achievementPoints;
+    /**
+     * The size of the hand of the player
+     */
     private int handSize;
+    /**
+     * The status of the player. If true, it is the player's turn
+     */
     private boolean active;
+    /**
+     * The color of the player
+     */
     private Color color;
+    /**
+     * The status of the player. If true, the player is ready to start the game
+     */
     private boolean ready;
-
+    /**
+     * The manuscript of the player
+     */
     private Manuscript manuscript;
 
+    /**
+     * Deafult constructor
+     * @param name the name of the player
+     */
     public Player(String name) {
         this.name = name;
         this.manuscriptPoints = 0;
@@ -26,6 +57,15 @@ public class Player implements Serializable {
         this.ready = false;
     }
 
+    /**
+     * Custom constructor. Used in saved games and when reconnecting to a game.
+     * @param name the name of the player
+     * @param points the total points of the player
+     * @param handSize the size of the hand of the player
+     * @param active the active status of the player
+     * @param color the color of the player
+     * @param manuscript the manuscript of the player
+     */
     public Player(String name, int points, int handSize, boolean active, Color color, Manuscript manuscript) {
         this.name = name;
         this.manuscriptPoints = points;
@@ -61,8 +101,11 @@ public class Player implements Serializable {
         this.manuscriptPoints += points;
     }
 
+    /**
+     * Initialize the manuscript of the player with a starting card
+     * @param startingCard the starting card of the manuscript
+     */
     public void initializeManuscript(CornerCardFace startingCard) {
-        System.out.println("Initializing manuscript for player " + name);
         this.manuscript = new Manuscript(startingCard);
     }
 
@@ -158,7 +201,10 @@ public class Player implements Serializable {
     public void addCardToManuscript(int x, int y, CornerCardFace cardFace, int turn) {
         manuscript.addCard(x, y, cardFace, turn);
     }
-
+    /**
+     * Gets the manuscript of the player
+     * @return manuscript the manuscript of the player
+     */
     public Manuscript getManuscript() {
         return manuscript;
     }

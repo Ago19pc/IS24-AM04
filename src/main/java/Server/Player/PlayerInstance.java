@@ -6,21 +6,48 @@ import Server.Card.ResourceCard;
 import Server.Enums.Color;
 import Server.Enums.Face;
 import Server.Exception.AlreadySetException;
-import Server.Exception.TooFewElementsException;
 import Server.Exception.TooManyElementsException;
 import Server.Manuscript.Manuscript;
 
 import java.util.LinkedList;
 import java.util.List;
 
+/**
+ * Implementation of the Player interface
+ */
 public class PlayerInstance implements Player {
+    /**
+     * The secret objective of the player
+     */
     private AchievementCard secretObjective;
+    /**
+     * The hand of the player
+     */
     private final List<ResourceCard> handCards;
+    /**
+     * The color of the player
+     */
     private Color color;
+    /**
+     * The name of the player
+     */
     private final String name;
+    /**
+     * The points of the player
+     */
     private int points;
+    /**
+     * The manuscript of the player
+     */
     private Manuscript manuscript;
+    /**
+     * The ready status of the player
+     */
     private boolean ready;
+    /**
+     * Constructor
+     * @param name the name of the player
+     */
     public PlayerInstance(String name) {
         this.name = name;
         this.handCards = new LinkedList<>();
@@ -28,11 +55,7 @@ public class PlayerInstance implements Player {
         this.ready = false;
     }
 
-    /**
-     * Add a card to the player's hand
-     *
-     * @param card the card to add
-     */
+
     @Override
     public void addCardToHand(Card card) throws TooManyElementsException{
         if(handCards.size() > 2){
@@ -41,76 +64,49 @@ public class PlayerInstance implements Player {
         handCards.add((ResourceCard) card);
     }
 
-    /**
-     * Remove a card from the player's hand
-     *
-     * @param position the position of the card to remove
-     */
     @Override
-    public void removeCardFromHand(int position) throws IndexOutOfBoundsException, TooFewElementsException{
+    public void removeCardFromHand(int position) throws IndexOutOfBoundsException{
         if(position < 0 || position >= handCards.size()){
             throw new IndexOutOfBoundsException("Position out of bounds");
         }
         handCards.remove(position);
     }
 
-    /**
-     * @return List<Card> the player's hand
-     */
     @Override
     public List<Card> getHand() {
-        List<Card> handToReturn = new LinkedList<>();
-        for(ResourceCard card : handCards){
-            handToReturn.add((Card) card);
-        }
-        return handToReturn;
+        return new LinkedList<>(handCards);
     }
 
-    /**
-     * @return Manuscript the player's manuscript
-     */
+
     @Override
     public Manuscript getManuscript() {
         return manuscript;
     }
 
-    /**
-     * @return String the player's name
-     */
+
     @Override
     public String getName() {
         return name;
     }
 
-    /**
-     * @return Color the player's color
-     */
+
     @Override
     public Color getColor() {
         return color;
     }
 
-    /**
-     * @return AchievementCard the player's secret objective
-     */
+
     @Override
     public AchievementCard getSecretObjective() {
         return secretObjective;
     }
 
-    /**
-     * @return int the player's points
-     */
+
     @Override
     public int getPoints() {
         return points;
     }
 
-    /**
-     * Set the player's secret objective
-     *
-     * @param achievementCard the secret objective card
-     */
     @Override
     public void setSecretObjective(AchievementCard achievementCard) throws AlreadySetException{
         if(this.secretObjective != null){
@@ -119,32 +115,19 @@ public class PlayerInstance implements Player {
         this.secretObjective = achievementCard;
     }
 
-    /**
-     * Set the player's color
-     *
-     * @param color the player's color
-     */
+
     @Override
     public void setColor(Color color) {
         this.color = color;
     }
 
-    /**
-     * Add points to the player's total
-     *
-     * @param num the number of points to add
-     */
+
     @Override
     public void addPoints(int num) {
         this.points += num;
     }
 
-    /**
-     * Initialize the player's manuscript
-     *
-     * @param startingCard the manuscript's starting card
-     * @param face         the face of the starting card
-     */
+
     @Override
     public void initializeManuscript(Card startingCard, Face face) throws AlreadySetException{
         if(this.manuscript != null){
@@ -153,17 +136,11 @@ public class PlayerInstance implements Player {
         this.manuscript = new Manuscript(startingCard.getCornerFace(face));
     }
 
-    /**
-     * Sets a player ready status
-     * @param ready, the ready status
-     */
+
     public void setReady(boolean ready) {
         this.ready = ready;
     }
 
-    /**
-     * @return boolean the player's ready status
-     */
     public boolean isReady() {
         return ready;
     }
