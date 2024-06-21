@@ -530,6 +530,13 @@ public class GUI implements UI{
 
     @Override
     public void otherPlayerReconnected(String name) {
+        Platform.runLater(()-> {
+            ((ColorReadySceneController) sceneControllerMap.get(SceneName.SETCOLOR)).chat_messages.getItems().add(name + " reconnected");
+            ((NameReadySceneController) sceneControllerMap.get(SceneName.SETNAME)).chat_message.getItems().add(name + " reconnected");
+            ((ChooseSecretCardController) sceneControllerMap.get(SceneName.SECRETCARDCHOICE)).chat_message.getItems().add(name + " reconnected");
+            ((ChooseStartingCardController) sceneControllerMap.get(SceneName.STARTINGCARDCHOICE)).chat_message.getItems().add(name + " reconnected");
+            ((MainBoardSceneController) sceneControllerMap.get(SceneName.GAME)).chatMessages.getItems().add(name + " reconnected");
+        });
         System.out.println("Other player reconnected");
     }
 
