@@ -102,7 +102,7 @@ public interface ClientController {
      * Sends a message to the server setting the player's color to the given color
      * @param color the color to set
      */
-    void askSetColor(String color);
+    void askSetColor(Color color);
     /**
      * Sends a message to the chat
      * @param message the text of the message to send

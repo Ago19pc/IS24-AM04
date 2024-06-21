@@ -7,6 +7,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * This class represents the front face of starting cards
@@ -66,6 +67,11 @@ public class StartingFrontFace extends  CornerCardFace implements Serializable {
      * @return a string representation of the card face
      */
     public String toString(){
-        return super.toString() + "\nSimboli centrali: " + centerSymbols;
+        String boundaries = "-".repeat(32);
+        boundaries += "\n";
+        String upper = String.format("|%-9s|%10s|%9s|\n", getCornerSymbols().get(CardCorners.TOP_LEFT), " ", getCornerSymbols().get(CardCorners.TOP_RIGHT));
+        String middle = String.format("|%30s|\n", centerSymbols.stream().map(Symbol::toString).collect(Collectors.joining(" ")));
+        String lower = String.format("|%-9s|%10s|%9s|\n", getCornerSymbols().get(CardCorners.BOTTOM_LEFT), " ", getCornerSymbols().get(CardCorners.BOTTOM_RIGHT));
+        return boundaries + upper + middle + lower + boundaries;
     }
 }

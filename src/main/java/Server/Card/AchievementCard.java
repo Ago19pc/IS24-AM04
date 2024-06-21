@@ -52,7 +52,7 @@ public class AchievementCard implements Card {
      * @return a string representation of the achievement card
      */
     public String toString(){
-        return "Puoi ottenere " + frontFace.getScore() + " punti completando i seguenti requisiti: " + frontFace.getScoreRequirements();
+        return "Puoi ottenere " + frontFace.getScore() + " punti completando i seguenti requisiti: " + frontFace.scoreReqForPrint();
     }
 
     public String getImageURI() {

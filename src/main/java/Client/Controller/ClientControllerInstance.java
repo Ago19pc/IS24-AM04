@@ -166,15 +166,13 @@ public class ClientControllerInstance implements ClientController {
     }
 
     @Override
-    public void askSetColor(String color) {
+    public void askSetColor(Color color) {
         if (this.myName == null) {
             ui.needName();
             return;
         }
-        Color castedColor;
         try {
-            castedColor = Color.valueOf(color.toUpperCase());
-            if (unavaiableColors.contains(castedColor)){
+            if (unavaiableColors.contains(color)){
                 ui.unavailableColor();
                 return;
             }
@@ -182,7 +180,7 @@ public class ClientControllerInstance implements ClientController {
             ui.invalidColor();
             return;
         }
-        PlayerColorMessage playerColorMessage = new PlayerColorMessage(castedColor, id);
+        PlayerColorMessage playerColorMessage = new PlayerColorMessage(color, id);
         clientConnectionHandler.sendMessage(playerColorMessage);
 
     }
@@ -345,6 +343,7 @@ public class ClientControllerInstance implements ClientController {
 
     @Override
     public void loadLobbyInfo(String id, List<String> playerNames, Map<String, Color> playerColors, Map<String, Boolean> playerReady, Boolean isSavedGame) {
+        ui.successfulConnection();
         this.isSavedGame = isSavedGame;
         setId(id);
         ui.displayId();
@@ -455,9 +454,13 @@ public class ClientControllerInstance implements ClientController {
 
     @Override
     public void newPlayer(List<String> playerNames) {
-        Player newPlayer = new Player(playerNames.getLast());
-        players.add(newPlayer);
-        ui.displayNewPlayer();
+        try {
+            Player newPlayer = new Player(playerNames.getLast());
+            players.add(newPlayer);
+            ui.displayNewPlayer();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 
@@ -650,8 +653,12 @@ public class ClientControllerInstance implements ClientController {
 
     @Override
     public void playerRemoved(String name) {
-        players = players.stream().filter(p -> !p.getName().equals(name)).toList();
-        ui.playerRemoved(name);
+        try {
+            players.remove(getPlayerByName(name));
+            ui.playerRemoved(name);
+        } catch (PlayerNotFoundByNameException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
