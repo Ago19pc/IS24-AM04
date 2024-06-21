@@ -39,7 +39,9 @@ public class GameState implements CLIState{
                 cli.printOnNewLine("  I mazzi disponibili sono: GOLD, RESOURCE");
                 cli.printOnNewLine("  Le posizioni a terra disponibili sono: 1, 2");
                 cli.printOnNewLine("");
-                cli.printOnNewLine("  manuscript (opzionale <giocatore>): Mostra il manoscritto di <giocatore>, partendo dalla posizione 0,0. Se <giocatore> non è specificato, mostra il tuo manoscritto");
+                cli.printOnNewLine("  manuscript (opzionale <giocatore>): Mostra il manoscritto di <giocatore>Se <giocatore> non è specificato, mostra il tuo manoscritto");
+                cli.printOnNewLine("");
+                cli.printOnNewLine("  showCard <x> <y> (opzionale <giocatore>): Mostra la carta in posizione <x> <y> del manoscritto di <giocatore>, partendo dalla posizione 0,0. Se <giocatore> non è specificato, mostra le tue carte");
                 cli.printOnNewLine("");
                 cli.printPromptLine();
                 break;
@@ -110,20 +112,34 @@ public class GameState implements CLIState{
                 Decks deck = Decks.valueOf(args[1].toUpperCase());
                 controller.askDrawCard(deck, position);
                 break;
-        case "manuscript":
-            if(args.length > 2){
-                cli.printOnNewLine("Utilizzo corretto: manuscript (opzionale <giocatore>)");
-                return;
-            }
-            if(args.length == 1){
-                cli.displayManuscript(controller.getMyName());
-            } else {
-                cli.displayManuscript(args[1]);
-            }
-            break;
+            case "manuscript":
+                if(args.length > 2){
+                    cli.printOnNewLine("Utilizzo corretto: manuscript (opzionale <giocatore>)");
+                    return;
+                }
+                if(args.length == 1){
+                    cli.displayManuscript(controller.getMyName());
+                } else {
+                    cli.displayManuscript(args[1]);
+                }
+                break;
+            case "showCard":
+                if(args.length < 3 || args.length > 4){
+                    cli.printOnNewLine("Utilizzo corretto: showCard <x> <y> (opzionale <giocatore>)");
+                    return;
+                }
+                int xCoord = Integer.parseInt(args[1]);
+                int yCoord = Integer.parseInt(args[2]);
+                if(args.length == 3){
+                    cli.displayCard(controller.getMyName(), xCoord, yCoord);
+                } else {
+                    cli.displayCard(args[3], xCoord, yCoord);
+                }
+                break;
             default:
                 cli.printOnNewLine("Comando non valido. Digita <help> per visualizzare i comandi disponibili.");
                 cli.printPromptLine();
         }
+
     }
 }

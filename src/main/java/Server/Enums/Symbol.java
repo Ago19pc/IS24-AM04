@@ -71,4 +71,21 @@ public enum Symbol {
             case PATTERN6 -> "6";
         };
     }
+
+    /**
+     * Returns a string representation of the symbol used in maps
+     * @return a string representation of the symbol used in maps
+     */
+    public String toShortString(){
+        return switch (this) {
+            case ANIMAL -> "\uD83D\uDC3A";
+            case FUNGUS -> "\uD83C\uDF44";
+            case PLANT -> "\uD83C\uDF32";
+            case BUG -> "\uD83E\uDD8B";
+            case QUILL -> "\uD83E\uDEB6";
+            case BOTTLE -> "⚗\uFE0F";
+            case PARCHMENT -> "\uD83D\uDCDC";
+            default -> " ";
+        };
+    }
 }

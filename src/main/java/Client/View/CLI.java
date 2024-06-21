@@ -394,10 +394,77 @@ public class CLI extends Thread implements UI {
      * @param playerName the name of the player
      */
     public void displayManuscript(String playerName){
-        printOnNewLine("Manoscritto di " + playerName + ", in posizione 0,0:");
         try{
-            CardFace cardToDisplay = controller.getPlayerByName(playerName).getManuscript().getCardByCoord(0, 0);
-            printOnNewLine(cardToDisplay.toString());
+            printOnNewLine("Manoscritto di " + playerName + ":");
+            int minX, minY, maxX, maxY;
+            List<CornerCardFace> manuscriptCards = controller.getPlayerByName(playerName).getManuscript().getAllCards();
+            minX = manuscriptCards.stream().mapToInt(CornerCardFace::getXCoord).min().orElse(0);
+            minY = manuscriptCards.stream().mapToInt(CornerCardFace::getYCoord).min().orElse(0);
+            maxX = manuscriptCards.stream().mapToInt(CornerCardFace::getXCoord).max().orElse(0);
+            maxY = manuscriptCards.stream().mapToInt(CornerCardFace::getYCoord).max().orElse(0);
+            //first rows: x axis
+            System.out.println();
+            printOnNewLine("   ");
+            for(int x = minX; x <= maxX; x++){
+                System.out.print(" " + x + " ");
+            }
+            //other rows
+            for(int y = minY; y <= maxY; y++){
+                printOnNewLine("   ");
+                for(int x = minX; x <= maxX; x++){
+                    CardFace cardToDisplay = controller.getPlayerByName(playerName).getManuscript().getCardByCoord(x, y);
+                    if(cardToDisplay != null){
+                        System.out.print(cardToDisplay.getCornerSymbols().get(CardCorners.TOP_LEFT).toShortString());
+                        System.out.print((x == 0 && y == 0)? " ": cardToDisplay.getKingdom().toShortString());
+                        System.out.print(cardToDisplay.getCornerSymbols().get(CardCorners.TOP_RIGHT).toShortString());
+                    } else {
+                        System.out.print("   ");
+                    }
+                }
+                printOnNewLine(" " + y + " ");
+                for(int x = minX; x <= maxX; x++){
+                    CardFace cardToDisplay = controller.getPlayerByName(playerName).getManuscript().getCardByCoord(x, y);
+                    if(cardToDisplay != null){
+                        System.out.print((x == 0 && y == 0)? " ": cardToDisplay.getKingdom().toShortString());
+                        System.out.print("X");
+                        System.out.print((x == 0 && y == 0)? " ": cardToDisplay.getKingdom().toShortString());
+                    } else {
+                        System.out.print("   ");
+                    }
+                }
+                printOnNewLine("   ");
+                for(int x = minX; x <= maxX; x++){
+                    CardFace cardToDisplay = controller.getPlayerByName(playerName).getManuscript().getCardByCoord(x, y);
+                    if(cardToDisplay != null){
+                        System.out.print(cardToDisplay.getCornerSymbols().get(CardCorners.BOTTOM_LEFT).toShortString());
+                        System.out.print((x == 0 && y == 0)? " ": cardToDisplay.getKingdom().toShortString());
+                        System.out.print(cardToDisplay.getCornerSymbols().get(CardCorners.BOTTOM_RIGHT).toShortString());
+                    } else {
+                        System.out.print("   ");
+                    }
+                }
+            }
+        } catch (PlayerNotFoundByNameException e){
+            printOnNewLine("Il giocatore specificato non esiste");
+        }
+        printPromptLine();
+    }
+    /**
+     * Displays a card in the manuscript of a player
+     * @param playerName the name of the player
+     * @param x the x coordinate of the card
+     * @param y the y coordinate of the card
+     */
+    public void displayCard(String playerName, int x, int y){
+        try{
+            CardFace cardToDisplay = controller.getPlayerByName(playerName).getManuscript().getCardByCoord(x, y);
+            if(cardToDisplay != null){
+                printOnNewLine("La carta in posizione " + x + ", " + y + " è: ");
+                printOnNewLine(cardToDisplay.toString());
+                printOnNewLine("Questa carta è stata piazzata al turno " + cardToDisplay.getPlacementTurn());
+            } else {
+                printOnNewLine("Non c'è nessuna carta in posizione " + x + ", " + y);
+            }
         } catch (PlayerNotFoundByNameException e){
             printOnNewLine("Il giocatore specificato non esiste");
         }
