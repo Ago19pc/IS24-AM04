@@ -103,7 +103,7 @@ public class CLI extends Thread implements UI {
         printPromptLine();
     }
     public void successfulConnection(){
-        printOnNewLine("Connessione avvenuta con successo al server");
+        printOnNewLine("Connessione avvenuta con successo al server\n");
     }
     public void displayNewCardInHand(){
         Card newCard = controller.getHand().getLast();
@@ -254,12 +254,7 @@ public class CLI extends Thread implements UI {
         printPromptLine();
     }
     public void displayLeaderboard(LinkedHashMap<String, Integer> playerPoints){
-        printOnNewLine("Classifica: \n");
-        int i = 1;
-        for(String player: playerPoints.keySet()){
-            System.out.println("    Il giocatore n." + i++ + "è " + player + ": " + playerPoints.get(player) + " punti");
-        }
-        printPromptLine();
+        changeScene(new LeaderboardState(this, playerPoints, controller));
     }
     public void displayNewPlayer(){
         String newPlayerName = controller.getPlayers().getLast().getName();
@@ -536,7 +531,14 @@ public class CLI extends Thread implements UI {
     }
 
     @Override
-    public void serverDisconnected() {
-        changeScene(new JoinState(this));
+    public void clear() {
+        changeScene(new NetworkState(this));
+    }
+
+    /**
+     * Goes to lobby scene
+     */
+    public void backToLobby() {
+        changeScene(new SetNameState(this, controller));
     }
 }

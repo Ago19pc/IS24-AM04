@@ -239,4 +239,12 @@ public class GeneralServerConnectionHandler {
     public List<String> getDisconnectedList() {
         return disconnectedPlayerIds;
     }
+
+    /**
+     * Clears the server preparing it for a new game
+     */
+    public void clear(){
+        playerID.clear();
+        disconnectedPlayerIds.clear();
+    }
 }
