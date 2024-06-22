@@ -411,26 +411,26 @@ public class CLI extends Thread implements UI {
             System.out.println();
             printOnNewLine("   ");
             for(int x = minX; x <= maxX; x++){
-                System.out.print(" " + x + " ");
+                System.out.print(manuscriptCoordString(x));
             }
             //other rows
-            for(int y = minY; y <= maxY; y++){
+            for(int y = maxY; y >= minY; y--){
                 printOnNewLine("   ");
                 for(int x = minX; x <= maxX; x++){
                     CardFace cardToDisplay = controller.getPlayerByName(playerName).getManuscript().getCardByCoord(x, y);
                     if(cardToDisplay != null){
                         System.out.print(cardToDisplay.getCornerSymbols().get(CardCorners.TOP_LEFT).toShortString());
-                        System.out.print((x == 0 && y == 0)? " ": cardToDisplay.getKingdom().toShortString());
+                        System.out.print(" ");
                         System.out.print(cardToDisplay.getCornerSymbols().get(CardCorners.TOP_RIGHT).toShortString());
                     } else {
                         System.out.print("   ");
                     }
                 }
-                printOnNewLine(" " + y + " ");
+                printOnNewLine(manuscriptCoordString(y));
                 for(int x = minX; x <= maxX; x++){
                     CardFace cardToDisplay = controller.getPlayerByName(playerName).getManuscript().getCardByCoord(x, y);
                     if(cardToDisplay != null){
-                        System.out.print((x == 0 && y == 0)? " ": cardToDisplay.getKingdom().toShortString());
+                        System.out.print(" ");
                         System.out.print("X");
                         System.out.print((x == 0 && y == 0)? " ": cardToDisplay.getKingdom().toShortString());
                     } else {
@@ -442,7 +442,7 @@ public class CLI extends Thread implements UI {
                     CardFace cardToDisplay = controller.getPlayerByName(playerName).getManuscript().getCardByCoord(x, y);
                     if(cardToDisplay != null){
                         System.out.print(cardToDisplay.getCornerSymbols().get(CardCorners.BOTTOM_LEFT).toShortString());
-                        System.out.print((x == 0 && y == 0)? " ": cardToDisplay.getKingdom().toShortString());
+                        System.out.print(" ");
                         System.out.print(cardToDisplay.getCornerSymbols().get(CardCorners.BOTTOM_RIGHT).toShortString());
                     } else {
                         System.out.print("   ");
@@ -538,5 +538,24 @@ public class CLI extends Thread implements UI {
     @Override
     public void serverDisconnected() {
         changeScene(new JoinState(this));
+    }
+
+    /**
+     * Returns a string with a number used in the manuscript display
+     * @param number the number to display
+     * @return the string
+     */
+    private String manuscriptCoordString(int number){
+        String toReturn = "";
+        if(number >= 0){
+            toReturn += " ";
+        } else {
+            toReturn += "-";
+        }
+        toReturn += Math.abs(number);
+        if(Math.abs(number) < 10){
+            toReturn += " ";
+        }
+        return toReturn;
     }
 }
