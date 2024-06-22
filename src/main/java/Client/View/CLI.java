@@ -233,7 +233,6 @@ public class CLI extends Thread implements UI {
         for (int i = 0; i < controller.getCommonAchievements().size(); i++) {
             System.out.println("    - " + controller.getCommonAchievements().get(i));
         }
-        printPromptLine();
     }
     public void chooseSecretAchievement(List<AchievementCard> possibleAchievements){
         printOnNewLine("Scegli un obiettivo segreto: \n");
@@ -378,7 +377,6 @@ public class CLI extends Thread implements UI {
      */
     public void displaySecretAchievement(){
         printOnNewLine("Il tuo obiettivo segreto è: " + controller.getSecretAchievement());
-        printPromptLine();
     }
 
     /**
@@ -406,28 +404,32 @@ public class CLI extends Thread implements UI {
             System.out.println();
             printOnNewLine("   ");
             for(int x = minX; x <= maxX; x++){
-                System.out.print(" " + x + " ");
+                System.out.print(manuscriptCoordString(x));
             }
             //other rows
-            for(int y = minY; y <= maxY; y++){
+            for(int y = maxY; y >= minY; y--){
                 printOnNewLine("   ");
                 for(int x = minX; x <= maxX; x++){
                     CardFace cardToDisplay = controller.getPlayerByName(playerName).getManuscript().getCardByCoord(x, y);
                     if(cardToDisplay != null){
                         System.out.print(cardToDisplay.getCornerSymbols().get(CardCorners.TOP_LEFT).toShortString());
-                        System.out.print((x == 0 && y == 0)? " ": cardToDisplay.getKingdom().toShortString());
+                        System.out.print(" ");
                         System.out.print(cardToDisplay.getCornerSymbols().get(CardCorners.TOP_RIGHT).toShortString());
                     } else {
                         System.out.print("   ");
                     }
                 }
-                printOnNewLine(" " + y + " ");
+                printOnNewLine(manuscriptCoordString(y));
                 for(int x = minX; x <= maxX; x++){
                     CardFace cardToDisplay = controller.getPlayerByName(playerName).getManuscript().getCardByCoord(x, y);
                     if(cardToDisplay != null){
-                        System.out.print((x == 0 && y == 0)? " ": cardToDisplay.getKingdom().toShortString());
+                        System.out.print(" ");
                         System.out.print("X");
-                        System.out.print((x == 0 && y == 0)? " ": cardToDisplay.getKingdom().toShortString());
+                        try {
+                            System.out.print(cardToDisplay.getKingdom().toShortString());
+                        } catch (UnsupportedOperationException e){
+                            System.out.print(" ");
+                        }
                     } else {
                         System.out.print("   ");
                     }
@@ -437,7 +439,7 @@ public class CLI extends Thread implements UI {
                     CardFace cardToDisplay = controller.getPlayerByName(playerName).getManuscript().getCardByCoord(x, y);
                     if(cardToDisplay != null){
                         System.out.print(cardToDisplay.getCornerSymbols().get(CardCorners.BOTTOM_LEFT).toShortString());
-                        System.out.print((x == 0 && y == 0)? " ": cardToDisplay.getKingdom().toShortString());
+                        System.out.print(" ");
                         System.out.print(cardToDisplay.getCornerSymbols().get(CardCorners.BOTTOM_RIGHT).toShortString());
                     } else {
                         System.out.print("   ");
@@ -462,6 +464,23 @@ public class CLI extends Thread implements UI {
                 printOnNewLine("La carta in posizione " + x + ", " + y + " è: ");
                 printOnNewLine(cardToDisplay.toString());
                 printOnNewLine("Questa carta è stata piazzata al turno " + cardToDisplay.getPlacementTurn());
+                List<CardFace> neighbors = new LinkedList<>();
+                neighbors.add(controller.getPlayerByName(playerName).getManuscript().getCardByCoord(x-1, y + 1));
+                neighbors.add(controller.getPlayerByName(playerName).getManuscript().getCardByCoord(x+1, y + 1));
+                neighbors.add(controller.getPlayerByName(playerName).getManuscript().getCardByCoord(x-1, y - 1));
+                neighbors.add(controller.getPlayerByName(playerName).getManuscript().getCardByCoord(x+1, y - 1));
+                printOnNewLine("Sopra questa carta ci sono le carte in posizione ");
+                for(CardFace neighbor: neighbors){
+                    if(neighbor != null && neighbor.getPlacementTurn() > cardToDisplay.getPlacementTurn()){
+                        System.out.print("(" + neighbor.getXCoord() + ", " + neighbor.getYCoord() + ") ");
+                    }
+                }
+                printOnNewLine("Sotto questa carta ci sono le carte in posizione ");
+                for(CardFace neighbor: neighbors){
+                    if(neighbor != null && neighbor.getPlacementTurn() < cardToDisplay.getPlacementTurn()){
+                        System.out.print("(" + neighbor.getXCoord() + ", " + neighbor.getYCoord() + ") ");
+                    }
+                }
             } else {
                 printOnNewLine("Non c'è nessuna carta in posizione " + x + ", " + y);
             }
@@ -503,14 +522,11 @@ public class CLI extends Thread implements UI {
     public void displayGameInfo(){
         displayId();
         displayCommonAchievements();
+        displaySecretAchievement();
         displayDeckSizes();
         displayBoardCards();
-        displaySecretAchievement();
         displayHand();
         displayTurn();
-        displayPlayerInfo();
-        displayChat();
-        displayGameState();
         switch (controller.getGameState()) {
             case CHOOSE_STARTING_CARD:
                 changeScene(new StartingCardChoiceState(this, controller));
@@ -540,5 +556,24 @@ public class CLI extends Thread implements UI {
      */
     public void backToLobby() {
         changeScene(new SetNameState(this, controller));
+    }
+
+    /**
+     * Returns a string with a number used in the manuscript display
+     * @param number the number to display
+     * @return the string
+     */
+    private String manuscriptCoordString(int number){
+        String toReturn = "";
+        if(number >= 0){
+            toReturn += " ";
+        } else {
+            toReturn += "-";
+        }
+        toReturn += Math.abs(number);
+        if(Math.abs(number) < 10){
+            toReturn += " ";
+        }
+        return toReturn;
     }
 }

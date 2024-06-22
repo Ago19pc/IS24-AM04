@@ -148,7 +148,6 @@ public class ClientControllerInstance implements ClientController {
     public void joinServer(String ip, int port) {
         try{
             clientConnectionHandler.setSocket(ip, port);
-            ui.successfulConnection();
         } catch (IOException | NotBoundException | NullPointerException e){
             ui.connectionFailed();
         }

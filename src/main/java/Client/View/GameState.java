@@ -43,6 +43,9 @@ public class GameState implements CLIState{
                 cli.printOnNewLine("");
                 cli.printOnNewLine("  showCard <x> <y> (opzionale <giocatore>): Mostra la carta in posizione <x> <y> del manoscritto di <giocatore>, partendo dalla posizione 0,0. Se <giocatore> non è specificato, mostra le tue carte");
                 cli.printOnNewLine("");
+                cli.printOnNewLine("");
+                cli.printOnNewLine("  achievements: Mostra gli obiettivi comuni e il tuo obiettivo segreto");
+                cli.printOnNewLine("");
                 cli.printPromptLine();
                 break;
             case "chat":
@@ -135,6 +138,15 @@ public class GameState implements CLIState{
                 } else {
                     cli.displayCard(args[3], xCoord, yCoord);
                 }
+                break;
+            case "achievements":
+                if(args.length != 1){
+                    cli.printOnNewLine("Utilizzo corretto: achievements");
+                    return;
+                }
+                cli.displayCommonAchievements();
+                cli.displaySecretAchievement();
+                cli.printPromptLine();
                 break;
             default:
                 cli.printOnNewLine("Comando non valido. Digita <help> per visualizzare i comandi disponibili.");
