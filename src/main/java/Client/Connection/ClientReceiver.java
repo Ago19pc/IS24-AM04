@@ -23,6 +23,7 @@ public class ClientReceiver extends Thread {
      */
     public ClientReceiver(Socket clientSocket, ClientController controller) throws IOException{
         this.controller = controller;
+        clientSocket.setSoTimeout(10000);
         in = new ObjectInputStream(clientSocket.getInputStream());
     }
 

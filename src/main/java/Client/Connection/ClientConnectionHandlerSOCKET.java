@@ -7,6 +7,7 @@ import Server.Messages.ToServerMessage;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
+import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.rmi.RemoteException;
 /**
@@ -71,23 +72,21 @@ public class ClientConnectionHandlerSOCKET extends Thread implements ClientConne
      * @param port the port of the server
      * @throws IOException when problems when setting Socket
      */
-    public void setSocket(String host, int port) throws IOException, IllegalArgumentException {
-
-        this.clientSocket = new Socket(host, port);
-        this.sender.setOutputBuffer(new ObjectOutputStream(clientSocket.getOutputStream()));
-        this.receiver = new ClientReceiver(clientSocket, controller);
-        Thread.UncaughtExceptionHandler h = (th, ex) -> {
-            System.err.println("Uncaught exception: " + ex);
-            try {
-                clientSocket.close();
-            } catch (IOException e) {
-                System.err.println("Error while closing the socket");
-            }
-        };
-        receiver.setUncaughtExceptionHandler(h);
-        receiver.start();
-
-
+    public void setSocket(String host, int port) throws IOException{
+            this.clientSocket = new Socket();
+            clientSocket.connect(new InetSocketAddress(host, port), 10000);
+            this.sender.setOutputBuffer(new ObjectOutputStream(clientSocket.getOutputStream()));
+            this.receiver = new ClientReceiver(clientSocket, controller);
+            Thread.UncaughtExceptionHandler h = (th, ex) -> {
+                System.err.println("Uncaught exception: " + ex);
+                try {
+                    clientSocket.close();
+                } catch (IOException e) {
+                    System.err.println("Error while closing the socket");
+                }
+            };
+            receiver.setUncaughtExceptionHandler(h);
+            receiver.start();
     }
 
 
