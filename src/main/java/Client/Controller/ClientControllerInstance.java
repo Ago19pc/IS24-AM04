@@ -149,7 +149,7 @@ public class ClientControllerInstance implements ClientController {
         try{
             clientConnectionHandler.setSocket(ip, port);
             ui.successfulConnection();
-        } catch (IOException | NotBoundException | NullPointerException | IllegalArgumentException e){
+        } catch (IOException | NotBoundException | NullPointerException e){
             ui.connectionFailed();
         }
     }

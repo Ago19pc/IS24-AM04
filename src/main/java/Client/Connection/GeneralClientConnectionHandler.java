@@ -42,9 +42,8 @@ public class GeneralClientConnectionHandler {
      * @throws NotBoundException if the connection is RMI and the server is not bound
      * @throws IOException if there is a problem with the connection
      * @throws NullPointerException if the connection is RMI and the server is not found
-     * @throws IllegalArgumentException if the connection is Socket and the server is RMI
      */
-    public void setSocket(String server_host, int server_port) throws NotBoundException, IOException, NullPointerException, IllegalArgumentException {
+    public void setSocket(String server_host, int server_port) throws NotBoundException, IOException, NullPointerException{
         if(trueifRMI) {
             clientConnectionHandlerRMI.setServer(server_host, server_port);
             clientConnectionHandlerRMI.setController(controller);
