@@ -478,4 +478,8 @@ public interface ClientController {
      * Clears the controller, preparing it for a new game
      */
     void clear();
+    /**
+     * Clears the UI, preparing it for a new game
+     */
+    void clearUI();
 }

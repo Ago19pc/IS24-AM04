@@ -103,7 +103,7 @@ public class CLI extends Thread implements UI {
         printPromptLine();
     }
     public void successfulConnection(){
-        printOnNewLine("Connessione avvenuta con successo al server");
+        printOnNewLine("Connessione avvenuta con successo al server\n");
     }
     public void displayNewCardInHand(){
         Card newCard = controller.getHand().getLast();
@@ -531,8 +531,8 @@ public class CLI extends Thread implements UI {
     }
 
     @Override
-    public void serverDisconnected() {
-        changeScene(new JoinState(this));
+    public void clear() {
+        changeScene(new NetworkState(this));
     }
 
     /**

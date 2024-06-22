@@ -142,7 +142,7 @@ public class ClientConnectionHandlerRMI implements ClientConnectionHandler {
         try {
             server.ping();
         } catch (RemoteException e) {
-            System.out.println("Server disconnected");
+            System.out.println("Server disconnesso");
             controller.serverDisconnected();
         }
     }

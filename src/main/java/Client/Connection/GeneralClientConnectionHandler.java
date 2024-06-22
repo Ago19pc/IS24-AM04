@@ -119,26 +119,13 @@ public class GeneralClientConnectionHandler {
     }
 
     /**
-     * Reacts to server disconnection
-     */
-    public void serverDisconnected() {
-        clientConnectionHandlerSOCKET = new ClientConnectionHandlerSOCKET(controller);
-        try{
-            clientConnectionHandlerSOCKET.setSocket("localhost", 1337);
-        } catch (Exception e) {
-            //do nothing
-        }
-    }
-
-    /**
      * Clears connection
      */
     public void clear() {
         if (!trueifRMI) {
             clientConnectionHandlerSOCKET = new ClientConnectionHandlerSOCKET(controller);
         } else {
-            clientConnectionHandlerRMI = new ClientConnectionHandlerRMI(1100);
-            clientConnectionHandlerRMI.setRmi_client_port(1100);
+            clientConnectionHandlerRMI.reset();
         }
     }
 }

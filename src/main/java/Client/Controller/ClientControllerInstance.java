@@ -28,7 +28,7 @@ public class ClientControllerInstance implements ClientController {
     private boolean rmiMode = false;
 
     //cards not owned by player info
-    private List<AchievementCard> commonAchievements;
+    private List<AchievementCard> commonAchievements = new ArrayList<>();
     private Deck<GoldCard> goldDeck;
     private Deck<ResourceCard> resourceDeck;
 
@@ -49,7 +49,7 @@ public class ClientControllerInstance implements ClientController {
     //temp stuff
     private String proposedName;
     private int indexofSecretAchievement = -1;
-    private List<AchievementCard> potentialSecretAchievements;
+    private List<AchievementCard> potentialSecretAchievements = new ArrayList<>();
     private Integer chosenHandCard;
     private Boolean isSavedGame;
 
@@ -736,8 +736,8 @@ public class ClientControllerInstance implements ClientController {
 
     @Override
     public void serverDisconnected() {
-        clientConnectionHandler.serverDisconnected();
-        ui.serverDisconnected();
+        clear();
+        clearUI();
     }
 
 
@@ -759,5 +759,10 @@ public class ClientControllerInstance implements ClientController {
         chosenHandCard = null;
         isSavedGame = false;
         clientConnectionHandler.clear();
+    }
+
+    @Override
+    public void clearUI() {
+        ui.clear();
     }
 }
