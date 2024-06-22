@@ -506,8 +506,19 @@ public class MainBoardSceneController extends SceneController {
         System.out.println("Leaderboard updated");
         List<Player> sorted = new ArrayList<>(controller.getPlayers());
         sorted.sort((p1, p2) -> p2.getPoints() - p1.getPoints());
+
+        String player2Name;
+        int player2Points;
+        try {
+            player2Name = sorted.get(1).getName();
+            player2Points = sorted.get(1).getPoints();
+        } catch (IndexOutOfBoundsException e) {
+            player2Name = "[UNAVAILABLE PLAYER]";
+            player2Points = 0;
+        }
+
         Player1.setText("Player: " + sorted.get(0).getName() + " Points: " + sorted.get(0).getPoints());
-        Player2.setText("Player: " + sorted.get(1).getName() + " Points: " + sorted.get(1).getPoints());
+        Player2.setText("Player: " + player2Name + " Points: " + player2Points);
         if (sorted.size() > 2) {
             Player3.setText("Player: " + sorted.get(2).getName() + " Points: " + sorted.get(2).getPoints());
         } else {

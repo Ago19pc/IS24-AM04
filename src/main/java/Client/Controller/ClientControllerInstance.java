@@ -151,6 +151,7 @@ public class ClientControllerInstance implements ClientController {
             ui.successfulConnection();
         } catch (IOException | NotBoundException | NullPointerException e){
             ui.connectionFailed();
+            e.printStackTrace();
         }
     }
 
@@ -689,8 +690,6 @@ public class ClientControllerInstance implements ClientController {
     @Override
     public void setGameInfo(String id, List<AchievementCard> commonAchievements, Deck<GoldCard> goldDeck, Deck<ResourceCard> resourceDeck, String name, AchievementCard secretAchievement, List<Card> hand, int turn, List<Player> players, Chat chat, GameState gameState) {
 
-
-        this.id = id;
         this.commonAchievements = commonAchievements;
         this.goldDeck = goldDeck;
         this.resourceDeck = resourceDeck;
@@ -735,5 +734,11 @@ public class ClientControllerInstance implements ClientController {
     @Override
     public int getIndexofSecretAchievement() {
         return indexofSecretAchievement;
+    }
+
+    @Override
+    public void serverDisconnected() {
+        clientConnectionHandler.serverDisconnected();
+        ui.serverDisconnected();
     }
 }

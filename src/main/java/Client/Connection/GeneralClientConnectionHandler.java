@@ -115,4 +115,12 @@ public class GeneralClientConnectionHandler {
     public boolean getTrueIfRMI() {
         return trueifRMI;
     }
+
+    /**
+     * Reacts to server disconnection
+     */
+    public void serverDisconnected() {
+        clientConnectionHandlerSOCKET = new ClientConnectionHandlerSOCKET(controller);
+        clientConnectionHandlerRMI.reset();
+    }
 }

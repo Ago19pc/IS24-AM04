@@ -41,9 +41,8 @@ public class ClientReceiver extends Thread {
                 packet.clientExecute(this.controller);
             } catch (IOException | ClassNotFoundException e) {
                 System.out.println("Server Disconnected");
-                throw new RuntimeException("Error reading from socket", e);
+                controller.serverDisconnected();
             }
-
         }
     }
 }

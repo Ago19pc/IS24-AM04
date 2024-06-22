@@ -119,7 +119,11 @@ public class GUI implements UI{
                 String name = controller.getPlayers().get(i).getName();
                 String color = controller.getPlayers().get(i).getColor() == null ? "No Color" : controller.getPlayers().get(i).getColor().toString();
                 String ready = controller.getPlayers().get(i).isReady() ? "Ready" : "Not Ready";
-                ((NameReadySceneController) sceneControllerMap.get(SceneName.SETNAME)).list_Player.getItems().set(i, name + "   " + color + "   " + ready);
+                try {
+                    ((NameReadySceneController) sceneControllerMap.get(SceneName.SETNAME)).list_Player.getItems().set(i, name + "   " + color + "   " + ready);
+                } catch (IndexOutOfBoundsException e) {
+                    ((NameReadySceneController) sceneControllerMap.get(SceneName.SETNAME)).list_Player.getItems().add(name + "   " + color + "   " + ready);
+                }
             }
             stage.setScene(getScene(SceneName.SETNAME));
             stage.show();
@@ -330,6 +334,12 @@ public class GUI implements UI{
     @Override
     public void displayLeaderboard(LinkedHashMap<String, Integer> playerPoints) {
         Platform.runLater(() -> {
+
+            if (!stage.getScene().equals(getScene(SceneName.GAME))){
+                sceneControllerMap.get(SceneName.GAME).setup();
+                stage.setScene(getScene(SceneName.GAME));
+            }
+
             ((MainBoardSceneController) sceneControllerMap.get(SceneName.GAME)).updateLeaderBoard();
             ((MainBoardSceneController) sceneControllerMap.get(SceneName.GAME)).tabPane.getTabs().forEach(tab -> {
                 if (!tab.getText().equals("LeaderBoard")) {
@@ -381,8 +391,6 @@ public class GUI implements UI{
     @Override
     public void secretAchievementChosen(String name) {
         Platform.runLater(() -> {
-            System.out.println("Secret achievement chosen name : "+ name);
-            System.out.println("Secret achievement chosen achievement : "+ controller.getSecretAchievement());
             if (name.equals(controller.getMyName())){
                 ((ChooseSecretCardController) sceneControllerMap.get(SceneName.SECRETCARDCHOICE)).confirmation();
                 ((MainBoardSceneController) sceneControllerMap.get(SceneName.GAME)).setSecretCard(controller.getSecretAchievement());
@@ -493,6 +501,13 @@ public class GUI implements UI{
 
     @Override
     public void playerDisconnected(String playerName) {
+        Platform.runLater(() -> {
+            ((ColorReadySceneController) sceneControllerMap.get(SceneName.SETCOLOR)).chat_messages.getItems().add( playerName + " left the match ");
+            ((NameReadySceneController) sceneControllerMap.get(SceneName.SETNAME)).chat_message.getItems().add( playerName + " left the match ");
+            ((ChooseSecretCardController) sceneControllerMap.get(SceneName.SECRETCARDCHOICE)).chat_message.getItems().add( playerName + " left the match ");
+            ((ChooseStartingCardController) sceneControllerMap.get(SceneName.STARTINGCARDCHOICE)).chat_message.getItems().add( playerName + " left the match ");
+            ((MainBoardSceneController) sceneControllerMap.get(SceneName.GAME)).chatMessages.getItems().add( playerName + " left the match ");
+        });
         System.out.println("Player disconnected");
     }
 
@@ -517,11 +532,23 @@ public class GUI implements UI{
 
     @Override
     public void playerRemoved(String name) {
+        Platform.runLater(()->{
+            ((ColorReadySceneController) sceneControllerMap.get(SceneName.SETCOLOR)).list_Player.getItems().stream().filter(s -> s.contains(name)).findFirst().ifPresent(s -> ((ColorReadySceneController) sceneControllerMap.get(SceneName.SETCOLOR)).list_Player.getItems().remove(s));
+            ((NameReadySceneController) sceneControllerMap.get(SceneName.SETNAME)).list_Player.getItems().stream().filter(s -> s.contains(name)).findFirst().ifPresent(s -> ((NameReadySceneController) sceneControllerMap.get(SceneName.SETNAME)).list_Player.getItems().remove(s));
+            ((NameReadySceneController) sceneControllerMap.get(SceneName.SETNAME)).cloneListView(((ColorReadySceneController) sceneControllerMap.get(SceneName.SETCOLOR)).list_Player);
+        });
         System.out.println("Player removed");
     }
 
     @Override
     public void otherPlayerReconnected(String name) {
+        Platform.runLater(()-> {
+            ((ColorReadySceneController) sceneControllerMap.get(SceneName.SETCOLOR)).chat_messages.getItems().add(name + " reconnected");
+            ((NameReadySceneController) sceneControllerMap.get(SceneName.SETNAME)).chat_message.getItems().add(name + " reconnected");
+            ((ChooseSecretCardController) sceneControllerMap.get(SceneName.SECRETCARDCHOICE)).chat_message.getItems().add(name + " reconnected");
+            ((ChooseStartingCardController) sceneControllerMap.get(SceneName.STARTINGCARDCHOICE)).chat_message.getItems().add(name + " reconnected");
+            ((MainBoardSceneController) sceneControllerMap.get(SceneName.GAME)).chatMessages.getItems().add(name + " reconnected");
+        });
         System.out.println("Other player reconnected");
     }
 
@@ -628,6 +655,11 @@ public class GUI implements UI{
     public void gameAlreadyFinished() {
         System.out.println("Game already finished");
         // todo: implement this
+    }
+
+    @Override
+    public void serverDisconnected() {
+        //todo: implement this
     }
 
     /**

@@ -2,6 +2,8 @@
 
 import Client.Connection.ClientConnectionHandlerSOCKET;
 import Client.Controller.ClientController;
+import Client.Controller.ClientControllerInstance;
+import Server.Connections.GeneralServerConnectionHandler;
 import Server.Connections.ServerConnectionHandlerSOCKET;
 import Server.Controller.Controller;
 import Server.Controller.ControllerInstance;
@@ -21,10 +23,10 @@ public class TestMessages {
     @Test
     public void TestPlayerNameMessage() throws IOException, InterruptedException, PlayerNotFoundByNameException, TooFewElementsException, AlreadySetException {
         // CREA UN SERVER
-        ServerConnectionHandlerSOCKET connectionHandler;
+        GeneralServerConnectionHandler connectionHandler;
         Controller controller;
         try {
-            connectionHandler = new ServerConnectionHandlerSOCKET(true);
+            connectionHandler = new GeneralServerConnectionHandler();
             controller = new ControllerInstance(connectionHandler);
             connectionHandler.setController(controller);
             connectionHandler.start();
@@ -36,8 +38,8 @@ public class TestMessages {
 
 
         // CREA UN CLIENT
-        ClientController clientController1 = new ClientController();
-        ClientController clientController2 = new ClientController();
+        ClientController clientController1 = new ClientControllerInstance();
+        ClientController clientController2 = new ClientControllerInstance();
         clientController1.mainDebug();
         clientController2.mainDebug();
         ClientController clientController3 = new ClientController();
@@ -130,5 +132,4 @@ public class TestMessages {
 
 
 
-}
-*/
+}*/

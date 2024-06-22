@@ -87,8 +87,6 @@ public class ClientConnectionHandlerSOCKET extends Thread implements ClientConne
             };
             receiver.setUncaughtExceptionHandler(h);
             receiver.start();
-
-
     }
 
 

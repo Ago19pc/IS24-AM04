@@ -6,6 +6,7 @@ import Server.Card.ResourceCard;
 import Server.Card.StartingCard;
 import Server.Enums.DeckPosition;
 import Server.Enums.Decks;
+import Server.Exception.AlreadyFinishedException;
 import Server.Exception.AlreadyStartedException;
 import Server.Exception.TooFewElementsException;
 import Server.Exception.TooManyElementsException;
@@ -45,6 +46,11 @@ public class ChooseSecretAchievementState implements ServerState{
 
     @Override
     public void removePlayer(Player player) {
+
+        if(controller.getPlayerList().size() == 1){
+            controller.disconnectionLeaderboard();
+        }
+
         boolean allSet = controller.getPlayerList().stream().allMatch(p -> p.getSecretObjective() != null);
         if(allSet){
             controller.shufflePlayerList();
