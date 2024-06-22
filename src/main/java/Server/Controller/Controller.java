@@ -228,6 +228,8 @@ public interface Controller {
      * @throws AlreadyFinishedException if the leaderboard is already computed
      */
     void computeLeaderboard() throws AlreadyFinishedException;
+
+    void disconnectionLeaderboard();
     /**
      * Starts the end game phase
      * @throws AlreadySetException if the end game phase is already set

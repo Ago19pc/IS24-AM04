@@ -220,7 +220,7 @@ public interface UI {
     void startingCardChosen(String name);
 
     /**
-     * Informs the user that the game has started
+     * Informs the user that all the players have joined
      */
     void gameStarted();
 
@@ -318,4 +318,9 @@ public interface UI {
      * Informs the user that the game has already finished
      */
     void gameAlreadyFinished();
+
+    /**
+     * Informs the user that the server has disconnected
+     */
+    void serverDisconnected();
 }

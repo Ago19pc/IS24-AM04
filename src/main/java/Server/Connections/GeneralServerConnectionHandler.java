@@ -163,6 +163,12 @@ public class GeneralServerConnectionHandler {
         serverConnectionHandlerSOCKET = new ServerConnectionHandlerSOCKET();
         serverConnectionHandlerSOCKET.setController(controller);
     }
+    public void setController(Controller controller , boolean test){
+        serverConnectionHandlerRMI = new ServerConnectionHandlerRMI(true);
+        serverConnectionHandlerRMI.setController(controller);
+        serverConnectionHandlerSOCKET = new ServerConnectionHandlerSOCKET(true);
+        serverConnectionHandlerSOCKET.setController(controller);
+    }
 
     /**
      * Starts the socket connection handler and starts a new ping pong thread

@@ -1,18 +1,22 @@
 package Server.Controller;
 
-import Client.Deck;
-import Server.Card.*;
+import Server.Card.AchievementCard;
+import Server.Card.Card;
+import Server.Card.CornerCardFace;
+import Server.Card.StartingCard;
 import Server.Chat.Message;
 import Server.Connections.GeneralServerConnectionHandler;
 import Server.Deck.AchievementDeck;
-import Server.Enums.*;
+import Server.Enums.Color;
+import Server.Enums.DeckPosition;
+import Server.Enums.Decks;
+import Server.Enums.Face;
 import Server.Exception.*;
 import Server.GameModel.GameModel;
 import Server.GameModel.GameModelInstance;
 import Server.Manuscript.Manuscript;
 import Server.Messages.*;
 import Server.Player.Player;
-import Server.Player.PlayerInstance;
 import com.google.gson.Gson;
 
 import java.io.File;
@@ -49,7 +53,12 @@ public class ControllerInstance implements Controller{
             }
         }
     }
-
+    public ControllerInstance(GeneralServerConnectionHandler connectionHandler, boolean test) {
+        this.connectionHandler = connectionHandler;
+        this.gameModel = new GameModelInstance();
+        changeState(new LobbyState(this.gameModel, this.connectionHandler, this));
+        connectionHandler.setController(this,true);
+    }
     public void changeState(ServerState state){
         gameState = state;
     }
@@ -104,7 +113,6 @@ public class ControllerInstance implements Controller{
             }
         }
         createDecks();
-        giveStartingCards();
         StartGameMessage startGameMessage = new StartGameMessage(
                 List.of(
                         gameModel.getGoldDeck().getTopCardNoPop(),
@@ -118,6 +126,7 @@ public class ControllerInstance implements Controller{
                 )
         );
         connectionHandler.sendAllMessage(startGameMessage);
+        giveStartingCards();
     }
 
     @Override
@@ -223,20 +232,6 @@ public class ControllerInstance implements Controller{
         if(allSet){
             try {
                 giveInitialHand();
-                StartGameMessage startGameMessage = new StartGameMessage(
-                        List.of(
-                                gameModel.getGoldDeck().getTopCardNoPop(),
-                                gameModel.getGoldDeck().getBoardCard().get(DeckPosition.FIRST_CARD),
-                                gameModel.getGoldDeck().getBoardCard().get(DeckPosition.SECOND_CARD)
-                        ),
-                        List.of(
-                                gameModel.getResourceDeck().getTopCardNoPop(),
-                                gameModel.getResourceDeck().getBoardCard().get(DeckPosition.FIRST_CARD),
-                                gameModel.getResourceDeck().getBoardCard().get(DeckPosition.SECOND_CARD)
-                        )
-                );
-                connectionHandler.sendAllMessage(startGameMessage);
-
             } catch (AlreadySetException | AlreadyFinishedException e) {
                 //do nothing as it's normal that it's already set
             }
@@ -402,7 +397,23 @@ public class ControllerInstance implements Controller{
             clear();
         } catch (AlreadyFinishedException e) {
             e.printStackTrace();
+        } finally {
+            System.out.println("Leaderboard computed, game finished. Bye bye");
+            System.exit(0);
         }
+    }
+
+    public void disconnectionLeaderboard() {
+        changeState(new LeaderboardState(this));
+        LinkedHashMap<String, Integer> leaderboardMap = new LinkedHashMap<>();
+        for (Player player : getPlayerList()) {
+            leaderboardMap.put(player.getName(), player.getPoints());
+        }
+        LeaderboardMessage leaderboardMessage = new LeaderboardMessage(leaderboardMap);
+        connectionHandler.sendAllMessage(leaderboardMessage);
+        clear();
+        System.out.println("Leaderboard computed, game finished because only one player left. Bye bye");
+        System.exit(0);
     }
 
     /**
@@ -510,7 +521,6 @@ public class ControllerInstance implements Controller{
     }
 
     public void reactToDisconnection(String id){
-        String playerName;
         try {
             if(getPlayerByName(connectionHandler.getPlayerNameByID(id)) == null){ //this means the client is not a player
                 try {
@@ -535,7 +545,7 @@ public class ControllerInstance implements Controller{
         gameState.reactToDisconnection(id);
     }
 
-        public void reconnect(String oldId, String newId) throws IllegalArgumentException, AlreadySetException, NotYetStartedException, AlreadyFinishedException {
+    public void reconnect(String oldId, String newId) throws IllegalArgumentException, AlreadySetException, NotYetStartedException, AlreadyFinishedException {
         System.out.println("Reconnecting player" + oldId + " with new id (id of previous player) " + newId);
         System.out.println(connectionHandler.getDisconnectedList());
         if(!connectionHandler.isInDisconnectedList(newId)){

@@ -1,6 +1,18 @@
 package Server.Manuscript;
 
-public class TestManuscript {/*
+import Server.Card.*;
+import Server.Enums.CardCorners;
+import Server.Enums.Symbol;
+import org.junit.jupiter.api.Test;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+public class TestManuscript {
     @Test
     public void testNewManuscript() {
         Map<CardCorners, Symbol> cornerSymbols = new HashMap<>();
@@ -12,8 +24,8 @@ public class TestManuscript {/*
         symbols.add(Symbol.ANIMAL);
         StartingFrontFace startingFrontFace = new StartingFrontFace("startingfront.jpeg", cornerSymbols, symbols);
         CornerCardFace startingBackFace = new CornerCardFace("startingback.jpeg", new HashMap<>());
-        StartingCard startingCard = new StartingCard(startingFrontFace, startingBackFace);
-        Manuscript manuscript = new Manuscript(startingCard, Face.FRONT);
+        StartingCard startingCard = new StartingCard(startingFrontFace, startingBackFace, "1.jpeg");
+        Manuscript manuscript = new Manuscript(startingFrontFace);
         assertEquals(startingFrontFace, manuscript.getCardByCoord(0, 0));
         for (Symbol symbol : Symbol.values()) {
             if (symbol == Symbol.BOTTLE || symbol == Symbol.PLANT || symbol == Symbol.ANIMAL) {
@@ -26,13 +38,20 @@ public class TestManuscript {/*
 
     @Test
     public void testCoordinates(){
-        StartingFrontFace startingFrontFace = new StartingFrontFace("startingfront.jpeg", new HashMap<>(), new ArrayList<>());
+        Map<CardCorners, Symbol> cornerSymbols = new HashMap<>();
+        cornerSymbols.put(CardCorners.TOP_LEFT, Symbol.NONE);
+        cornerSymbols.put(CardCorners.TOP_RIGHT, Symbol.PLANT);
+        cornerSymbols.put(CardCorners.BOTTOM_LEFT, Symbol.BUG);
+        cornerSymbols.put(CardCorners.BOTTOM_RIGHT, Symbol.NONE);
+        List<Symbol> centerSymbols = new ArrayList<>();
+        centerSymbols.add(Symbol.BUG);
+        StartingFrontFace startingFrontFace = new StartingFrontFace("startingfront.jpeg", cornerSymbols, centerSymbols);
         CornerCardFace startingBackFace = new CornerCardFace("startingback.jpeg", new HashMap<>());
         ResourceFrontFace resourceFrontFace = new ResourceFrontFace("resourcefront.jpeg", new HashMap<>(), 0, Symbol.ANIMAL);
         RegularBackFace goldBackFace = new RegularBackFace("regularback2.jpeg", new ArrayList<>(List.of(Symbol.BUG)));
         ResourceFrontFace resourceFrontFace2 = new ResourceFrontFace("resourcefront2.jpeg", new HashMap<>(), 0, Symbol.FUNGUS);
-        StartingCard startingCard = new StartingCard(startingFrontFace, startingBackFace);
-        Manuscript manuscript = new Manuscript(startingCard, Face.FRONT);
+        StartingCard startingCard = new StartingCard(startingFrontFace, startingBackFace, "1.jpeg");
+        Manuscript manuscript = new Manuscript(startingFrontFace);
         manuscript.addCard(1,1, resourceFrontFace,1);
         manuscript.addCard(0,2, goldBackFace,1);
         manuscript.addCard(-1,1, resourceFrontFace2,1);
@@ -52,8 +71,8 @@ public class TestManuscript {/*
         symbols.add(Symbol.FUNGUS);
         CornerCardFace backface = new CornerCardFace("backface.jpeg", new HashMap<>());
         StartingFrontFace frontface = new StartingFrontFace("frontface.jpeg", cornerSymbols, symbols);
-        StartingCard card = new StartingCard(frontface, backface);
-        Manuscript manuscript = new Manuscript(card, Face.FRONT);
+        StartingCard card = new StartingCard(frontface, backface, "1.jpeg");
+        Manuscript manuscript = new Manuscript(frontface);
         Map<CardCorners, Symbol> cornerSymbols2 = new HashMap<>();
         cornerSymbols2.put(CardCorners.TOP_LEFT, Symbol.BUG);
         cornerSymbols2.put(CardCorners.TOP_RIGHT, Symbol.NONE);
@@ -95,13 +114,17 @@ public class TestManuscript {/*
     public void testPoints()
     {
         Map<CardCorners, Symbol> cornerSymbols = new HashMap<>();
-        List<Symbol> symbols = new ArrayList<>();
-        symbols.add(Symbol.ANIMAL);
-        symbols.add(Symbol.BUG);
-        StartingFrontFace startingFrontFace = new StartingFrontFace("startingfront.jpeg", cornerSymbols, symbols);
+        cornerSymbols.put(CardCorners.TOP_LEFT,Symbol.NONE);
+        cornerSymbols.put(CardCorners.TOP_RIGHT,Symbol.NONE);
+        cornerSymbols.put(CardCorners.BOTTOM_RIGHT,Symbol.NONE);
+        cornerSymbols.put(CardCorners.BOTTOM_LEFT, Symbol.NONE);
+        List<Symbol> centerSymbols = new ArrayList<>();
+        centerSymbols.add(Symbol.ANIMAL);
+        centerSymbols.add(Symbol.BUG);
+        StartingFrontFace startingFrontFace = new StartingFrontFace("startingfront.jpeg", cornerSymbols, centerSymbols);
         CornerCardFace startingBackFace = new CornerCardFace("startingback.jpeg", new HashMap<>());
-        StartingCard startingCard = new StartingCard(startingFrontFace, startingBackFace);
-        Manuscript manuscript = new Manuscript(startingCard, Face.FRONT);
+        StartingCard startingCard = new StartingCard(startingFrontFace, startingBackFace, "1.jpeg");
+        Manuscript manuscript = new Manuscript(startingFrontFace);
         Map<CardCorners, Symbol> cornerSymbols2 = new HashMap<>();
         cornerSymbols2.put(CardCorners.TOP_LEFT, Symbol.FUNGUS);
         cornerSymbols2.put(CardCorners.TOP_RIGHT, Symbol.NONE);
@@ -183,69 +206,69 @@ public class TestManuscript {/*
         scoreRequirements.put(Symbol.PATTERN1F, 2);
         AchievementFrontFace achievementFrontFace1 = new AchievementFrontFace("achievementfront1.jpeg", scoreRequirements, 0);
         EmptyCardFace achievementBackFace1 = new EmptyCardFace("achievementback1.jpeg");
-        AchievementCard achievementCard1 = new AchievementCard(achievementFrontFace1, achievementBackFace1);
+        AchievementCard achievementCard1 = new AchievementCard(achievementFrontFace1, achievementBackFace1,"1.jpeg");
         Map<Symbol, Integer> scoreRequirements2 = new HashMap<>();
         scoreRequirements2.put(Symbol.PATTERN2P, 2);
         AchievementFrontFace achievementFrontFace2 = new AchievementFrontFace("achievementfront2.jpeg", scoreRequirements2, 0);
-        AchievementCard achievementCard2 = new AchievementCard(achievementFrontFace2, achievementBackFace1);
+        AchievementCard achievementCard2 = new AchievementCard(achievementFrontFace2, achievementBackFace1,"2.jpeg");
         Map<Symbol, Integer> scoreRequirements3 = new HashMap<>();
         scoreRequirements3.put(Symbol.PATTERN1A, 2);
         AchievementFrontFace achievementFrontFace3 = new AchievementFrontFace("achievementfront3.jpeg", scoreRequirements3, 0);
-        AchievementCard achievementCard3 = new AchievementCard(achievementFrontFace3, achievementBackFace1);
+        AchievementCard achievementCard3 = new AchievementCard(achievementFrontFace3, achievementBackFace1,"3.jpeg");
         Map<Symbol, Integer> scoreRequirements4 = new HashMap<>();
         scoreRequirements4.put(Symbol.PATTERN2B, 2);
         AchievementFrontFace achievementFrontFace4 = new AchievementFrontFace("achievementfront4.jpeg", scoreRequirements4, 0);
-        AchievementCard achievementCard4 = new AchievementCard(achievementFrontFace4, achievementBackFace1);
+        AchievementCard achievementCard4 = new AchievementCard(achievementFrontFace4, achievementBackFace1,"4.jpeg");
         Map<Symbol, Integer> scoreRequirements5 = new HashMap<>();
         scoreRequirements5.put(Symbol.PATTERN3, 3);
         AchievementFrontFace achievementFrontFace5 = new AchievementFrontFace("achievementfront5.jpeg", scoreRequirements5, 0);
-        AchievementCard achievementCard5 = new AchievementCard(achievementFrontFace5, achievementBackFace1);
+        AchievementCard achievementCard5 = new AchievementCard(achievementFrontFace5, achievementBackFace1,"5.jpeg");
         Map<Symbol, Integer> scoreRequirements6 = new HashMap<>();
         scoreRequirements6.put(Symbol.PATTERN4, 3);
         AchievementFrontFace achievementFrontFace6 = new AchievementFrontFace("achievementfront6.jpeg", scoreRequirements6, 0);
-        AchievementCard achievementCard6 = new AchievementCard(achievementFrontFace6, achievementBackFace1);
+        AchievementCard achievementCard6 = new AchievementCard(achievementFrontFace6, achievementBackFace1,"6.jpeg");
         Map<Symbol, Integer> scoreRequirements7 = new HashMap<>();
         scoreRequirements7.put(Symbol.PATTERN5, 3);
         AchievementFrontFace achievementFrontFace7 = new AchievementFrontFace("achievementfront7.jpeg", scoreRequirements7, 0);
-        AchievementCard achievementCard7 = new AchievementCard(achievementFrontFace7, achievementBackFace1);
+        AchievementCard achievementCard7 = new AchievementCard(achievementFrontFace7, achievementBackFace1,"7.jpeg");
         Map<Symbol, Integer> scoreRequirements8 = new HashMap<>();
         scoreRequirements8.put(Symbol.PATTERN6, 3);
         AchievementFrontFace achievementFrontFace8 = new AchievementFrontFace("achievementfront8.jpeg", scoreRequirements8, 0);
-        AchievementCard achievementCard8 = new AchievementCard(achievementFrontFace8, achievementBackFace1);
+        AchievementCard achievementCard8 = new AchievementCard(achievementFrontFace8, achievementBackFace1,"8.jpeg");
         Map<Symbol, Integer> scoreRequirements9 = new HashMap<>();
         scoreRequirements9.put(Symbol.FUNGUS, 3);
         AchievementFrontFace achievementFrontFace9 = new AchievementFrontFace("achievementfront9.jpeg", scoreRequirements9, 0);
-        AchievementCard achievementCard9 = new AchievementCard(achievementFrontFace9, achievementBackFace1);
+        AchievementCard achievementCard9 = new AchievementCard(achievementFrontFace9, achievementBackFace1,"9.jpeg");
         Map<Symbol, Integer> scoreRequirements10 = new HashMap<>();
         scoreRequirements10.put(Symbol.PLANT, 3);
         AchievementFrontFace achievementFrontFace10 = new AchievementFrontFace("achievementfront10.jpeg", scoreRequirements10, 0);
-        AchievementCard achievementCard10 = new AchievementCard(achievementFrontFace10, achievementBackFace1);
+        AchievementCard achievementCard10 = new AchievementCard(achievementFrontFace10, achievementBackFace1,"10.jpeg");
         Map<Symbol, Integer> scoreRequirements11 = new HashMap<>();
         scoreRequirements11.put(Symbol.ANIMAL, 3);
         AchievementFrontFace achievementFrontFace11 = new AchievementFrontFace("achievementfront11.jpeg", scoreRequirements11, 0);
-        AchievementCard achievementCard11 = new AchievementCard(achievementFrontFace11, achievementBackFace1);
+        AchievementCard achievementCard11 = new AchievementCard(achievementFrontFace11, achievementBackFace1,"11.jpeg");
         Map<Symbol, Integer> scoreRequirements12 = new HashMap<>();
         scoreRequirements12.put(Symbol.BUG, 3);
         AchievementFrontFace achievementFrontFace12 = new AchievementFrontFace("achievementfront12.jpeg", scoreRequirements12, 0);
-        AchievementCard achievementCard12 = new AchievementCard(achievementFrontFace12, achievementBackFace1);
+        AchievementCard achievementCard12 = new AchievementCard(achievementFrontFace12, achievementBackFace1,"12.jpeg");
         Map<Symbol, Integer> scoreRequirements13 = new HashMap<>();
         scoreRequirements13.put(Symbol.PARCHMENT, 1);
         scoreRequirements13.put(Symbol.BOTTLE, 1);
         scoreRequirements13.put(Symbol.QUILL, 1);
         AchievementFrontFace achievementFrontFace13 = new AchievementFrontFace("achievementfront13.jpeg", scoreRequirements13, 0);
-        AchievementCard achievementCard13 = new AchievementCard(achievementFrontFace13, achievementBackFace1);
+        AchievementCard achievementCard13 = new AchievementCard(achievementFrontFace13, achievementBackFace1,"13.jpeg");
         Map<Symbol, Integer> scoreRequirements14 = new HashMap<>();
         scoreRequirements14.put(Symbol.PARCHMENT, 2);
         AchievementFrontFace achievementFrontFace14 = new AchievementFrontFace("achievementfront14.jpeg", scoreRequirements14, 0);
-        AchievementCard achievementCard14 = new AchievementCard(achievementFrontFace14, achievementBackFace1);
+        AchievementCard achievementCard14 = new AchievementCard(achievementFrontFace14, achievementBackFace1,"14.jpeg");
         Map<Symbol, Integer> scoreRequirements15 = new HashMap<>();
         scoreRequirements15.put(Symbol.BOTTLE, 2);
         AchievementFrontFace achievementFrontFace15 = new AchievementFrontFace("achievementfront15.jpeg", scoreRequirements15, 0);
-        AchievementCard achievementCard15 = new AchievementCard(achievementFrontFace15, achievementBackFace1);
+        AchievementCard achievementCard15 = new AchievementCard(achievementFrontFace15, achievementBackFace1,"15.jpeg");
         Map<Symbol, Integer> scoreRequirements16 = new HashMap<>();
         scoreRequirements16.put(Symbol.QUILL, 2);
         AchievementFrontFace achievementFrontFace16 = new AchievementFrontFace("achievementfront16.jpeg", scoreRequirements16, 0);
-        AchievementCard achievementCard16 = new AchievementCard(achievementFrontFace16, achievementBackFace1);
+        AchievementCard achievementCard16 = new AchievementCard(achievementFrontFace16, achievementBackFace1,"16.jpeg");
         assertEquals(2, manuscript.calculatePoints(achievementCard1));
         assertEquals(0, manuscript.calculatePoints(achievementCard2));
         assertEquals(0, manuscript.calculatePoints(achievementCard3));
@@ -273,8 +296,8 @@ public class TestManuscript {/*
         startingCornerSymbols.put(CardCorners.BOTTOM_RIGHT, Symbol.FUNGUS);
         StartingFrontFace startingFrontFace = new StartingFrontFace("startingfront.jpeg", startingCornerSymbols, new ArrayList<>());
         CornerCardFace startingBackFace = new CornerCardFace("startingback.jpeg", new HashMap<>());
-        StartingCard startingCard = new StartingCard(startingFrontFace, startingBackFace);
-        Manuscript manuscript = new Manuscript(startingCard, Face.FRONT);
+        StartingCard startingCard = new StartingCard(startingFrontFace, startingBackFace, "1.jpeg");
+        Manuscript manuscript = new Manuscript(startingFrontFace);
         Map<CardCorners, Symbol> cornerSymbols = new HashMap<>();
         cornerSymbols.put(CardCorners.TOP_LEFT, Symbol.BUG);
         cornerSymbols.put(CardCorners.TOP_RIGHT, Symbol.NONE);
@@ -314,4 +337,4 @@ public class TestManuscript {/*
         GoldFrontFace frontface4 = new GoldFrontFace("frontface4.jpeg", cornerSymbols4, 0, placementRequirements, new HashMap<>(), Symbol.BUG);
         assertFalse(manuscript.isPlaceable(-1, -1, frontface4));
     }
-*/}
+}

@@ -1,6 +1,7 @@
 package Client.Connection;
 
 import Client.Controller.ClientController;
+import Server.Connections.PingPong;
 import Server.Connections.ServerConnectionHandler;
 import Server.Messages.ToClientMessage;
 import Server.Messages.ToServerMessage;
@@ -41,6 +42,8 @@ public class ClientConnectionHandlerRMI implements ClientConnectionHandler {
      */
     int rmi_client_port;
 
+    PingServer pingServer;
+
     /**
      * Sets the port for the RMI connection
      * @param rmi_port the port
@@ -60,6 +63,8 @@ public class ClientConnectionHandlerRMI implements ClientConnectionHandler {
     public void setServer(String server_rmi_host, int serverPort) throws RemoteException, NotBoundException {
         serverRegistry = LocateRegistry.getRegistry(server_rmi_host, serverPort);
         server = (ServerConnectionHandler) serverRegistry.lookup("ServerConnectionHandler");
+        pingServer = new PingServer(this);
+        pingServer.start();
     }
 
     /**
@@ -124,10 +129,30 @@ public class ClientConnectionHandlerRMI implements ClientConnectionHandler {
             stub = (ClientConnectionHandler) UnicastRemoteObject.exportObject(this, rmi_client_port);
             registry = LocateRegistry.createRegistry(rmi_client_port);
             registry.rebind("ClientConnectionHandler", stub);
-            System.out.println("[RMI] Service started on port: " + rmi_client_port);
         } catch (Exception e) {
             System.out.println("[RMI] Error with selected port trying with next one...");
             setRmi_client_port(rmi_client_port + 1);
         }
+    }
+
+    /**
+     * Sends a ping message to the server
+     */
+    public void pingServer() {
+        try {
+            server.ping();
+        } catch (RemoteException e) {
+            System.out.println("Server disconnected");
+            controller.serverDisconnected();
+        }
+    }
+
+    /**
+     * Resets the server connection
+     */
+    public void reset(){
+        serverRegistry = null;
+        server = null;
+        pingServer.stopPinging();
     }
 }
