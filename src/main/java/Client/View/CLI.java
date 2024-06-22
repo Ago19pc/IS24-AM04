@@ -254,12 +254,7 @@ public class CLI extends Thread implements UI {
         printPromptLine();
     }
     public void displayLeaderboard(LinkedHashMap<String, Integer> playerPoints){
-        printOnNewLine("Classifica: \n");
-        int i = 1;
-        for(String player: playerPoints.keySet()){
-            System.out.println("    Il giocatore n." + i++ + "è " + player + ": " + playerPoints.get(player) + " punti");
-        }
-        printPromptLine();
+        changeScene(new LeaderboardState(this, playerPoints, controller));
     }
     public void displayNewPlayer(){
         String newPlayerName = controller.getPlayers().getLast().getName();
@@ -538,5 +533,12 @@ public class CLI extends Thread implements UI {
     @Override
     public void serverDisconnected() {
         changeScene(new JoinState(this));
+    }
+
+    /**
+     * Goes to lobby scene
+     */
+    public void backToLobby() {
+        changeScene(new SetNameState(this, controller));
     }
 }

@@ -339,7 +339,7 @@ public class GUI implements UI{
                 sceneControllerMap.get(SceneName.GAME).setup();
                 stage.setScene(getScene(SceneName.GAME));
             }
-
+            ((MainBoardSceneController) sceneControllerMap.get(SceneName.GAME)).enableBackToLobbyButton();
             ((MainBoardSceneController) sceneControllerMap.get(SceneName.GAME)).updateLeaderBoard();
             ((MainBoardSceneController) sceneControllerMap.get(SceneName.GAME)).tabPane.getTabs().forEach(tab -> {
                 if (!tab.getText().equals("LeaderBoard")) {

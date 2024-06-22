@@ -48,7 +48,7 @@ public class ClientControllerInstance implements ClientController {
 
     //temp stuff
     private String proposedName;
-    private int indexofSecretAchievement;
+    private int indexofSecretAchievement = -1;
     private List<AchievementCard> potentialSecretAchievements;
     private Integer chosenHandCard;
     private Boolean isSavedGame;
@@ -740,5 +740,25 @@ public class ClientControllerInstance implements ClientController {
     public void serverDisconnected() {
         clientConnectionHandler.serverDisconnected();
         ui.serverDisconnected();
+    }
+
+
+    public void clear(){
+        commonAchievements.clear();
+        goldDeck = null;
+        resourceDeck = null;
+        myName = null;
+        secretAchievement = null;
+        hand.clear();
+        turn = 0;
+        unavaiableColors.clear();
+        chat = new Chat();
+        players.clear();
+        gameState = GameState.LOBBY;
+        proposedName = null;
+        indexofSecretAchievement = -1;
+        potentialSecretAchievements.clear();
+        chosenHandCard = null;
+        isSavedGame = false;
     }
 }

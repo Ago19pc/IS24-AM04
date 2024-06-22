@@ -474,4 +474,8 @@ public interface ClientController {
      * Reacts to server disconnection
      */
     void serverDisconnected();
+    /**
+     * Clears the controller, preparing it for a new game
+     */
+    void clear();
 }

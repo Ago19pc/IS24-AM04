@@ -23,7 +23,6 @@ public abstract class SceneController implements Initializable {
     ClientController controller;
     Stage stage;
     Map<SceneName, Scene> sceneMap;
-    private SceneController sceneController;
     private Map<SceneName,SceneController> sceneControllerMap = new HashMap<>();
     public TextField messageToSend;
     /**
