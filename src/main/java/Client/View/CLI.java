@@ -233,7 +233,6 @@ public class CLI extends Thread implements UI {
         for (int i = 0; i < controller.getCommonAchievements().size(); i++) {
             System.out.println("    - " + controller.getCommonAchievements().get(i));
         }
-        printPromptLine();
     }
     public void chooseSecretAchievement(List<AchievementCard> possibleAchievements){
         printOnNewLine("Scegli un obiettivo segreto: \n");
@@ -383,7 +382,6 @@ public class CLI extends Thread implements UI {
      */
     public void displaySecretAchievement(){
         printOnNewLine("Il tuo obiettivo segreto è: " + controller.getSecretAchievement());
-        printPromptLine();
     }
 
     /**
@@ -432,7 +430,11 @@ public class CLI extends Thread implements UI {
                     if(cardToDisplay != null){
                         System.out.print(" ");
                         System.out.print("X");
-                        System.out.print((x == 0 && y == 0)? " ": cardToDisplay.getKingdom().toShortString());
+                        try {
+                            System.out.print(cardToDisplay.getKingdom().toShortString());
+                        } catch (UnsupportedOperationException e){
+                            System.out.print(" ");
+                        }
                     } else {
                         System.out.print("   ");
                     }
@@ -467,6 +469,23 @@ public class CLI extends Thread implements UI {
                 printOnNewLine("La carta in posizione " + x + ", " + y + " è: ");
                 printOnNewLine(cardToDisplay.toString());
                 printOnNewLine("Questa carta è stata piazzata al turno " + cardToDisplay.getPlacementTurn());
+                List<CardFace> neighbors = new LinkedList<>();
+                neighbors.add(controller.getPlayerByName(playerName).getManuscript().getCardByCoord(x-1, y + 1));
+                neighbors.add(controller.getPlayerByName(playerName).getManuscript().getCardByCoord(x+1, y + 1));
+                neighbors.add(controller.getPlayerByName(playerName).getManuscript().getCardByCoord(x-1, y - 1));
+                neighbors.add(controller.getPlayerByName(playerName).getManuscript().getCardByCoord(x+1, y - 1));
+                printOnNewLine("Sopra questa carta ci sono le carte in posizione ");
+                for(CardFace neighbor: neighbors){
+                    if(neighbor != null && neighbor.getPlacementTurn() > cardToDisplay.getPlacementTurn()){
+                        System.out.print("(" + neighbor.getXCoord() + ", " + neighbor.getYCoord() + ") ");
+                    }
+                }
+                printOnNewLine("Sotto questa carta ci sono le carte in posizione ");
+                for(CardFace neighbor: neighbors){
+                    if(neighbor != null && neighbor.getPlacementTurn() < cardToDisplay.getPlacementTurn()){
+                        System.out.print("(" + neighbor.getXCoord() + ", " + neighbor.getYCoord() + ") ");
+                    }
+                }
             } else {
                 printOnNewLine("Non c'è nessuna carta in posizione " + x + ", " + y);
             }
@@ -508,14 +527,11 @@ public class CLI extends Thread implements UI {
     public void displayGameInfo(){
         displayId();
         displayCommonAchievements();
+        displaySecretAchievement();
         displayDeckSizes();
         displayBoardCards();
-        displaySecretAchievement();
         displayHand();
         displayTurn();
-        displayPlayerInfo();
-        displayChat();
-        displayGameState();
         switch (controller.getGameState()) {
             case CHOOSE_STARTING_CARD:
                 changeScene(new StartingCardChoiceState(this, controller));

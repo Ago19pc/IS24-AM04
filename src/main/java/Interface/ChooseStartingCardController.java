@@ -66,7 +66,7 @@ public class ChooseStartingCardController extends SceneController {
         firstCard.setStyle("-fx-opacity: 1;");
         secondCard.setStyle("-fx-opacity: 0.5;");
         confirmButton.setOpacity(1);
-        chosenCardText.setText("Back Face");
+        chosenCardText.setText("Front Face");
         chosenCard.setImage(firstCard.getImage());
     }
 
@@ -79,7 +79,7 @@ public class ChooseStartingCardController extends SceneController {
         secondCard.setStyle("-fx-opacity: 1;");
         firstCard.setStyle("-fx-opacity: 0.5;");
         confirmButton.setOpacity(1);
-        chosenCardText.setText("Front Face");
+        chosenCardText.setText("Back Face");
         chosenCard.setImage(secondCard.getImage());
     }
 
