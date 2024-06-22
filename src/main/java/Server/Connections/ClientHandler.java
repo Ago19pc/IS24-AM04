@@ -59,6 +59,7 @@ public class ClientHandler extends Thread {
             receiver.join();
         } catch (InterruptedException e) {
             System.out.println("ClientHandler caught an exception");
+            e.printStackTrace();
             throw new RuntimeException(e);
         }
 

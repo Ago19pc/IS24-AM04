@@ -561,6 +561,6 @@ public class MainBoardSceneController extends SceneController {
 
     public void backToLobby() {
         controller.clear();
-        stage.setScene(sceneMap.get(SceneName.SETNAME));
+        stage.setScene(sceneMap.get(SceneName.JOIN));
     }
 }

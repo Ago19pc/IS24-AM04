@@ -151,7 +151,6 @@ public class ClientControllerInstance implements ClientController {
             ui.successfulConnection();
         } catch (IOException | NotBoundException | NullPointerException e){
             ui.connectionFailed();
-            e.printStackTrace();
         }
     }
 
@@ -344,7 +343,6 @@ public class ClientControllerInstance implements ClientController {
 
     @Override
     public void loadLobbyInfo(String id, List<String> playerNames, Map<String, Color> playerColors, Map<String, Boolean> playerReady, Boolean isSavedGame) {
-        ui.successfulConnection();
         this.isSavedGame = isSavedGame;
         setId(id);
         ui.displayId();
@@ -760,5 +758,6 @@ public class ClientControllerInstance implements ClientController {
         potentialSecretAchievements.clear();
         chosenHandCard = null;
         isSavedGame = false;
+        clientConnectionHandler.clear();
     }
 }

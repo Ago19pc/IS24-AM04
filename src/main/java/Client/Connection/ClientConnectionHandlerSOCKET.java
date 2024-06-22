@@ -9,6 +9,7 @@ import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.net.InetSocketAddress;
 import java.net.Socket;
+import java.net.SocketTimeoutException;
 import java.rmi.RemoteException;
 /**
  * This class handles the connection between the client and the server using Socket.
@@ -71,8 +72,9 @@ public class ClientConnectionHandlerSOCKET extends Thread implements ClientConne
      * @param host the ip address of the server
      * @param port the port of the server
      * @throws IOException when problems when setting Socket
+     * @throws SocketTimeoutException when the socket times out (e.g. RMI port selected)
      */
-    public void setSocket(String host, int port) throws IOException{
+    public void setSocket(String host, int port) throws IOException, SocketTimeoutException {
             this.clientSocket = new Socket();
             clientSocket.connect(new InetSocketAddress(host, port), 10000);
             this.sender.setOutputBuffer(new ObjectOutputStream(clientSocket.getOutputStream()));
