@@ -406,12 +406,14 @@ public class ControllerInstance implements Controller{
     }
 
     /**
-     * Clears the game model and prepares for a new game
+     * Clears the server and prepares for a new game
      */
     private void clear() {
+        connectionHandler.clear();
         gameModel = new GameModelInstance();
         givenStartingCards = new HashMap<>();
         givenSecretObjectiveCards = new HashMap<>();
+        changeState(new LobbyState(gameModel, connectionHandler, this));
     }
 
     public void setReady(Player player) throws MissingInfoException, AlreadyStartedException {
