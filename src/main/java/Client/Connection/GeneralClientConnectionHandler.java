@@ -5,7 +5,6 @@ import Server.Messages.LobbyPlayersMessage;
 import Server.Messages.ToServerMessage;
 
 import java.io.IOException;
-import java.net.SocketTimeoutException;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 
@@ -43,9 +42,8 @@ public class GeneralClientConnectionHandler {
      * @throws NotBoundException if the connection is RMI and the server is not bound
      * @throws IOException if there is a problem with the connection
      * @throws NullPointerException if the connection is RMI and the server is not found
-     * @throws SocketTimeoutException if the connection is Socket and the socket times out
      */
-    public void setSocket(String server_host, int server_port) throws NotBoundException, IOException, NullPointerException, SocketTimeoutException {
+    public void setSocket(String server_host, int server_port) throws NotBoundException, IOException, NullPointerException{
         if(trueifRMI) {
             clientConnectionHandlerRMI.setServer(server_host, server_port);
             clientConnectionHandlerRMI.setController(controller);
@@ -80,42 +78,6 @@ public class GeneralClientConnectionHandler {
                 System.err.println("[SOCKET] Error while sending message to the server");
             }
         }
-    }
-
-    /**
-     * Checks if the client is connected to the server
-     * @return true if the client is connected to the server
-     */
-    public boolean isConnectedToServer() {
-        if(trueifRMI) {
-            return clientConnectionHandlerRMI != null;
-        } else {
-            return clientConnectionHandlerSOCKET.sender.getOutputBuffer() == null;
-        }
-    }
-
-    /**
-     * Gets the RMI client connection handler
-     * @return the client connection handler RMI
-     */
-    public ClientConnectionHandlerRMI getClientConnectionHandlerRMI() {
-        return clientConnectionHandlerRMI;
-    }
-
-    /**
-     * Gets the SOCKET client connection handler
-     * @return the client connection handler SOCKET
-     */
-    public ClientConnectionHandlerSOCKET getClientConnectionHandlerSOCKET() {
-        return clientConnectionHandlerSOCKET;
-    }
-
-    /**
-     * Checks if the client is using RMI
-     * @return true if the client is using RMI
-     */
-    public boolean getTrueIfRMI() {
-        return trueifRMI;
     }
 
     /**

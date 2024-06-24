@@ -6,10 +6,8 @@ import Server.Messages.ToServerMessage;
 
 import java.io.IOException;
 import java.io.ObjectOutputStream;
-import java.io.OutputStream;
 import java.net.InetSocketAddress;
 import java.net.Socket;
-import java.net.SocketTimeoutException;
 import java.rmi.RemoteException;
 /**
  * This class handles the connection between the client and the server using Socket.
@@ -38,12 +36,12 @@ public class ClientConnectionHandlerSOCKET extends Thread implements ClientConne
         this.sender = new ClientSender();
         this.start();
     }
-
-    /**
+/*
+    **
      * Fast constructor. Used for testing purposes
      * @param debugMode if true, connects to localhost:1234 automatically
      * @param controller the controller to use. This is used to execute incoming messages
-     */
+     *
     public ClientConnectionHandlerSOCKET(boolean debugMode, ClientController controller) {
         try {
             this.controller = controller;
@@ -55,10 +53,10 @@ public class ClientConnectionHandlerSOCKET extends Thread implements ClientConne
         this.start();
     }
 
-    /**
+    **
      * Gets socket output buffer
      * @return the socket output buffer
-     */
+     *
     public OutputStream getSocketOutputBuffer() {
         try {
             return clientSocket.getOutputStream();
@@ -66,15 +64,14 @@ public class ClientConnectionHandlerSOCKET extends Thread implements ClientConne
             throw new RuntimeException(e);
         }
     }
-
+*/
     /**
      * Connects to a server
      * @param host the ip address of the server
      * @param port the port of the server
      * @throws IOException when problems when setting Socket
-     * @throws SocketTimeoutException when the socket times out (e.g. RMI port selected)
      */
-    public void setSocket(String host, int port) throws IOException, SocketTimeoutException {
+    public void setSocket(String host, int port) throws IOException{
             this.clientSocket = new Socket();
             clientSocket.connect(new InetSocketAddress(host, port), 10000);
             this.sender.setOutputBuffer(new ObjectOutputStream(clientSocket.getOutputStream()));
@@ -98,9 +95,12 @@ public class ClientConnectionHandlerSOCKET extends Thread implements ClientConne
      * Waits for the receiver to terminate
      */
     public void run() {
+        /*
+         * Thread sleeps because it's waiting for receiver to be initialized.
+         */
         while(receiver == null){
             try {
-                Thread.sleep(100);
+                Thread.sleep(100); //each 100ms it checks if receiver is initialized
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
@@ -116,16 +116,6 @@ public class ClientConnectionHandlerSOCKET extends Thread implements ClientConne
 
     public void sendMessage(ToServerMessage message) throws IOException {
         sender.sendMessage(message);
-    }
-
-
-    /**
-     * Stops the connection, interrupts the sender and receiver threads and closes the socket
-     * @throws IOException when problems with closing socket
-     */
-    public void stopConnection() throws IOException {
-        receiver.interrupt();
-        clientSocket.close();
     }
 
     public void executeMessage(ToClientMessage message) {

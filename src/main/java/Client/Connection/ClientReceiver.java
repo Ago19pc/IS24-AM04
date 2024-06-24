@@ -6,8 +6,6 @@ import Server.Messages.ToClientMessage;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.net.Socket;
-import java.net.SocketException;
-import java.net.SocketTimeoutException;
 
 /**
  * This class is responsible for receiving messages from the server and executing them on a socket connection.
@@ -22,9 +20,8 @@ public class ClientReceiver extends Thread {
      * @param clientSocket the socket to receive messages from
      * @param controller the controller to use. This is used to execute incoming messages
      * @throws IOException if the socket can't be opened
-     * @throws SocketTimeoutException if the socket times out (e.g. RMI port selected)
      */
-    public ClientReceiver(Socket clientSocket, ClientController controller) throws IOException, SocketTimeoutException {
+    public ClientReceiver(Socket clientSocket, ClientController controller) throws IOException{
         this.controller = controller;
         clientSocket.setSoTimeout(10000);
         in = new ObjectInputStream(clientSocket.getInputStream());

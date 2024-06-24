@@ -27,14 +27,6 @@ public class ClientSender{
     }
 
     /**
-     * Gets this sender's output buffer
-     * @return the output buffer
-     */
-    public ObjectOutputStream getOutputBuffer() {
-        return out;
-    }
-
-    /**
      * Sends a message to the server.
      * @param message the message to send.
      * @throws IOException if the message can't be sent.

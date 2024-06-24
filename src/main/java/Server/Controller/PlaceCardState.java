@@ -96,6 +96,7 @@ public class PlaceCardState implements ServerState{
             //System.out.println("RequiredSymbols " + requiredSymbol + " ScoreRequirements" + scoreRequirements);
             if(requiredQuantity != 0){
                 obtainedPoints = actualQuantity / requiredQuantity * cardPoints;
+                cardPoints = obtainedPoints;
                 player.addPoints(obtainedPoints);
             } else {
                 player.addPoints(cardPoints);
@@ -109,7 +110,7 @@ public class PlaceCardState implements ServerState{
                 cardFace,
                 xCoord,
                 yCoord,
-                obtainedPoints
+                cardPoints
         );
         controller.changeState(new DrawCardState(controller, gameModel));
         controller.getConnectionHandler().sendAllMessage(otherPlayerPlayCardMessage);

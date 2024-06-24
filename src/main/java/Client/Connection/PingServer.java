@@ -1,7 +1,5 @@
 package Client.Connection;
 
-import Server.Connections.GeneralServerConnectionHandler;
-
 public class PingServer extends Thread{
     private final ClientConnectionHandlerRMI connectionHandler;
     private boolean shouldPing;

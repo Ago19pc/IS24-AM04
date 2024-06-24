@@ -1,7 +1,7 @@
 /**
  * Codex Naturalis Game Project
  */
-module it.am04.demo1 {
+module it.am04codexnaturalis {
     requires javafx.controls;
     requires javafx.fxml;
 
@@ -13,9 +13,12 @@ module it.am04.demo1 {
 
 
     exports Client;
+    exports Client.Controller;
     exports Interface;
     exports Server;
+    exports Server.Card;
     exports theMain;
+    exports Server.Messages;
     exports Server.Connections to java.rmi;
     exports Client.Connection to java.rmi;
 

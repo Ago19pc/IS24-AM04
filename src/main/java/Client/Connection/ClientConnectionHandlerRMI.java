@@ -1,12 +1,9 @@
 package Client.Connection;
 
 import Client.Controller.ClientController;
-import Server.Connections.PingPong;
 import Server.Connections.ServerConnectionHandler;
 import Server.Messages.ToClientMessage;
 import Server.Messages.ToServerMessage;
-
-import java.io.IOException;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
@@ -109,14 +106,6 @@ public class ClientConnectionHandlerRMI implements ClientConnectionHandler {
     @Override
     public boolean ping() {
         return true;
-    }
-
-    /**
-     * Gets the client port used for the RMI connection
-     * @return the client port
-     */
-    public int getRmi_client_port() {
-        return rmi_client_port;
     }
 
     /**
