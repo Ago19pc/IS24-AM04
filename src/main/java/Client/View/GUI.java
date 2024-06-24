@@ -68,6 +68,7 @@ public class GUI implements UI{
         generateScene("/chooseStartingCard.fxml", SceneName.STARTINGCARDCHOICE, stage);
         generateScene("/chooseSecretCard.fxml", SceneName.SECRETCARDCHOICE, stage);
         generateScene("/mainboard.fxml", SceneName.GAME, stage);
+        generateScene("/waiting.fxml", SceneName.WAITING, stage);
     }
 
     /**
@@ -98,7 +99,7 @@ public class GUI implements UI{
     public void nameChanged() {
         Platform.runLater(() -> {
             if (controller.isSavedGame()) {
-                //todo: implement graphically with another scene
+                stage.setScene(getScene(SceneName.WAITING));
                 System.out.println("WAITING FOR OTHERS, TODO");
             } else {
                 sceneControllerMap.get(SceneName.SETCOLOR).messageToSend.setPromptText("Scrivi un messaggio!");
