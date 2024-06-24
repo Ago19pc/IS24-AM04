@@ -5,8 +5,8 @@ import Client.Controller.ClientController;
  * This class represents the state of the game where the player has to choose the secret card.
  */
 public class SecretCardChoiceState implements CLIState{
-    private CLI cli;
-    private ClientController controller;
+    private final CLI cli;
+    private final ClientController controller;
     public SecretCardChoiceState(CLI cli, ClientController controller) {
         this.cli = cli;
         this.controller = controller;

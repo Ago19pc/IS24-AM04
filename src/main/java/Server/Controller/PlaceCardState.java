@@ -12,9 +12,7 @@ import Server.Messages.OtherPlayerPlayCardMessage;
 import Server.Messages.ReconnectionMessage;
 import Server.Player.Player;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -85,7 +83,13 @@ public class PlaceCardState implements ServerState{
             System.out.println("RequiredQuantity " + requiredQuantity);
             int actualQuantity;
             if (requiredSymbol == Symbol.COVERED_CORNER) {
-                actualQuantity = player.getManuscript().getCardsUnder(cardFace).size();
+                List<CardFace> neighbors = new LinkedList<>();
+                neighbors.add(player.getManuscript().getCardByCoord(xCoord - 1, yCoord - 1));
+                neighbors.add(player.getManuscript().getCardByCoord(xCoord - 1, yCoord + 1));
+                neighbors.add(player.getManuscript().getCardByCoord(xCoord + 1, yCoord - 1));
+                neighbors.add(player.getManuscript().getCardByCoord(xCoord + 1, yCoord + 1));
+                neighbors = neighbors.stream().filter(Objects::nonNull).collect(Collectors.toList());
+                actualQuantity = neighbors.size();
             } else {
                 actualQuantity = player.getManuscript().getSymbolCount(requiredSymbol);
                 Symbol finalRequiredSymbol = requiredSymbol;

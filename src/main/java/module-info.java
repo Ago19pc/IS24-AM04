@@ -17,8 +17,12 @@ module it.am04codexnaturalis {
     exports Interface;
     exports Server;
     exports Server.Card;
+    exports Client.View;
     exports theMain;
     exports Server.Messages;
+    exports Server.Exception;
+    exports Server.Enums;
+    exports Server.Chat;
     exports Server.Connections to java.rmi;
     exports Client.Connection to java.rmi;
 

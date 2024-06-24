@@ -5,8 +5,8 @@ import Client.Controller.ClientController;
 import java.util.LinkedHashMap;
 
 public class LeaderboardState implements CLIState{
-    private CLI cli;
-    private ClientController controller;
+    private final CLI cli;
+    private final ClientController controller;
     LinkedHashMap<String, Integer> playerPoints;
 
     public LeaderboardState(CLI cli, LinkedHashMap<String, Integer> playerPoints, ClientController controller){

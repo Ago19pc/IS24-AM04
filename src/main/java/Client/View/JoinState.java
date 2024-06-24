@@ -4,7 +4,7 @@ package Client.View;
  * This state is used to ask the user to join a server
  */
 public class JoinState implements CLIState{
-    private CLI cli;
+    private final CLI cli;
 
     public JoinState(CLI cli){
         this.cli = cli;

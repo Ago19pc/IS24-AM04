@@ -4,7 +4,7 @@ package Client.View;
  * This state is used to ask the user to choose the network mode
  */
 public class NetworkState implements CLIState{
-    private CLI cli;
+    private final CLI cli;
 
     /**
      * Asks the user to choose the network mode

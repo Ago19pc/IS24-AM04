@@ -5,9 +5,11 @@ import Server.Enums.DeckPosition;
 import Server.Enums.Decks;
 import Server.Enums.Face;
 
+import java.util.Objects;
+
 public class GameState implements CLIState{
-    private CLI cli;
-    private ClientController controller;
+    private final CLI cli;
+    private final ClientController controller;
 
     public GameState(CLI cli, ClientController controller){
         this.cli = cli;
@@ -49,11 +51,11 @@ public class GameState implements CLIState{
                 cli.printPromptLine();
                 break;
             case "chat":
-                String message = "";
+                StringBuilder message = new StringBuilder();
                 for(int i = 1; i < args.length; i++){
-                    message += args[i] + " ";
+                    message.append(args[i]).append(" ");
                 }
-                controller.sendChatMessage(message);
+                controller.sendChatMessage(message.toString());
                 break;
             case "chooseCard":
                 if(args.length != 2){
@@ -61,13 +63,11 @@ public class GameState implements CLIState{
                     return;
                 }
                 int cardNumber = Integer.parseInt(args[1]) - 1;
-                switch(controller.getGameState()){
-                    case PLACE_CARD:
-                        controller.setChosenHandCard(cardNumber);
-                        cli.printOnNewLine("Carta selezionata: " + controller.getHand().get(cardNumber));
-                        break;
-                    default:
-                        cli.printOnNewLine("C'è un tempo e un luogo per ogni cosa! Ma non ora...");
+                if (Objects.requireNonNull(controller.getGameState()) == Server.Enums.GameState.PLACE_CARD) {
+                    controller.setChosenHandCard(cardNumber);
+                    cli.printOnNewLine("Carta selezionata: " + controller.getHand().get(cardNumber));
+                } else {
+                    cli.printOnNewLine("C'è un tempo e un luogo per ogni cosa! Ma non ora...");
                 }
                 break;
             case "hand":

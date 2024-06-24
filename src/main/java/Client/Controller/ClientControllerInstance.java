@@ -25,7 +25,6 @@ import java.util.Map;
 public class ClientControllerInstance implements ClientController {
     private GeneralClientConnectionHandler clientConnectionHandler;
     private UI ui;
-    private boolean rmiMode = false;
 
     //cards not owned by player info
     private List<AchievementCard> commonAchievements = new ArrayList<>();
@@ -207,9 +206,8 @@ public class ClientControllerInstance implements ClientController {
 
     @Override
     public void setRMIMode(boolean rmi) {
-        this.rmiMode = rmi;
         try {
-            clientConnectionHandler = new GeneralClientConnectionHandler(this, rmiMode);
+            clientConnectionHandler = new GeneralClientConnectionHandler(this, rmi);
         } catch (RemoteException e) {
             throw new RuntimeException(e);
         }
@@ -458,7 +456,7 @@ public class ClientControllerInstance implements ClientController {
             players.add(newPlayer);
             ui.displayNewPlayer();
         } catch (Exception e) {
-            e.printStackTrace();
+            System.err.println("Error adding new player");
         }
     }
 

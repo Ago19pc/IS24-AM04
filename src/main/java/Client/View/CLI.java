@@ -2,14 +2,11 @@ package Client.View;
 
 import Client.Controller.ClientController;
 import Client.Player;
-import Interface.MainBoardSceneController;
-import Interface.SceneName;
 import Server.Card.AchievementCard;
 import Server.Card.Card;
 import Server.Card.CardFace;
 import Server.Card.CornerCardFace;
 import Server.Chat.Message;
-import Client.View.StartingCardChoiceState;
 import Server.Enums.*;
 import Server.Exception.PlayerNotFoundByNameException;
 
@@ -400,7 +397,7 @@ public class CLI extends Thread implements UI {
             minY = manuscriptCards.stream().mapToInt(CornerCardFace::getYCoord).min().orElse(0);
             maxX = manuscriptCards.stream().mapToInt(CornerCardFace::getXCoord).max().orElse(0);
             maxY = manuscriptCards.stream().mapToInt(CornerCardFace::getYCoord).max().orElse(0);
-            //first rows: x axis
+            //first rows: x-axis
             System.out.println();
             printOnNewLine("   ");
             for(int x = minX; x <= maxX; x++){
@@ -487,35 +484,6 @@ public class CLI extends Thread implements UI {
         } catch (PlayerNotFoundByNameException e){
             printOnNewLine("Il giocatore specificato non esiste");
         }
-        printPromptLine();
-    }
-
-    /**
-     * Displays the players' info
-     */
-    public void displayPlayerInfo(){
-        displayPlayerOrder();
-        displayPlayerColors();
-        for (Player player : controller.getPlayers()) {
-            System.out.println("    " + player.getName() + ": " + player.getPoints() + " punti");
-            displayManuscript(player.getName());
-        }
-    }
-
-    /**
-     * Displays the full chat
-     */
-    public void displayChat(){
-        for (Message message : controller.getChat()) {
-            System.out.println(message.getName() + ": " + message.getMessage());
-        }
-    }
-
-    /**
-     * Displays the current game state
-     */
-    public void displayGameState(){
-        printOnNewLine("Stato del gioco: " + controller.getGameState());
         printPromptLine();
     }
 
