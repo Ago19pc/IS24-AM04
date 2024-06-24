@@ -196,12 +196,6 @@ public class GUI implements UI{
     }
 
     @Override
-    public void needConnection() {
-        System.out.println("Need connection");
-        //maybe useless here
-    }
-
-    @Override
     public void connectionFailed() {
         Platform.runLater(() -> {
             ((JoinSceneController) sceneControllerMap.get(SceneName.JOIN)).text_ip.clear();
@@ -281,11 +275,6 @@ public class GUI implements UI{
     @Override
     public void notYourTurn() {
         System.out.println("Not your turn");
-    }
-
-    @Override
-    public void playerListChanged() {
-        System.out.println("Player list changed");
     }
 
     @Override
