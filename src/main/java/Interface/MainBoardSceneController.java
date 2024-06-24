@@ -10,6 +10,7 @@ import Server.Enums.DeckPosition;
 import Server.Enums.Decks;
 import Server.Enums.Face;
 import Server.Exception.PlayerNotFoundByNameException;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Group;
 import javafx.scene.control.*;
@@ -27,6 +28,7 @@ import java.util.Map;
  * This class is responsible for the logic of the main board scene
  */
 public class MainBoardSceneController extends SceneController {
+
     /**
      * Constructor
      */
@@ -59,6 +61,11 @@ public class MainBoardSceneController extends SceneController {
      */
     @FXML
     public Button rotateFirstCardButton, rotateSecondCardButton, rotateThirdCardButton;
+    /**
+     * The button to go back to the lobby
+     */
+    @FXML
+    public Button backToLobbyButton;
     /**
      * The player's manuscript
      */
@@ -487,6 +494,7 @@ public class MainBoardSceneController extends SceneController {
      */
     public void setup()
     {
+        backToLobbyButton.setDisable(true);
         for(Player p : controller.getPlayers()) {
             if(!p.getName().equals(controller.getMyName())) {
                 OtherPlayerTab tab = new OtherPlayerTab(p.getName());
@@ -497,6 +505,12 @@ public class MainBoardSceneController extends SceneController {
             }
         }
         updateLeaderBoard();
+    }
+    /**
+     * Sets the Go Back to Lobby button to be enabled
+     */
+    public void enableBackToLobbyButton() {
+        backToLobbyButton.setDisable(false);
     }
 
     /**
@@ -545,4 +559,7 @@ public class MainBoardSceneController extends SceneController {
     }
 
 
+    public void backToLobby() {
+        controller.clearUI();
+    }
 }

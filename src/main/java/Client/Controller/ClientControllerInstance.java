@@ -28,7 +28,7 @@ public class ClientControllerInstance implements ClientController {
     private boolean rmiMode = false;
 
     //cards not owned by player info
-    private List<AchievementCard> commonAchievements;
+    private List<AchievementCard> commonAchievements = new ArrayList<>();
     private Deck<GoldCard> goldDeck;
     private Deck<ResourceCard> resourceDeck;
 
@@ -48,8 +48,8 @@ public class ClientControllerInstance implements ClientController {
 
     //temp stuff
     private String proposedName;
-    private int indexofSecretAchievement;
-    private List<AchievementCard> potentialSecretAchievements;
+    private int indexofSecretAchievement = -1;
+    private List<AchievementCard> potentialSecretAchievements = new ArrayList<>();
     private Integer chosenHandCard;
     private Boolean isSavedGame;
 
@@ -148,10 +148,8 @@ public class ClientControllerInstance implements ClientController {
     public void joinServer(String ip, int port) {
         try{
             clientConnectionHandler.setSocket(ip, port);
-            ui.successfulConnection();
         } catch (IOException | NotBoundException | NullPointerException e){
             ui.connectionFailed();
-            e.printStackTrace();
         }
     }
 
@@ -344,7 +342,6 @@ public class ClientControllerInstance implements ClientController {
 
     @Override
     public void loadLobbyInfo(String id, List<String> playerNames, Map<String, Color> playerColors, Map<String, Boolean> playerReady, Boolean isSavedGame) {
-        ui.successfulConnection();
         this.isSavedGame = isSavedGame;
         setId(id);
         ui.displayId();
@@ -738,7 +735,33 @@ public class ClientControllerInstance implements ClientController {
 
     @Override
     public void serverDisconnected() {
-        clientConnectionHandler.serverDisconnected();
-        ui.serverDisconnected();
+        clear();
+        clearUI();
+    }
+
+
+    public void clear(){
+        commonAchievements.clear();
+        goldDeck = null;
+        resourceDeck = null;
+        myName = null;
+        secretAchievement = null;
+        hand.clear();
+        turn = 0;
+        unavaiableColors.clear();
+        chat = new Chat();
+        players.clear();
+        gameState = GameState.LOBBY;
+        proposedName = null;
+        indexofSecretAchievement = -1;
+        potentialSecretAchievements.clear();
+        chosenHandCard = null;
+        isSavedGame = false;
+        clientConnectionHandler.clear();
+    }
+
+    @Override
+    public void clearUI() {
+        ui.clear();
     }
 }

@@ -71,6 +71,7 @@ public class ServerConnectionHandlerSOCKET extends Thread implements ServerConne
     public void run() {
         Thread.UncaughtExceptionHandler h = (th, ex) -> {
             System.out.println("[Socket] ServerConnectionHandler gestore eccezioni thread figli: " + ex);
+            ex.printStackTrace();
             th.interrupt();
         };
         try {

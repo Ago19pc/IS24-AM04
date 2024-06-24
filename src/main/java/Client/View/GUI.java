@@ -56,6 +56,21 @@ public class GUI implements UI{
     }
 
     /**
+     * This method generates all the scenes from a fxml file, loads the scene controller , and adds the scenes to the sceneMap and sceneControllerMap.
+     * @param stage the stage where the scene will be displayed
+     * @throws IOException if the fxml file is not found
+     */
+    public void generateScenes(Stage stage) throws IOException {
+        generateScene("/rmi_or_socket.fxml", SceneName.NETWORK, stage);
+        generateScene("/graficap1.fxml", SceneName.JOIN, stage);
+        generateScene("/setName.fxml", SceneName.SETNAME, stage);
+        generateScene("/setColor.fxml", SceneName.SETCOLOR, stage);
+        generateScene("/chooseStartingCard.fxml", SceneName.STARTINGCARDCHOICE, stage);
+        generateScene("/chooseSecretCard.fxml", SceneName.SECRETCARDCHOICE, stage);
+        generateScene("/mainboard.fxml", SceneName.GAME, stage);
+    }
+
+    /**
      * Gets a scene by its name
      * @param sceneName the name of the scene
      * @return the scene
@@ -339,7 +354,7 @@ public class GUI implements UI{
                 sceneControllerMap.get(SceneName.GAME).setup();
                 stage.setScene(getScene(SceneName.GAME));
             }
-
+            ((MainBoardSceneController) sceneControllerMap.get(SceneName.GAME)).enableBackToLobbyButton();
             ((MainBoardSceneController) sceneControllerMap.get(SceneName.GAME)).updateLeaderBoard();
             ((MainBoardSceneController) sceneControllerMap.get(SceneName.GAME)).tabPane.getTabs().forEach(tab -> {
                 if (!tab.getText().equals("LeaderBoard")) {
@@ -658,8 +673,16 @@ public class GUI implements UI{
     }
 
     @Override
-    public void serverDisconnected() {
-        //todo: implement this
+    public void clear() {
+        Platform.runLater(() -> {
+            try {
+                generateScenes(stage);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+            stage.setScene(getScene(SceneName.NETWORK));
+            stage.show();
+        });
     }
 
     /**

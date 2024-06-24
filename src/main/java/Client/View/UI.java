@@ -322,5 +322,5 @@ public interface UI {
     /**
      * Informs the user that the server has disconnected
      */
-    void serverDisconnected();
+    void clear();
 }

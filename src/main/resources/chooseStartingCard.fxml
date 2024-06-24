@@ -28,13 +28,13 @@
           <Font size="19.0"/>
         </font>
     </Text>
-    <Text fx:id="backFaceText" layoutX="502.0" layoutY="252.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Back Face">
+    <Text fx:id="backFaceText" layoutX="502.0" layoutY="252.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Front Face">
         <font>
           <Font size="32.0"/>
         </font>
     </Text>
     <Text fx:id="frontFaceText" layoutX="502.0" layoutY="432.0" strokeType="OUTSIDE" strokeWidth="0.0"
-          text="Front Face">
+          text="Back Face">
         <font>
           <Font size="32.0"/>
         </font>

@@ -304,7 +304,9 @@ public class ControllerInstance implements Controller{
             changeState(new PlaceCardState(this, gameModel));
         } while (!isOnline(getPlayerList().get(gameModel.getActivePlayerIndex())));//if the player is not online skips to the next one
         gameModel.nextTurn();
-        saveGame();
+        if(!gameModel.isLastRound()) {
+            saveGame();
+        }
         NewTurnMessage newTurnMessage = new NewTurnMessage(getPlayerList().get(gameModel.getActivePlayerIndex()).getName(), gameModel.getTurn());
         connectionHandler.sendAllMessage(newTurnMessage);
     }
@@ -415,9 +417,11 @@ public class ControllerInstance implements Controller{
     }
 
     public void clear() {
+        connectionHandler.clear();
         gameModel = new GameModelInstance();
         givenStartingCards = new HashMap<>();
         givenSecretObjectiveCards = new HashMap<>();
+        changeState(new LobbyState(gameModel, connectionHandler, this));
     }
 
     public void setReady(Player player) throws MissingInfoException, AlreadyStartedException {

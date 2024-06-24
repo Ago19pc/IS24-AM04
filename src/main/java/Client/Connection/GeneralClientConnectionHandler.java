@@ -5,6 +5,7 @@ import Server.Messages.LobbyPlayersMessage;
 import Server.Messages.ToServerMessage;
 
 import java.io.IOException;
+import java.net.SocketTimeoutException;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 
@@ -42,8 +43,9 @@ public class GeneralClientConnectionHandler {
      * @throws NotBoundException if the connection is RMI and the server is not bound
      * @throws IOException if there is a problem with the connection
      * @throws NullPointerException if the connection is RMI and the server is not found
+     * @throws SocketTimeoutException if the connection is Socket and the socket times out
      */
-    public void setSocket(String server_host, int server_port) throws NotBoundException, IOException, NullPointerException{
+    public void setSocket(String server_host, int server_port) throws NotBoundException, IOException, NullPointerException, SocketTimeoutException {
         if(trueifRMI) {
             clientConnectionHandlerRMI.setServer(server_host, server_port);
             clientConnectionHandlerRMI.setController(controller);
@@ -117,10 +119,13 @@ public class GeneralClientConnectionHandler {
     }
 
     /**
-     * Reacts to server disconnection
+     * Clears connection
      */
-    public void serverDisconnected() {
-        clientConnectionHandlerSOCKET = new ClientConnectionHandlerSOCKET(controller);
-        clientConnectionHandlerRMI.reset();
+    public void clear() {
+        if (!trueifRMI) {
+            clientConnectionHandlerSOCKET = new ClientConnectionHandlerSOCKET(controller);
+        } else {
+            clientConnectionHandlerRMI.reset();
+        }
     }
 }
