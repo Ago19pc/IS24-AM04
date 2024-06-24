@@ -46,12 +46,4 @@ public class Message implements Serializable {
     public String getName() {
         return name;
     }
-
-    /**
-     * Returns the timestamp
-     * @return the timestamp of the message
-     */
-    public Timestamp getTimestamp() {
-        return timestamp;
-    }
 }

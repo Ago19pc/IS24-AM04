@@ -23,6 +23,9 @@ module it.am04codexnaturalis {
     exports Server.Exception;
     exports Server.Enums;
     exports Server.Chat;
+    exports Server.Manuscript;
+    exports Server.Player;
+    exports Server.Controller;
     exports Server.Connections to java.rmi;
     exports Client.Connection to java.rmi;
 

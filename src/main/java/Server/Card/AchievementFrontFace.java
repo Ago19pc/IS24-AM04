@@ -124,9 +124,7 @@ public class AchievementFrontFace extends EmptyCardFace {
                 if (!toRet.isEmpty()) {
                     toRet.append(" ");
                 }
-                for(int i = 0; i < scoreRequirements.get(s); i++) {
-                    toRet.append(s.toString()).append("");
-                }
+                toRet.append(s.toString().repeat(Math.max(0, scoreRequirements.get(s))));
             }
         }
         return toRet.toString();

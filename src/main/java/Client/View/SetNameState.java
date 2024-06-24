@@ -7,8 +7,8 @@ import Client.Player;
  * This class represents the lobby state of the game.
  */
 public class SetNameState implements CLIState {
-    private CLI cli;
-    private ClientController controller;
+    private final CLI cli;
+    private final ClientController controller;
     public SetNameState(CLI cli, ClientController controller) {
         this.cli = cli;
         this.controller = controller;

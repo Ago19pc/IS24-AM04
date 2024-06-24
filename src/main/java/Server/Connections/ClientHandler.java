@@ -33,7 +33,6 @@ public class ClientHandler extends Thread {
         this.connectionHandler = connectionHandler;
         UncaughtExceptionHandler h = (th, ex) -> {
             System.out.println("Exception, killing ClientHandler Thread " + ex);
-            ex.printStackTrace();
             connectionHandler.killClient(connectionHandler.getThreadName(this));
 
         };
@@ -59,7 +58,6 @@ public class ClientHandler extends Thread {
             receiver.join();
         } catch (InterruptedException e) {
             System.out.println("ClientHandler caught an exception");
-            e.printStackTrace();
             throw new RuntimeException(e);
         }
 
@@ -85,34 +83,12 @@ public class ClientHandler extends Thread {
     }
 
     /**
-     * Returns the receiver of this client
-     * @return the receiver
-     */
-    public ServerReceiver getReceiver() {
-        return this.receiver;
-    }
-
-    /**
      * get this client's address
      * @return the client's address
      */
     public String getSocketAddress() {
         return this.socket.getInetAddress().getHostAddress();
     }
-
-    /**
-     * get this client's port
-     * @return the client's port
-     */
-    public int getSocketPort() {
-        return this.socket.getPort();
-    }
-
-    /**
-     * checks if the client is online
-     * @return true if the socket is connected, false otherwise
-     */
-    public boolean isOnline() {return this.socket.isConnected();}
     /**
      * checks if the client is closed
      * @return true if the socket is closed, false otherwise

@@ -1,11 +1,9 @@
 package Interface;
 
 import Server.Enums.Color;
-import javafx.event.ActionEvent;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
-import javafx.scene.layout.Pane;
 
 /**
  * This class is responsible for the logic of the scene where the player chooses the color and sets ready.

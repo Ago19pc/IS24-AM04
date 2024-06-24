@@ -76,11 +76,6 @@ public interface UI {
     void invalidColor();
 
     /**
-     * Informs the user that he needs to connect to a server.
-     */
-    void needConnection();
-
-    /**
      * Informs the user that the connection to the server has failed.
      */
     void connectionFailed();
@@ -137,11 +132,6 @@ public interface UI {
      * Informs the user that it's not his turn
      */
     void notYourTurn();
-
-    /**
-     * Informs the user that the list of players has changed
-     */
-    void playerListChanged();
 
     /**
      * Displays the colors of the players

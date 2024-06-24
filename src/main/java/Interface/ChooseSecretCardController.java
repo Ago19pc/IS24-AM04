@@ -4,13 +4,13 @@ import Server.Card.AchievementCard;
 import Server.Enums.Decks;
 import Server.Enums.Face;
 import javafx.scene.control.ListView;
-import javafx.scene.text.Text;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
 import java.util.List;
+import java.util.Objects;
 
 /**
  * This class is responsible for the logic of the scene where the player chooses the secret achievement card.
@@ -132,8 +132,8 @@ public class ChooseSecretCardController extends SceneController {
     public void setUp(List<AchievementCard> cards) {
         confirmButton.setDisable(true);
         confirmButton.setOpacity(0);
-        firstCard.setImage(new Image(getClass().getResource("/images/Faces/" + cards.get(0).getFace(Face.FRONT).getImageURI()).toExternalForm()));
-        secondCard.setImage(new Image(getClass().getResource("/images/Faces/" + cards.get(1).getFace(Face.FRONT).getImageURI()).toExternalForm()));
+        firstCard.setImage(new Image(Objects.requireNonNull(getClass().getResource("/images/Faces/" + cards.get(0).getFace(Face.FRONT).getImageURI())).toExternalForm()));
+        secondCard.setImage(new Image(Objects.requireNonNull(getClass().getResource("/images/Faces/" + cards.get(1).getFace(Face.FRONT).getImageURI())).toExternalForm()));
         firstCardInHand.setImage(getImageFromCard(controller.getHand().get(0), Face.FRONT));
         secondCardInHand.setImage(getImageFromCard(controller.getHand().get(1), Face.FRONT));
         thirdCardInHand.setImage(getImageFromCard(controller.getHand().get(2), Face.FRONT));

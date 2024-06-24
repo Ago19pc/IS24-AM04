@@ -11,6 +11,8 @@ import javafx.scene.image.ImageView;
 import javafx.scene.text.Text;
 import Server.Enums.Face;
 
+import java.util.Objects;
+
 import static Server.Enums.Face.BACK;
 import static Server.Enums.Face.FRONT;
 
@@ -111,7 +113,7 @@ public class ChooseStartingCardController extends SceneController {
         chosenCard.setOpacity(1);
         try {
             CornerCardFace chosenCardFace = controller.getPlayerByName(controller.getMyName()).getManuscript().getCardByCoord(0, 0);
-            chosenCard.setImage(new Image(getClass().getResource("/images/Faces/"+ chosenCardFace.getImageURI()).toExternalForm()));
+            chosenCard.setImage(new Image(Objects.requireNonNull(getClass().getResource("/images/Faces/" + chosenCardFace.getImageURI())).toExternalForm()));
         } catch (PlayerNotFoundByNameException e) {
             System.err.println("Player not found (ChooseStartingCardController)");
         }
@@ -124,8 +126,8 @@ public class ChooseStartingCardController extends SceneController {
     public void setUp(Card card) {
         confirmButton.setDisable(true);
         confirmButton.setOpacity(0);
-        firstCard.setImage(new Image(getClass().getResource("/images/Faces/"+ card.getFace(FRONT).getImageURI()).toExternalForm()));
-        secondCard.setImage(new Image(getClass().getResource("/images/Faces/"+ card.getFace(BACK).getImageURI()).toExternalForm()));
+        firstCard.setImage(new Image(Objects.requireNonNull(getClass().getResource("/images/Faces/" + card.getFace(FRONT).getImageURI())).toExternalForm()));
+        secondCard.setImage(new Image(Objects.requireNonNull(getClass().getResource("/images/Faces/" + card.getFace(BACK).getImageURI())).toExternalForm()));
         waitText.setVisible(false);
         chosenCardText.setOpacity(0);
         chosenCard.setOpacity(0);
