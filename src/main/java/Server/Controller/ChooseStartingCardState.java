@@ -2,7 +2,6 @@ package Server.Controller;
 
 import Server.Card.AchievementCard;
 import Server.Card.CornerCardFace;
-import Server.Card.ResourceCard;
 import Server.Card.StartingCard;
 import Server.Enums.DeckPosition;
 import Server.Enums.Decks;
@@ -22,8 +21,8 @@ import java.util.Map;
 
  */
 public class ChooseStartingCardState implements ServerState{
-    private Controller controller;
-    private GameModel gameModel;
+    private final Controller controller;
+    private final GameModel gameModel;
 
     /**
      * Constructor for the class
@@ -101,7 +100,7 @@ public class ChooseStartingCardState implements ServerState{
                         gameModel.getGoldDeck().getBoardCard().get(DeckPosition.SECOND_CARD)
                 ),
                 List.of(
-                        (ResourceCard)gameModel.getResourceDeck().getTopCardNoPop(),
+                        gameModel.getResourceDeck().getTopCardNoPop(),
                         gameModel.getResourceDeck().getBoardCard().get(DeckPosition.FIRST_CARD),
                         gameModel.getResourceDeck().getBoardCard().get(DeckPosition.SECOND_CARD)
                 )

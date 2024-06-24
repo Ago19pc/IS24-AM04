@@ -2,8 +2,6 @@ package Server.Controller;
 
 import Server.Connections.GeneralServerConnectionHandler;
 import Server.Exception.PlayerNotFoundByNameException;
-
-import java.sql.Time;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -26,15 +24,15 @@ public class DisconnectionTimer {
     public DisconnectionTimer(Controller controller, GeneralServerConnectionHandler connectionHandler, String id, int time) {
         t = new Timer();
         t.scheduleAtFixedRate(new CheckOnlineTask(connectionHandler, id), 0, 100);
-        t.schedule(new DisconnectionTask(controller, connectionHandler, id), time * 1000);
+        t.schedule(new DisconnectionTask(controller, connectionHandler, id), time * 1000L);
     }
 
     /**
      * Task that checks if the player is still disconnected
      */
     class CheckOnlineTask extends TimerTask {
-        private GeneralServerConnectionHandler connectionHandler;
-        private String id;
+        private final GeneralServerConnectionHandler connectionHandler;
+        private final String id;
 
         /**
          * Constructor
@@ -60,9 +58,9 @@ public class DisconnectionTimer {
      * Task that removes the player from the game
      */
     class DisconnectionTask extends TimerTask {
-        private Controller controller;
-        private GeneralServerConnectionHandler connectionHandler;
-        private String id;
+        private final Controller controller;
+        private final GeneralServerConnectionHandler connectionHandler;
+        private final String id;
 
         /**
          * Constructor
@@ -85,7 +83,7 @@ public class DisconnectionTimer {
                 try {
                     controller.removePlayer(controller.getPlayerByName(connectionHandler.getPlayerNameByID(id)));
                 } catch (PlayerNotFoundByNameException e) {
-                    e.printStackTrace();
+                    System.err.println("Player not found");
                 }
             }
             t.cancel();

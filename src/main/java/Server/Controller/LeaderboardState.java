@@ -19,14 +19,10 @@ import java.util.Map;
 
  */
 public class LeaderboardState implements ServerState{
-    private Controller controller;
 
     /**
-     * Constructor
-     * @param controller the controller to use
-     */
-    public LeaderboardState(Controller controller){
-        this.controller = controller;
+     * Constructor     */
+    public LeaderboardState(){
     }
 
     @Override

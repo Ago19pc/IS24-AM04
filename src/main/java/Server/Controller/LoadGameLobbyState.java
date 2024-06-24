@@ -20,9 +20,9 @@ import java.util.Map;
 
  */
 public class LoadGameLobbyState implements ServerState{
-    private GeneralServerConnectionHandler connectionHandler;
-    private GameModel gameModel;
-    private Controller controller;
+    private final GeneralServerConnectionHandler connectionHandler;
+    private final GameModel gameModel;
+    private final Controller controller;
 
     /**
      * Constructor

@@ -1,10 +1,6 @@
 package Server.Connections;
 
 import Server.Controller.Controller;
-import Server.Exception.AlreadyFinishedException;
-import Server.Exception.AlreadyStartedException;
-import Server.Exception.PlayerNotFoundByNameException;
-import Server.Exception.TooManyPlayersException;
 import Server.Messages.LobbyPlayersMessage;
 import Server.Messages.ToClientMessage;
 import Server.Messages.ToServerMessage;
@@ -12,7 +8,6 @@ import Server.Messages.ToServerMessage;
 import java.rmi.NotBoundException;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
-import java.util.List;
 
 /**
  * This interface is used to handle all clients connection of a certain type.
@@ -56,13 +51,6 @@ public interface ServerConnectionHandler extends Remote {
      */
     boolean isClientAvailable(String id) throws RemoteException;
 
-    /**
-     * Get all the ids of the clients connected with this connection type
-     * @return a list of all the ids of the clients connected
-     * @throws RemoteException when failing to get the ids
-     */
-    List<String> getAllIds() throws RemoteException;
-
 
 
     /**
@@ -85,7 +73,7 @@ public interface ServerConnectionHandler extends Remote {
     /**
      * Responds to a ping from a client
      * @return true if everything is fine
-     * @Throws RemoteException when failing to respond to the ping
+     * @throws RemoteException when failing to respond to the ping
      */
     boolean ping() throws RemoteException;
 }

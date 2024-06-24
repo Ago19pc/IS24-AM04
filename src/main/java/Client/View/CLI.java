@@ -140,11 +140,6 @@ public class CLI extends Thread implements UI {
         printOnNewLine("Impossibile cambiare il colore. Assicurati di aver inserito un colore disponibile");
         printPromptLine();
     }
-    public void needConnection() {
-        printOnNewLine("Devi connetterti a un server prima di poter eseguire questa azione");
-        printOnNewLine("Per connetterti a un server utilizza: join <ip> <porta>");
-        printPromptLine();
-    }
     public void connectionFailed(){
         printOnNewLine("Connessione al server fallita");
         printPromptLine();
@@ -189,15 +184,7 @@ public class CLI extends Thread implements UI {
         printOnNewLine("Non è il tuo turno");
         printPromptLine();
     }
-
-    // Updates
-    public void playerListChanged() {
-        printOnNewLine("E' entrato un nuovo giocatore! I giocatori ora sono: ");
-        for (Player player : controller.getPlayers()) {
-            System.out.print(player.getName() + " ");
-        }
-        printPromptLine();
-    }
+    
     public void displayPlayerColors(){
         printOnNewLine("Ora i giocatori hanno questi colori: \n");
         for (Player player : controller.getPlayers()) {
@@ -222,7 +209,7 @@ public class CLI extends Thread implements UI {
         printPromptLine();
     }
     public void chat(Message message){
-        printOnNewLine(message.getName() + ": " + message.getMessage());
+        printOnNewLine(message.name() + ": " + message.message());
         printPromptLine();
     }
     public void displayCommonAchievements(){

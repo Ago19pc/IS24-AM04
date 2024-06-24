@@ -4,7 +4,6 @@ import Server.Card.AchievementCard;
 import Server.Card.Card;
 import Server.Card.CornerCardFace;
 import Server.Card.StartingCard;
-import Server.Chat.Message;
 import Server.Connections.GeneralServerConnectionHandler;
 import Server.Deck.AchievementDeck;
 import Server.Enums.Color;
@@ -52,12 +51,6 @@ public class ControllerInstance implements Controller{
                 System.out.println(p.getName());
             }
         }
-    }
-    public ControllerInstance(GeneralServerConnectionHandler connectionHandler, boolean test) {
-        this.connectionHandler = connectionHandler;
-        this.gameModel = new GameModelInstance();
-        changeState(new LobbyState(this.gameModel, this.connectionHandler, this));
-        connectionHandler.setController(this,true);
     }
     public void changeState(ServerState state){
         gameState = state;
@@ -355,7 +348,7 @@ public class ControllerInstance implements Controller{
 
 
     public void computeLeaderboard() throws AlreadyFinishedException {
-        changeState(new LeaderboardState(this));
+        changeState(new LeaderboardState());
         AchievementDeck achievementDeck = gameModel.getAchievementDeck();
         try {
             AchievementCard commonAchievement1 = achievementDeck.popCard(DeckPosition.FIRST_CARD);
@@ -394,9 +387,8 @@ public class ControllerInstance implements Controller{
             }
             LeaderboardMessage leaderboardMessage = new LeaderboardMessage(leaderboardMap);
             connectionHandler.sendAllMessage(leaderboardMessage);
-            clear();
         } catch (AlreadyFinishedException e) {
-            e.printStackTrace();
+            System.err.println("Leaderboard already computed");
         } finally {
             System.out.println("Leaderboard computed, game finished. Bye bye");
             System.exit(0);
@@ -404,7 +396,7 @@ public class ControllerInstance implements Controller{
     }
 
     public void disconnectionLeaderboard() {
-        changeState(new LeaderboardState(this));
+        changeState(new LeaderboardState());
         LinkedHashMap<String, Integer> leaderboardMap = new LinkedHashMap<>();
         for (Player player : getPlayerList()) {
             leaderboardMap.put(player.getName(), player.getPoints());
@@ -465,16 +457,10 @@ public class ControllerInstance implements Controller{
         connectionHandler.sendAllMessage(chatMessage);
     }
 
-    public List<Message> getChatMessages() {
-        List<Message> messages = gameModel.getChat().getMessages();
-        //Notify
-        return messages;
-    }
-
     public void saveGame() {
         try {
             Gson gson = new Gson();
-            File file = new File(getClass().getResource("/saves/game.json").toURI());
+            File file = new File(Objects.requireNonNull(getClass().getResource("/saves/game.json")).toURI());
             FileWriter fileWriter = new FileWriter(file);
             gson.toJson(gameModel, fileWriter);
             fileWriter.close();
@@ -486,7 +472,7 @@ public class ControllerInstance implements Controller{
     public void loadGame() {
         try {
             Gson gson = new Gson();
-            File file = new File(getClass().getResource("/saves/game.json").toURI());
+            File file = new File(Objects.requireNonNull(getClass().getResource("/saves/game.json")).toURI());
             FileReader fileReader = new FileReader(file);
             gameModel = gson.fromJson(fileReader, GameModelInstance.class);
             fileReader.close();
@@ -506,15 +492,6 @@ public class ControllerInstance implements Controller{
 
     public GeneralServerConnectionHandler getConnectionHandler() {
         return this.connectionHandler;
-    }
-
-
-    @Override
-    public void printData() {
-        System.out.println("----------");
-        System.out.println("Players:");
-        this.gameModel.getPlayerList().forEach(p -> System.out.print(p.getName() + " " + p.getColor() + " " + p.isReady() +  ", "));
-        System.out.println("\n");
     }
 
     public void reactToDisconnection(String id){

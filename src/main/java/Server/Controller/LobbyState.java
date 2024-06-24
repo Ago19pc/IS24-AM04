@@ -21,9 +21,9 @@ import java.util.Map;
 
  */
 public class LobbyState implements ServerState{
-    private GameModel gameModel;
-    private GeneralServerConnectionHandler connectionHandler;
-    private Controller controller;
+    private final GameModel gameModel;
+    private final GeneralServerConnectionHandler connectionHandler;
+    private final Controller controller;
     /**
      * Constructor
      * @param gameModel the game model to use

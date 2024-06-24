@@ -3,8 +3,6 @@ package Server.Connections;
 import Client.Connection.ClientConnectionHandler;
 import Server.Controller.Controller;
 import Server.Enums.Color;
-import Server.Enums.GameState;
-import Server.Exception.*;
 import Server.Messages.LobbyPlayersMessage;
 import Server.Messages.ToClientMessage;
 import Server.Messages.ToServerMessage;
@@ -62,22 +60,6 @@ public class ServerConnectionHandlerRMI implements ServerConnectionHandler, Remo
         System.out.println("[RMI] Server avviato sulla porta: " + port);
 
     }
-    /**
-     * Debug constructor
-     * @param debugMode if true, the server will start on port 1235, or the next available one
-     */
-    public ServerConnectionHandlerRMI(boolean debugMode) {
-        if (debugMode) {
-            port = 1235;
-        } else {
-            askForPort();
-        }
-        while (!startServer(port)) {
-            System.out.println("[RMI] Porta già in uso, provo la successiva...");
-            port++;
-        }
-        System.out.println("[RMI] Server avviato sulla porta: " + port);
-    }
 
     /**
      * Starts the RMI server on the specified port.
@@ -134,19 +116,6 @@ public class ServerConnectionHandlerRMI implements ServerConnectionHandler, Remo
         this.controller = controller;
     }
 
-    public List<String> getAllIds(){
-        return clients.keySet().stream().toList();
-    }
-
-
-    /**
-     * Get the stub for RMI
-     * @return the stub of RMI
-     */
-    public ServerConnectionHandler getStub() {
-        return stub;
-    }
-
     @Override
     public void sendAllMessage(ToClientMessage message) {
         pingAll();
@@ -158,7 +127,6 @@ public class ServerConnectionHandlerRMI implements ServerConnectionHandler, Remo
                 }
             } catch (RemoteException e) {
                 System.out.println(" Send All Message : Client disconnected: " + clients.entrySet().stream().filter(entry -> entry.getValue().equals(client)).findFirst().get().getKey());
-                e.printStackTrace();
             }
         }
     }
@@ -169,7 +137,6 @@ public class ServerConnectionHandlerRMI implements ServerConnectionHandler, Remo
             clients.get(id).executeMessage(message);
         } catch (RemoteException e) {
             System.out.println("Send message : Client disconnected");
-            e.printStackTrace();
         }
     }
 

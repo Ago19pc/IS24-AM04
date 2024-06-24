@@ -195,12 +195,6 @@ public class GUI implements UI{
     }
 
     @Override
-    public void needConnection() {
-        System.out.println("Need connection");
-        //maybe useless here
-    }
-
-    @Override
     public void connectionFailed() {
         Platform.runLater(() -> {
             ((JoinSceneController) sceneControllerMap.get(SceneName.JOIN)).text_ip.clear();
@@ -283,11 +277,6 @@ public class GUI implements UI{
     }
 
     @Override
-    public void playerListChanged() {
-        System.out.println("Player list changed");
-    }
-
-    @Override
     public void displayPlayerColors() {
         Platform.runLater(this::listViewSetUpdate);
     }
@@ -312,14 +301,14 @@ public class GUI implements UI{
     public void chat(Message message) {
         Platform.runLater(()->
         {
-            ((ColorReadySceneController) sceneControllerMap.get(SceneName.SETCOLOR)).chat_messages.getItems().add( message.getName() + ": "+  message.getMessage());
+            ((ColorReadySceneController) sceneControllerMap.get(SceneName.SETCOLOR)).chat_messages.getItems().add( message.name() + ": "+  message.message());
             sceneControllerMap.get(SceneName.SETCOLOR).messageToSend.clear();
-            ((NameReadySceneController) sceneControllerMap.get(SceneName.SETNAME)).chat_message.getItems().add( message.getName() + ": "+  message.getMessage());
-            ((ChooseSecretCardController) sceneControllerMap.get(SceneName.SECRETCARDCHOICE)).chat_message.getItems().add( message.getName() + ": "+  message.getMessage());
+            ((NameReadySceneController) sceneControllerMap.get(SceneName.SETNAME)).chat_message.getItems().add( message.name() + ": "+  message.message());
+            ((ChooseSecretCardController) sceneControllerMap.get(SceneName.SECRETCARDCHOICE)).chat_message.getItems().add( message.name() + ": "+  message.message());
             sceneControllerMap.get(SceneName.SECRETCARDCHOICE).messageToSend.clear();
-            ((ChooseStartingCardController) sceneControllerMap.get(SceneName.STARTINGCARDCHOICE)).chat_message.getItems().add( message.getName() + ": "+  message.getMessage());
+            ((ChooseStartingCardController) sceneControllerMap.get(SceneName.STARTINGCARDCHOICE)).chat_message.getItems().add( message.name() + ": "+  message.message());
             sceneControllerMap.get(SceneName.STARTINGCARDCHOICE).messageToSend.clear();
-            ((MainBoardSceneController) sceneControllerMap.get(SceneName.GAME)).chatMessages.getItems().add( message.getName() + ": "+  message.getMessage());
+            ((MainBoardSceneController) sceneControllerMap.get(SceneName.GAME)).chatMessages.getItems().add( message.name() + ": "+  message.message());
             sceneControllerMap.get(SceneName.GAME).messageToSend.clear();
         });
     }

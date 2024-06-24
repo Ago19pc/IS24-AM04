@@ -21,8 +21,8 @@ import java.util.Map;
 
  */
 public class DrawCardState implements ServerState{
-    private Controller controller;
-    private GameModel gameModel;
+    private final Controller controller;
+    private final GameModel gameModel;
     /**
      * Constructor
      * @param controller the controller
@@ -108,7 +108,7 @@ public class DrawCardState implements ServerState{
                     try {
                         controller.drawCard(controller.getPlayerByName(playerName), DeckPosition.DECK, Decks.RESOURCE);
                     } catch (TooManyElementsException | InvalidMoveException | AlreadyFinishedException | NotYetStartedException e) {
-                        e.printStackTrace();
+                        System.err.println("Error while drawing card");
                     } catch (PlayerNotFoundByNameException e) {
                         throw new RuntimeException(e);
                     }
@@ -116,7 +116,7 @@ public class DrawCardState implements ServerState{
                     try {
                         controller.drawCard(controller.getPlayerByName(playerName), DeckPosition.FIRST_CARD, Decks.RESOURCE);
                     } catch (TooManyElementsException | InvalidMoveException | AlreadyFinishedException | NotYetStartedException e) {
-                        e.printStackTrace();
+                        System.err.println("Error while drawing card");
                     } catch (PlayerNotFoundByNameException e) {
                         throw new RuntimeException(e);
                     }
@@ -126,7 +126,7 @@ public class DrawCardState implements ServerState{
                     } catch (TooManyElementsException | InvalidMoveException |
                              AlreadyFinishedException | NotYetStartedException |
                              PlayerNotFoundByNameException e) {
-                        e.printStackTrace();
+                        System.err.println("Error while drawing card");
                     }
                 }
             } else if(!gameModel.getGoldDeck().isEmpty()){
@@ -136,7 +136,7 @@ public class DrawCardState implements ServerState{
                     } catch (TooManyElementsException | InvalidMoveException |
                              AlreadyFinishedException | NotYetStartedException |
                              PlayerNotFoundByNameException e) {
-                        e.printStackTrace();
+                        System.err.println("Error while drawing card");
                     }
                 } else if (gameModel.getGoldDeck().getBoardCard().get(DeckPosition.FIRST_CARD) != null){
                     try {
@@ -144,14 +144,14 @@ public class DrawCardState implements ServerState{
                     } catch (TooManyElementsException | InvalidMoveException |
                              AlreadyFinishedException | NotYetStartedException |
                              PlayerNotFoundByNameException e) {
-                        e.printStackTrace();
+                        System.err.println("Error while drawing card");
                     }
                 } else{
                     try {
                         controller.drawCard(controller.getPlayerByName(playerName), DeckPosition.SECOND_CARD, Decks.GOLD);
                     } catch (TooManyElementsException | AlreadyFinishedException | PlayerNotFoundByNameException |
                              InvalidMoveException | NotYetStartedException e) {
-                        e.printStackTrace();
+                        System.err.println("Error while drawing card");
                     }
                 }
             } else {

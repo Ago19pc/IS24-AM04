@@ -142,12 +142,6 @@ public interface Controller {
      */
     void addMessage(String message, Player player) throws IllegalArgumentException;
 
-    /**
-     * Gets all the messages in the chat
-     * @return the chat messages
-     */
-    List<Message> getChatMessages();
-
     //SAVED GAMES METHODS
     /**
      * saves a game to a json file
@@ -175,11 +169,6 @@ public interface Controller {
      */
     GeneralServerConnectionHandler getConnectionHandler();
 
-
-    /**
-     * Prints some data
-     */
-    void printData();
 
     /**
      * Reacts to the disconnection of a player, handling its possible removal from the game

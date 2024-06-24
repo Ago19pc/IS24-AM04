@@ -3,8 +3,6 @@ package Server.Connections;
 
 import Server.Controller.Controller;
 import Server.Enums.Color;
-import Server.Enums.GameState;
-import Server.Exception.*;
 import Server.Messages.*;
 import Server.Player.Player;
 
@@ -43,23 +41,6 @@ public class ServerConnectionHandlerSOCKET extends Thread implements ServerConne
         System.out.println("[Socket] Server avviato sulla porta: " + port);
     }
 
-    /**
-     * Create the server socket
-     * @param debugMode if true the server will start on port 1234
-     */
-    public ServerConnectionHandlerSOCKET(boolean debugMode){
-        this.clients = new HashMap<>();
-        if(debugMode)
-            this.port = 1234;
-        else
-            askForPort();
-        while (!startServer(port)) {
-            System.out.println("[Socket] Porta già in uso, provo la successiva...");
-            port++;
-        }
-        System.out.println("[Socket] Server avviato sulla porta: " + port);
-    }
-
 
     public void setController(Controller controller) {
         this.controller = controller;
@@ -71,7 +52,6 @@ public class ServerConnectionHandlerSOCKET extends Thread implements ServerConne
     public void run() {
         Thread.UncaughtExceptionHandler h = (th, ex) -> {
             System.out.println("[Socket] ServerConnectionHandler gestore eccezioni thread figli: " + ex);
-            ex.printStackTrace();
             th.interrupt();
         };
         try {
@@ -106,7 +86,6 @@ public class ServerConnectionHandlerSOCKET extends Thread implements ServerConne
             }
         } catch (IOException | RuntimeException e) {
             System.err.println("[Socket] Errore nel main loop del ServerConnectionHandlerSOCKET");
-            e.printStackTrace();
         }
     }
 
@@ -167,11 +146,6 @@ public class ServerConnectionHandlerSOCKET extends Thread implements ServerConne
         clients.remove(target);
         target.interrupt();
     }
-
-    public List<String> getAllIds(){
-        return clients.values().stream().toList();
-    }
-
     /**
      * Get the controller
      * @return the controller

@@ -3,7 +3,6 @@ package Server.Controller;
 import Client.Deck;
 import Server.Card.*;
 import Server.Enums.*;
-import Server.Exception.AlreadyFinishedException;
 import Server.Exception.AlreadyStartedException;
 import Server.Exception.TooFewElementsException;
 import Server.Exception.TooManyElementsException;
@@ -19,8 +18,8 @@ import java.util.stream.Collectors;
  * Class for the state where players place their cards
  */
 public class PlaceCardState implements ServerState{
-    private Controller controller;
-    private GameModel gameModel;
+    private final Controller controller;
+    private final GameModel gameModel;
     /**
      * Constructor
      * @param controller the controller

@@ -116,13 +116,6 @@ public class GeneralServerConnectionHandler {
     public ServerConnectionHandlerRMI getServerConnectionHandlerRMI() {
         return serverConnectionHandlerRMI;
     }
-    /**
-     * Returns the socket connection handler as a ServerConnectionHandlerSOCKET
-     * @return the socket connection handler
-     */
-    public ServerConnectionHandlerSOCKET getServerConnectionHandlerSOCKET() {
-        return serverConnectionHandlerSOCKET;
-    }
 
     /**
      * Sends a message to all the clients
@@ -161,12 +154,6 @@ public class GeneralServerConnectionHandler {
         serverConnectionHandlerRMI = new ServerConnectionHandlerRMI();
         serverConnectionHandlerRMI.setController(controller);
         serverConnectionHandlerSOCKET = new ServerConnectionHandlerSOCKET();
-        serverConnectionHandlerSOCKET.setController(controller);
-    }
-    public void setController(Controller controller , boolean test){
-        serverConnectionHandlerRMI = new ServerConnectionHandlerRMI(true);
-        serverConnectionHandlerRMI.setController(controller);
-        serverConnectionHandlerSOCKET = new ServerConnectionHandlerSOCKET(true);
         serverConnectionHandlerSOCKET.setController(controller);
     }
 
