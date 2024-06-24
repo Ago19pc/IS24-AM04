@@ -16,21 +16,15 @@ public class ResourceCard implements Card {
      * The back face of the card
      */
     final RegularBackFace backFace;
-    /**
-     * The URI of the image of the card
-     */
-    private final String imageURI;
 
     /**
      * Constructor for the ResourceCard
      * @param frontFace the front face
      * @param backFace the back face
-     * @param imageURI the image URI
      */
-    public ResourceCard(ResourceFrontFace frontFace, RegularBackFace backFace, String imageURI) {
+    public ResourceCard(ResourceFrontFace frontFace, RegularBackFace backFace) {
         this.frontFace = frontFace;
         this.backFace = backFace;
-        this.imageURI = imageURI;
     }
 
 
@@ -49,9 +43,4 @@ public class ResourceCard implements Card {
     public String toString(){
         return "Carta risorsa. Faccia anteriore: \n" + frontFace.toString() + "\nFaccia posteriore: \n" + backFace.toString();
     }
-
-    public String getImageURI() {
-        return imageURI;
-    }
-
 }

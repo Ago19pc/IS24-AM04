@@ -18,22 +18,16 @@ public class AchievementCard implements Card {
      * The back face of the card. It's empty
      */
     private final EmptyCardFace backFace;
-    /**
-     * The URI of the image of the card
-     */
-    private final String imageURI;
 
 
     /**
      * Constructor for the AchievementCard
      * @param frontFace the front face
      * @param backFace the back face
-     * @param imageURI the image URI
      */
-    public AchievementCard(AchievementFrontFace frontFace, EmptyCardFace backFace, String imageURI) {
+    public AchievementCard(AchievementFrontFace frontFace, EmptyCardFace backFace) {
         this.frontFace = frontFace;
         this.backFace = backFace;
-        this.imageURI = imageURI;
     }
 
     public CardFace getFace(Face face) {
@@ -53,10 +47,6 @@ public class AchievementCard implements Card {
      */
     public String toString(){
         return "Puoi ottenere " + frontFace.getScore() + " punti completando i seguenti requisiti: " + frontFace.scoreReqForPrint();
-    }
-
-    public String getImageURI() {
-        return imageURI;
     }
 
 }

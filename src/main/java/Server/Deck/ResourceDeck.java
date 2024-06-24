@@ -214,7 +214,7 @@ public class ResourceDeck implements Deckable {
 
                 RegularBackFace backFace = new RegularBackFace("back-" + counter + ".jpeg", centerSymbolsB);
             
-                ResourceCard card = new ResourceCard(frontFace, backFace, counter + ".jpeg");
+                ResourceCard card = new ResourceCard(frontFace, backFace);
                 this.cards.add(card);
                 cardNumber++;
             }
@@ -222,6 +222,11 @@ public class ResourceDeck implements Deckable {
             System.err.println("An error occurred while generating starting cards");
         }
 
+    }
+
+    @Override
+    public Card getCard(int position) {
+        return cards.get(position);
     }
 
 }

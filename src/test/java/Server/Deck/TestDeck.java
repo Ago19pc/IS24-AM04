@@ -126,7 +126,7 @@ public class TestDeck {
         scoreRequirements.put(Symbol.QUILL, 1);
         List<Symbol> symbols = new ArrayList<>();
         symbols.add(Symbol.FUNGUS);
-        GoldCard goldCard = new GoldCard(new GoldFrontFace("",cornerSymbols,1, PlacementRequirements,scoreRequirements,Symbol.FUNGUS), new RegularBackFace("",symbols ),"");
+        GoldCard goldCard = new GoldCard(new GoldFrontFace("",cornerSymbols,1, PlacementRequirements,scoreRequirements,Symbol.FUNGUS), new RegularBackFace("",symbols ));
         assertEquals(goldCard.toString(), goldDeck.getBoardCard().get(DeckPosition.FIRST_CARD).toString());
         cornerSymbols = new HashMap<>();
         cornerSymbols.put(CardCorners.TOP_LEFT, Symbol.EMPTY);
@@ -138,7 +138,7 @@ public class TestDeck {
         PlacementRequirements.put(Symbol.PLANT, 1);
         scoreRequirements = new HashMap<>();
         scoreRequirements.put(Symbol.BOTTLE, 1);
-        goldCard = new GoldCard(new GoldFrontFace("",cornerSymbols,1, PlacementRequirements,scoreRequirements,Symbol.FUNGUS), new RegularBackFace("",symbols ),"");
+        goldCard = new GoldCard(new GoldFrontFace("",cornerSymbols,1, PlacementRequirements,scoreRequirements,Symbol.FUNGUS), new RegularBackFace("",symbols ));
         assertEquals(goldCard.toString(), goldDeck.getBoardCard().get(DeckPosition.SECOND_CARD).toString());
 
     }
@@ -153,14 +153,14 @@ public class TestDeck {
         cornerSymbols.put(CardCorners.BOTTOM_RIGHT, Symbol.NONE);
         List<Symbol> symbols = new ArrayList<>();
         symbols.add(Symbol.FUNGUS);
-        ResourceCard resourceCard = new ResourceCard(new ResourceFrontFace("",cornerSymbols,0,Symbol.FUNGUS), new RegularBackFace("",symbols ),"");
+        ResourceCard resourceCard = new ResourceCard(new ResourceFrontFace("",cornerSymbols,0,Symbol.FUNGUS), new RegularBackFace("",symbols ));
         assertEquals(resourceCard.toString(), resourceDeck.getBoardCard().get(DeckPosition.FIRST_CARD).toString());
         cornerSymbols = new HashMap<>();
         cornerSymbols.put(CardCorners.TOP_LEFT, Symbol.FUNGUS);
         cornerSymbols.put(CardCorners.TOP_RIGHT, Symbol.FUNGUS);
         cornerSymbols.put(CardCorners.BOTTOM_LEFT, Symbol.NONE);
         cornerSymbols.put(CardCorners.BOTTOM_RIGHT, Symbol.EMPTY);
-        resourceCard = new ResourceCard(new ResourceFrontFace("",cornerSymbols,0,Symbol.FUNGUS), new RegularBackFace("",symbols ),"");
+        resourceCard = new ResourceCard(new ResourceFrontFace("",cornerSymbols,0,Symbol.FUNGUS), new RegularBackFace("",symbols ));
         assertEquals(resourceCard.toString(), resourceDeck.getBoardCard().get(DeckPosition.SECOND_CARD).toString());
     }
     @Test
@@ -174,7 +174,7 @@ public class TestDeck {
                 scoreRequirements.put(symbol, 0);
         }
         scoreRequirements.put(Symbol.PATTERN1F, 1);
-        AchievementCard achievementCard = new AchievementCard(new AchievementFrontFace("",scoreRequirements,2), new EmptyCardFace(""),"");
+        AchievementCard achievementCard = new AchievementCard(new AchievementFrontFace("",scoreRequirements,2), new EmptyCardFace(""));
         assertEquals(achievementCard.toString(), achievementDeck.getBoardCard().get(DeckPosition.FIRST_CARD).toString());
         scoreRequirements = new HashMap<>();
         for (Symbol symbol : Symbol.values()) {
@@ -182,7 +182,7 @@ public class TestDeck {
                 scoreRequirements.put(symbol, 0);
         }
         scoreRequirements.put(Symbol.PATTERN2P, 1);
-        achievementCard = new AchievementCard(new AchievementFrontFace("",scoreRequirements,2), new EmptyCardFace(""),"");
+        achievementCard = new AchievementCard(new AchievementFrontFace("",scoreRequirements,2), new EmptyCardFace(""));
         assertEquals(achievementCard.toString(), achievementDeck.getBoardCard().get(DeckPosition.SECOND_CARD).toString());
     }
 

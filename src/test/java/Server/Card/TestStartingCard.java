@@ -12,7 +12,7 @@ public class TestStartingCard {
     public void testGetFace() {
         StartingFrontFace frontFace = new StartingFrontFace("image1.jpg", new HashMap<>(), new ArrayList<>());
         CornerCardFace backFace = new CornerCardFace("image2.jpg", new HashMap<>());
-        StartingCard card = new StartingCard(frontFace, backFace, "1.jpeg");
+        StartingCard card = new StartingCard(frontFace, backFace);
         assertEquals(frontFace, card.getFace(Face.FRONT));
         assertEquals(backFace, card.getFace(Face.BACK));
     }
@@ -21,7 +21,7 @@ public class TestStartingCard {
     public void testGetCornerFace() {
         StartingFrontFace frontFace = new StartingFrontFace("image1.jpg", new HashMap<>(), new ArrayList<>());
         CornerCardFace backFace = new CornerCardFace("image2.jpg", new HashMap<>());
-        StartingCard card = new StartingCard(frontFace, backFace, "1.jpeg");
+        StartingCard card = new StartingCard(frontFace, backFace);
         assertEquals(frontFace, card.getCornerFace(Face.FRONT));
         assertEquals(backFace, card.getCornerFace(Face.BACK));
     }

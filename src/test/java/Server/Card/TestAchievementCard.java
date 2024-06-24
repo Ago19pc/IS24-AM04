@@ -14,7 +14,7 @@ public class TestAchievementCard {
     public void testGetFace() {
         AchievementFrontFace frontFace = new AchievementFrontFace("front-1.jpeg", new HashMap<>(), 1);
         EmptyCardFace backFace = new EmptyCardFace("back-1.jpeg");
-        AchievementCard achievementCard = new AchievementCard(frontFace, backFace, "1.jpeg");
+        AchievementCard achievementCard = new AchievementCard(frontFace, backFace);
         assertEquals(frontFace, achievementCard.getFace(Face.FRONT));
         assertEquals(backFace, achievementCard.getFace(Face.BACK));
 
@@ -25,7 +25,7 @@ public class TestAchievementCard {
     public void testGetCornerFace() {
         AchievementFrontFace frontFace = new AchievementFrontFace("front-1.jpeg", new HashMap<>(), 0);
         EmptyCardFace backFace = new EmptyCardFace("back-1.jpeg");
-        AchievementCard achievementCard = new AchievementCard(frontFace, backFace, "1.jpeg");
+        AchievementCard achievementCard = new AchievementCard(frontFace, backFace);
         UnsupportedOperationException exceptionThrown = assertThrows(
                 UnsupportedOperationException.class, () -> achievementCard.getCornerFace(Face.FRONT)
         );

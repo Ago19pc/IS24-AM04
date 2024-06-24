@@ -132,6 +132,11 @@ public class GoldDeck implements Deckable {
         return cards.getFirst();
     }
 
+    @Override
+    public Card getCard(int position) {
+        return cards.get(position);
+    }
+
     /**
      * Get the number of cards in the deck
      * @return int the number of cards in the deck
@@ -222,7 +227,7 @@ public class GoldDeck implements Deckable {
 
                 RegularBackFace backFace = new RegularBackFace("back-" + counter + ".jpeg", centerSymbolsB);
 
-                GoldCard card = new GoldCard(frontFace, backFace,counter + ".jpeg");
+                GoldCard card = new GoldCard(frontFace, backFace);
                 this.cards.add(card);
                 cardNumber++;
             }

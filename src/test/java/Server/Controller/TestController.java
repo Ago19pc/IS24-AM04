@@ -1,18 +1,17 @@
-package Server.Controller;
+/*package Server.Controller;
 
-import Server.Card.CornerCardFace;
-import Server.Card.StartingFrontFace;
+import Server.Card.*;
 import Server.Connections.GeneralServerConnectionHandler;
-import Server.Enums.CardCorners;
-import Server.Enums.Color;
-import Server.Enums.Face;
-import Server.Enums.Symbol;
-import Server.Exception.PlayerNotFoundByNameException;
-import Server.Exception.TooManyPlayersException;
+import Server.Deck.AchievementDeck;
+import Server.Deck.GoldDeck;
+import Server.Deck.ResourceDeck;
+import Server.Enums.*;
+import Server.Exception.*;
 import Server.Player.Player;
 import Server.Player.PlayerInstance;
 import org.junit.jupiter.api.Test;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -21,11 +20,12 @@ import java.util.Map;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class TestController {
+    GeneralServerConnectionHandler connectionHandler = new GeneralServerConnectionHandler();
+    Controller controller = new ControllerInstance(connectionHandler,true);
 
     @Test
     public void testAddPlayer() throws Exception {
-        GeneralServerConnectionHandler connectionHandler = new GeneralServerConnectionHandler();
-        Controller controller = new ControllerInstance(connectionHandler,true);
+        controller.clear();
         controller.addPlayer("player1", "1");
         List<Server.Player.Player> playerList = controller.getPlayerList();
         assertEquals(1, playerList.size());
@@ -41,8 +41,7 @@ public class TestController {
     }
     @Test
     public void testRemovePlayer() throws Exception {
-        GeneralServerConnectionHandler connectionHandler = new GeneralServerConnectionHandler();
-        Controller controller = new ControllerInstance(connectionHandler,true);
+        controller.clear();
         Player player = new PlayerInstance("player1");
         controller.addPlayer(player.getName(), "1");
         List<Server.Player.Player> playerList = controller.getPlayerList();
@@ -53,9 +52,7 @@ public class TestController {
     }
     @Test
     public void testColor() throws Exception {
-        GeneralServerConnectionHandler connectionHandler = new GeneralServerConnectionHandler();
-        Controller controller = new ControllerInstance(connectionHandler,true);
-
+        controller.clear();
         controller.addPlayer("player1", "1");
         controller.setPlayerColor(Color.RED, controller.getPlayerByName("player1"));
         controller.addPlayer("player2", "2");
@@ -64,11 +61,9 @@ public class TestController {
         assertEquals(Color.RED, controller.getPlayerByName("player1").getColor());
         assertNull(controller.getPlayerByName("player2").getColor());
     }
-    /*
     @Test
     public void testSetSecretAchievement() throws Exception {
-        GeneralServerConnectionHandler connectionHandler = new GeneralServerConnectionHandler();
-        Controller controller = new ControllerInstance(connectionHandler,true);
+        controller.clear();
         controller.addPlayer("player1", "1");
         controller.addPlayer("player2", "2");
         controller.setPlayerColor(Color.RED, controller.getPlayerByName("player1"));
@@ -77,19 +72,16 @@ public class TestController {
         controller.setReady(controller.getPlayerByName("player2"));
         AchievementDeck achievementDeck = new AchievementDeck();
         List<AchievementCard> achievementCards = new ArrayList<>();
-        achievementCards.add(achievementDeck.popCard(DeckPosition.FIRST_CARD));
-        achievementCards.add(achievementDeck.popCard(DeckPosition.SECOND_CARD));
-        achievementCards.add(controller.getPlayerByName("player1").getSecretObjective());
-        controller.setSecretObjectiveCard(controller.getPlayerByName("player1"), 0);
-        controller.setSecretObjectiveCard(controller.getPlayerByName("player2"), 1);
-        //controller.setSecretObjectiveCard(controller.getPlayerList().getFirst(), chosenCard);
-        //assertEquals(chosenCard, player.getSecretObjective());
-    }*/
+        achievementCards.add(achievementDeck.getCard(0));
+        achievementCards.add(achievementDeck.getCard(1));
+        controller.giveInitialHand();
+        assertEquals(achievementCards.getFirst(), controller.getPlayerByName("player1").getSecretObjective());
+        assertEquals(achievementCards.getLast(), controller.getPlayerByName("player2").getSecretObjective());
+    }
     @Test
     public void testInitializeManuscript() throws Exception
     {
-        GeneralServerConnectionHandler connectionHandler = new GeneralServerConnectionHandler();
-        Controller controller = new ControllerInstance(connectionHandler,true);
+        controller.clear();
         controller.addPlayer("Player1","1");
         controller.addPlayer("Player2","2");
         controller.setPlayerColor(Color.RED, controller.getPlayerByName("Player1"));
@@ -180,8 +172,7 @@ public class TestController {
     @Test
     public void testGiveInitialHand() throws Exception
     {
-        GeneralServerConnectionHandler connectionHandler = new GeneralServerConnectionHandler();
-        Controller controller = new ControllerInstance(connectionHandler,true);
+        controller.clear();
         controller.addPlayer("player1","1");
         controller.addPlayer("player2","2");
         controller.setPlayerColor(Color.RED, controller.getPlayerByName("player1"));
@@ -196,18 +187,15 @@ public class TestController {
 
     @Test
     public void testNextTurn() throws Exception {
-        GeneralServerConnectionHandler connectionHandler = new GeneralServerConnectionHandler();
-        Controller controller = new ControllerInstance(connectionHandler,true);
+        controller.clear();
         Player player = new PlayerInstance("player1");
         controller.addPlayer("player1","1");
         controller.nextTurn();
         assertEquals(1, controller.getTurn());
     }
-    /*
     @Test
     public void testPlayCard() throws Exception {
-        GeneralServerConnectionHandler connectionHandler = new GeneralServerConnectionHandler();
-        Controller controller = new ControllerInstance(connectionHandler,true);
+        controller.clear();
         Player player = new PlayerInstance("player1");
         Player player2 = new PlayerInstance("player2");
         Map<CardCorners, Symbol> cornerSymbols123 = new HashMap<>();
@@ -217,7 +205,7 @@ public class TestController {
         cornerSymbols123.put(CardCorners.BOTTOM_RIGHT, Symbol.EMPTY);
         List<Symbol> centerSymbols123 = new ArrayList<>();
         centerSymbols123.add(Symbol.BUG);
-        StartingCard startingCard = new StartingCard(new StartingFrontFace("image.jpg", cornerSymbols123, centerSymbols123), new CornerCardFace("image.jpg", new HashMap<>()), "1.jpeg");
+        StartingCard startingCard = new StartingCard(new StartingFrontFace("image.jpg", cornerSymbols123, centerSymbols123), new CornerCardFace("image.jpg", new HashMap<>()));
         controller.addPlayer("player", "1");
         controller.addPlayer("player2", "2");
         controller.setPlayerColor(Color.RED, player);
@@ -237,7 +225,7 @@ public class TestController {
         centerSymbols.add(Symbol.FUNGUS);
         ResourceCard resourceCard = new ResourceCard(
                 new ResourceFrontFace("image1.jpg", cornerSymbols , 0, Symbol.FUNGUS),
-                new RegularBackFace("image2.jpg", centerSymbols),"1.jpeg"
+                new RegularBackFace("image2.jpg", centerSymbols)
         );
         player.removeCardFromHand(0);
         player.removeCardFromHand(0);
@@ -256,7 +244,7 @@ public class TestController {
         centerSymbols2.add(Symbol.BUG);
         ResourceCard resourceCard2 = new ResourceCard(
                 new ResourceFrontFace("image3.jpg", cornerSymbols2 , 1, Symbol.BUG),
-                new RegularBackFace("image4.jpg", centerSymbols2), "2.jpeg"
+                new RegularBackFace("image4.jpg", centerSymbols2)
         );
         player.addCardToHand(resourceCard2);
         player.addCardToHand(resourceCard2);
@@ -282,23 +270,21 @@ public class TestController {
         scoreRequirements.put(Symbol.BUG, 2);
         GoldCard goldCard = new GoldCard(
                 new GoldFrontFace("image5.jpg", cornerSymbols3, 2,new HashMap<>(), scoreRequirements, Symbol.BUG),
-                new RegularBackFace("image6.jpg", centerSymbols2), "3.jpeg"
+                new RegularBackFace("image6.jpg", centerSymbols2)
         );
         player3.addCardToHand(goldCard);
         controller.playCard(player3, 2,-1,-1,Face.FRONT);
         assertEquals(5, player3.getPoints());
 
     }
-    /*
     @Test
     public void testDrawCard() throws Exception {
         int sentinel = 0,i;
-        GeneralServerConnectionHandler connectionHandler = new GeneralServerConnectionHandler(true);
-        Controller controller = new ControllerInstance(connectionHandler);
+        controller.clear();
         Player player = new PlayerInstance("player1");
         Player player2 = new PlayerInstance("player2");
-        controller.addPlayer(player.getName());
-        controller.addPlayer(player2.getName());
+        controller.addPlayer(player.getName(), "1");
+        controller.addPlayer(player2.getName(), "2");
         controller.setPlayerColor(Color.RED, player);
         controller.setPlayerColor(Color.BLUE, player2);
         controller.setReady(player);
@@ -391,13 +377,12 @@ public class TestController {
         assertEquals(3 , sentinel );
     }
     @Test
-    public void testClearGame() throws IOException, TooManyPlayersException, MissingInfoException, AlreadyFinishedException {
-        GeneralServerConnectionHandler connectionHandler = new GeneralServerConnectionHandler(true);
-        Controller controller = new ControllerInstance(connectionHandler);
+    public void testClearGame() throws TooManyPlayersException, AlreadyStartedException {
+        controller.clear();
         Player player = new PlayerInstance("player1");
-        controller.addPlayer(player.getName());
+        controller.addPlayer(player.getName(), "1");
         Player player2 = new PlayerInstance("player2");
-        controller.addPlayer(player2.getName());
+        controller.addPlayer(player2.getName(), "2");
         controller.nextTurn();
         controller.clear();
         assertEquals(0, controller.getPlayerList().size());
@@ -405,11 +390,10 @@ public class TestController {
     }
 
     @Test
-    public void testReady() throws IOException, TooManyPlayersException, MissingInfoException {
-        GeneralServerConnectionHandler connectionHandler = new GeneralServerConnectionHandler(true);
-        Controller controller = new ControllerInstance(connectionHandler);
+    public void testReady() throws TooManyPlayersException, MissingInfoException, AlreadyStartedException {
+        controller.clear();
         Player player = new PlayerInstance("player1");
-        controller.addPlayer(player.getName());
+        controller.addPlayer(player.getName(), "1");
         assertFalse(player.isReady());
         controller.setPlayerColor(Color.RED, player);
         controller.setReady(player);
@@ -419,11 +403,10 @@ public class TestController {
     }
 
     @Test
-    public void testChat() throws IOException, TooManyPlayersException {
-        GeneralServerConnectionHandler connectionHandler = new GeneralServerConnectionHandler(true);
-        Controller controller = new ControllerInstance(connectionHandler);
+    public void testChat() throws TooManyPlayersException, AlreadyStartedException {
+        controller.clear();
         Player player = new PlayerInstance("player1");
-        controller.addPlayer(player.getName());
+        controller.addPlayer(player.getName(), "1");
         assertEquals(0, controller.getChatMessages().size());
         controller.addMessage("Hello", player);
         assertEquals(1, controller.getChatMessages().size());
@@ -432,13 +415,12 @@ public class TestController {
     }
 
     @Test
-    public void testSaveAndLoad() throws IOException, TooManyPlayersException, AlreadySetException, MissingInfoException, TooFewElementsException, AlreadyFinishedException {
-        GeneralServerConnectionHandler connectionHandler = new GeneralServerConnectionHandler(true);
-        Controller controller = new ControllerInstance(connectionHandler);
+    public void testSaveAndLoad() throws IOException, TooManyPlayersException, AlreadySetException, MissingInfoException, TooFewElementsException, AlreadyFinishedException, AlreadyStartedException {
+        controller.clear();
         Player player = new PlayerInstance("player1");
-        controller.addPlayer(player.getName());
+        controller.addPlayer(player.getName(), "1");
         Player player2 = new PlayerInstance("player2");
-        controller.addPlayer(player2.getName());
+        controller.addPlayer(player2.getName(), "2");
         controller.setPlayerColor(Color.RED, player);
         controller.setPlayerColor(Color.BLUE, player2);
         controller.setReady(player);
@@ -452,25 +434,23 @@ public class TestController {
         assertEquals(2, controller.getPlayerList().size());
         assertEquals(3, controller.getPlayerList().get(0).getHand().size());
     }
+    /*
     @Test
-    public void testLeaderboard() throws TooManyPlayersException, MissingInfoException, TooFewElementsException, AlreadySetException, AlreadyFinishedException, TooManyElementsException, InvalidMoveException {
-        Controller controller = new ControllerInstance(new ServerConnectionHandler(true));
-        Player player = new PlayerInstance("player1");
-        Player player2 = new PlayerInstance("player2");
-        Player player3 = new PlayerInstance("player3");
-        controller.addPlayer(player);
-        controller.addPlayer(player2);
-        controller.addPlayer(player3);
-        controller.setPlayerColor(Color.RED, player);
-        controller.setPlayerColor(Color.BLUE, player2);
-        controller.setPlayerColor(Color.GREEN, player3);
-        controller.setReady(player);
-        controller.setReady(player2);
-        controller.setReady(player3);
+    public void testLeaderboard() throws TooManyPlayersException, MissingInfoException, TooFewElementsException, AlreadySetException, AlreadyFinishedException, TooManyElementsException, InvalidMoveException, AlreadyStartedException, PlayerNotFoundByNameException {
+        controller.clear();
+        controller.addPlayer("player1", "1");
+        controller.addPlayer("player2", "2");
+        controller.addPlayer("player3", "3");
+        controller.setPlayerColor(Color.RED, controller.getPlayerByName("player1"));
+        controller.setPlayerColor(Color.BLUE, controller.getPlayerByName("player2"));
+        controller.setPlayerColor(Color.GREEN, controller.getPlayerByName("player3"));
+        controller.setReady(controller.getPlayerByName("player1"));
+        controller.setReady(controller.getPlayerByName("player2"));
+        controller.setReady(controller.getPlayerByName("player3"));
         controller.start();
-        player = controller.getPlayerList().get(0);
-        player2 = controller.getPlayerList().get(1);
-        player3 = controller.getPlayerList().get(2);
+        Player player = controller.getPlayerList().get(0);
+        Player player2 = controller.getPlayerList().get(1);
+        Player player3 = controller.getPlayerList().get(2);
         Map <CardCorners, Symbol> cornerSymbolsStarting = new HashMap<>();
         cornerSymbolsStarting.put(CardCorners.TOP_LEFT, Symbol.FUNGUS);
         cornerSymbolsStarting.put(CardCorners.TOP_RIGHT, Symbol.PLANT);
@@ -635,9 +615,5 @@ public class TestController {
         assertEquals(controller.getPlayerList().get(2).getName(), leaderboard.get(0).getName());
         assertEquals(controller.getPlayerList().get(1).getName(), leaderboard.get(1).getName());
         assertEquals(controller.getPlayerList().get(0).getName(), leaderboard.get(2).getName());
-
-
-
-
-    }*/
-}
+    }
+}*/

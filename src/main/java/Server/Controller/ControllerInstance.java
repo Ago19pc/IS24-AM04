@@ -414,10 +414,7 @@ public class ControllerInstance implements Controller{
         System.exit(0);
     }
 
-    /**
-     * Clears the game model and prepares for a new game
-     */
-    private void clear() {
+    public void clear() {
         gameModel = new GameModelInstance();
         givenStartingCards = new HashMap<>();
         givenSecretObjectiveCards = new HashMap<>();

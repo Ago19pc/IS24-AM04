@@ -21,10 +21,4 @@ public interface Card extends Serializable {
      * @throws UnsupportedOperationException if the card does not have corners
      */
     CornerCardFace getCornerFace(Face face) throws UnsupportedOperationException;
-
-    /**
-     * Returns the image URI of the card
-     * @return the image URI
-     */
-    String getImageURI();
 }

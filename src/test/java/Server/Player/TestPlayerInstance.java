@@ -33,8 +33,7 @@ public class TestPlayerInstance {
         );
         GoldCard goldCard = new GoldCard(
                 goldFrontFace,
-                goldBackFace,
-                "1.jpeg"
+                goldBackFace
         );
         playerInstance.addCardToHand(goldCard);
         assertEquals(1, playerInstance.getHand().size());
@@ -51,8 +50,7 @@ public class TestPlayerInstance {
         );
         ResourceCard resourceCard = new ResourceCard(
                 resourceFrontFace,
-                resourceBackFace,
-                "1.jpeg"
+                resourceBackFace
         );
         playerInstance.addCardToHand(resourceCard);
         assertEquals(2, playerInstance.getHand().size());
@@ -76,8 +74,7 @@ public class TestPlayerInstance {
         );
         GoldCard goldCard = new GoldCard(
                 goldFrontFace,
-                goldBackFace,
-                "1.jpeg"
+                goldBackFace
         );
         playerInstance.addCardToHand(goldCard);
         ResourceFrontFace resourceFrontFace = new ResourceFrontFace(
@@ -92,14 +89,12 @@ public class TestPlayerInstance {
         );
         ResourceCard resourceCard = new ResourceCard(
                 resourceFrontFace,
-                resourceBackFace,
-                "1.jpeg"
+                resourceBackFace
         );
         playerInstance.addCardToHand(resourceCard);
         ResourceCard resourceCard2 = new ResourceCard(
                 resourceFrontFace,
-                resourceBackFace,
-                "1.jpeg"
+                resourceBackFace
         );
         playerInstance.addCardToHand(resourceCard2);
         playerInstance.removeCardFromHand(0);
@@ -136,8 +131,7 @@ public class TestPlayerInstance {
         );
         AchievementCard achievementCard = new AchievementCard(
                 achievementFrontFace,
-                achievementBackFace,
-                "1.jpeg"
+                achievementBackFace
         );
         playerInstance.setSecretObjective(achievementCard);
         assertEquals(achievementCard, playerInstance.getSecretObjective());

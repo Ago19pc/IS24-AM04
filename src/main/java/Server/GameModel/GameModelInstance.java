@@ -106,7 +106,7 @@ public class GameModelInstance implements GameModel{
 
                 CornerCardFace backFace = new CornerCardFace("back-" + counter + ".jpeg", cornerSymbolsB);
 
-                StartingCard card = new StartingCard(frontFace, backFace, counter + ".jpeg");
+                StartingCard card = new StartingCard(frontFace, backFace);
                 startingCards.add(card);
             }
         } catch (Exception e) {

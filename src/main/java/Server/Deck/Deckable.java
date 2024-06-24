@@ -41,4 +41,11 @@ public interface Deckable {
      * @return the card on top of the deck
      */
      Card getTopCardNoPop();
+
+    /**
+     * Returns the card at the given position from the top of the deck
+     * @param position the position of the card
+     * @return the card at the given position
+     */
+    Card getCard(int position);
 }

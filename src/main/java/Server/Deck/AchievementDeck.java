@@ -137,7 +137,7 @@ public class AchievementDeck implements Deckable{
             
                 EmptyCardFace backFace = new EmptyCardFace("back-" + counter + ".jpeg");
             
-                AchievementCard card = new AchievementCard(frontFace, backFace, counter + ".jpeg");
+                AchievementCard card = new AchievementCard(frontFace, backFace);
                 this.cards.add(card);
             }
         } catch (Exception e) {
@@ -179,6 +179,11 @@ public class AchievementDeck implements Deckable{
         if(cards.isEmpty())
             return null;
         return cards.getFirst();
+    }
+
+    @Override
+    public AchievementCard getCard(int position) {
+        return cards.get(position);
     }
 
     /**

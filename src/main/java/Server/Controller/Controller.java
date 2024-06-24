@@ -246,5 +246,10 @@ public interface Controller {
      * @return true if the server is in the saved game lobby
      */
     boolean isInSavedGameLobby();
+
+    /**
+     * Clears the game model and prepares for a new game
+     */
+    void clear();
 }
 
