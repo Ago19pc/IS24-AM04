@@ -1,4 +1,4 @@
-<mxfile host="app.diagrams.net" modified="2024-06-24T13:22:20.201Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36 OPR/110.0.0.0" etag="w0fMq7OphrpB23pI9Uom" version="24.6.2" type="github">
+<mxfile host="app.diagrams.net" modified="2024-06-24T13:26:29.531Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36 OPR/110.0.0.0" etag="Z9fZDVWUg1K077zOsS56" version="24.6.2" type="github">
   <diagram name="Page-1" id="2YBvvXClWsGukQMizWep">
     <mxGraphModel dx="2460" dy="1330" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="0" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
       <root>
@@ -460,7 +460,7 @@
             <mxPoint as="offset" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="DGeFTbc-uDnH9qFSbPcV-57" value="if&amp;nbsp;&lt;div&gt;Player doesen&#39;t reconnect within 180 sec&lt;/div&gt;" style="shape=umlFrame;whiteSpace=wrap;html=1;pointerEvents=0;width=74;height=84;" parent="1" vertex="1">
+        <mxCell id="DGeFTbc-uDnH9qFSbPcV-57" value="if&amp;nbsp;&lt;div&gt;Player doesen&#39;t reconnect within timer setitngs&lt;/div&gt;" style="shape=umlFrame;whiteSpace=wrap;html=1;pointerEvents=0;width=74;height=84;" parent="1" vertex="1">
           <mxGeometry x="1373" y="110" width="300" height="127" as="geometry" />
         </mxCell>
         <mxCell id="DGeFTbc-uDnH9qFSbPcV-60" value="" style="endArrow=classic;html=1;rounded=0;" parent="1" edge="1">
