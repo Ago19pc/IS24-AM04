@@ -7,8 +7,8 @@ import Server.Enums.Face;
  * This class represents the state of the game where the player has to choose the starting card.
  */
 public class StartingCardChoiceState implements CLIState{
-    private CLI cli;
-    private ClientController controller;
+    private final CLI cli;
+    private final ClientController controller;
 
     public StartingCardChoiceState(CLI cli, ClientController controller) {
         this.cli = cli;

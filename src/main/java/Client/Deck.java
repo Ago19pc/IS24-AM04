@@ -63,6 +63,7 @@ public class Deck<T> implements Serializable {
     public void setBoardCards(List<Card> boardCards) {
         this.boardCards = new ArrayList<>();
         for (Card boardCard : boardCards) {
+            //noinspection unchecked
             this.boardCards.add((T) boardCard);
         }
     }

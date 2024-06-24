@@ -7,8 +7,8 @@ import Server.Enums.Color;
  * This class represents the state of the game where the player has to set his color and ready status.
  */
 public class SetColorState implements CLIState{
-    private CLI cli;
-    private ClientController controller;
+    private final CLI cli;
+    private final ClientController controller;
     public SetColorState(CLI cli, ClientController controller) {
         this.cli = cli;
         this.controller = controller;

@@ -1,9 +1,6 @@
 package Server.Card;
 
 import Server.Enums.Face;
-
-import java.util.Map;
-
 /**
  * This class represents achievement cards. They are composed of an AchievementFrontFace and an EmptyCardFace
  * @see AchievementFrontFace

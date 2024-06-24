@@ -10,19 +10,14 @@ import Server.Enums.DeckPosition;
 import Server.Enums.Decks;
 import Server.Enums.Face;
 import Server.Exception.PlayerNotFoundByNameException;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Group;
 import javafx.scene.control.*;
 import javafx.scene.effect.Glow;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * This class is responsible for the logic of the main board scene
@@ -549,7 +544,7 @@ public class MainBoardSceneController extends SceneController {
     public void pasqualino() {
         Tab tab = new Tab("Squadra Genew");
         AnchorPane pane = new AnchorPane();
-        ImageView image = new ImageView(getClass().getResource("/images/otherImages/uovadipasqua.jpg").toExternalForm());
+        ImageView image = new ImageView(Objects.requireNonNull(getClass().getResource("/images/otherImages/uovadipasqua.jpg")).toExternalForm());
         image.setPreserveRatio(false);
         image.setFitWidth(400);
         image.setFitHeight(300);

@@ -14,6 +14,7 @@ import javafx.stage.Stage;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.ResourceBundle;
 
 /**
@@ -61,8 +62,8 @@ public abstract class SceneController implements Initializable {
      * @return the Image of the card
      */
     public Image getImageFromCard(Card card, Face face) {
-        if (card == null) return new Image(getClass().getResourceAsStream("/images/Faces/back-96.jpeg"));
-        return new Image(getClass().getResourceAsStream("/images/Faces/" + card.getFace(face).getImageURI()));
+        if (card == null) return new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/Faces/back-96.jpeg")));
+        return new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/Faces/" + card.getFace(face).getImageURI())));
     }
 
     /**
@@ -72,8 +73,8 @@ public abstract class SceneController implements Initializable {
      * @return the Image of the cardface
      */
     public Image getImageFromCard(CardFace cardFace) {
-        if (cardFace == null) return new Image(getClass().getResourceAsStream("/images/Faces/back-96.jpeg"));
-        return new Image(getClass().getResourceAsStream("/images/Faces/" + cardFace.getImageURI()));
+        if (cardFace == null) return new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/Faces/back-96.jpeg")));
+        return new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/Faces/" + cardFace.getImageURI())));
     }
 
     /**

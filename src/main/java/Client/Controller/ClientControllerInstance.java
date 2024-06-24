@@ -207,7 +207,11 @@ public class ClientControllerInstance implements ClientController {
     @Override
     public void setRMIMode(boolean rmi) {
         try {
-            clientConnectionHandler = new GeneralClientConnectionHandler(this, rmi);
+            if(clientConnectionHandler != null) {
+                clientConnectionHandler.clear();
+            } else {
+                clientConnectionHandler = new GeneralClientConnectionHandler(this, rmi);
+            }
         } catch (RemoteException e) {
             throw new RuntimeException(e);
         }

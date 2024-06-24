@@ -40,16 +40,6 @@ public class Chat implements Serializable {
     }
 
     /**
-     * Add a message to the chat using the text and the sender's name
-     * @param message the text of the message
-     * @param name the name of the player who sent the message
-     */
-    public void addMessage(String message, String name) {
-        Message m = new Message(message, name);
-        messages.add(m);
-    }
-
-    /**
      * Get the list of messages
      * @return the messages as a list
      */
