@@ -34,5 +34,9 @@ public enum SceneName {
     /**
      * End scene
      */
-    END
+    END,
+    /**
+     * Scene where the user waits for the other players to reconnect
+     */
+    WAITING
 }
