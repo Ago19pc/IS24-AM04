@@ -152,8 +152,9 @@ public interface Controller {
     /**
      * loads a game from a json file
      * @throws IOException if the file can't be loaded
+     * @throws NullPointerException if the file is empty
      */
-    void loadGame() throws IOException;
+    void loadGame() throws IOException, NullPointerException;
 
     /**
      * Returns the player instance associated with the name

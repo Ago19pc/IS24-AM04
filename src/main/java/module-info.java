@@ -1,7 +1,7 @@
 /**
  * Codex Naturalis Game Project
  */
-module it.am04codexnaturalis {
+module it.am04softeng.codexnaturalis {
     requires javafx.controls;
     requires javafx.fxml;
 

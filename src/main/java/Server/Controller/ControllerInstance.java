@@ -18,9 +18,7 @@ import Server.Messages.*;
 import Server.Player.Player;
 import com.google.gson.Gson;
 
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
+import java.io.*;
 import java.util.*;
 
 /**
@@ -45,10 +43,14 @@ public class ControllerInstance implements Controller{
         System.out.println("Vuoi iniziare una nuova partita (n) o caricare una partita salvata (l)?");
         String input = inputReader.nextLine();
         if(input.equals("l")){
-            loadGame();
-            System.out.println("Partita caricata. I giocatori sono:");
-            for (Player p : gameModel.getPlayerList()){
-                System.out.println(p.getName());
+            try {
+                loadGame();
+                System.out.println("Partita caricata. I giocatori sono:");
+                for (Player p : gameModel.getPlayerList()) {
+                    System.out.println(p.getName());
+                }
+            } catch (NullPointerException e) {
+                System.out.println("Non esiste nessuna partita salvata. Inizio nuova partita.");
             }
         }
     }
@@ -469,15 +471,18 @@ public class ControllerInstance implements Controller{
         }
     }
 
-    public void loadGame() {
+    public void loadGame() throws NullPointerException{
         try {
             Gson gson = new Gson();
-            File file = new File(Objects.requireNonNull(getClass().getResource("/saves/game.json")).toURI());
-            FileReader fileReader = new FileReader(file);
-            gameModel = gson.fromJson(fileReader, GameModelInstance.class);
-            fileReader.close();
+            InputStream in = Objects.requireNonNull(getClass().getResourceAsStream("/saves/game.json"));
+            InputStreamReader reader = new InputStreamReader(in);
+            gameModel = gson.fromJson(reader, GameModelInstance.class);
+            reader.close();
+            if(gameModel == null){
+                throw new NullPointerException("Failed to load game. Game model is null");
+            }
             changeState(new LoadGameLobbyState(connectionHandler, gameModel, this));
-        } catch (Exception e) {
+        } catch (IOException e) {
             System.err.println("Error while loading game");
         }
     }
