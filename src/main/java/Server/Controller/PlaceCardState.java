@@ -54,18 +54,12 @@ public class PlaceCardState implements ServerState{
         int obtainedPoints;
         try {
             cardPoints = cardFace.getScore();
-        } catch (UnsupportedOperationException e) {
-            if (!Objects.equals(e.getMessage(), "Regular cards do not have scores")){
-                throw e;
-            }
+        } catch (UnsupportedOperationException ignored) {
         }
         Map<Symbol, Integer> scoreRequirements = new HashMap<>();
         try {
             scoreRequirements = cardFace.getScoreRequirements();
-        } catch (UnsupportedOperationException e) {
-            if (!Objects.equals(e.getMessage(), "Regular cards do not have score requirements")){
-                throw e;
-            }
+        } catch (UnsupportedOperationException ignored) {
         }
         System.out.println("ScoreRequirements " + scoreRequirements + "Player " + player.getName() + " CardPoints " + cardPoints);
         if (scoreRequirements != null) {
