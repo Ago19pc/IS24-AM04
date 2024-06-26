@@ -738,7 +738,6 @@ public class ClientControllerInstance implements ClientController {
 
     @Override
     public void serverDisconnected() {
-        clear();
         ui.serverDisconnected();
         if(gameState != GameState.LEADERBOARD){
             clear();
