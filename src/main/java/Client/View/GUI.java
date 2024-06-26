@@ -684,13 +684,14 @@ public class GUI implements UI{
      */
     private void regenerateManuscript()
     {
-        try {
-            for(CornerCardFace c : controller.getPlayerByName(controller.getMyName()).getManuscript().getAllCards())
-            {
-                ((MainBoardSceneController) sceneControllerMap.get(SceneName.GAME)).updateManuscript(controller.getMyName(), c, c.getXCoord(), c.getYCoord());
+        for(String playerName: controller.getPlayerNames()) {
+            try {
+                for (CornerCardFace c : controller.getPlayerByName(playerName).getManuscript().getAllCards()) {
+                    ((MainBoardSceneController) sceneControllerMap.get(SceneName.GAME)).updateManuscript(playerName, c, c.getXCoord(), c.getYCoord());
+                }
+            } catch (PlayerNotFoundByNameException e) {
+                throw new RuntimeException(e);
             }
-        } catch (PlayerNotFoundByNameException e) {
-            throw new RuntimeException(e);
         }
     }
 }
