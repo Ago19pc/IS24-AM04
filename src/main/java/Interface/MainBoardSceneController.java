@@ -9,6 +9,7 @@ import Server.Card.CornerCardFace;
 import Server.Enums.DeckPosition;
 import Server.Enums.Decks;
 import Server.Enums.Face;
+import Server.Enums.GameState;
 import Server.Exception.PlayerNotFoundByNameException;
 import javafx.fxml.FXML;
 import javafx.scene.Group;
@@ -555,5 +556,6 @@ public class MainBoardSceneController extends SceneController {
      */
     public void backToLobby() {
         controller.clearUI();
+        controller.setGameState(GameState.LOBBY);
     }
 }

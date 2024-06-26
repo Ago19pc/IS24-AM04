@@ -482,4 +482,9 @@ public interface ClientController {
      * Clears the UI, preparing it for a new game
      */
     void clearUI();
+    /**
+     * Sets the game state to the one passed in the arguments
+     * @param gameState the new game state
+     */
+    void setGameState(GameState gameState);
 }

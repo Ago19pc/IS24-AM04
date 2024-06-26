@@ -740,6 +740,9 @@ public class ClientControllerInstance implements ClientController {
     public void serverDisconnected() {
         clear();
         ui.serverDisconnected();
+        if(gameState != GameState.LEADERBOARD){
+            gameState = GameState.LOBBY;
+        }
     }
 
 
@@ -754,7 +757,6 @@ public class ClientControllerInstance implements ClientController {
         unavaiableColors.clear();
         chat = new Chat();
         players.clear();
-        gameState = GameState.LOBBY;
         proposedName = null;
         indexofSecretAchievement = -1;
         potentialSecretAchievements.clear();
@@ -766,5 +768,9 @@ public class ClientControllerInstance implements ClientController {
     @Override
     public void clearUI() {
         ui.clear();
+    }
+
+    public void setGameState(GameState gameState){
+        this.gameState = gameState;
     }
 }
