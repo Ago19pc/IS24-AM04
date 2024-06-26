@@ -100,7 +100,6 @@ public class GUI implements UI{
         Platform.runLater(() -> {
             if (controller.isSavedGame()) {
                 stage.setScene(getScene(SceneName.WAITING));
-                System.out.println("WAITING FOR OTHERS, TODO");
             } else {
                 sceneControllerMap.get(SceneName.SETCOLOR).messageToSend.setPromptText("Scrivi un messaggio!");
                 stage.setScene(getScene(SceneName.SETCOLOR));
@@ -387,9 +386,7 @@ public class GUI implements UI{
     @Override
     public void otherPlayerInitialHand(String name) {
         System.out.println("Other player initial hand");
-        Platform.runLater(() -> {
-            ((MainBoardSceneController) sceneControllerMap.get(SceneName.GAME)).updateDeckSizes(controller.getDeckSize(Decks.GOLD), controller.getDeckSize(Decks.RESOURCE));
-        });
+        Platform.runLater(() -> ((MainBoardSceneController) sceneControllerMap.get(SceneName.GAME)).updateDeckSizes(controller.getDeckSize(Decks.GOLD), controller.getDeckSize(Decks.RESOURCE)));
     }
 
     @Override
@@ -658,7 +655,6 @@ public class GUI implements UI{
     }
     public void gameAlreadyFinished() {
         System.out.println("Game already finished");
-        // todo: implement this
     }
 
     @Override

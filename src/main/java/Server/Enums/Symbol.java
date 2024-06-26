@@ -86,34 +86,6 @@ public enum Symbol {
     }
 
     /**
-     * Gets a text representation of the symbol
-     * @return a char with the text representation of the symbol
-     */
-    public char toChar(){
-        return switch (this) {
-            case ANIMAL -> 'A';
-            case FUNGUS -> 'F';
-            case PLANT -> 'P';
-            case BUG -> 'B';
-            case QUILL -> 'Q';
-            case BOTTLE -> 'O';
-            case PARCHMENT -> 'C';
-            case EMPTY -> 'E';
-            case NONE -> 'N';
-            case COVERED_CORNER -> 'X';
-            case PATTERN1F -> '1';
-            case PATTERN1A -> '2';
-            case PATTERN2P -> '3';
-            case PATTERN2B -> '4';
-            case PATTERN3 -> '5';
-            case PATTERN4 -> '6';
-            case PATTERN5 -> '7';
-            case PATTERN6 -> '8';
-            default -> ' ';
-        };
-    }
-
-    /**
      * Returns a short string representation of the symbol
      * @return a short string representation of the symbol
      */
@@ -124,7 +96,7 @@ public enum Symbol {
             case PLANT -> "\uD83C\uDF32";
             case BUG -> "\uD83E\uDD8B";
             case QUILL -> "\uD83E\uDEB6";
-            case BOTTLE -> "⚗\uFE0F";
+            case BOTTLE -> "⚗️";
             case PARCHMENT -> "\uD83D\uDCDC";
             case EMPTY -> " ";
             case NONE -> "NO";
@@ -151,7 +123,7 @@ public enum Symbol {
             case PLANT -> "\uD83C\uDF32";
             case BUG -> "\uD83E\uDD8B";
             case QUILL -> "\uD83E\uDEB6";
-            case BOTTLE -> "⚗\uFE0F";
+            case BOTTLE -> "⚗️";
             case PARCHMENT -> "\uD83D\uDCDC";
             default -> " ";
         };

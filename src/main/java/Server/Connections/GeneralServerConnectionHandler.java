@@ -46,7 +46,7 @@ public class GeneralServerConnectionHandler {
      * @param name the name of the player whose client has to be removed
      */
     public void removePlayerByName(String name) {
-        String id = playerID.entrySet().stream().filter(entry -> entry.getValue().equals(name)).findFirst().get().getKey();
+        String id = playerID.entrySet().stream().filter(entry -> entry.getValue().equals(name)).findFirst().orElseThrow().getKey();
         try{
             getServerConnectionHandler(id).killClient(id);
         } catch (PlayerNotInAnyServerConnectionHandlerException e) {
@@ -75,7 +75,7 @@ public class GeneralServerConnectionHandler {
      * @return the id
      */
     public String getIdByName(String name) {
-        return playerID.entrySet().stream().filter(entry -> entry.getValue().equals(name)).findFirst().get().getKey();
+        return playerID.entrySet().stream().filter(entry -> entry.getValue().equals(name)).findFirst().orElseThrow().getKey();
     }
 
     /**
@@ -134,7 +134,7 @@ public class GeneralServerConnectionHandler {
     public void sendMessage(ToClientMessage message, String name) {
         System.out.println(playerID);
         try {
-            String id = playerID.entrySet().stream().filter(entry -> entry.getValue().equals(name)).findFirst().get().getKey();
+            String id = playerID.entrySet().stream().filter(entry -> entry.getValue().equals(name)).findFirst().orElseThrow().getKey();
             if(disconnectedPlayerIds.contains(id)) {
                 return;
             }
@@ -199,7 +199,7 @@ public class GeneralServerConnectionHandler {
      * @param id the new id
      */
     public void changePlayerId(String name, String id) {
-        String idToRemove = playerID.entrySet().stream().filter(entry -> entry.getValue().equals(name)).findFirst().get().getKey();
+        String idToRemove = playerID.entrySet().stream().filter(entry -> entry.getValue().equals(name)).findFirst().orElseThrow().getKey();
         playerID.remove(idToRemove);
         playerID.put(id, name);
         try{

@@ -37,7 +37,7 @@ public class GoldDeck implements Deckable {
             System.err.println("Error while moving cards to the board, generating gold deck");
         }
     }
-    public GoldDeck(Boolean test){
+    public GoldDeck(Boolean ignoredTest){
         this.boardCards = new HashMap<>();
         this.cards = new ArrayList<>();
         boardCards.put(FIRST_CARD, null);
@@ -74,7 +74,7 @@ public class GoldDeck implements Deckable {
             try {
                 addCard(cardToMove, where_to);
             } catch (IncorrectDeckPositionException e) {
-                e.printStackTrace();
+                System.err.println("Error while moving card to the board (GoldDeck)");
             }
         }
     }
@@ -121,8 +121,7 @@ public class GoldDeck implements Deckable {
     public void addCard(Card card, DeckPosition position) throws IncorrectDeckPositionException {
         if (position == DECK)
             throw new IncorrectDeckPositionException("Cannot add card to the deck, only to FIST_CARD or SECOND_CARD.");
-        if (position != DECK)
-            boardCards.put(position, (GoldCard) card);
+        boardCards.put(position, (GoldCard) card);
     }
 
     @Override
@@ -130,11 +129,6 @@ public class GoldDeck implements Deckable {
         if(cards.isEmpty())
             return null;
         return cards.getFirst();
-    }
-
-    @Override
-    public Card getCard(int position) {
-        return cards.get(position);
     }
 
     /**
@@ -157,7 +151,9 @@ public class GoldDeck implements Deckable {
         try {
             fileFRONT = getClass().getResourceAsStream("/images/GoldFrontFace.txt");
             fileBACK = getClass().getResourceAsStream("/images/GoldBackFace.txt");
+            assert fileFRONT != null;
             readerFRONT = new BufferedReader(new InputStreamReader(fileFRONT));
+            assert fileBACK != null;
             readerBACK = new BufferedReader(new InputStreamReader(fileBACK));
 
 

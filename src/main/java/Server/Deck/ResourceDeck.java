@@ -40,7 +40,7 @@ public class ResourceDeck implements Deckable {
         }
     }
 
-    public ResourceDeck(Boolean test){
+    public ResourceDeck(Boolean ignoredTest){
         this.boardCards = new HashMap<>();
         this.cards = new ArrayList<>();
         boardCards.put(FIRST_CARD, null);
@@ -77,7 +77,7 @@ public class ResourceDeck implements Deckable {
             try {
                 addCard(cardToMove, where_to);
             } catch (IncorrectDeckPositionException e) {
-                e.printStackTrace();
+                System.err.println("Error while moving card to the board (ResourceDeck)");
             }
         }
     }
@@ -128,8 +128,7 @@ public class ResourceDeck implements Deckable {
     public void addCard(Card card, DeckPosition position) throws IncorrectDeckPositionException {
         if (position == DECK)
             throw new IncorrectDeckPositionException("Cannot add card to the deck, only to FIST_CARD or SECOND_CARD.");
-        if (position != DECK)
-            boardCards.put(position, (ResourceCard) card);
+        boardCards.put(position, (ResourceCard) card);
     }
 
     @Override
@@ -159,7 +158,9 @@ public class ResourceDeck implements Deckable {
         try {
             fileFRONT = getClass().getResourceAsStream("/images/ResourceFrontFace.txt");
             fileBACK = getClass().getResourceAsStream("/images/ResourceBackFace.txt");
+            assert fileFRONT != null;
             readerFRONT = new BufferedReader(new InputStreamReader(fileFRONT));
+            assert fileBACK != null;
             readerBACK = new BufferedReader(new InputStreamReader(fileBACK));
 
             String lineF;
@@ -224,11 +225,6 @@ public class ResourceDeck implements Deckable {
             System.err.println("An error occurred while generating starting cards");
         }
 
-    }
-
-    @Override
-    public Card getCard(int position) {
-        return cards.get(position);
     }
 
 }

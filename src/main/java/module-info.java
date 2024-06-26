@@ -27,6 +27,7 @@ module it.am04softeng.codexnaturalis {
     exports Server.Player;
     exports Server.Controller;
     exports Server.GameModel;
+    exports Server.Deck;
     exports Server.Connections to java.rmi;
     exports Client.Connection to java.rmi;
 

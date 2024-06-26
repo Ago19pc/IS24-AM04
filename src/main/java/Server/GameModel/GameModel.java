@@ -85,11 +85,6 @@ public interface GameModel {
      */
     List<Player> getPlayerList();
     /**
-     * sets the player list
-     * @param playerList the new player list
-     */
-    void setPlayerList(List<Player> playerList);
-    /**
      * shuffles the player list
      */
     void shufflePlayerList();

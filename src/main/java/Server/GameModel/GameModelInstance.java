@@ -71,7 +71,9 @@ public class GameModelInstance implements GameModel{
         try {
             fileFRONT = getClass().getResourceAsStream("/images/StartingCardsFRONT.txt");
             fileBACK = getClass().getResourceAsStream("/images/StartingCardsBACK.txt");
+            assert fileFRONT != null;
             readerFRONT = new BufferedReader(new InputStreamReader(fileFRONT));
+            assert fileBACK != null;
             readerBACK = new BufferedReader(new InputStreamReader(fileBACK));
         
         
@@ -118,12 +120,6 @@ public class GameModelInstance implements GameModel{
 
     public List<Player> getPlayerList() {
         return new LinkedList<>(playerList);
-    }
-    public void setPlayerList(List<Player> playerList) {
-        this.playerList.clear();
-        for (Player player : playerList) {
-            this.playerList.add((PlayerInstance) player);
-        }
     }
 
     public void addPlayer(Player player) throws IllegalArgumentException{

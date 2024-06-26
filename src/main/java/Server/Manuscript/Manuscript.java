@@ -330,16 +330,6 @@ public class Manuscript implements Serializable {
     }
 
     /**
-     * Get all cards under a certain card
-     * @param cardFace the card face to get the cards under
-     * @return the cards under the card
-     * @throws IllegalArgumentException if the card is not in the manuscript
-     */
-    public Map<CardCorners, CornerCardFace> getCardsUnder(CornerCardFace cardFace) throws IllegalArgumentException{
-        return this.graph.getCardsUnder(cardFace);
-    }
-
-    /**
      * Checks whether a card is placeable in a certain position
      * @param x the x coordinate
      * @param y the y coordinate

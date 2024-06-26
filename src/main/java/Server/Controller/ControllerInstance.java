@@ -382,7 +382,7 @@ public class ControllerInstance implements Controller{
                 });
                 String firstPlayer = playerAchievementPoints.entrySet().stream()
                         .filter(entry -> playersWithMaxPoints.contains(entry.getKey()))
-                        .max(Map.Entry.comparingByValue()).get().getKey();
+                        .max(Map.Entry.comparingByValue()).orElseThrow().getKey();
                 leaderboardMap.put(firstPlayer, playerCardPoints.get(firstPlayer) + playerAchievementPoints.get(firstPlayer));
                 playerCardPoints.remove(firstPlayer);
                 playerAchievementPoints.remove(firstPlayer);

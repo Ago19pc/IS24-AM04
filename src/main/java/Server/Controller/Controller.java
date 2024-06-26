@@ -1,6 +1,5 @@
 package Server.Controller;
 
-import Server.Chat.Message;
 import Server.Connections.GeneralServerConnectionHandler;
 import Server.Enums.*;
 import Server.Exception.*;

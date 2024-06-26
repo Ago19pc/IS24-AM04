@@ -121,12 +121,12 @@ public class ServerConnectionHandlerRMI implements ServerConnectionHandler, Remo
         pingAll();
         for (ClientConnectionHandler client : clients.values()) {
             try {
-                String clientId = clients.entrySet().stream().filter(entry -> entry.getValue().equals(client)).findFirst().get().getKey();
+                String clientId = clients.entrySet().stream().filter(entry -> entry.getValue().equals(client)).findFirst().orElseThrow().getKey();
                 if(!controller.getConnectionHandler().isInDisconnectedList(clientId)){
                     client.executeMessage(message);
                 }
             } catch (RemoteException e) {
-                System.out.println(" Send All Message : Client disconnected: " + clients.entrySet().stream().filter(entry -> entry.getValue().equals(client)).findFirst().get().getKey());
+                System.out.println(" Send All Message : Client disconnected: " + clients.entrySet().stream().filter(entry -> entry.getValue().equals(client)).findFirst().orElseThrow().getKey());
             }
         }
     }

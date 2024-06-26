@@ -5,7 +5,6 @@ import Server.Card.Card;
 import Server.Enums.Color;
 import Server.Enums.Face;
 import Server.Exception.AlreadySetException;
-import Server.Exception.TooFewElementsException;
 import Server.Exception.TooManyElementsException;
 import Server.Manuscript.Manuscript;
 

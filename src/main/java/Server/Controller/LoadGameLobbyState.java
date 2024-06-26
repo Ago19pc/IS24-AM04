@@ -77,11 +77,11 @@ public class LoadGameLobbyState implements ServerState{
             resourceCardsToSend.add(gameModel.getResourceDeck().getTopCardNoPop());
             resourceCardsToSend.add(gameModel.getResourceDeck().getBoardCard().get(DeckPosition.FIRST_CARD));
             resourceCardsToSend.add(gameModel.getResourceDeck().getBoardCard().get(DeckPosition.SECOND_CARD));
-            Deck<GoldCard> goldDeck = new Deck<GoldCard>(
+            Deck<GoldCard> goldDeck = new Deck<>(
                     gameModel.getGoldDeck().getNumberOfCards(),
                     goldCardsToSend
             );
-            Deck<ResourceCard> resourceDeck = new Deck<ResourceCard>(
+            Deck<ResourceCard> resourceDeck = new Deck<>(
                     gameModel.getResourceDeck().getNumberOfCards(),
                     resourceCardsToSend
             );

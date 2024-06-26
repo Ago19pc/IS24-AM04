@@ -74,9 +74,7 @@ public class DrawCardState implements ServerState{
                 drawnCard = gameModel.getGoldDeck().popCard(deckPosition);
                 player.addCardToHand(drawnCard);
             }
-            default -> {
-                throw new IllegalArgumentException("Invalid deck");
-            }
+            default -> throw new IllegalArgumentException("Invalid deck");
         }
         DrawCardMessage drawCardMessage = new DrawCardMessage(drawnCard);
         controller.getConnectionHandler().sendMessage(drawCardMessage, player.getName());
@@ -188,11 +186,11 @@ public class DrawCardState implements ServerState{
         resourceCardsToSend.add(gameModel.getResourceDeck().getTopCardNoPop());
         resourceCardsToSend.add(gameModel.getResourceDeck().getBoardCard().get(DeckPosition.FIRST_CARD));
         resourceCardsToSend.add(gameModel.getResourceDeck().getBoardCard().get(DeckPosition.SECOND_CARD));
-        Deck<GoldCard> goldDeck = new Deck<GoldCard>(
+        Deck<GoldCard> goldDeck = new Deck<>(
                 gameModel.getGoldDeck().getNumberOfCards(),
                 goldCardsToSend
         );
-        Deck<ResourceCard> resourceDeck = new Deck<ResourceCard>(
+        Deck<ResourceCard> resourceDeck = new Deck<>(
                 gameModel.getResourceDeck().getNumberOfCards(),
                 resourceCardsToSend
         );

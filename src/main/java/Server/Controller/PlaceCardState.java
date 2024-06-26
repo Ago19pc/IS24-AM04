@@ -50,20 +50,22 @@ public class PlaceCardState implements ServerState{
     @Override
     public void playCard(Player player, int position, int xCoord, int yCoord, CornerCardFace cardFace) throws TooFewElementsException {
         player.removeCardFromHand(position);
-        int cardPoints;
-        int obtainedPoints = 0;
+        int cardPoints = 0;
+        int obtainedPoints;
         try {
             cardPoints = cardFace.getScore();
         } catch (UnsupportedOperationException e) {
-            if (e.getMessage() == "Regular cards do not have scores") ;
-            cardPoints = 0;
+            if (!Objects.equals(e.getMessage(), "Regular cards do not have scores")){
+                throw e;
+            }
         }
-        Map<Symbol, Integer> scoreRequirements;
+        Map<Symbol, Integer> scoreRequirements = new HashMap<>();
         try {
             scoreRequirements = cardFace.getScoreRequirements();
         } catch (UnsupportedOperationException e) {
-            if (e.getMessage() == "Regular cards do not have score requirements") ;
-            scoreRequirements = null;
+            if (!Objects.equals(e.getMessage(), "Regular cards do not have score requirements")){
+                throw e;
+            }
         }
         System.out.println("ScoreRequirements " + scoreRequirements + "Player " + player.getName() + " CardPoints " + cardPoints);
         if (scoreRequirements != null) {
@@ -75,9 +77,6 @@ public class PlaceCardState implements ServerState{
                 }
                 i++;
             }
-            /*System.out.println("///////////////////////////");
-            System.out.println("RequiredSymbol " + requiredSymbol);
-            System.out.println("///////////////////////////");*/
             int requiredQuantity = scoreRequirements.get(requiredSymbol);
             System.out.println("RequiredQuantity " + requiredQuantity);
             int actualQuantity;
@@ -93,7 +92,7 @@ public class PlaceCardState implements ServerState{
                 actualQuantity = player.getManuscript().getSymbolCount(requiredSymbol);
                 Symbol finalRequiredSymbol = requiredSymbol;
                 int quantityOnCard = cardFace.getCornerSymbols().entrySet().stream()
-                        .filter(entry -> entry.getValue() == finalRequiredSymbol).collect(Collectors.toList()).size();
+                        .filter(entry -> entry.getValue() == finalRequiredSymbol).toList().size();
                 actualQuantity += quantityOnCard;
             }
             //System.out.println("RequiredSymbols " + requiredSymbol + " ScoreRequirements" + scoreRequirements);
@@ -151,11 +150,11 @@ public class PlaceCardState implements ServerState{
         resourceCardsToSend.add(gameModel.getResourceDeck().getTopCardNoPop());
         resourceCardsToSend.add(gameModel.getResourceDeck().getBoardCard().get(DeckPosition.FIRST_CARD));
         resourceCardsToSend.add(gameModel.getResourceDeck().getBoardCard().get(DeckPosition.SECOND_CARD));
-        Deck<GoldCard> goldDeck = new Deck<GoldCard>(
+        Deck<GoldCard> goldDeck = new Deck<>(
                 gameModel.getGoldDeck().getNumberOfCards(),
                 goldCardsToSend
         );
-        Deck<ResourceCard> resourceDeck = new Deck<ResourceCard>(
+        Deck<ResourceCard> resourceDeck = new Deck<>(
                 gameModel.getResourceDeck().getNumberOfCards(),
                 resourceCardsToSend
         );

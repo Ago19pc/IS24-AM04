@@ -40,7 +40,7 @@ public class AchievementDeck implements Deckable{
         }
     }
 
-    public AchievementDeck(Boolean test){
+    public AchievementDeck(Boolean ignoredTest){
         this.boardCards = new HashMap<>();
         this.cards = new ArrayList<>();
         boardCards.put(FIRST_CARD, null);
@@ -105,6 +105,7 @@ public class AchievementDeck implements Deckable{
         try {
             fileFRONT = getClass().getResourceAsStream("/images/AchievementFrontFace.txt");
 
+            assert fileFRONT != null;
             readerFRONT = new BufferedReader(new InputStreamReader(fileFRONT));
             
         
@@ -181,10 +182,6 @@ public class AchievementDeck implements Deckable{
         return cards.getFirst();
     }
 
-    @Override
-    public AchievementCard getCard(int position) {
-        return cards.get(position);
-    }
 
     /**
      * Get the number of cards in the deck

@@ -16,7 +16,7 @@ public class PlayerNameMessage implements ToClientMessage, ToServerMessage, Seri
     /**
      * The name to set
      */
-    private String name;
+    private final String name;
     /**
      * True if the name was set, false otherwise
      */

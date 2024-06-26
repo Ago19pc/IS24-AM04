@@ -85,6 +85,7 @@ public class DrawCardMessage implements Serializable, ToServerMessage, ToClientM
             controller.getConnectionHandler().sendMessage(notYourTurnMessage, playerName);
         } catch (TooManyElementsException e) {
             ToDoFirstMessage toDoFirstMessage = new ToDoFirstMessage(Actions.PLAY_CARD);
+            controller.getConnectionHandler().sendMessage(toDoFirstMessage, playerName);
         } catch (AlreadyFinishedException e) {
             EmptyDeckMessage emptyDeckMessage = new EmptyDeckMessage();
             controller.getConnectionHandler().sendMessage(emptyDeckMessage, playerName);

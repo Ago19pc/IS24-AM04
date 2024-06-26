@@ -127,7 +127,7 @@ public class Graph implements Serializable {
             throw new IllegalArgumentException("Node already in graph");
         }
         for (CornerCardFace neighbor : positions.values()) {
-            if (positions.get(neighbor) != null && !this.containedCards.contains(positions.get(neighbor))) {
+            if (neighbor != null && !this.containedCards.contains(neighbor)) {
                 throw new IllegalArgumentException("At least one of the nodes is not in graph");
             }
         }
@@ -138,15 +138,6 @@ public class Graph implements Serializable {
                 addEdge(card, corner, positions.get(corner));
             }
         });
-    }
-
-
-    /**
-     * Get all cards in a list, a copy of the original list
-     * @return the copied list of all cards
-     */
-    public List<CornerCardFace> getAllCardsCopy(){
-        return new ArrayList<>(this.containedCards);
     }
 
     /**

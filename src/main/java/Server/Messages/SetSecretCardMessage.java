@@ -63,11 +63,12 @@ public class SetSecretCardMessage implements Serializable, ToClientMessage, ToSe
         try {
             playerName = controller.getConnectionHandler().getPlayerNameByID(this.idOrName);
             Player player = controller.getPlayerByName(playerName);
-            if(chosenCard < 0 || chosenCard > 1){
+            if(chosenCard == null || chosenCard < 0 || chosenCard > 1){
                 InvalidCardMessage invalidCardMessage = new InvalidCardMessage(Actions.SECRET_ACHIEVEMENT_CHOICE);
                 controller.getConnectionHandler().sendMessage(invalidCardMessage, playerName);
+            } else {
+                controller.setSecretObjectiveCard(player, chosenCard);
             }
-            controller.setSecretObjectiveCard(player, chosenCard);
         } catch (PlayerNotFoundByNameException e) {
             NameNotYetSetMessage message = new NameNotYetSetMessage();
             try{
