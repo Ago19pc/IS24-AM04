@@ -741,7 +741,7 @@ public class ClientControllerInstance implements ClientController {
         clear();
         ui.serverDisconnected();
         if(gameState != GameState.LEADERBOARD){
-            gameState = GameState.LOBBY;
+            clear();
         }
     }
 
@@ -763,6 +763,7 @@ public class ClientControllerInstance implements ClientController {
         chosenHandCard = null;
         isSavedGame = false;
         clientConnectionHandler.clear();
+        setGameState(GameState.LOBBY);
     }
 
     @Override

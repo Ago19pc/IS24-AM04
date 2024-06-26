@@ -556,6 +556,6 @@ public class MainBoardSceneController extends SceneController {
      */
     public void backToLobby() {
         controller.clearUI();
-        controller.setGameState(GameState.LOBBY);
+        controller.clear();
     }
 }
