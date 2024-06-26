@@ -462,7 +462,8 @@ public class ControllerInstance implements Controller{
     public void saveGame() {
         try {
             Gson gson = new Gson();
-            File file = new File(Objects.requireNonNull(getClass().getResource("/saves/game.json")).toURI());
+            File file = new File("game.json");
+            file.createNewFile();
             FileWriter fileWriter = new FileWriter(file);
             gson.toJson(gameModel, fileWriter);
             fileWriter.close();
@@ -474,8 +475,7 @@ public class ControllerInstance implements Controller{
     public void loadGame() throws NullPointerException{
         try {
             Gson gson = new Gson();
-            InputStream in = Objects.requireNonNull(getClass().getResourceAsStream("/saves/game.json"));
-            InputStreamReader reader = new InputStreamReader(in);
+            FileReader reader = new FileReader("game.json");
             gameModel = gson.fromJson(reader, GameModelInstance.class);
             reader.close();
             if(gameModel == null){
