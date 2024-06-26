@@ -62,7 +62,7 @@ public class PlaceCardState implements ServerState{
         } catch (UnsupportedOperationException ignored) {
         }
         System.out.println("ScoreRequirements " + scoreRequirements + "Player " + player.getName() + " CardPoints " + cardPoints);
-        if (scoreRequirements != null) {
+        if (scoreRequirements != null && !scoreRequirements.isEmpty()) {
             Symbol requiredSymbol = (Symbol) scoreRequirements.keySet().toArray()[0];
             int i = 0;
             for (Symbol symbol : scoreRequirements.keySet()) {
