@@ -310,7 +310,12 @@ public interface UI {
     void gameAlreadyFinished();
 
     /**
-     * Informs the user that the server has disconnected
+     * Resets the interface
      */
     void clear();
+
+    /**
+     * Reacts to server disconnection
+     */
+    void serverDisconnected();
 }

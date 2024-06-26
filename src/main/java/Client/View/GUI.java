@@ -9,6 +9,7 @@ import Server.Enums.Actions;
 import Server.Enums.Color;
 import Server.Enums.DeckPosition;
 import Server.Enums.Decks;
+import Server.Enums.GameState;
 import Server.Exception.PlayerNotFoundByNameException;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
@@ -669,6 +670,14 @@ public class GUI implements UI{
             stage.show();
         });
     }
+
+    @Override
+    public void serverDisconnected() {
+        if(controller.getGameState() != GameState.LEADERBOARD){
+            clear();
+        }
+    }
+
 
     /**
      * Generate a manuscript based on its data

@@ -507,6 +507,12 @@ public class CLI extends Thread implements UI {
         changeScene(new NetworkState(this));
     }
 
+    @Override
+    public void serverDisconnected() {
+        printOnNewLine("Il server si è disconnesso");
+        clear();
+    }
+
     /**
      * Goes to lobby scene
      */

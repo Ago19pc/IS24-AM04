@@ -739,7 +739,7 @@ public class ClientControllerInstance implements ClientController {
     @Override
     public void serverDisconnected() {
         clear();
-        clearUI();
+        ui.serverDisconnected();
     }
 
 
