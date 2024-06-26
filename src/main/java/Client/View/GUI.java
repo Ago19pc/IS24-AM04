@@ -578,12 +578,14 @@ public class GUI implements UI{
                     stage.show();
                     break;
                 case CHOOSE_SECRET_ACHIEVEMENT:
+                    sceneControllerMap.get(SceneName.GAME).setup();
                     chooseSecretAchievement(controller.getPotentialSecretAchievements());
                     break;
                 default:
                     displayHand();
                     displayBoardCards();
                     displayCommonAchievements();
+                    sceneControllerMap.get(SceneName.GAME).setup();
                     regenerateManuscript();
                     Platform.runLater(() -> ((MainBoardSceneController) sceneControllerMap.get(SceneName.GAME)).updateDeckSizes(controller.getDeckSize(Decks.GOLD), controller.getDeckSize(Decks.RESOURCE)));
                     ((MainBoardSceneController) sceneControllerMap.get(SceneName.GAME)).yourTurnLabel.setVisible(controller.getActivePlayer().getName().equals(controller.getMyName()));
