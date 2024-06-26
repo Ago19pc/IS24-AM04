@@ -13,6 +13,7 @@ import Server.Messages.ReconnectionMessage;
 import Server.Player.Player;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -83,16 +84,22 @@ public class DrawCardState implements ServerState{
                 //do nothing as it's normal that it's already set
             }
         }
+        List<Card> cardsToSend = new LinkedList<>();
+        if(deck == Decks.RESOURCE){
+            cardsToSend.add(gameModel.getResourceDeck().getBoardCard().get(DeckPosition.DECK));
+            cardsToSend.add(gameModel.getResourceDeck().getBoardCard().get(DeckPosition.FIRST_CARD));
+            cardsToSend.add(gameModel.getResourceDeck().getBoardCard().get(DeckPosition.SECOND_CARD));
+        }
+        else {
+            cardsToSend.add(gameModel.getGoldDeck().getBoardCard().get(DeckPosition.DECK));
+            cardsToSend.add(gameModel.getGoldDeck().getBoardCard().get(DeckPosition.FIRST_CARD));
+            cardsToSend.add(gameModel.getGoldDeck().getBoardCard().get(DeckPosition.SECOND_CARD));
+        }
         OtherPlayerDrawCardMessage otherPlayerDrawCardMessage = new OtherPlayerDrawCardMessage(
                 player.getName(),
                 deck,
                 deckPosition,
-                switch (deck) {
-                    //todo: aggiungere un metodo ai deck che ritorni le boardcards in una lista per evitare sto macello
-                    case RESOURCE -> List.of(gameModel.getResourceDeck().getBoardCard().get(DeckPosition.DECK),  gameModel.getResourceDeck().getBoardCard().get(DeckPosition.FIRST_CARD), gameModel.getResourceDeck().getBoardCard().get(DeckPosition.SECOND_CARD));
-                    case GOLD -> List.of(gameModel.getGoldDeck().getBoardCard().get(DeckPosition.DECK), gameModel.getGoldDeck().getBoardCard().get(DeckPosition.FIRST_CARD), gameModel.getGoldDeck().getBoardCard().get(DeckPosition.SECOND_CARD));
-                    default -> null;
-                }
+                cardsToSend
         );
         controller.getConnectionHandler().sendAllMessage(otherPlayerDrawCardMessage);
         controller.nextTurn();

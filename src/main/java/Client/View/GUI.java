@@ -374,10 +374,7 @@ public class GUI implements UI{
     public void otherPlayerDraw(String name, Decks deckFrom, DeckPosition position) {
         Platform.runLater(() -> {
             ((MainBoardSceneController) sceneControllerMap.get(SceneName.GAME)).setBoardCards(deckFrom);
-            if(deckFrom == Decks.GOLD)
-                ((MainBoardSceneController) sceneControllerMap.get(SceneName.GAME)).decrementGoldDeckCounter();
-            if(deckFrom == Decks.RESOURCE)
-                ((MainBoardSceneController) sceneControllerMap.get(SceneName.GAME)).decrementResourceDeckCounter();
+            ((MainBoardSceneController) sceneControllerMap.get(SceneName.GAME)).updateDeckSizes(controller.getDeckSize(Decks.GOLD), controller.getDeckSize(Decks.RESOURCE));
         });
     }
 

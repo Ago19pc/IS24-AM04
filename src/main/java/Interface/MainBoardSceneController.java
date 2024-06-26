@@ -115,22 +115,6 @@ public class MainBoardSceneController extends SceneController {
     private final Glow glow = new Glow(7);
 
     private Face selectedFace = null;
-
-    /**
-     * Decreases the counter of the gold deck
-     */
-    public void decrementGoldDeckCounter() {
-        int counter = Integer.parseInt(goldDeck_counter.getText());
-        goldDeck_counter.setText(String.valueOf(counter - 1));
-    }
-
-    /**
-     * Decreases the counter of the resource deck
-     */
-    public void decrementResourceDeckCounter() {
-        int counter = Integer.parseInt(resourceDeck_counter.getText());
-        resourceDeck_counter.setText(String.valueOf(counter - 1));
-    }
     /**
      * Displays the hand cards of the player
      */

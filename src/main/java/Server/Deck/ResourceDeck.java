@@ -99,6 +99,8 @@ public class ResourceDeck implements Deckable {
     public ResourceCard popCard(DeckPosition position) throws  AlreadyFinishedException{
 
             if (position == DECK) {
+                if(cards.isEmpty())
+                    throw new AlreadyFinishedException("The deck is empty");
                 return cards.removeFirst();
             } else {
                 // LA POSIZIONE NON E' DECK
