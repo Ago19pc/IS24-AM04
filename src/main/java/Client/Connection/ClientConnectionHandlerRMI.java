@@ -38,7 +38,9 @@ public class ClientConnectionHandlerRMI implements ClientConnectionHandler {
      * The client port used for the RMI connection
      */
     int rmi_client_port;
-
+    /**
+     * The object used to periodically ping the server
+     */
     PingServer pingServer;
 
     /**

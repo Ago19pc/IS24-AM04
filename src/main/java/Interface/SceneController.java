@@ -21,10 +21,22 @@ import java.util.ResourceBundle;
  * Abstract class for SceneController, which contains the scene logic
  */
 public abstract class SceneController implements Initializable {
+    /**
+     * The client controller
+     */
     ClientController controller;
+    /**
+     * The stage
+     */
     Stage stage;
+    /**
+     * The map of scenes. Key is the SceneName, value is the Scene
+     */
     Map<SceneName, Scene> sceneMap;
     private Map<SceneName,SceneController> sceneControllerMap = new HashMap<>();
+    /**
+     * The text field where the player writes the message to send in chat
+     */
     public TextField messageToSend;
     /**
      * Constructor

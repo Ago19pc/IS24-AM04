@@ -40,6 +40,10 @@ public class ResourceDeck implements Deckable {
         }
     }
 
+    /**
+     * Debug constructor
+     * @param ignoredTest gets ignored. Only there to differentiate the two constructors
+     */
     public ResourceDeck(Boolean ignoredTest){
         this.boardCards = new HashMap<>();
         this.cards = new ArrayList<>();

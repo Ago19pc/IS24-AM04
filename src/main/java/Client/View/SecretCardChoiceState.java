@@ -7,6 +7,12 @@ import Client.Controller.ClientController;
 public class SecretCardChoiceState implements CLIState{
     private final CLI cli;
     private final ClientController controller;
+
+    /**
+     * Constructor for the SecretCardChoiceState. Asks the user to choose the secret card.
+     * @param cli the CLI
+     * @param controller the client controller
+     */
     public SecretCardChoiceState(CLI cli, ClientController controller) {
         this.cli = cli;
         this.controller = controller;

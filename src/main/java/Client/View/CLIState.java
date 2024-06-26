@@ -6,6 +6,7 @@ package Client.View;
 public interface CLIState {
     /**
      * Decodes the input of the user and acts accordingly
+     * @param args the input of the user
      */
     void decode(String[] args);
 }

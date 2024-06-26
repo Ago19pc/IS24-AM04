@@ -40,6 +40,10 @@ public class AchievementDeck implements Deckable{
         }
     }
 
+    /**
+     * Debug constructor
+     * @param ignoredTest gets ignored. Only there to differentiate the two constructors
+     */
     public AchievementDeck(Boolean ignoredTest){
         this.boardCards = new HashMap<>();
         this.cards = new ArrayList<>();

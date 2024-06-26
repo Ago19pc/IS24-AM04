@@ -1,5 +1,9 @@
 package Client.Connection;
 
+/**
+ * This class is used to periodically ping the server every 5 seconds.
+
+ */
 public class PingServer extends Thread{
     private final ClientConnectionHandlerRMI connectionHandler;
     private boolean shouldPing;

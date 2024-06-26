@@ -535,6 +535,9 @@ public class MainBoardSceneController extends SceneController {
 
     }
 
+    /**
+     * Easter egg
+     */
     public void pasqualino() {
         Tab tab = new Tab("Squadra Genew");
         AnchorPane pane = new AnchorPane();
@@ -547,7 +550,9 @@ public class MainBoardSceneController extends SceneController {
         tabPane.getTabs().add(tab);
     }
 
-
+    /**
+     * Goes back to the lobby
+     */
     public void backToLobby() {
         controller.clearUI();
     }

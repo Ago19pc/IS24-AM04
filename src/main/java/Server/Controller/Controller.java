@@ -218,6 +218,9 @@ public interface Controller {
      */
     void computeLeaderboard() throws AlreadyFinishedException;
 
+    /**
+     * Goes to leaderboard state and exits the game
+     */
     void disconnectionLeaderboard();
     /**
      * Starts the end game phase

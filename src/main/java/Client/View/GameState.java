@@ -7,10 +7,18 @@ import Server.Enums.Face;
 
 import java.util.Objects;
 
+/**
+ * This class represents the state of the CLI when the game is ongoing
+ */
 public class GameState implements CLIState{
     private final CLI cli;
     private final ClientController controller;
 
+    /**
+     * Constructor for the GameState. Welcomes the user to the game telling him about the help command
+     * @param cli the CLI
+     * @param controller the client controller
+     */
     public GameState(CLI cli, ClientController controller){
         this.cli = cli;
         this.controller = controller;

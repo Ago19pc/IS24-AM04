@@ -4,11 +4,25 @@ import Client.Controller.ClientController;
 
 import java.util.LinkedHashMap;
 
+/**
+ * CLI state for the leaderboard
+ */
 public class LeaderboardState implements CLIState{
     private final CLI cli;
     private final ClientController controller;
+    /**
+     * The points of the players in an ordered map
+     * The key is the player name, the value is the points
+     * The map is ordered by win order, from the highest to the lowest
+     */
     LinkedHashMap<String, Integer> playerPoints;
 
+    /**
+     * Constructor for the leaderboard state. Displays the leaderboard
+     * @param cli the CLI
+     * @param playerPoints the points of the players in an ordered map
+     * @param controller the client controller
+     */
     public LeaderboardState(CLI cli, LinkedHashMap<String, Integer> playerPoints, ClientController controller){
         this.cli = cli;
         this.playerPoints = playerPoints;

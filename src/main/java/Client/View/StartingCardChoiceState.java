@@ -10,6 +10,11 @@ public class StartingCardChoiceState implements CLIState{
     private final CLI cli;
     private final ClientController controller;
 
+    /**
+     * Constructor for the StartingCardChoiceState. Asks the user to choose the starting card.
+     * @param cli the CLI
+     * @param controller the client controller
+     */
     public StartingCardChoiceState(CLI cli, ClientController controller) {
         this.cli = cli;
         this.controller = controller;

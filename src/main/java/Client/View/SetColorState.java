@@ -9,6 +9,12 @@ import Server.Enums.Color;
 public class SetColorState implements CLIState{
     private final CLI cli;
     private final ClientController controller;
+
+    /**
+     * Constructor for the SetColorState. Asks the user to set his color.
+     * @param cli the CLI
+     * @param controller the client controller
+     */
     public SetColorState(CLI cli, ClientController controller) {
         this.cli = cli;
         this.controller = controller;

@@ -37,6 +37,11 @@ public class GoldDeck implements Deckable {
             System.err.println("Error while moving cards to the board, generating gold deck");
         }
     }
+
+    /**
+     * Debug constructor
+     * @param ignoredTest gets ignored. Only there to differentiate the two constructors
+     */
     public GoldDeck(Boolean ignoredTest){
         this.boardCards = new HashMap<>();
         this.cards = new ArrayList<>();

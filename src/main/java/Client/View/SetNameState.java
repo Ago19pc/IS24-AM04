@@ -9,6 +9,12 @@ import Client.Player;
 public class SetNameState implements CLIState {
     private final CLI cli;
     private final ClientController controller;
+
+    /**
+     * Constructor for the SetNameState. Displays the lobby info and asks the user to set his name or to reconnect using an id
+     * @param cli the CLI
+     * @param controller the client controller
+     */
     public SetNameState(CLI cli, ClientController controller) {
         this.cli = cli;
         this.controller = controller;

@@ -29,6 +29,7 @@ public class CLI extends Thread implements UI {
 
     /**
      * Changes the scene of the CLI
+     * @param scene the new scene
      */
     public void changeScene(CLIState scene) {
         this.scene = scene;

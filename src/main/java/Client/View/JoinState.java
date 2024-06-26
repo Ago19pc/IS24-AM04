@@ -6,6 +6,10 @@ package Client.View;
 public class JoinState implements CLIState{
     private final CLI cli;
 
+    /**
+     * Constructor for the JoinState. Asks the user which server to join
+     * @param cli the CLI
+     */
     public JoinState(CLI cli){
         this.cli = cli;
         askJoin();
