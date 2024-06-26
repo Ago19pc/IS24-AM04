@@ -208,7 +208,7 @@ public class ClientControllerInstance implements ClientController {
     public void setRMIMode(boolean rmi) {
         try {
             if(clientConnectionHandler != null) {
-                clientConnectionHandler.clear();
+                clientConnectionHandler.clear(rmi);
             } else {
                 clientConnectionHandler = new GeneralClientConnectionHandler(this, rmi);
             }

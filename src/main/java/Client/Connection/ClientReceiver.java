@@ -43,7 +43,7 @@ public class ClientReceiver extends Thread {
             } catch (IOException | ClassNotFoundException e) {
                 System.out.println("Server Disconnected");
                 controller.serverDisconnected();
-                System.exit(0);
+                break;
             }
         }
     }

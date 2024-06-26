@@ -16,7 +16,7 @@ public class GeneralClientConnectionHandler {
     private ClientConnectionHandlerSOCKET clientConnectionHandlerSOCKET;
     private ClientConnectionHandlerRMI clientConnectionHandlerRMI;
     private final ClientController controller;
-    private final boolean trueifRMI;
+    private boolean trueifRMI;
 
     /**
      * Standard constructor.
@@ -82,12 +82,21 @@ public class GeneralClientConnectionHandler {
 
     /**
      * Clears connection
+     * @param rmiMode wether the connection is RMI or not
      */
-    public void clear() {
-        if (!trueifRMI) {
+    public void clear(boolean rmiMode) {
+        if (!rmiMode) {
             clientConnectionHandlerSOCKET = new ClientConnectionHandlerSOCKET(controller);
         } else {
             clientConnectionHandlerRMI.reset();
         }
+        trueifRMI = rmiMode;
+    }
+
+    /**
+     * Clears current connection
+     */
+    public void clear() {
+        clear(trueifRMI);
     }
 }
