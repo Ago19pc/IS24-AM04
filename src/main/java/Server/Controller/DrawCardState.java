@@ -32,6 +32,9 @@ public class DrawCardState implements ServerState{
     public DrawCardState(Controller controller, GameModel gameModel){
         this.controller = controller;
         this.gameModel = gameModel;
+        if(gameModel.getResourceDeck().isEmpty() && gameModel.getGoldDeck().isEmpty()){
+            controller.nextTurn();
+        }
     }
 
     @Override
