@@ -260,6 +260,16 @@ public class MainBoardSceneController extends SceneController {
     }
 
     /**
+     * Updates deck sizes
+     * @param goldDeckSize the size of the gold deck
+     * @param resourceDeckSize the size of the resource deck
+     */
+    public void updateDeckSizes(int goldDeckSize, int resourceDeckSize) {
+        goldDeck_counter.setText(String.valueOf(goldDeckSize));
+        resourceDeck_counter.setText(String.valueOf(resourceDeckSize));
+    }
+
+    /**
      * Updates the manuscript of the player
      * This method is called to place a new card
      * @param name the name of the player, useful to find the correct manuscript to place

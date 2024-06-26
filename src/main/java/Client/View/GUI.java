@@ -370,7 +370,6 @@ public class GUI implements UI{
 
     }
 
-    // I DONT KNOW WHY
     @Override
     public void otherPlayerDraw(String name, Decks deckFrom, DeckPosition position) {
         Platform.runLater(() -> {
@@ -391,6 +390,9 @@ public class GUI implements UI{
     @Override
     public void otherPlayerInitialHand(String name) {
         System.out.println("Other player initial hand");
+        Platform.runLater(() -> {
+            ((MainBoardSceneController) sceneControllerMap.get(SceneName.GAME)).updateDeckSizes(controller.getDeckSize(Decks.GOLD), controller.getDeckSize(Decks.RESOURCE));
+        });
     }
 
     @Override
@@ -588,7 +590,7 @@ public class GUI implements UI{
                     displayBoardCards();
                     displayCommonAchievements();
                     regenerateManuscript();
-
+                    Platform.runLater(() -> ((MainBoardSceneController) sceneControllerMap.get(SceneName.GAME)).updateDeckSizes(controller.getDeckSize(Decks.GOLD), controller.getDeckSize(Decks.RESOURCE)));
                     ((MainBoardSceneController) sceneControllerMap.get(SceneName.GAME)).yourTurnLabel.setVisible(controller.getActivePlayer().getName().equals(controller.getMyName()));
 
                     secretAchievementChosen(controller.getMyName());

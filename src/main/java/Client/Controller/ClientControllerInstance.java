@@ -489,11 +489,11 @@ public class ClientControllerInstance implements ClientController {
         switch (deckFrom){
             case GOLD:
                 goldDeck.setBoardCards(newBoardCards);
-                goldDeck.setDeckSize(goldDeck.getDeckSize() - 1);
+                goldDeck.setDeckSize(Math.max(0, goldDeck.getDeckSize() - 1));
                 break;
             case RESOURCE:
                 resourceDeck.setBoardCards(newBoardCards);
-                resourceDeck.setDeckSize(resourceDeck.getDeckSize() - 1);
+                resourceDeck.setDeckSize(Math.max(0, resourceDeck.getDeckSize() - 1));
                 break;
         }
         try{
