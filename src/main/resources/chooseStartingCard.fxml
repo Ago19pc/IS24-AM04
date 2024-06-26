@@ -17,7 +17,7 @@
         <Image url="@./images/otherImages/logovuoto.jpg"/>
     </ImageView>
     <ImageView fx:id="chosenCard" fitHeight="150.0" fitWidth="200.0" layoutX="414.0" layoutY="264.0"
-               onMouseClicked="#chooseFirstCard" pickOnBounds="true" preserveRatio="true"/>
+               pickOnBounds="true" preserveRatio="true"/>
     <ImageView fx:id="firstCard" fitHeight="150.0" fitWidth="200.0" layoutX="692.0" layoutY="168.0"
                onMouseClicked="#chooseFirstCard" pickOnBounds="true" preserveRatio="true"/>
     <ImageView fx:id="secondCard" fitHeight="150.0" fitWidth="200.0" layoutX="692.0" layoutY="350.0"
