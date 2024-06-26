@@ -88,7 +88,12 @@ public class GeneralClientConnectionHandler {
         if (!rmiMode) {
             clientConnectionHandlerSOCKET = new ClientConnectionHandlerSOCKET(controller);
         } else {
-            clientConnectionHandlerRMI.reset();
+            if(clientConnectionHandlerRMI != null){
+                clientConnectionHandlerRMI.reset();
+            } else {
+                clientConnectionHandlerRMI = new ClientConnectionHandlerRMI(1100);
+                clientConnectionHandlerRMI.setRmi_client_port(1100);
+            }
         }
         trueifRMI = rmiMode;
     }

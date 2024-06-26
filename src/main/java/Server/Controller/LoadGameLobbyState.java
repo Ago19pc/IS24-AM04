@@ -13,6 +13,7 @@ import Server.Messages.SavedGameMessage;
 import Server.Player.Player;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 /**
@@ -68,13 +69,21 @@ public class LoadGameLobbyState implements ServerState{
             List<AchievementCard> commonAchievementCards = new ArrayList<>();
             commonAchievementCards.add(gameModel.getAchievementDeck().getBoardCard().get(DeckPosition.FIRST_CARD));
             commonAchievementCards.add(gameModel.getAchievementDeck().getBoardCard().get(DeckPosition.SECOND_CARD));
+            List<GoldCard> goldCardsToSend = new LinkedList<>();
+            goldCardsToSend.add(gameModel.getGoldDeck().getTopCardNoPop());
+            goldCardsToSend.add(gameModel.getGoldDeck().getBoardCard().get(DeckPosition.FIRST_CARD));
+            goldCardsToSend.add(gameModel.getGoldDeck().getBoardCard().get(DeckPosition.SECOND_CARD));
+            List<ResourceCard> resourceCardsToSend = new LinkedList<>();
+            resourceCardsToSend.add(gameModel.getResourceDeck().getTopCardNoPop());
+            resourceCardsToSend.add(gameModel.getResourceDeck().getBoardCard().get(DeckPosition.FIRST_CARD));
+            resourceCardsToSend.add(gameModel.getResourceDeck().getBoardCard().get(DeckPosition.SECOND_CARD));
             Deck<GoldCard> goldDeck = new Deck<GoldCard>(
                     gameModel.getGoldDeck().getNumberOfCards(),
-                    new ArrayList<>(List.of(gameModel.getGoldDeck().getTopCardNoPop(), gameModel.getGoldDeck().getBoardCard().get(DeckPosition.FIRST_CARD), gameModel.getGoldDeck().getBoardCard().get(DeckPosition.SECOND_CARD)))
+                    goldCardsToSend
             );
             Deck<ResourceCard> resourceDeck = new Deck<ResourceCard>(
                     gameModel.getResourceDeck().getNumberOfCards(),
-                    new ArrayList<>(List.of(gameModel.getResourceDeck().getTopCardNoPop(), gameModel.getResourceDeck().getBoardCard().get(DeckPosition.FIRST_CARD), gameModel.getResourceDeck().getBoardCard().get(DeckPosition.SECOND_CARD)))
+                    resourceCardsToSend
             );
             List<Client.Player> playerList = new ArrayList<>();
             System.out.println("Il giocatore attivo è il giocatore numero " + gameModel.getActivePlayerIndex());

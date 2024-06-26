@@ -143,13 +143,21 @@ public class PlaceCardState implements ServerState{
         List<AchievementCard> commonAchievementCards = new ArrayList<>();
         commonAchievementCards.add(gameModel.getAchievementDeck().getBoardCard().get(DeckPosition.FIRST_CARD));
         commonAchievementCards.add(gameModel.getAchievementDeck().getBoardCard().get(DeckPosition.SECOND_CARD));
+        List<GoldCard> goldCardsToSend = new LinkedList<>();
+        goldCardsToSend.add(gameModel.getGoldDeck().getTopCardNoPop());
+        goldCardsToSend.add(gameModel.getGoldDeck().getBoardCard().get(DeckPosition.FIRST_CARD));
+        goldCardsToSend.add(gameModel.getGoldDeck().getBoardCard().get(DeckPosition.SECOND_CARD));
+        List<ResourceCard> resourceCardsToSend = new LinkedList<>();
+        resourceCardsToSend.add(gameModel.getResourceDeck().getTopCardNoPop());
+        resourceCardsToSend.add(gameModel.getResourceDeck().getBoardCard().get(DeckPosition.FIRST_CARD));
+        resourceCardsToSend.add(gameModel.getResourceDeck().getBoardCard().get(DeckPosition.SECOND_CARD));
         Deck<GoldCard> goldDeck = new Deck<GoldCard>(
                 gameModel.getGoldDeck().getNumberOfCards(),
-                new ArrayList<>(List.of(gameModel.getGoldDeck().getTopCardNoPop() ,gameModel.getGoldDeck().getBoardCard().get(DeckPosition.FIRST_CARD), gameModel.getGoldDeck().getBoardCard().get(DeckPosition.SECOND_CARD)))
+                goldCardsToSend
         );
         Deck<ResourceCard> resourceDeck = new Deck<ResourceCard>(
                 gameModel.getResourceDeck().getNumberOfCards(),
-                new ArrayList<>(List.of((ResourceCard) gameModel.getResourceDeck().getTopCardNoPop() ,gameModel.getResourceDeck().getBoardCard().get(DeckPosition.FIRST_CARD), gameModel.getResourceDeck().getBoardCard().get(DeckPosition.SECOND_CARD)))
+                resourceCardsToSend
         );
         List<Client.Player> playerList = new ArrayList<>();
         for (Player p : gameModel.getPlayerList()){
