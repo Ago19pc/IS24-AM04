@@ -1,6 +1,8 @@
 # IS AM-04
 ## Authors: Contemi Agostino, Consorte Federico, Dodi Filippo, Corsi Jacopo
 
+![alt text](https://github.com/Ago19pc/IS24-AM04/blob/main/src/main/resources/images/otherImages/logo.jpg)
+
 |Feature|Status|
 |-------|------|
 |UML (high level)|✅|
@@ -8,16 +10,8 @@
 |Socket|✅|
 |RMI|✅|
 |Controller|✅|
-|TUI|⚙️|
-|GUI|⚙️|
+|TUI|✅|
+|GUI|✅|
 |Persistance|✅|
 |Connection resilience|✅|
 |Chat|✅|
-
-|To Do |Comments | Priority |Status|
-|-------|-------|----------|-----|
-|Add missing tests|tests are currently broken| WIP        |⚙️|
-|Improve CLI|It works but it's not enjoyable + cards and manuscript are shown incorrectly| WIP        |⚙️|
-|Finish GUI|-------| WIP      |⚙️|
-|Finish UML|-------| WIP        |⚙️|
-|Create interfaces|-------| WIP        |⚙️|
