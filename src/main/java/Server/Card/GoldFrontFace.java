@@ -60,9 +60,9 @@ public class GoldFrontFace extends ResourceFrontFace {
         //
         String boundaries = "-".repeat(32);
         boundaries += "\n";
-        String upper = String.format("|%-9s|%10s|%9s|\n", getCornerSymbols().get(CardCorners.TOP_LEFT), scoreReqForPrint(), getCornerSymbols().get(CardCorners.TOP_RIGHT));
-        String middle = String.format("|%30s|\n", "REGNO: " + getKingdom());
-        String lower = String.format("|%-9s|%10s|%9s|\n", getCornerSymbols().get(CardCorners.BOTTOM_LEFT), placeReqForPrint(), getCornerSymbols().get(CardCorners.BOTTOM_RIGHT));
+        String upper = String.format("|%-9s|%10s|%9s|\n", getCornerSymbols().get(CardCorners.TOP_LEFT).toShortString(), scoreReqForPrint(), getCornerSymbols().get(CardCorners.TOP_RIGHT).toShortString());
+        String middle = String.format("|%30s|\n", "REGNO: " + getKingdom().toShortString());
+        String lower = String.format("|%-9s|%10s|%9s|\n", getCornerSymbols().get(CardCorners.BOTTOM_LEFT).toShortString(), placeReqForPrint(), getCornerSymbols().get(CardCorners.BOTTOM_RIGHT).toShortString());
 
         return boundaries + upper + middle + lower + boundaries;
     }
@@ -79,7 +79,7 @@ public class GoldFrontFace extends ResourceFrontFace {
                 if (!toRet.isEmpty()) {
                     toRet.append(" ");
                 }
-                toRet.append(s.toString().repeat(Math.max(0, placementRequirements.get(s))));
+                toRet.append(s.toShortString().repeat(Math.max(0, placementRequirements.get(s))));
             }
         }
 
@@ -97,7 +97,7 @@ public class GoldFrontFace extends ResourceFrontFace {
                 if (!toRet.isEmpty()) {
                     toRet.append(" ");
                 }
-                toRet.append(s.toString().repeat(Math.max(0, scoreRequirements.get(s))));
+                toRet.append(s.toShortString().repeat(Math.max(0, scoreRequirements.get(s))));
             }
         }
 

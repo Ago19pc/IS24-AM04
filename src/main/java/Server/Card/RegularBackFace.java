@@ -75,9 +75,9 @@ public class RegularBackFace extends CornerCardFace {
     public String toString() {
         String boundaries = "-".repeat(32);
         boundaries += "\n";
-        String upper = String.format("|%-9s|%10s|%9s|\n", getCornerSymbols().get(CardCorners.TOP_LEFT), " ", getCornerSymbols().get(CardCorners.TOP_RIGHT));
-        String middle = String.format("|%20s|%9s|\n", centerSymbols.stream().map(Symbol::toString).collect(Collectors.joining(" ")), "REGNO: " + getKingdom().toString());
-        String lower = String.format("|%-9s|%10s|%9s|\n", getCornerSymbols().get(CardCorners.BOTTOM_LEFT), " ", getCornerSymbols().get(CardCorners.BOTTOM_RIGHT));
+        String upper = String.format("|%-9s|%10s|%9s|\n", getCornerSymbols().get(CardCorners.TOP_LEFT).toShortString(), " ", getCornerSymbols().get(CardCorners.TOP_RIGHT).toShortString());
+        String middle = String.format("|%20s|%9s|\n", centerSymbols.stream().map(Symbol::toShortString).collect(Collectors.joining(" ")), "REGNO: " + getKingdom().toShortString());
+        String lower = String.format("|%-9s|%10s|%9s|\n", getCornerSymbols().get(CardCorners.BOTTOM_LEFT).toShortString(), " ", getCornerSymbols().get(CardCorners.BOTTOM_RIGHT).toShortString());
         return boundaries + upper + middle + lower + boundaries;
     }
 }

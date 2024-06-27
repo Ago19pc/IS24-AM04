@@ -91,13 +91,13 @@ public enum Symbol {
      */
     public String toString(){
         return switch (this) {
-            case ANIMAL -> "\uD83D\uDC3A";
-            case FUNGUS -> "\uD83C\uDF44";
-            case PLANT -> "\uD83C\uDF32";
-            case BUG -> "\uD83E\uDD8B";
-            case QUILL -> "\uD83E\uDEB6";
-            case BOTTLE -> "⚗️";
-            case PARCHMENT -> "\uD83D\uDCDC";
+            case ANIMAL -> "A";
+            case FUNGUS -> "F";
+            case PLANT -> "P";
+            case BUG -> "B";
+            case QUILL -> "Q";
+            case BOTTLE -> "️BL";
+            case PARCHMENT -> "PR";
             case EMPTY -> " ";
             case NONE -> "NO";
             case COVERED_CORNER -> "XX";
@@ -125,7 +125,17 @@ public enum Symbol {
             case QUILL -> "\uD83E\uDEB6";
             case BOTTLE -> "⚗️";
             case PARCHMENT -> "\uD83D\uDCDC";
-            default -> " ";
+            case EMPTY -> " ";
+            case NONE -> "NO";
+            case COVERED_CORNER -> "XX";
+            case PATTERN1F -> "1F";
+            case PATTERN1A -> "1A";
+            case PATTERN2P -> "2P";
+            case PATTERN2B -> "2B";
+            case PATTERN3 -> "3";
+            case PATTERN4 -> "4";
+            case PATTERN5 -> "5";
+            case PATTERN6 -> "6";
         };
     }
 }

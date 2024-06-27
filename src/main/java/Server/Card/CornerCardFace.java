@@ -118,9 +118,9 @@ public class CornerCardFace extends EmptyCardFace implements Serializable {
     public String toString(){
         String boundaries = "-".repeat(32);
         boundaries += "\n";
-        String upper = String.format("|%-9s|%10s|%9s|\n", getCornerSymbols().get(CardCorners.TOP_LEFT), " ", getCornerSymbols().get(CardCorners.TOP_RIGHT));
+        String upper = String.format("|%-9s|%10s|%9s|\n", getCornerSymbols().get(CardCorners.TOP_LEFT).toShortString(), " ", getCornerSymbols().get(CardCorners.TOP_RIGHT).toShortString());
         String middle = String.format("|%30s|\n", " ");
-        String lower = String.format("|%-9s|%10s|%9s|\n", getCornerSymbols().get(CardCorners.BOTTOM_LEFT), " ", getCornerSymbols().get(CardCorners.BOTTOM_RIGHT));
+        String lower = String.format("|%-9s|%10s|%9s|\n", getCornerSymbols().get(CardCorners.BOTTOM_LEFT).toShortString(), " ", getCornerSymbols().get(CardCorners.BOTTOM_RIGHT).toShortString());
         return boundaries + upper + middle + lower + boundaries;
     }
 }
