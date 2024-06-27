@@ -48,18 +48,18 @@ public class Manuscript implements Serializable {
         for(CardCorners corner : cardsUnder.keySet()) {
             CornerCardFace neighbor = cardsUnder.get(corner);
             Symbol symbol = neighbor.getCornerSymbols().get(corner.getOppositeCorner());
-            activeSymbols.put(symbol, activeSymbols.get(symbol) - 1);
+            activeSymbols.put(symbol, activeSymbols.get(symbol) != null? activeSymbols.get(symbol) - 1: 0);
         }
         try {
             for (Symbol symbol : cardFace.getCenterSymbols()) {
-                activeSymbols.put(symbol, activeSymbols.get(symbol) + 1);
+                activeSymbols.put(symbol, activeSymbols.get(symbol) != null? activeSymbols.get(symbol) + 1: 1);
             }
         } catch (UnsupportedOperationException e) {
             //do nothing since not all cards have center symbols
         }
         for(CardCorners corner : cardFace.getCornerSymbols().keySet()){
             Symbol symbol = cardFace.getCornerSymbols().get(corner);
-            activeSymbols.put(symbol, activeSymbols.get(symbol) + 1);
+            activeSymbols.put(symbol, activeSymbols.get(symbol) != null? activeSymbols.get(symbol) + 1: + 1);
         }
     }
 
