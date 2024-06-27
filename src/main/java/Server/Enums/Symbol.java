@@ -96,7 +96,7 @@ public enum Symbol {
             case PLANT -> "P";
             case BUG -> "B";
             case QUILL -> "Q";
-            case BOTTLE -> "️BL";
+            case BOTTLE -> "BL";
             case PARCHMENT -> "PR";
             case EMPTY -> " ";
             case NONE -> "NO";
