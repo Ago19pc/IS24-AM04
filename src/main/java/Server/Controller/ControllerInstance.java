@@ -483,7 +483,7 @@ public class ControllerInstance implements Controller{
             }
             changeState(new LoadGameLobbyState(connectionHandler, gameModel, this));
         } catch (IOException e) {
-            System.err.println("Error while loading game");
+            throw new NullPointerException("Failed to load game");
         }
     }
 
