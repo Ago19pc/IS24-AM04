@@ -37,21 +37,22 @@ docker compose -f docker/compose.yaml run --rm --service-ports client
 The first command builds the image (a few minutes the first time) and starts the server in
 the background. The second one opens the launcher menu, where you pick a client:
 
-- **Client GUI → Browser (noVNC):** open <http://localhost:6080>. In the game choose RMI or
-  SOCKET, then join with *Server IP* `server` and *Server port* `1099` (RMI) or `1234` (SOCKET).
+- **Client GUI → Browser (noVNC):** open the address the terminal shows, e.g.
+  <http://localhost:6080>. The game joins the server by itself, over Socket or RMI picked at
+  random, and opens on the name screen.
 - **Client TUI:** the menu asks how to connect and joins the server for you.
 
-Each player runs the second command in their own terminal. Every browser client needs its own
-port:
+Each player runs the second command in their own terminal. Docker gives every browser client on
+the same computer a free port between 6080 and 6089, and each client's terminal shows its own
+address (on Linux it shows the `docker port` command that tells it). To pin a client to a port,
+set `NOVNC_PORT`:
 
 ```sh
-# macOS / Linux
-NOVNC_PORT=6081 docker compose -f docker/compose.yaml run --rm --service-ports client
+NOVNC_PORT=6085 docker compose -f docker/compose.yaml run --rm --service-ports client   # macOS / Linux
 ```
 
 ```powershell
-# Windows PowerShell
-$env:NOVNC_PORT=6081; docker compose -f docker/compose.yaml run --rm --service-ports client; Remove-Item Env:NOVNC_PORT
+$env:NOVNC_PORT=6085; docker compose -f docker/compose.yaml run --rm --service-ports client; Remove-Item Env:NOVNC_PORT
 ```
 
 To stop the server: `docker compose -f docker/compose.yaml down` (saved games are kept).
@@ -130,13 +131,13 @@ Environment variables read by the container (the menu fills in the ones it asks 
 | `MODE` | *(menu)* | all | `host`, `gclient` or `tclient`. Empty with a terminal attached shows the menu. |
 | `GAME_MODE` | `n` (compose: `l`) | host | `n` new game, `l` resume the saved game. |
 | `RMI_PORT` / `SOCKET_PORT` | `1099` / `1234` | host | Server ports inside the container. |
-| `CONNECTION` | `socket` | tclient | `socket` or `rmi`. |
-| `SERVER_HOST` | `server` | tclient | Server address. |
-| `SERVER_PORT` | `1234` / `1099` | tclient | Server port, default depends on `CONNECTION`. |
+| `CONNECTION` | `socket` (TUI), `random` (GUI) | clients | TUI: `socket` or `rmi`. GUI: `random`, `socket`, `rmi`, or `manual` to fill in the connection screens yourself. |
+| `SERVER_HOST` | `server` | clients | Server address. |
+| `SERVER_PORT` | `1234` / `1099` | clients | Server port, default depends on the connection. |
 | `DISPLAY_MODE` | `novnc` | gclient | `novnc` (browser) or `x11` (window on your X server). |
 | `DISPLAY` | `host.docker.internal:0` | gclient, x11 | X server to draw on. |
 | `GUI_SIZE` | `1024x768` | gclient, novnc | Size of the virtual screen. |
-| `NOVNC_PORT` | `6080` | compose | Host port of the browser client. |
+| `NOVNC_PORT` | `6080-6089` | compose | Host port of the browser client: a port, or a range whose first free port is used. |
 | `CODEX_IMAGE` | `codex-naturalis:local` | compose | Image to run, e.g. the published one. |
 
 ## What is in the image
@@ -150,9 +151,10 @@ Environment variables read by the container (the menu fills in the ones it asks 
 - **Fonts:** the GUI was designed on Windows with Segoe UI and Constantia, which cannot be
   redistributed. Selawik (Microsoft's open-source font with the same metrics as Segoe UI) and
   Caladea take their place.
-- **Fixed window size:** a Docker-only JavaFX preloader (`docker/hooks`) makes the game window
-  non-resizable. Every scene is 1024×768, and drag-resizing a JavaFX window through XQuartz turns
-  it black. The game's own code is unchanged.
+- **Docker-only JavaFX hooks** (`docker/hooks`, loaded as a preloader; the game's own code is
+  unchanged): the game window cannot be resized (every scene is 1024×768, and drag-resizing a
+  JavaFX window through XQuartz turns it black), and the two connection screens are filled in and
+  confirmed automatically.
 
 ## Releases
 
@@ -190,7 +192,8 @@ COMPOSE_FILE=docker/release/compose.yaml docker/tests/compose.sh
 - **"nessuna modalità scelta e nessun terminale interattivo":** the menu needs a terminal.
   `docker compose run` gives it one; with `docker run` add `-it`, or set `MODE`.
 - **"Server X non raggiungibile":** follow the X11 steps above, or play in the browser.
-- **Port already in use (1234 or 6080):** stop what is using it, or choose another `NOVNC_PORT`.
+- **Port already in use:** 1234 belongs to the server. For browser clients it means all of
+  6080-6089 are taken: stop some clients, or set another `NOVNC_PORT`.
 - **The browser page shows "Disconnected":** the client has exited (for example the game is
   over); start it again.
 

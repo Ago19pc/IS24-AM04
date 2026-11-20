@@ -67,6 +67,19 @@ wait_for_log() {
   return 1
 }
 
+# count_log <container> <fixed-string>: how many log lines contain it
+count_log() { docker logs "$1" 2>&1 | grep -cF -- "$2"; }
+
+# wait_for_more <container> <fixed-string> <count-before> <timeout-seconds>
+wait_for_more() {
+  local i
+  for ((i = 0; i < $4; i++)); do
+    (( $(count_log "$1" "$2") > $3 )) && return 0
+    sleep 1
+  done
+  return 1
+}
+
 start_server() {
   drun -d --name "$SERVER" --network "$NET" -v "$VOL:/data" \
     -e MODE=host -e GAME_MODE=n -e SOCKET_PORT=$SOCKET_PORT -e RMI_PORT=$RMI_PORT \
@@ -157,10 +170,11 @@ wait_for_log "$TUI_RMI" "Connessione avvenuta con successo" 20 \
   && ok "client confirms the RMI connection" || ko "client did not confirm (RMI)"
 
 # ---------------------------------------------------------------- 8. GUI via noVNC
-step "8. GUI client via noVNC"
+step "8. GUI client via noVNC (joins the server by itself via Socket)"
+socket_before=$(count_log "$SERVER" "[Socket] Nuova connessione accettata")
 drun -d --name "$GUI" --network "$NET" \
-  -e MODE=gclient -e DISPLAY_MODE=novnc -p "127.0.0.1:$NOVNC_HOST_PORT:6080" \
-  "$IMAGE" >/dev/null
+  -e MODE=gclient -e DISPLAY_MODE=novnc -e CONNECTION=socket -e SERVER_HOST="$SERVER" \
+  -p "127.0.0.1:$NOVNC_HOST_PORT:6080" "$IMAGE" >/dev/null
 code=000
 for _ in $(seq 1 60); do
   code="$(curl -s -o /dev/null -w '%{http_code}' "http://127.0.0.1:$NOVNC_HOST_PORT/vnc.html" || true)"
@@ -187,14 +201,20 @@ docker exec "$GUI" fc-list : fullname 2>/dev/null | grep Constantia >/dev/null \
   && ok "Caladea answers to the name Constantia" || ko "no font named Constantia"
 wait_for_log "$GUI" "[codex] finestra a dimensione fissa: Welcome to Codex Naturalis!" 10 \
   && ok "game window cannot be resized" || ko "game window still resizable"
+wait_for_more "$SERVER" "[Socket] Nuova connessione accettata" "$socket_before" 40 \
+  && ok "GUI joined the server by itself via Socket" || ko "GUI did not join the server via Socket"
+wait_for_log "$GUI" "[codex] scelta del nome" 30 \
+  && ok "GUI landed on the name screen" || ko "GUI did not reach the name screen"
 
 # ---------------------------------------------------------------- 9. GUI via X11
-step "9. GUI client via X11 (an X server in another container plays the host)"
+step "9. GUI client via X11 (another container plays the host's X server; joins via RMI)"
 drun -d --name "$XSRV" --network "$NET" --entrypoint Xvfb "$IMAGE" \
   :0 -screen 0 1024x768x24 -listen tcp -ac >/dev/null
 sleep 2
+rmi_before=$(count_log "$SERVER" "[RMI] Client connected")
 drun -d --name "$GUI_X11" --network "$NET" \
-  -e MODE=gclient -e DISPLAY_MODE=x11 -e DISPLAY="$XSRV:0" "$IMAGE" >/dev/null
+  -e MODE=gclient -e DISPLAY_MODE=x11 -e DISPLAY="$XSRV:0" -e CONNECTION=rmi -e SERVER_HOST="$SERVER" \
+  "$IMAGE" >/dev/null
 sleep 12
 running "$GUI_X11" && has_process "$GUI_X11" '[j]ava' \
   && ok "JavaFX window opened on the X server" || ko "JavaFX did not start on X11"
@@ -206,9 +226,15 @@ if docker logs "$GUI_X11" 2>&1 | grep -iE 'Exception|Unable to open DISPLAY|Erro
 else
   ok "no errors in X11 GUI logs"
 fi
+wait_for_more "$SERVER" "[RMI] Client connected" "$rmi_before" 40 \
+  && ok "X11 GUI joined the server by itself via RMI" || ko "X11 GUI did not join the server via RMI"
+wait_for_log "$GUI_X11" "[codex] scelta del nome" 30 \
+  && ok "X11 GUI landed on the name screen" || ko "X11 GUI did not reach the name screen"
 out="$(drun --rm -e MODE=gclient -e DISPLAY_MODE=x11 -e DISPLAY=nowhere.invalid:0 "$IMAGE" 2>&1)"; rc=$?
 [[ $rc -eq 64 ]] && grep -q 'Server X non raggiungibile' <<<"$out" \
   && ok "unreachable X server -> clear error" || ko "unreachable X server not reported (exit $rc)"
+grep -qE 'Collegamento automatico \(scelto a caso\): (SOCKET|RMI)' <<<"$out" \
+  && ok "without CONNECTION the GUI picks Socket or RMI at random" || ko "no random connection by default"
 
 # ---------------------------------------------------------------- 10. graceful stop
 step "10. Graceful stop (signals reach the JVM)"

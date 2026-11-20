@@ -10,6 +10,7 @@ ROOT="$(cd "$(dirname "$0")/../.." && pwd)"
 COMPOSE_FILE="${COMPOSE_FILE:-$ROOT/docker/compose.yaml}"
 PROJECT=codex-compose-test
 NOVNC_TEST_PORT="${NOVNC_TEST_PORT:-16090}"
+NOVNC_TEST_RANGE="${NOVNC_TEST_RANGE:-16091-16095}"
 dc() { docker compose -f "$COMPOSE_FILE" -p "$PROJECT" "$@"; }
 
 pass=0; fail=0
@@ -84,6 +85,38 @@ docker port "$c3" 6080 2>/dev/null | grep -q "^127\.0\.0\.1:$NOVNC_TEST_PORT$" \
   && ok "noVNC published on localhost only" || ko "noVNC not bound to 127.0.0.1"
 docker logs "$c3" 2>&1 | grep -F "http://localhost:$NOVNC_TEST_PORT" >/dev/null \
   && ok "the message shows the right URL" || ko "the message shows the wrong URL"
+
+# ---------------------------------------------------------------- 5. several clients
+step "5. Several GUI clients on the same computer (automatic browser ports)"
+NOVNC_PORT='' dc --profile client config 2>/dev/null | grep -E 'published: "?6080-6089"?$' >/dev/null \
+  && ok "by default the browser port comes from the range 6080-6089" \
+  || ko "the browser port is fixed by default"
+# --no-deps: a GUI client shows its first screen without a server
+g1="$(NOVNC_PORT=$NOVNC_TEST_RANGE run_client --no-deps --service-ports -e MODE=gclient)"
+g2="$(NOVNC_PORT=$NOVNC_TEST_RANGE run_client --no-deps --service-ports -e MODE=gclient)"
+p1="$(docker port "$g1" 6080 2>/dev/null)"; p2="$(docker port "$g2" 6080 2>/dev/null)"
+[[ -n $p1 && -n $p2 && $p1 != "$p2" ]] \
+  && ok "two GUI clients started, on $p1 and $p2" || ko "second GUI client did not start (ports: '$p1' '$p2')"
+for p in "$p1" "$p2"; do
+  code=000
+  for _ in $(seq 1 90); do
+    code="$(curl -s -o /dev/null -w '%{http_code}' "http://$p/vnc.html" || true)"
+    [[ $code == 200 ]] && break
+    sleep 1
+  done
+  [[ $code == 200 ]] && ok "noVNC answers on $p" || ko "noVNC not reachable on '$p' (HTTP $code)"
+done
+if docker info --format '{{.OperatingSystem}}' 2>/dev/null | grep -F 'Docker Desktop' >/dev/null; then
+  # Docker Desktop lets a container reach its own published port: each client finds its URL
+  for pair in "$g1 $p1" "$g2 $p2"; do
+    set -- $pair
+    docker logs "$1" 2>&1 | grep -F "http://localhost:${2##*:}" >/dev/null \
+      && ok "client on ${2##*:} shows its exact URL" || ko "client on '${2##*:}' does not show its URL"
+  done
+else
+  docker logs "$g2" 2>&1 | grep -F "docker port" >/dev/null \
+    && ok "the message tells how to find this client's port" || ko "the message does not tell how to find the port"
+fi
 
 echo
 echo "RESULT: $pass passed, $fail failed"

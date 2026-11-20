@@ -20,7 +20,7 @@ MODE="${MODE:-}"
 GAME_MODE="${GAME_MODE:-n}"
 RMI_PORT="${RMI_PORT:-1099}"
 SOCKET_PORT="${SOCKET_PORT:-1234}"
-CONNECTION="${CONNECTION:-socket}"
+CONNECTION="${CONNECTION:-}"   # tclient: socket (default) or rmi; gclient: random (default), socket, rmi, manual
 SERVER_HOST="${SERVER_HOST:-server}"
 SERVER_PORT="${SERVER_PORT:-}"
 DISPLAY_MODE="${DISPLAY_MODE:-novnc}"
@@ -70,7 +70,7 @@ Per il menu avvia il container con un terminale:
 Oppure scegli la modalità con le variabili d'ambiente:
   MODE=host     GAME_MODE=n|l  RMI_PORT=1099  SOCKET_PORT=1234
   MODE=tclient  CONNECTION=socket|rmi  SERVER_HOST=server  SERVER_PORT=1234|1099
-  MODE=gclient  DISPLAY_MODE=novnc|x11
+  MODE=gclient  DISPLAY_MODE=novnc|x11  CONNECTION=random|socket|rmi|manual
 EOF
   exit 64
 }
@@ -146,9 +146,9 @@ menu_host() {
 }
 
 menu_gui() {
-  local choice
+  local choice port=${NOVNC_PORT:-6080}
   choice=$(choose "Dove vuoi vedere la grafica?" \
-    "Browser (noVNC)   apri http://localhost:${NOVNC_PORT:-6080}" \
+    "Browser (noVNC)   apri http://localhost:${port%%-*}" \
     "Finestra X11      XQuartz · VcXsrv/WSLg · Linux") || bye
   if [[ $choice == Browser* ]]; then DISPLAY_MODE=novnc; else DISPLAY_MODE=x11; fi
   MODE=gclient
@@ -192,9 +192,9 @@ run_game() {  # run_game <answer-to-start-menu> [<prompt> <answer>]...
   local args=(--answer "$WELCOME" "$1"); shift
   while (( $# )); do args+=(--answer "$1" "$2"); shift 2; done
   # prism.order=sw: software rendering (no GPU in a container)
-  # javafx.preloader: Docker-only hook that locks the 1024x768 game window (docker/hooks)
+  # javafx.preloader: Docker-only hooks (docker/hooks): fixed 1024x768 window, automatic join
   exec python3 "$AUTORESPOND" "${args[@]}" -- \
-    java -Dprism.order=sw -Djavafx.preloader=codex.docker.FixedSizeWindows \
+    java -Dprism.order=sw -Djavafx.preloader=codex.docker.DockerPreloader \
       -cp "$APP_CLASSPATH" theMain.main
 }
 
@@ -213,7 +213,8 @@ start_host() {
 }
 
 start_tui() {
-  case "${CONNECTION,,}" in
+  local connection=${CONNECTION:-socket}
+  case "${connection,,}" in
     socket) CONNECTION=SOCKET; SERVER_PORT=${SERVER_PORT:-1234} ;;
     rmi)    CONNECTION=RMI;    SERVER_PORT=${SERVER_PORT:-1099} ;;
     *) die "CONNECTION non valida: '$CONNECTION' (usa socket oppure rmi)" ;;
@@ -225,8 +226,36 @@ start_tui() {
     "A che server vuoi connetterti?" "$SERVER_HOST $SERVER_PORT"
 }
 
+# The GUI joins the server by itself (AutoConnect in docker/hooks): Socket or RMI at random,
+# unless CONNECTION says which; CONNECTION=manual leaves the connection screens to the player.
+choose_gui_connection() {
+  local picked="" default_port=1234
+  case "${CONNECTION,,}" in
+    ""|random)
+      if (( RANDOM % 2 )); then CODEX_CONNECTION=RMI; else CODEX_CONNECTION=SOCKET; fi
+      picked=" (scelto a caso)" ;;
+    socket) CODEX_CONNECTION=SOCKET ;;
+    rmi)    CODEX_CONNECTION=RMI ;;
+    manual) CODEX_CONNECTION="" ;;
+    *) die "CONNECTION non valida: '$CONNECTION' (usa random, socket, rmi oppure manual)" ;;
+  esac
+  if [[ -z $CODEX_CONNECTION ]]; then
+    gum style --foreground "$C_MUTED" "  Collegamento: lo scegli nella finestra del gioco"
+    return
+  fi
+  [[ $CODEX_CONNECTION == RMI ]] && default_port=1099
+  CODEX_SERVER_HOST=$SERVER_HOST
+  CODEX_SERVER_PORT=${SERVER_PORT:-$default_port}
+  [[ $CODEX_SERVER_HOST =~ ^[A-Za-z0-9._:-]+$ ]] || die "SERVER_HOST non valido: '$CODEX_SERVER_HOST'"
+  is_port "$CODEX_SERVER_PORT" || die "SERVER_PORT non valida: '$CODEX_SERVER_PORT'"
+  export CODEX_CONNECTION CODEX_SERVER_HOST CODEX_SERVER_PORT
+  gum style --foreground "$C_MUTED" \
+    "  Collegamento automatico${picked}: $CODEX_CONNECTION → $CODEX_SERVER_HOST:$CODEX_SERVER_PORT"
+}
+
 start_gui() {
   [[ -r $GUI_HELPER ]] || die "client grafico non disponibile in questa immagine"
+  choose_gui_connection
   # shellcheck source=start-gui.sh
   source "$GUI_HELPER"
   prepare_display        # noVNC or X11, exports DISPLAY

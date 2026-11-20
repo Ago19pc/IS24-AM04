@@ -2,9 +2,8 @@
 # Put this file in an empty folder and run, from that folder:
 #
 #   docker compose up -d server                        start (or resume) the game server
-#   docker compose run --rm --service-ports client     one per player: menu (GUI or TUI)
-#   NOVNC_PORT=6081 docker compose run --rm --service-ports client
-#                                                      a second GUI player in the browser
+#   docker compose run --rm --service-ports client     one per player: menu (GUI or TUI);
+#                                                      browser clients get 6080, 6081, ...
 #   docker compose logs -f server                      server log
 #   docker compose down                                stop (saves stay in the volume)
 #
@@ -37,10 +36,12 @@ services:
     tty: true
     environment:
       SERVER_HOST: server
-      NOVNC_PORT: ${NOVNC_PORT:-6080}   # only used to print the right URL
-      DISPLAY: ${DISPLAY:-}             # X11 mode; empty -> host.docker.internal:0
+      CONNECTION: ${CONNECTION:-}            # GUI joins by itself: random (default), socket, rmi, manual
+      NOVNC_PORT: ${NOVNC_PORT:-6080-6089}   # shown in the menu
+      DISPLAY: ${DISPLAY:-}                  # X11 mode; empty -> host.docker.internal:0
     ports:
-      - "127.0.0.1:${NOVNC_PORT:-6080}:6080"   # noVNC, this computer only
+      # noVNC, this computer only: the first free port in the range (or NOVNC_PORT=6085, fixed)
+      - "127.0.0.1:${NOVNC_PORT:-6080-6089}:6080"
     extra_hosts:
       - "host.docker.internal:host-gateway"    # X11 mode on Linux hosts (Docker Desktop has it already)
 

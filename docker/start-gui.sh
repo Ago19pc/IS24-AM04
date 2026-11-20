@@ -5,7 +5,9 @@
 # Uses die/summary from entrypoint.sh.
 
 GUI_SIZE="${GUI_SIZE:-1024x768}"   # every scene of the game is 1024x768
-NOVNC_PORT="${NOVNC_PORT:-6080}"   # host port published by compose/run, only used in messages
+# Host port(s) published by compose or run, only used in messages: one port, or a range
+# (compose's default 6080-6089) from which Docker took the first free one.
+NOVNC_PORT="${NOVNC_PORT:-6080}"
 
 wait_until() {  # wait_until <seconds> <command...>
   local tries=$(( $1 * 10 ))
@@ -26,7 +28,36 @@ start_novnc() {
   PYTHONPATH=/opt/websockify PYTHONWARNINGS=ignore \
     python3 -m websockify --web /opt/novnc 6080 localhost:5900 >/tmp/websockify.log 2>&1 &
   wait_until 10 port_open 127.0.0.1 6080 || die "noVNC non è partito: $(tail -3 /tmp/websockify.log)"
-  summary "Client grafico pronto" "Apri  http://localhost:$NOVNC_PORT  nel browser"
+  local port=$NOVNC_PORT
+  [[ $NOVNC_PORT == *-* ]] && port=$(find_host_port)
+  if [[ -n $port ]]; then
+    summary "Client grafico pronto" "Apri  http://localhost:$port  nel browser"
+  else
+    summary "Client grafico pronto" \
+      "Apri il browser sulla porta che Docker ha scelto tra ${NOVNC_PORT%-*} e ${NOVNC_PORT#*-}:" \
+      "te la dice  docker port $HOSTNAME 6080"
+  fi
+}
+
+# Which port of the range did Docker publish noVNC on? The container cannot see it, but with
+# Docker Desktop it can reach its own published port through the host: ask each port of the
+# range for /whoami, a page only this container answers with its own name (see the Dockerfile).
+# Linux hosts do not allow it: then this prints nothing.
+find_host_port() {
+  printf '%s\n' "$HOSTNAME" > /tmp/codex-whoami
+  python3 - "${NOVNC_PORT%-*}" "${NOVNC_PORT#*-}" "$HOSTNAME" <<'EOF'
+import sys, urllib.request
+first, last, me = int(sys.argv[1]), int(sys.argv[2]), sys.argv[3]
+for port in range(first, last + 1):
+    try:
+        url = "http://host.docker.internal:%d/whoami" % port
+        with urllib.request.urlopen(url, timeout=0.5) as answer:
+            if answer.read().decode().strip() == me:
+                print(port)
+                break
+    except Exception:
+        pass
+EOF
 }
 
 x11_reachable() {

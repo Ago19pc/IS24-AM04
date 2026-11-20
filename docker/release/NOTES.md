@@ -12,11 +12,12 @@ no Java, no JavaFX and nothing to build.
    docker compose up -d server
    docker compose run --rm --service-ports client
    ```
-4. In the menu pick **Client GUI → Browser** and open <http://localhost:6080>, or **Client TUI**
-   to play in the terminal. In the game, join *Server IP* `server` with port `1234` (SOCKET)
-   or `1099` (RMI).
+4. In the menu pick **Client GUI → Browser** and open the address the terminal shows (e.g.
+   <http://localhost:6080>): the game joins the server by itself and opens on the name screen.
+   Or pick **Client TUI** to play in the terminal.
 
-A second player in the browser: `NOVNC_PORT=6081 docker compose run --rm --service-ports client`.
+More players on the same computer: run the client command again; each client shows its own
+address (ports 6080-6089).
 
 Game window on your desktop (X11, uses **compose.x11-linux.yaml** on Linux), saved games, playing
 over the local network and all settings: [docker/README.md]({{README}}).

@@ -1,22 +1,20 @@
 package codex.docker;
 
-import javafx.application.Preloader;
 import javafx.collections.ListChangeListener;
 import javafx.stage.Stage;
 import javafx.stage.Window;
 
 /**
- * Docker-only hook, enabled by the entrypoint with
- * {@code -Djavafx.preloader=codex.docker.FixedSizeWindows}.
- * <p>
  * Every scene of Codex Naturalis is 1024x768, so a bigger window only adds an empty area.
  * On macOS with XQuartz, drag-resizing a JavaFX window also turns it black for good.
- * Locking the size of the game windows avoids both, without touching the game's code.
+ * Locking the size of the game windows avoids both.
  */
-public class FixedSizeWindows extends Preloader {
+final class FixedSizeWindows {
 
-    @Override
-    public void start(Stage preloaderStage) {
+    private FixedSizeWindows() {
+    }
+
+    static void install() {
         Window.getWindows().addListener((ListChangeListener<Window>) change -> {
             while (change.next()) {
                 for (Window window : change.getAddedSubList()) {

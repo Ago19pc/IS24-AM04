@@ -86,6 +86,7 @@ RUN set -eux; \
       '<!doctype html><meta charset="utf-8"><title>Codex Naturalis</title>' \
       '<meta http-equiv="refresh" content="0; url=vnc.html?autoconnect=true&amp;resize=scale&amp;reconnect=true&amp;reconnect_delay=1000">' \
       > index.html; \
+    ln -s /tmp/codex-whoami whoami; \
     tar -xzf /tmp/websockify.tar.gz --strip-components=1 -C /tmp/ws; \
     mv /tmp/ws/websockify /tmp/ws/COPYING /opt/websockify/; \
     unzip -q -j /tmp/selawik.zip '*.ttf' -d /opt/fonts/selawik
