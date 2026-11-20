@@ -1,6 +1,8 @@
 # X11 mode on Linux or WSLg: share the host's X11 socket with the client.
+# Add it after the main compose file:
 #   xhost +local:
 #   docker compose -f docker/compose.yaml -f docker/compose.x11-linux.yaml run --rm client
+#   docker compose -f compose.yaml -f compose.x11-linux.yaml run --rm client   (release files)
 # Not part of compose.yaml: on macOS/Windows the folder is not a usable X socket and
 # would break the browser (noVNC) mode.
 services:

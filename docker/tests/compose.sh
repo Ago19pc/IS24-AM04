@@ -1,13 +1,16 @@
 #!/usr/bin/env bash
 # Compose test: server + players, started the way the README tells players to.
 # Run from anywhere:  docker/tests/compose.sh
+# Optional env:  COMPOSE_FILE=path  (default docker/compose.yaml; the release one is
+#                                   docker/release/compose.yaml)
 # Uses its own project name, so it never touches a real game's volume.
 set -uo pipefail
 
 ROOT="$(cd "$(dirname "$0")/../.." && pwd)"
+COMPOSE_FILE="${COMPOSE_FILE:-$ROOT/docker/compose.yaml}"
 PROJECT=codex-compose-test
 NOVNC_TEST_PORT="${NOVNC_TEST_PORT:-16090}"
-dc() { docker compose -f "$ROOT/docker/compose.yaml" -p "$PROJECT" "$@"; }
+dc() { docker compose -f "$COMPOSE_FILE" -p "$PROJECT" "$@"; }
 
 pass=0; fail=0
 ok()   { printf '  \033[32m✔ %s\033[0m\n' "$1"; pass=$((pass+1)); }
@@ -34,7 +37,7 @@ cleanup
 
 # ---------------------------------------------------------------- 1. file
 step "1. Compose file"
-dc config -q 2>/dev/null && ok "docker/compose.yaml is valid" || ko "docker/compose.yaml missing or invalid"
+dc config -q 2>/dev/null && ok "${COMPOSE_FILE#$ROOT/} is valid" || ko "${COMPOSE_FILE#$ROOT/} missing or invalid"
 
 # ---------------------------------------------------------------- 2. server
 step "2. Server service"

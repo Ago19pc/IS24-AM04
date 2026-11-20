@@ -11,9 +11,23 @@ in your browser, or as a regular window through an X server.
 - Optional, for a native game window instead of the browser: an X server
   (XQuartz on macOS, VcXsrv or WSLg on Windows, any X11/XWayland session on Linux).
 
-Run every command from the repository root.
+## Play without building
 
-## Quick start
+Every [release](https://github.com/Ago19pc/IS24-AM04/releases/latest) ships a ready-made image
+for Intel/AMD and ARM. Download its `compose.yaml` into an empty folder, open a terminal there and
+run:
+
+```sh
+docker compose up -d server
+docker compose run --rm --service-ports client
+```
+
+The first command downloads the image (about 150 MB) instead of building it. Everything below
+works the same way with the release file: just leave out `-f docker/compose.yaml`.
+
+## Quick start from the repository
+
+Run every command from the repository root.
 
 ```sh
 docker compose -f docker/compose.yaml up -d server
@@ -140,27 +154,27 @@ Environment variables read by the container (the menu fills in the ones it asks 
   non-resizable. Every scene is 1024×768, and drag-resizing a JavaFX window through XQuartz turns
   it black. The game's own code is unchanged.
 
-## Publishing the image (GitHub Container Registry)
+## Releases
 
-Publishing needs push rights on the `ago19pc` account, with a GitHub token that has the
-`write:packages` scope.
-
-```sh
-echo "$GITHUB_TOKEN" | docker login ghcr.io -u <github-user> --password-stdin
-docker buildx create --name codex-multiarch --driver docker-container --use
-docker buildx build --platform linux/amd64,linux/arm64 -f docker/Dockerfile \
-  -t ghcr.io/ago19pc/codex-naturalis:latest --push .
-```
-
-On an ARM Mac the amd64 half is built under emulation and takes longer. To let players pull it
-without logging in, make the package public on GitHub (*Packages → codex-naturalis → Package
-settings*). Players then skip the build:
+Pushing a version tag publishes a new release:
 
 ```sh
-export CODEX_IMAGE=ghcr.io/ago19pc/codex-naturalis:latest      # PowerShell: $env:CODEX_IMAGE="..."
-docker compose -f docker/compose.yaml pull server
-docker compose -f docker/compose.yaml up -d server
+git tag v1.0.1
+git push origin v1.0.1
 ```
+
+The workflow `.github/workflows/release.yml` builds the image on native amd64 and arm64 runners,
+publishes it as `ghcr.io/ago19pc/codex-naturalis:<version>` and `:latest`, and creates the GitHub
+Release with the ready-to-play `compose.yaml` (`docker/release/compose.yaml` with the version
+filled in) and `compose.x11-linux.yaml`. No personal token is needed: it uses the repository's
+own `GITHUB_TOKEN`.
+
+The package starts out private. Once, after the first release, the owner of the `ago19pc`
+account makes it public: *profile → Packages → codex-naturalis → Package settings → Danger
+Zone → Change visibility → Public*.
+
+With the repository's compose file you can also run a published image instead of building:
+`CODEX_IMAGE=ghcr.io/ago19pc/codex-naturalis:latest docker compose -f docker/compose.yaml up -d server`.
 
 ## Tests
 
@@ -168,6 +182,8 @@ docker compose -f docker/compose.yaml up -d server
 docker/tests/smoke.sh                        # the image: errors, menu, server, clients, GUI, X11
 PLATFORM=linux/amd64 docker/tests/smoke.sh   # the same on the other architecture
 docker/tests/compose.sh                      # the compose services, as players use them
+COMPOSE_FILE=docker/release/compose.yaml docker/tests/compose.sh
+                                             # the release's compose file (pulls the image)
 ```
 
 ## Troubleshooting
