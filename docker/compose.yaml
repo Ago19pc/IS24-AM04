@@ -1,0 +1,50 @@
+# Codex Naturalis with Docker Compose. Run from the repo root:
+#
+#   docker compose -f docker/compose.yaml up -d server       start (or resume) the game server
+#   docker compose -f docker/compose.yaml run --rm --service-ports client
+#                                                            one per player: menu (GUI or TUI)
+#   NOVNC_PORT=6081 docker compose -f docker/compose.yaml run --rm --service-ports client
+#                                                            a second GUI player in the browser
+#   docker compose -f docker/compose.yaml logs -f server      server log
+#   docker compose -f docker/compose.yaml down                stop (saves stay in the volume)
+#
+# X11 on Linux / WSLg: add  -f docker/compose.x11-linux.yaml  to the client command.
+name: codex-naturalis
+
+x-codex-image: &codex-image
+  image: ${CODEX_IMAGE:-codex-naturalis:local}
+  build:
+    context: ..
+    dockerfile: docker/Dockerfile
+
+services:
+  server:
+    <<: *codex-image
+    environment:
+      MODE: host
+      GAME_MODE: ${GAME_MODE:-l}   # l: resume the saved game if there is one, else start a new one
+      RMI_PORT: "1099"
+      SOCKET_PORT: "1234"
+    ports:
+      - "1234:1234"                # Socket, reachable from the LAN (RMI stays inside the Docker network)
+    volumes:
+      - codex-data:/data
+    restart: unless-stopped
+
+  client:
+    <<: *codex-image
+    profiles: [client]             # not started by `up`: each player runs it with `docker compose run`
+    depends_on: [server]
+    stdin_open: true
+    tty: true
+    environment:
+      SERVER_HOST: server
+      NOVNC_PORT: ${NOVNC_PORT:-6080}   # only used to print the right URL
+      DISPLAY: ${DISPLAY:-}             # X11 mode; empty -> host.docker.internal:0
+    ports:
+      - "127.0.0.1:${NOVNC_PORT:-6080}:6080"   # noVNC, this computer only
+    extra_hosts:
+      - "host.docker.internal:host-gateway"    # X11 mode on Linux hosts (Docker Desktop has it already)
+
+volumes:
+  codex-data:

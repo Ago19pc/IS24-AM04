@@ -1,0 +1,10 @@
+# Build context is the repo root: send only what docker/Dockerfile uses.
+*
+!pom.xml
+!src/main
+!deliveries/jar/codexnaturalis.jar
+!docker/*.sh
+!docker/*.py
+!docker/fonts.conf
+!docker/hooks
+**/.DS_Store

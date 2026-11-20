@@ -1,0 +1,185 @@
+# Codex Naturalis in Docker
+
+Run the whole game (server, graphical client and text client) on macOS, Windows or Linux,
+on Intel/AMD or ARM machines, without installing Java or JavaFX. The graphical client opens
+in your browser, or as a regular window through an X server.
+
+## Requirements
+
+- **macOS / Windows:** Docker Desktop.
+- **Linux:** Docker Engine with the Compose plugin.
+- Optional, for a native game window instead of the browser: an X server
+  (XQuartz on macOS, VcXsrv or WSLg on Windows, any X11/XWayland session on Linux).
+
+Run every command from the repository root.
+
+## Quick start
+
+```sh
+docker compose -f docker/compose.yaml up -d server
+docker compose -f docker/compose.yaml run --rm --service-ports client
+```
+
+The first command builds the image (a few minutes the first time) and starts the server in
+the background. The second one opens the launcher menu, where you pick a client:
+
+- **Client GUI → Browser (noVNC):** open <http://localhost:6080>. In the game choose RMI or
+  SOCKET, then join with *Server IP* `server` and *Server port* `1099` (RMI) or `1234` (SOCKET).
+- **Client TUI:** the menu asks how to connect and joins the server for you.
+
+Each player runs the second command in their own terminal. Every browser client needs its own
+port:
+
+```sh
+# macOS / Linux
+NOVNC_PORT=6081 docker compose -f docker/compose.yaml run --rm --service-ports client
+```
+
+```powershell
+# Windows PowerShell
+$env:NOVNC_PORT=6081; docker compose -f docker/compose.yaml run --rm --service-ports client; Remove-Item Env:NOVNC_PORT
+```
+
+To stop the server: `docker compose -f docker/compose.yaml down` (saved games are kept).
+
+## Playing over the local network
+
+The server publishes the Socket port **1234** on every network interface: players on other
+computers join with **SOCKET**, using this computer's IP address and port 1234, either from this
+image or with the regular jar. Your firewall may ask you to allow incoming connections.
+
+RMI only works between containers on the same computer: the RMI server calls the clients back,
+and Docker's network address translation does not let those calls through.
+
+## Saved games
+
+The server writes `game.json` to the `codex-naturalis_codex-data` volume. With the default
+`GAME_MODE=l` it resumes that save when it starts, also after a crash or a reboot
+(`restart: unless-stopped`); if there is no save, a new game starts.
+
+```sh
+GAME_MODE=n docker compose -f docker/compose.yaml up -d server     # force a new game
+docker compose -f docker/compose.yaml cp server:/data/game.json .  # back up the save
+docker compose -f docker/compose.yaml down -v                      # stop and DELETE the saves
+```
+
+## Game window on your desktop (X11)
+
+Choose **Client GUI → Finestra X11** in the menu, or set `DISPLAY_MODE=x11`. The window keeps the
+game's size, 1024×768.
+
+**macOS (XQuartz)**
+
+1. Install [XQuartz](https://www.xquartz.org), open it, go to *Settings → Security*, tick
+   *Allow connections from network clients*, then quit and reopen XQuartz.
+2. Every time XQuartz starts, run `xhost +localhost` in Terminal. To make it permanent:
+   ```sh
+   printf '#!/bin/sh\n/opt/X11/bin/xhost +localhost\n' \
+     | sudo tee /opt/X11/etc/X11/xinit/xinitrc.d/99-codex-xhost.sh >/dev/null
+   sudo chmod +x /opt/X11/etc/X11/xinit/xinitrc.d/99-codex-xhost.sh
+   ```
+3. Start the client as usual. The container reaches XQuartz at `host.docker.internal:0`.
+
+**Windows**
+
+- **VcXsrv:** start *XLaunch* → *Multiple windows* → *Start no client* → tick
+  *Disable access control*. The container finds it at `host.docker.internal:0`.
+- **WSLg (Windows 11):** from a WSL terminal,
+  `docker compose -f docker/compose.yaml -f docker/compose.x11-linux.yaml run --rm client`.
+
+**Linux**
+
+```sh
+xhost +local:
+docker compose -f docker/compose.yaml -f docker/compose.x11-linux.yaml run --rm client
+```
+
+## Without Compose
+
+```sh
+docker build -f docker/Dockerfile -t codex-naturalis:local .
+docker network create codex
+docker volume create codex-data
+docker run -d --name server --network codex -v codex-data:/data -p 1234:1234 \
+  -e MODE=host -e GAME_MODE=l codex-naturalis:local
+docker run -it --rm --network codex -p 127.0.0.1:6080:6080 codex-naturalis:local
+```
+
+`docker run -it --rm codex-naturalis:local bash` opens a shell inside the image.
+
+## Settings
+
+Environment variables read by the container (the menu fills in the ones it asks about):
+
+| Variable | Default | Used by | Meaning |
+|---|---|---|---|
+| `MODE` | *(menu)* | all | `host`, `gclient` or `tclient`. Empty with a terminal attached shows the menu. |
+| `GAME_MODE` | `n` (compose: `l`) | host | `n` new game, `l` resume the saved game. |
+| `RMI_PORT` / `SOCKET_PORT` | `1099` / `1234` | host | Server ports inside the container. |
+| `CONNECTION` | `socket` | tclient | `socket` or `rmi`. |
+| `SERVER_HOST` | `server` | tclient | Server address. |
+| `SERVER_PORT` | `1234` / `1099` | tclient | Server port, default depends on `CONNECTION`. |
+| `DISPLAY_MODE` | `novnc` | gclient | `novnc` (browser) or `x11` (window on your X server). |
+| `DISPLAY` | `host.docker.internal:0` | gclient, x11 | X server to draw on. |
+| `GUI_SIZE` | `1024x768` | gclient, novnc | Size of the virtual screen. |
+| `NOVNC_PORT` | `6080` | compose | Host port of the browser client. |
+| `CODEX_IMAGE` | `codex-naturalis:local` | compose | Image to run, e.g. the published one. |
+
+## What is in the image
+
+- **Base:** `debian:trixie-slim` with a Java 21 runtime trimmed by `jlink` to the modules the
+  game uses. About 360 MB on arm64 and 380 MB on amd64.
+- **amd64** reuses the delivered `deliveries/jar/codexnaturalis.jar`. **arm64** builds the game
+  from source with Maven, because the delivered jar only contains x86-64 JavaFX libraries.
+- **Rendering:** JavaFX draws in software (containers have no GPU), so Mesa/OpenGL is left out.
+  A placeholder package keeps apt consistent; delete it in the Dockerfile to get Mesa back.
+- **Fonts:** the GUI was designed on Windows with Segoe UI and Constantia, which cannot be
+  redistributed. Selawik (Microsoft's open-source font with the same metrics as Segoe UI) and
+  Caladea take their place.
+- **Fixed window size:** a Docker-only JavaFX preloader (`docker/hooks`) makes the game window
+  non-resizable. Every scene is 1024×768, and drag-resizing a JavaFX window through XQuartz turns
+  it black. The game's own code is unchanged.
+
+## Publishing the image (GitHub Container Registry)
+
+Publishing needs push rights on the `ago19pc` account, with a GitHub token that has the
+`write:packages` scope.
+
+```sh
+echo "$GITHUB_TOKEN" | docker login ghcr.io -u <github-user> --password-stdin
+docker buildx create --name codex-multiarch --driver docker-container --use
+docker buildx build --platform linux/amd64,linux/arm64 -f docker/Dockerfile \
+  -t ghcr.io/ago19pc/codex-naturalis:latest --push .
+```
+
+On an ARM Mac the amd64 half is built under emulation and takes longer. To let players pull it
+without logging in, make the package public on GitHub (*Packages → codex-naturalis → Package
+settings*). Players then skip the build:
+
+```sh
+export CODEX_IMAGE=ghcr.io/ago19pc/codex-naturalis:latest      # PowerShell: $env:CODEX_IMAGE="..."
+docker compose -f docker/compose.yaml pull server
+docker compose -f docker/compose.yaml up -d server
+```
+
+## Tests
+
+```sh
+docker/tests/smoke.sh                        # the image: errors, menu, server, clients, GUI, X11
+PLATFORM=linux/amd64 docker/tests/smoke.sh   # the same on the other architecture
+docker/tests/compose.sh                      # the compose services, as players use them
+```
+
+## Troubleshooting
+
+- **"nessuna modalità scelta e nessun terminale interattivo":** the menu needs a terminal.
+  `docker compose run` gives it one; with `docker run` add `-it`, or set `MODE`.
+- **"Server X non raggiungibile":** follow the X11 steps above, or play in the browser.
+- **Port already in use (1234 or 6080):** stop what is using it, or choose another `NOVNC_PORT`.
+- **The browser page shows "Disconnected":** the client has exited (for example the game is
+  over); start it again.
+
+## Third-party software in the image
+
+noVNC (MPL-2.0), websockify (LGPL-3.0), Selawik (OFL-1.1) and Caladea (Apache-2.0). Their
+licence files ship inside the image next to them.
