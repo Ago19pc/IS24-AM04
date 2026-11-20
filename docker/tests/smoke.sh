@@ -20,6 +20,7 @@ SERVER="$PFX-server"
 MENU="$PFX-menu"
 TUI_SOCKET="$PFX-tui-socket"
 TUI_RMI="$PFX-tui-rmi"
+TUI_RANDOM="$PFX-tui-random"
 GUI="$PFX-gui"
 XSRV="$PFX-xserver"
 GUI_X11="$PFX-gui-x11"
@@ -37,7 +38,7 @@ ko()   { printf '  \033[31m✘ %s\033[0m\n' "$1"; fail=$((fail+1)); }
 step() { printf '\n\033[1m▶ %s\033[0m\n' "$1"; }
 
 cleanup() {
-  docker rm -f "$SERVER" "$MENU" "$TUI_SOCKET" "$TUI_RMI" "$GUI" "$XSRV" "$GUI_X11" >/dev/null 2>&1
+  docker rm -f "$SERVER" "$MENU" "$TUI_SOCKET" "$TUI_RMI" "$TUI_RANDOM" "$GUI" "$XSRV" "$GUI_X11" >/dev/null 2>&1
   docker network rm "$NET" >/dev/null 2>&1
   docker volume rm "$VOL" >/dev/null 2>&1
 }
@@ -168,6 +169,11 @@ wait_for_log "$SERVER" "[RMI] Client connected" 60 \
   && ok "server registered the RMI client" || ko "no RMI client on the server"
 wait_for_log "$TUI_RMI" "Connessione avvenuta con successo" 20 \
   && ok "client confirms the RMI connection" || ko "client did not confirm (RMI)"
+drun -d --name "$TUI_RANDOM" --network "$NET" -e MODE=tclient -e SERVER_HOST="$SERVER" "$IMAGE" >/dev/null
+wait_for_log "$TUI_RANDOM" "Collegamento automatico (scelto a caso)" 20 \
+  && ok "without CONNECTION the TUI picks Socket or RMI at random" || ko "TUI did not pick a connection by itself"
+wait_for_log "$TUI_RANDOM" "Connessione avvenuta con successo" 60 \
+  && ok "TUI joined the server by itself" || ko "TUI did not join the server by itself"
 
 # ---------------------------------------------------------------- 8. GUI via noVNC
 step "8. GUI client via noVNC (joins the server by itself via Socket)"

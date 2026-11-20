@@ -20,7 +20,7 @@ MODE="${MODE:-}"
 GAME_MODE="${GAME_MODE:-n}"
 RMI_PORT="${RMI_PORT:-1099}"
 SOCKET_PORT="${SOCKET_PORT:-1234}"
-CONNECTION="${CONNECTION:-}"   # tclient: socket (default) or rmi; gclient: random (default), socket, rmi, manual
+CONNECTION="${CONNECTION:-}"   # clients: random (default), socket, rmi, manual
 SERVER_HOST="${SERVER_HOST:-server}"
 SERVER_PORT="${SERVER_PORT:-}"
 DISPLAY_MODE="${DISPLAY_MODE:-novnc}"
@@ -69,8 +69,8 @@ Per il menu avvia il container con un terminale:
 
 Oppure scegli la modalità con le variabili d'ambiente:
   MODE=host     GAME_MODE=n|l  RMI_PORT=1099  SOCKET_PORT=1234
-  MODE=tclient  CONNECTION=socket|rmi  SERVER_HOST=server  SERVER_PORT=1234|1099
-  MODE=gclient  DISPLAY_MODE=novnc|x11  CONNECTION=random|socket|rmi|manual
+  MODE=tclient  CONNECTION=random|socket|rmi|manual  SERVER_HOST=server  SERVER_PORT=1234|1099
+  MODE=gclient  DISPLAY_MODE=novnc|x11  (CONNECTION, SERVER_HOST, SERVER_PORT come sopra)
 EOF
   exit 64
 }
@@ -155,15 +155,7 @@ menu_gui() {
 }
 
 menu_tui() {
-  local choice default_port
-  choice=$(choose "Come vuoi collegarti al server?" "Socket" "RMI") || bye
-  CONNECTION=${choice,,}
-  SERVER_HOST=$(ask "Indirizzo del server" "$SERVER_HOST") || bye
-  SERVER_HOST=${SERVER_HOST:-server}
-  if [[ $CONNECTION == rmi ]]; then default_port=1099; else default_port=1234; fi
-  SERVER_PORT=$(ask_port "Porta del server" "${SERVER_PORT:-$default_port}") || bye
-  summary "Client testuale" "$choice → $SERVER_HOST:$SERVER_PORT"
-  MODE=tclient
+  MODE=tclient   # the connection is chosen by itself, like the GUI's
 }
 
 menu() {
@@ -213,22 +205,19 @@ start_host() {
 }
 
 start_tui() {
-  local connection=${CONNECTION:-socket}
-  case "${connection,,}" in
-    socket) CONNECTION=SOCKET; SERVER_PORT=${SERVER_PORT:-1234} ;;
-    rmi)    CONNECTION=RMI;    SERVER_PORT=${SERVER_PORT:-1099} ;;
-    *) die "CONNECTION non valida: '$CONNECTION' (usa socket oppure rmi)" ;;
-  esac
-  [[ $SERVER_HOST =~ ^[A-Za-z0-9._:-]+$ ]] || die "SERVER_HOST non valido: '$SERVER_HOST'"
-  is_port "$SERVER_PORT" || die "SERVER_PORT non valida: '$SERVER_PORT'"
+  choose_connection
+  if [[ -z $CODEX_CONNECTION ]]; then
+    run_game tclient   # manual: the player answers the game's questions
+  fi
   run_game tclient \
-    "RMI o SOCKET?"                  "$CONNECTION" \
-    "A che server vuoi connetterti?" "$SERVER_HOST $SERVER_PORT"
+    "RMI o SOCKET?"                  "$CODEX_CONNECTION" \
+    "A che server vuoi connetterti?" "$CODEX_SERVER_HOST $CODEX_SERVER_PORT"
 }
 
-# The GUI joins the server by itself (AutoConnect in docker/hooks): Socket or RMI at random,
-# unless CONNECTION says which; CONNECTION=manual leaves the connection screens to the player.
-choose_gui_connection() {
+# Both clients join the server by themselves (the TUI through autorespond.py, the GUI through
+# AutoConnect in docker/hooks): Socket or RMI at random, unless CONNECTION says which;
+# CONNECTION=manual leaves the connection questions to the player.
+choose_connection() {
   local picked="" default_port=1234
   case "${CONNECTION,,}" in
     ""|random)
@@ -240,7 +229,7 @@ choose_gui_connection() {
     *) die "CONNECTION non valida: '$CONNECTION' (usa random, socket, rmi oppure manual)" ;;
   esac
   if [[ -z $CODEX_CONNECTION ]]; then
-    gum style --foreground "$C_MUTED" "  Collegamento: lo scegli nella finestra del gioco"
+    gum style --foreground "$C_MUTED" "  Collegamento: lo scegli tu nel gioco"
     return
   fi
   [[ $CODEX_CONNECTION == RMI ]] && default_port=1099
@@ -255,7 +244,7 @@ choose_gui_connection() {
 
 start_gui() {
   [[ -r $GUI_HELPER ]] || die "client grafico non disponibile in questa immagine"
-  choose_gui_connection
+  choose_connection
   # shellcheck source=start-gui.sh
   source "$GUI_HELPER"
   prepare_display        # noVNC or X11, exports DISPLAY

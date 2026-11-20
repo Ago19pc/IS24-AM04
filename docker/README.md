@@ -40,7 +40,7 @@ the background. The second one opens the launcher menu, where you pick a client:
 - **Client GUI → Browser (noVNC):** open the address the terminal shows, e.g.
   <http://localhost:6080>. The game joins the server by itself, over Socket or RMI picked at
   random, and opens on the name screen.
-- **Client TUI:** the menu asks how to connect and joins the server for you.
+- **Client TUI:** joins the server by itself too, over Socket or RMI picked at random.
 
 Each player runs the second command in their own terminal. Docker gives every browser client on
 the same computer a free port between 6080 and 6089, and each client's terminal shows its own
@@ -131,7 +131,7 @@ Environment variables read by the container (the menu fills in the ones it asks 
 | `MODE` | *(menu)* | all | `host`, `gclient` or `tclient`. Empty with a terminal attached shows the menu. |
 | `GAME_MODE` | `n` (compose: `l`) | host | `n` new game, `l` resume the saved game. |
 | `RMI_PORT` / `SOCKET_PORT` | `1099` / `1234` | host | Server ports inside the container. |
-| `CONNECTION` | `socket` (TUI), `random` (GUI) | clients | TUI: `socket` or `rmi`. GUI: `random`, `socket`, `rmi`, or `manual` to fill in the connection screens yourself. |
+| `CONNECTION` | `random` | clients | `random`, `socket`, `rmi`, or `manual` to answer the connection questions yourself. |
 | `SERVER_HOST` | `server` | clients | Server address. |
 | `SERVER_PORT` | `1234` / `1099` | clients | Server port, default depends on the connection. |
 | `DISPLAY_MODE` | `novnc` | gclient | `novnc` (browser) or `x11` (window on your X server). |

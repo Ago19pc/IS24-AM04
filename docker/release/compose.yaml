@@ -36,7 +36,7 @@ services:
     tty: true
     environment:
       SERVER_HOST: server
-      CONNECTION: ${CONNECTION:-}            # GUI joins by itself: random (default), socket, rmi, manual
+      CONNECTION: ${CONNECTION:-}            # clients join by themselves: random (default), socket, rmi, manual
       NOVNC_PORT: ${NOVNC_PORT:-6080-6089}   # shown in the menu
       DISPLAY: ${DISPLAY:-}                  # X11 mode; empty -> host.docker.internal:0
     ports:
