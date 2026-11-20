@@ -6,6 +6,8 @@
 #                IMAGE=name:tag        (image to build/test, default codex-naturalis:smoke)
 #                PFX=name              (container/network prefix, to run two suites in parallel)
 #                NOVNC_HOST_PORT=port  (host port for the noVNC check, default 16080)
+#                BUILDER=name          (build with this buildx builder, e.g. a docker-container
+#                                       one, which runs the same recent BuildKit as the CI)
 set -uo pipefail
 
 ROOT="$(cd "$(dirname "$0")/../.." && pwd)"
@@ -78,7 +80,9 @@ docker volume create "$VOL" >/dev/null
 # ---------------------------------------------------------------- 1. build
 step "1. Build image"
 if [[ -z "${SKIP_BUILD:-}" ]]; then
-  if docker build ${PLATFORM_ARGS[@]+"${PLATFORM_ARGS[@]}"} -f "$ROOT/docker/Dockerfile" -t "$IMAGE" "$ROOT"; then
+  build=(docker build)
+  [[ -n "${BUILDER:-}" ]] && build=(docker buildx build --builder "$BUILDER" --load)
+  if "${build[@]}" ${PLATFORM_ARGS[@]+"${PLATFORM_ARGS[@]}"} -f "$ROOT/docker/Dockerfile" -t "$IMAGE" "$ROOT"; then
     ok "image built"
   else
     ko "image build failed"; echo; echo "RESULT: $pass passed, $fail failed"; exit 1
@@ -97,6 +101,9 @@ out="$(drun --rm -e MODE=bogus "$IMAGE" 2>&1)"; rc=$?
   && ok "invalid MODE rejected" || ko "invalid MODE not rejected (exit $rc)"
 docker inspect -f '{{json .Config.Entrypoint}}' "$IMAGE" | grep -q tini \
   && ok "tini is PID 1" || ko "tini is not the entrypoint"
+drun --rm --entrypoint sh "$IMAGE" -c \
+  'test -r /usr/local/lib/codex/autorespond.py && test -r /usr/local/lib/codex/start-gui.sh' \
+  && ok "the app user can read the helper scripts" || ko "the app user cannot read /usr/local/lib/codex"
 
 # ---------------------------------------------------------------- 3. menu
 step "3. Menu shows up when a terminal is attached"

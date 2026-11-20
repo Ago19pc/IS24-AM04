@@ -1,6 +1,7 @@
 # Release: when a version tag (e.g. v1.0.0) is pushed, build the Docker image for amd64 and arm64
-# on native runners, publish it to GitHub Container Registry as <version> and latest, and create
-# the GitHub Release with the ready-to-play compose file. See docker/README.md.
+# on native runners, run the smoke test on each, and only then publish it to GitHub Container
+# Registry as <version> and latest and create the GitHub Release with the ready-to-play compose
+# file. See docker/README.md.
 name: Release
 
 on:
@@ -53,6 +54,12 @@ jobs:
           outputs: type=image,name=${{ env.IMAGE }},push-by-digest=true,name-canonical=true,push=true
           cache-from: type=gha,scope=${{ matrix.arch }}
           cache-to: type=gha,scope=${{ matrix.arch }},mode=max
+
+      # Nothing is tagged or released unless the pushed image passes the smoke test
+      - name: Smoke test the pushed image
+        env:
+          IMAGE_REF: ${{ env.IMAGE }}@${{ steps.build.outputs.digest }}
+        run: IMAGE="$IMAGE_REF" SKIP_BUILD=1 docker/tests/smoke.sh
 
       - name: Export digest
         env:

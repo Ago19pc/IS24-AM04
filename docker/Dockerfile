@@ -132,10 +132,15 @@ COPY --from=hooks  /opt/hooks/codex-docker-hooks.jar /opt/app/lib/
 
 # Windows look: Selawik (Segoe UI metrics) as default font, Caladea in place of Constantia
 COPY docker/fonts.conf /etc/fonts/conf.d/50-codex.conf
-COPY --chmod=0755 docker/entrypoint.sh /usr/local/bin/entrypoint.sh
-COPY --chmod=0644 docker/start-gui.sh docker/autorespond.py /usr/local/lib/codex/
-# CRLF safety net for Windows checkouts (see docker/.gitattributes), then build the font cache
+COPY docker/entrypoint.sh /usr/local/bin/entrypoint.sh
+COPY docker/start-gui.sh docker/autorespond.py /usr/local/lib/codex/
+# Permissions are set here, not with COPY --chmod: recent BuildKit applies --chmod to the folder
+# COPY creates too, which left /usr/local/lib/codex without the x bit (broken v1.0.0).
+# Then the CRLF safety net for Windows checkouts (see docker/.gitattributes) and the font cache.
 RUN set -eux; \
+    chmod 0755 /usr/local/bin/entrypoint.sh /usr/local/lib/codex; \
+    chmod 0644 /usr/local/lib/codex/* /etc/fonts/conf.d/50-codex.conf; \
+    chmod -R a+rX /usr/local/share/fonts/selawik; \
     sed -i 's/\r$//' /usr/local/bin/entrypoint.sh /usr/local/lib/codex/*; \
     fc-cache -f
 

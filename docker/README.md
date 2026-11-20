@@ -163,15 +163,12 @@ git tag v1.0.1
 git push origin v1.0.1
 ```
 
-The workflow `.github/workflows/release.yml` builds the image on native amd64 and arm64 runners,
-publishes it as `ghcr.io/ago19pc/codex-naturalis:<version>` and `:latest`, and creates the GitHub
-Release with the ready-to-play `compose.yaml` (`docker/release/compose.yaml` with the version
-filled in) and `compose.x11-linux.yaml`. No personal token is needed: it uses the repository's
-own `GITHUB_TOKEN`.
-
-The package starts out private. Once, after the first release, the owner of the `ago19pc`
-account makes it public: *profile → Packages → codex-naturalis → Package settings → Danger
-Zone → Change visibility → Public*.
+The workflow `.github/workflows/release.yml` builds the image on native amd64 and arm64 runners
+and runs `docker/tests/smoke.sh` on each. Only if both pass does it publish the image as
+`ghcr.io/ago19pc/codex-naturalis:<version>` and `:latest` and create the GitHub Release with the
+ready-to-play `compose.yaml` (`docker/release/compose.yaml` with the version filled in) and
+`compose.x11-linux.yaml`. No personal token is needed: it uses the repository's own
+`GITHUB_TOKEN`, and the package is public like the repository.
 
 With the repository's compose file you can also run a published image instead of building:
 `CODEX_IMAGE=ghcr.io/ago19pc/codex-naturalis:latest docker compose -f docker/compose.yaml up -d server`.
@@ -181,6 +178,8 @@ With the repository's compose file you can also run a published image instead of
 ```sh
 docker/tests/smoke.sh                        # the image: errors, menu, server, clients, GUI, X11
 PLATFORM=linux/amd64 docker/tests/smoke.sh   # the same on the other architecture
+BUILDER=ci docker/tests/smoke.sh             # build with a buildx builder like the CI's:
+                                             # docker buildx create --name ci --driver docker-container
 docker/tests/compose.sh                      # the compose services, as players use them
 COMPOSE_FILE=docker/release/compose.yaml docker/tests/compose.sh
                                              # the release's compose file (pulls the image)
